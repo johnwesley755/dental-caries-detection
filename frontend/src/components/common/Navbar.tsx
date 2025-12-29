@@ -62,13 +62,18 @@ const Navbar: React.FC = () => {
           </div>
           <div className="flex items-center">
             {isAuthenticated ? (
-              <div className="flex items-center space-x-4">
-                <span className="text-sm text-gray-700">
-                  {user?.full_name}
-                </span>
+              <div className="flex items-center space-x-6">
+                <div className="flex flex-col items-end">
+                  <span className="text-sm font-semibold text-gray-900 leading-tight">
+                    {user?.full_name}
+                  </span>
+                  <span className="text-xs font-medium text-primary-600 uppercase tracking-wider">
+                    {user?.role}
+                  </span>
+                </div>
                 <button
                   onClick={handleLogout}
-                  className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium"
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors shadow-sm"
                 >
                   Logout
                 </button>
