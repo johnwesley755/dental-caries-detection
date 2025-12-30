@@ -3,6 +3,7 @@ from typing import Optional
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from email.mime.application import MIMEApplication
 from ..core.config import settings
 import secrets
 import string
@@ -125,3 +126,199 @@ class EmailService:
         """
         
         return EmailService.send_email(email, subject, html_content)
+    
+    @staticmethod
+    def send_detection_report(
+        to_email: str,
+        patient_name: str,
+        detection_id: str,
+        detection_date: str,
+        summary_stats: dict,
+        pdf_bytes: bytes,
+        cc_email: Optional[str] = None
+    ) -> bool:
+        """
+        Send detection report via email with PDF attachment
+        
+        Args:
+            to_email: Recipient email address
+            patient_name: Patient's full name
+            detection_id: Detection ID
+            detection_date: Detection date string
+            summary_stats: Dictionary with teeth_detected, caries_found, etc.
+            pdf_bytes: PDF file as bytes
+            cc_email: Optional CC email address
+            
+        Returns:
+            True if email sent successfully, False otherwise
+        """
+        try:
+            # Create message
+            msg = MIMEMultipart()
+            msg['From'] = f"{settings.SMTP_FROM_NAME} <{settings.SMTP_FROM_EMAIL}>"
+            msg['To'] = to_email
+            if cc_email:
+                msg['Cc'] = cc_email
+            msg['Subject'] = f"Dental Detection Report - {detection_id}"
+            
+            # HTML body
+            html_body = EmailService._create_report_email_html(
+                patient_name,
+                detection_id,
+                detection_date,
+                summary_stats
+            )
+            
+            msg.attach(MIMEText(html_body, 'html'))
+            
+            # Attach PDF
+            pdf_attachment = MIMEApplication(pdf_bytes, _subtype='pdf')
+            pdf_attachment.add_header(
+                'Content-Disposition',
+                'attachment',
+                filename=f'Detection_Report_{detection_id}.pdf'
+            )
+            msg.attach(pdf_attachment)
+            
+            # Send email
+            with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT) as server:
+                server.starttls()
+                server.login(settings.SMTP_USERNAME, settings.SMTP_PASSWORD)
+                
+                recipients = [to_email]
+                if cc_email:
+                    recipients.append(cc_email)
+                
+                server.sendmail(settings.SMTP_FROM_EMAIL, recipients, msg.as_string())
+            
+            return True
+            
+        except Exception as e:
+            print(f"Failed to send detection report email: {str(e)}")
+            return False
+    
+    @staticmethod
+    def _create_report_email_html(
+        patient_name: str,
+        detection_id: str,
+        detection_date: str,
+        summary_stats: dict
+    ) -> str:
+        """Create professional HTML email body for detection report"""
+        
+        html = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{
+                    font-family: Arial, sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                }}
+                .container {{
+                    max-width: 600px;
+                    margin: 0 auto;
+                    padding: 20px;
+                }}
+                .header {{
+                    background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+                    color: white;
+                    padding: 30px;
+                    text-align: center;
+                    border-radius: 8px 8px 0 0;
+                }}
+                .header h1 {{
+                    margin: 0;
+                    font-size: 24px;
+                }}
+                .content {{
+                    background: #ffffff;
+                    padding: 30px;
+                    border: 1px solid #e5e7eb;
+                }}
+                .summary-box {{
+                    background: #f9fafb;
+                    border-left: 4px solid #3b82f6;
+                    padding: 20px;
+                    margin: 20px 0;
+                }}
+                .summary-box h3 {{
+                    margin-top: 0;
+                    color: #1e40af;
+                }}
+                .stat-row {{
+                    display: flex;
+                    justify-content: space-between;
+                    margin: 10px 0;
+                }}
+                .stat-label {{
+                    font-weight: bold;
+                    color: #6b7280;
+                }}
+                .footer {{
+                    background: #f9fafb;
+                    padding: 20px;
+                    text-align: center;
+                    border-radius: 0 0 8px 8px;
+                    border: 1px solid #e5e7eb;
+                    border-top: none;
+                }}
+                .footer p {{
+                    margin: 5px 0;
+                    color: #6b7280;
+                    font-size: 14px;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>🦷 Dental Detection Report</h1>
+                </div>
+                
+                <div class="content">
+                    <p>Dear {patient_name},</p>
+                    
+                    <p>Please find attached your dental detection report from <strong>{detection_date}</strong>.</p>
+                    
+                    <div class="summary-box">
+                        <h3>Summary</h3>
+                        <div class="stat-row">
+                            <span class="stat-label">Detection ID:</span>
+                            <span>{detection_id}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Teeth Detected:</span>
+                            <span>{summary_stats.get('teeth_detected', 'N/A')}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Caries Found:</span>
+                            <span>{summary_stats.get('caries_found', 'N/A')}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Status:</span>
+                            <span style="text-transform: uppercase;">{summary_stats.get('status', 'N/A')}</span>
+                        </div>
+                    </div>
+                    
+                    <p>The attached PDF contains detailed information about your dental examination, including AI-detected findings and recommendations.</p>
+                    
+                    <p>If you have any questions or concerns about your report, please don't hesitate to contact us.</p>
+                    
+                    <p>Best regards,<br>
+                    <strong>{settings.HOSPITAL_NAME}</strong></p>
+                </div>
+                
+                <div class="footer">
+                    <p><strong>{settings.HOSPITAL_NAME}</strong></p>
+                    {f'<p>{settings.HOSPITAL_ADDRESS}</p>' if settings.HOSPITAL_ADDRESS else ''}
+                    {f'<p>Phone: {settings.HOSPITAL_PHONE}</p>' if settings.HOSPITAL_PHONE else ''}
+                    {f'<p>Email: {settings.HOSPITAL_EMAIL}</p>' if settings.HOSPITAL_EMAIL else ''}
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        return html

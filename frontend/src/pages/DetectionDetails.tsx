@@ -2,15 +2,17 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { ArrowLeft, Download, Printer, FileText } from 'lucide-react';
+import { ArrowLeft, Download, Printer, FileText, Share2 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { ImageComparison } from '../components/detection/ImageComparison';
 import { SeverityChart } from '../components/detection/SeverityChart';
 import { DetectionResult } from '../components/detection/DetectionResult';
+import { ShareDialog } from '../components/detection/ShareDialog';
 import { detectionService } from '../services/detectionService';
 import { patientService } from '../services/patientService';
+import { reportService } from '../services/reportService';
 import type { Detection } from '../types/detection.types';
 import type { Patient } from '../types/patient.types';
 import { DetectionStatus } from '../types/detection.types';
@@ -21,6 +23,8 @@ export const DetectionDetails: React.FC = () => {
   const [detection, setDetection] = useState<Detection | null>(null);
   const [patient, setPatient] = useState<Patient | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [shareDialogOpen, setShareDialogOpen] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -42,6 +46,22 @@ export const DetectionDetails: React.FC = () => {
       toast.error('Failed to load detection details');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleDownloadPDF = async () => {
+    if (!detection) return;
+    
+    setIsDownloading(true);
+    try {
+      const blob = await reportService.downloadPDF(detection.id);
+      reportService.triggerDownload(blob, `Detection_Report_${detection.detection_id}.pdf`);
+      toast.success('Report downloaded successfully!');
+    } catch (error: any) {
+      console.error('Download error:', error);
+      toast.error(error.response?.data?.detail || 'Failed to download report');
+    } finally {
+      setIsDownloading(false);
     }
   };
 
@@ -103,9 +123,22 @@ export const DetectionDetails: React.FC = () => {
             </div>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm">
-              <Download className="h-4 w-4 mr-2" />
-              Download Report
+            <Button variant="outline" size="sm" onClick={handleDownloadPDF} disabled={isDownloading}>
+              {isDownloading ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary mr-2"></div>
+                  Downloading...
+                </>
+              ) : (
+                <>
+                  <Download className="h-4 w-4 mr-2" />
+                  Download Report
+                </>
+              )}
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => setShareDialogOpen(true)}>
+              <Share2 className="h-4 w-4 mr-2" />
+              Share
             </Button>
             <Button variant="outline" size="sm">
               <Printer className="h-4 w-4 mr-2" />
@@ -195,6 +228,16 @@ export const DetectionDetails: React.FC = () => {
           )}
           <Button onClick={() => navigate('/detection')}>New Detection</Button>
         </div>
+
+        {/* Share Dialog */}
+        {detection && (
+          <ShareDialog
+            open={shareDialogOpen}
+            onOpenChange={setShareDialogOpen}
+            detectionId={detection.id}
+            detection_id={detection.detection_id}
+          />
+        )}
       </div>
     </div>
   );

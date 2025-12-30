@@ -5,9 +5,10 @@ import { toast } from 'sonner';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
-import { ArrowLeft, Calendar, Clock, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, AlertCircle, Download } from 'lucide-react';
 import { ImageComparison } from '../components/detection/ImageComparison';
 import { patientService } from '../services/patientService';
+import { reportService } from '../services/reportService';
 import type { Detection } from '../types/detection.types';
 
 export const DetectionView: React.FC = () => {
@@ -15,6 +16,7 @@ export const DetectionView: React.FC = () => {
   const navigate = useNavigate();
   const [detection, setDetection] = useState<Detection | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -32,6 +34,22 @@ export const DetectionView: React.FC = () => {
       navigate('/detections');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleDownloadPDF = async () => {
+    if (!detection) return;
+    
+    setIsDownloading(true);
+    try {
+      const blob = await reportService.downloadPDF(detection.id);
+      reportService.triggerDownload(blob, `Detection_Report_${detection.detection_id}.pdf`);
+      toast.success('Report downloaded successfully!');
+    } catch (error: any) {
+      console.error('Download error:', error);
+      toast.error(error.response?.data?.detail || 'Failed to download report');
+    } finally {
+      setIsDownloading(false);
     }
   };
 
@@ -65,10 +83,26 @@ export const DetectionView: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="space-y-6">
-        <Button variant="ghost" onClick={() => navigate('/detections')}>
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Scans
-        </Button>
+        <div className="flex items-center justify-between">
+          <Button variant="ghost" onClick={() => navigate('/detections')}>
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Scans
+          </Button>
+          
+          <Button onClick={handleDownloadPDF} disabled={isDownloading}>
+            {isDownloading ? (
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                Downloading...
+              </>
+            ) : (
+              <>
+                <Download className="h-4 w-4 mr-2" />
+                Download Report
+              </>
+            )}
+          </Button>
+        </div>
 
         <div>
           <h1 className="text-3xl font-bold">{detection.detection_id}</h1>

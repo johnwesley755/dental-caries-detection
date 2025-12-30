@@ -34,6 +34,13 @@ class Settings(BaseSettings):
     CLOUDINARY_API_KEY: str = ""
     CLOUDINARY_API_SECRET: str = ""
     
+    # Hospital Information
+    HOSPITAL_NAME: str = "Dental Care Hospital"
+    HOSPITAL_ADDRESS: str = ""
+    HOSPITAL_PHONE: str = ""
+    HOSPITAL_EMAIL: str = ""
+    HOSPITAL_LOGO_URL: str = ""
+    
     # Server
     HOST: str = "0.0.0.0"
     PORT: int = 8000
