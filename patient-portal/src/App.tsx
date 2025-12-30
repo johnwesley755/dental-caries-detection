@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { AuthProvider } from './contexts/AuthContext';
 import Sidebar from './components/common/Sidebar';
+import { FloatingChatButton } from './components/chat/FloatingChatButton';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
 import { Home } from './pages/Home';
 import { Login } from './pages/Login';
@@ -20,6 +21,7 @@ const AuthenticatedLayout: React.FC<{ children: React.ReactNode }> = ({ children
       <main className="flex-1 overflow-auto">
         {children}
       </main>
+      <FloatingChatButton />
     </div>
   );
 };

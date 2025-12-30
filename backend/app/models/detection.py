@@ -40,5 +40,8 @@ class Detection(Base):
     notes = Column(Text)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     
+    # Relationships
     patient = relationship("Patient", back_populates="detections")
-    caries_findings = relationship("CariesFinding", back_populates="detection")
+    dentist = relationship("User")
+    caries_findings = relationship("CariesFinding", back_populates="detection", cascade="all, delete-orphan")
+    chat_messages = relationship("ChatMessage", back_populates="detection")

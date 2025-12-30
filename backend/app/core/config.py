@@ -41,6 +41,11 @@ class Settings(BaseSettings):
     HOSPITAL_EMAIL: str = ""
     HOSPITAL_LOGO_URL: str = ""
     
+    # Groq API (for chatbot) - Free tier with API key
+    GROQ_API_KEY: str = ""
+    GROQ_MODEL: str = "llama-3.1-8b-instant"  # LLaMA 3.1 8B Instant
+    GROQ_API_URL: str = "https://api.groq.com/openai/v1/chat/completions"
+    
     # Server
     HOST: str = "0.0.0.0"
     PORT: int = 8000

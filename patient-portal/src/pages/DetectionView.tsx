@@ -7,6 +7,7 @@ import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
 import { ArrowLeft, Calendar, Clock, AlertCircle, Download } from 'lucide-react';
 import { ImageComparison } from '../components/detection/ImageComparison';
+import { ChatBot } from '../components/chat/ChatBot';
 import { patientService } from '../services/patientService';
 import { reportService } from '../services/reportService';
 import type { Detection } from '../types/detection.types';
@@ -200,6 +201,9 @@ export const DetectionView: React.FC = () => {
             </CardContent>
           </Card>
         )}
+
+        {/* Chatbot Section */}
+        <ChatBot detectionId={detection.id} />
       </div>
     </div>
   );
