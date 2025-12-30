@@ -55,7 +55,7 @@ class Settings(BaseSettings):
     PORT: int = 8000
     
     # CORS - Support both local and production URLs
-    ALLOWED_ORIGINS: str = "http://localhost:3000,http://localhost:5173,http://localhost:5174"
+    ALLOWED_ORIGINS: str = "http://localhost:3000,http://localhost:5173,http://localhost:5174,https://dental-caries-detection-pjblkpl05.vercel.app,https://dental-caries-detection-patients.vercel.app"
     
     class Config:
         env_file = ".env"
