@@ -46,12 +46,16 @@ class Settings(BaseSettings):
     GROQ_MODEL: str = "llama-3.1-8b-instant"  # LLaMA 3.1 8B Instant
     GROQ_API_URL: str = "https://api.groq.com/openai/v1/chat/completions"
     
+    # Frontend URLs (for email links, redirects, etc.)
+    FRONTEND_URL: str = "http://localhost:5173"
+    PATIENT_PORTAL_URL: str = "http://localhost:5174"
+    
     # Server
     HOST: str = "0.0.0.0"
     PORT: int = 8000
     
-    # CORS
-    ALLOWED_ORIGINS: list = ["http://localhost:3000", "http://localhost:5173"]
+    # CORS - Support both local and production URLs
+    ALLOWED_ORIGINS: str = "http://localhost:3000,http://localhost:5173,http://localhost:5174"
     
     class Config:
         env_file = ".env"

@@ -17,10 +17,10 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Configure CORS - Allow all origins for development
+# Configure CORS - Support both local and production
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins in development
+    allow_origins=settings.ALLOWED_ORIGINS.split(","),  # Split comma-separated string
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
