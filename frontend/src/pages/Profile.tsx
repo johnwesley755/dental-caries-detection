@@ -1,175 +1,298 @@
 // frontend/src/pages/Profile.tsx
-import React, { useState } from 'react';
-import { User, Mail, Shield, Calendar } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { toast } from 'sonner';
+import { User, Mail, Shield, Calendar, Edit2, Save, X, Lock } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
-import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
+import { Input } from '../components/ui/input';
+import { Label } from '../components/ui/label';
 import { useAuth } from '../contexts/AuthContext';
+import { userService } from '../services/userService';
 
 export const Profile: React.FC = () => {
-  const { user, logout } = useAuth();
+  const { user, updateUser } = useAuth();
+  const [isEditing, setIsEditing] = useState(false);
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const getRoleBadgeColor = (role: string) => {
-    switch (role) {
-      case 'admin':
-        return 'bg-red-100 text-red-800 border-red-300';
-      case 'dentist':
-        return 'bg-blue-100 text-blue-800 border-blue-300';
-      case 'assistant':
-        return 'bg-green-100 text-green-800 border-green-300';
-      default:
-        return 'bg-gray-100 text-gray-800 border-gray-300';
+  // Profile form state
+  const [profileData, setProfileData] = useState({
+    full_name: user?.full_name || '',
+    email: user?.email || '',
+  });
+
+  // Password form state
+  const [passwordData, setPasswordData] = useState({
+    old_password: '',
+    new_password: '',
+    confirm_password: '',
+  });
+
+  useEffect(() => {
+    if (user) {
+      setProfileData({
+        full_name: user.full_name,
+        email: user.email,
+      });
+    }
+  }, [user]);
+
+  const handleProfileUpdate = async () => {
+    setLoading(true);
+    try {
+      const updated = await userService.updateProfile(profileData);
+      updateUser(updated);
+      toast.success('Profile updated successfully!');
+      setIsEditing(false);
+    } catch (error: any) {
+      console.error('Profile update error:', error);
+      toast.error(error.response?.data?.detail || 'Failed to update profile');
+    } finally {
+      setLoading(false);
     }
   };
 
-  if (!user) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold mb-4">Please log in to view your profile</h2>
-        </div>
-      </div>
-    );
-  }
+  const handlePasswordChange = async () => {
+    if (passwordData.new_password !== passwordData.confirm_password) {
+      toast.error('New passwords do not match');
+      return;
+    }
+
+    if (passwordData.new_password.length < 6) {
+      toast.error('Password must be at least 6 characters');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await userService.changePassword({
+        old_password: passwordData.old_password,
+        new_password: passwordData.new_password,
+      });
+      toast.success('Password changed successfully!');
+      setPasswordData({
+        old_password: '',
+        new_password: '',
+        confirm_password: '',
+      });
+      setIsChangingPassword(false);
+    } catch (error: any) {
+      console.error('Password change error:', error);
+      toast.error(error.response?.data?.detail || 'Failed to change password');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setProfileData({
+      full_name: user?.full_name || '',
+      email: user?.email || '',
+    });
+    setIsEditing(false);
+  };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-4xl mx-auto space-y-6">
-        {/* Header */}
-        <div>
-          <h1 className="text-3xl font-bold">Profile</h1>
-          <p className="text-gray-600 mt-1">Manage your account information</p>
-        </div>
+    <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <h1 className="text-3xl font-bold mb-6">My Profile</h1>
 
-        {/* Profile Information */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Account Information</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-6">
-              {/* Avatar and Name */}
-              <div className="flex items-center gap-6">
-                <div className="h-24 w-24 bg-blue-100 rounded-full flex items-center justify-center">
-                  <User className="h-12 w-12 text-blue-600" />
-                </div>
-                <div>
-                  <h2 className="text-2xl font-bold">{user.full_name}</h2>
-                  <Badge variant="outline" className={getRoleBadgeColor(user.role)}>
-                    {user.role.toUpperCase()}
-                  </Badge>
-                </div>
-              </div>
-
-              {/* Details */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t">
-                <div className="flex items-start gap-3">
-                  <Mail className="h-5 w-5 text-gray-400 mt-0.5" />
-                  <div>
-                    <p className="text-sm text-gray-600">Email Address</p>
-                    <p className="font-medium">{user.email}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <Shield className="h-5 w-5 text-gray-400 mt-0.5" />
-                  <div>
-                    <p className="text-sm text-gray-600">Role</p>
-                    <p className="font-medium capitalize">{user.role}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <Calendar className="h-5 w-5 text-gray-400 mt-0.5" />
-                  <div>
-                    <p className="text-sm text-gray-600">Member Since</p>
-                    <p className="font-medium">
-                      {new Date(user.created_at).toLocaleDateString()}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <User className="h-5 w-5 text-gray-400 mt-0.5" />
-                  <div>
-                    <p className="text-sm text-gray-600">Account Status</p>
-                    <Badge variant="outline" className="bg-green-100 text-green-800 border-green-300">
-                      {user.is_active ? 'ACTIVE' : 'INACTIVE'}
-                    </Badge>
-                  </div>
-                </div>
-              </div>
+      {/* Profile Information Card */}
+      <Card className="mb-6">
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle className="flex items-center gap-2">
+            <User className="h-5 w-5" />
+            Profile Information
+          </CardTitle>
+          {!isEditing && (
+            <Button onClick={() => setIsEditing(true)} variant="outline" size="sm">
+              <Edit2 className="h-4 w-4 mr-2" />
+              Edit Profile
+            </Button>
+          )}
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {/* Full Name */}
+            <div>
+              <Label htmlFor="full_name">Full Name</Label>
+              {isEditing ? (
+                <Input
+                  id="full_name"
+                  value={profileData.full_name}
+                  onChange={(e) =>
+                    setProfileData({ ...profileData, full_name: e.target.value })
+                  }
+                  placeholder="Enter your full name"
+                />
+              ) : (
+                <p className="text-lg font-medium mt-1">{user?.full_name}</p>
+              )}
             </div>
-          </CardContent>
-        </Card>
 
-        {/* Account Actions */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Account Actions</CardTitle>
-          </CardHeader>
-          <CardContent>
+            {/* Email */}
+            <div>
+              <Label htmlFor="email" className="flex items-center gap-2">
+                <Mail className="h-4 w-4" />
+                Email
+              </Label>
+              {isEditing ? (
+                <Input
+                  id="email"
+                  type="email"
+                  value={profileData.email}
+                  onChange={(e) =>
+                    setProfileData({ ...profileData, email: e.target.value })
+                  }
+                  placeholder="Enter your email"
+                />
+              ) : (
+                <p className="text-lg font-medium mt-1">{user?.email}</p>
+              )}
+            </div>
+
+            {/* Role (Read-only) */}
+            <div>
+              <Label className="flex items-center gap-2">
+                <Shield className="h-4 w-4" />
+                Role
+              </Label>
+              <p className="text-lg font-medium mt-1 uppercase">{user?.role}</p>
+            </div>
+
+            {/* Created At (Read-only) */}
+            <div>
+              <Label className="flex items-center gap-2">
+                <Calendar className="h-4 w-4" />
+                Member Since
+              </Label>
+              <p className="text-lg font-medium mt-1">
+                {user?.created_at
+                  ? new Date(user.created_at).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })
+                  : 'N/A'}
+              </p>
+            </div>
+
+            {/* Action Buttons */}
+            {isEditing && (
+              <div className="flex gap-2 pt-4">
+                <Button onClick={handleProfileUpdate} disabled={loading}>
+                  {loading ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="h-4 w-4 mr-2" />
+                      Save Changes
+                    </>
+                  )}
+                </Button>
+                <Button onClick={handleCancelEdit} variant="outline" disabled={loading}>
+                  <X className="h-4 w-4 mr-2" />
+                  Cancel
+                </Button>
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Change Password Card */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Lock className="h-5 w-5" />
+            Change Password
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {!isChangingPassword ? (
+            <Button onClick={() => setIsChangingPassword(true)} variant="outline">
+              Change Password
+            </Button>
+          ) : (
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 border rounded-lg">
-                <div>
-                  <h3 className="font-semibold">Edit Profile</h3>
-                  <p className="text-sm text-gray-600">
-                    Update your personal information and preferences
-                  </p>
-                </div>
-                <Button variant="outline" disabled>
-                  Edit
-                </Button>
+              <div>
+                <Label htmlFor="old_password">Current Password</Label>
+                <Input
+                  id="old_password"
+                  type="password"
+                  value={passwordData.old_password}
+                  onChange={(e) =>
+                    setPasswordData({ ...passwordData, old_password: e.target.value })
+                  }
+                  placeholder="Enter current password"
+                />
               </div>
 
-              <div className="flex items-center justify-between p-4 border rounded-lg">
-                <div>
-                  <h3 className="font-semibold">Change Password</h3>
-                  <p className="text-sm text-gray-600">
-                    Update your password to keep your account secure
-                  </p>
-                </div>
-                <Button variant="outline" disabled>
-                  Change
-                </Button>
+              <div>
+                <Label htmlFor="new_password">New Password</Label>
+                <Input
+                  id="new_password"
+                  type="password"
+                  value={passwordData.new_password}
+                  onChange={(e) =>
+                    setPasswordData({ ...passwordData, new_password: e.target.value })
+                  }
+                  placeholder="Enter new password"
+                />
               </div>
 
-              <div className="flex items-center justify-between p-4 border rounded-lg border-red-200 bg-red-50">
-                <div>
-                  <h3 className="font-semibold text-red-900">Sign Out</h3>
-                  <p className="text-sm text-red-700">
-                    Sign out of your account on this device
-                  </p>
-                </div>
-                <Button variant="destructive" onClick={logout}>
-                  Sign Out
+              <div>
+                <Label htmlFor="confirm_password">Confirm New Password</Label>
+                <Input
+                  id="confirm_password"
+                  type="password"
+                  value={passwordData.confirm_password}
+                  onChange={(e) =>
+                    setPasswordData({
+                      ...passwordData,
+                      confirm_password: e.target.value,
+                    })
+                  }
+                  placeholder="Confirm new password"
+                />
+              </div>
+
+              <div className="flex gap-2 pt-4">
+                <Button onClick={handlePasswordChange} disabled={loading}>
+                  {loading ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      Changing...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="h-4 w-4 mr-2" />
+                      Change Password
+                    </>
+                  )}
+                </Button>
+                <Button
+                  onClick={() => {
+                    setPasswordData({
+                      old_password: '',
+                      new_password: '',
+                      confirm_password: '',
+                    });
+                    setIsChangingPassword(false);
+                  }}
+                  variant="outline"
+                  disabled={loading}
+                >
+                  <X className="h-4 w-4 mr-2" />
+                  Cancel
                 </Button>
               </div>
             </div>
-          </CardContent>
-        </Card>
-
-        {/* System Information */}
-        <Card>
-          <CardHeader>
-            <CardTitle>System Information</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-              <div>
-                <span className="text-gray-600">User ID:</span>
-                <p className="font-mono text-xs mt-1 break-all">{user.id}</p>
-              </div>
-              <div>
-                <span className="text-gray-600">Account Created:</span>
-                <p className="font-medium mt-1">
-                  {new Date(user.created_at).toLocaleString()}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 };

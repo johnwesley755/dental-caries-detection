@@ -1,15 +1,13 @@
-import Navbar from '../components/common/Navbar';
-import Footer from '../components/common/Footer';
+import Sidebar from '../components/common/Sidebar';
 import { Outlet } from 'react-router-dom';
 
 const MainLayout = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
-      <Navbar />
-      <main className="flex-1">
+    <div className="flex h-screen bg-gray-50">
+      <Sidebar />
+      <main className="flex-1 overflow-auto">
         <Outlet />
       </main>
-      <Footer />
     </div>
   );
 };
