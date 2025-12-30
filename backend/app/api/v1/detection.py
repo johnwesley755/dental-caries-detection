@@ -31,8 +31,9 @@ async def create_detection(
             detail="Invalid file format. Only JPG, PNG, and BMP are allowed."
         )
     
-    # Save uploaded file
-    file_path = await image_service.save_upload_file(file)
+    # Save uploaded file (now returns dict with local_path and cloudinary info)
+    upload_result = await image_service.save_upload_file(file)
+    file_path = upload_result.get("local_path")
     
     try:
         # Create detection data
@@ -42,13 +43,14 @@ async def create_detection(
             notes=notes
         )
         
-        # Process detection
+        # Process detection with Cloudinary data
         detection = detection_service.process_detection(
             db=db,
             image_path=file_path,
             patient_id=UUID(patient_id),
             dentist_id=current_user.id,
-            detection_data=detection_data
+            detection_data=detection_data,
+            original_image_cloudinary=upload_result
         )
         
         return detection

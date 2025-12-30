@@ -28,7 +28,8 @@ class DetectionService:
         image_path: str,
         patient_id: UUID,
         dentist_id: UUID,
-        detection_data: DetectionCreate
+        detection_data: DetectionCreate,
+        original_image_cloudinary: dict = None
     ) -> Detection:
         """Process dental caries detection"""
         # Preprocess image
@@ -43,6 +44,16 @@ class DetectionService:
         # Get annotated image path
         annotated_path = os.path.join(results_dir, "detection", os.path.basename(image_path))
         
+        # Upload annotated image to Cloudinary if it exists
+        annotated_cloudinary = None
+        if os.path.exists(annotated_path) and settings.CLOUDINARY_CLOUD_NAME:
+            try:
+                from .cloudinary_service import CloudinaryService
+                cloudinary_service = CloudinaryService()
+                annotated_cloudinary = cloudinary_service.upload_annotated_image(annotated_path)
+            except Exception as e:
+                print(f"Warning: Failed to upload annotated image to Cloudinary: {str(e)}")
+        
         # Process results
         detections = self.postprocessor.process_results(
             detection_results["results"],
@@ -56,6 +67,10 @@ class DetectionService:
             dentist_id=dentist_id,
             original_image_path=image_path,
             annotated_image_path=annotated_path if os.path.exists(annotated_path) else None,
+            original_image_url=original_image_cloudinary.get("cloudinary_url") if original_image_cloudinary else None,
+            annotated_image_url=annotated_cloudinary.get("url") if annotated_cloudinary else None,
+            original_image_public_id=original_image_cloudinary.get("public_id") if original_image_cloudinary else None,
+            annotated_image_public_id=annotated_cloudinary.get("public_id") if annotated_cloudinary else None,
             image_type=detection_data.image_type,
             total_caries_detected=len(detections),
             processing_time_ms=detection_results["processing_time_ms"],

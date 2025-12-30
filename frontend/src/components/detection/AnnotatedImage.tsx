@@ -38,10 +38,10 @@ export const AnnotatedImage: React.FC<AnnotatedImageProps> = ({ detection }) => 
     return `${API_BASE_URL}/${cleanPath}`;
   };
 
-  const originalImageUrl = getImageUrl(detection.original_image_path);
-  const annotatedImageUrl = detection.annotated_image_path
-    ? getImageUrl(detection.annotated_image_path)
-    : null;
+  // Prioritize Cloudinary URLs, fallback to local paths
+  const originalImageUrl = detection.original_image_url || getImageUrl(detection.original_image_path);
+  const annotatedImageUrl = detection.annotated_image_url || 
+    (detection.annotated_image_path ? getImageUrl(detection.annotated_image_path) : null);
 
   return (
     <Card className="w-full">

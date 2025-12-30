@@ -53,6 +53,10 @@ export interface Detection {
   dentist_id: string;
   original_image_path: string;
   annotated_image_path?: string;
+  original_image_url?: string;
+  annotated_image_url?: string;
+  original_image_public_id?: string;
+  annotated_image_public_id?: string;
   image_type?: ImageType;
   detection_date: string;
   total_teeth_detected: number;

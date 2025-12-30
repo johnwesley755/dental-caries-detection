@@ -9,6 +9,7 @@ import Login from './components/auth/Login';
 import { Home } from './pages/Home';
 import { Dashboard } from './pages/Dashboard';
 import { Detection } from './pages/Detection';
+import { DetectionDetails } from './pages/DetectionDetails';
 import { History } from './pages/History';
 import { PatientDetails } from './pages/PatientDetails';
 import { Profile } from './pages/Profile';
@@ -39,7 +40,7 @@ function App() {
             >
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/detection" element={<Detection />} />
-              <Route path="/detection/:id" element={<Detection />} />
+              <Route path="/detection/:id" element={<DetectionDetails />} />
               <Route path="/history" element={<History />} />
               <Route path="/patients" element={<Patients />} />
               <Route path="/patients/:id" element={<PatientDetails />} />

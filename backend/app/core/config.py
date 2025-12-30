@@ -29,6 +29,11 @@ class Settings(BaseSettings):
     UPLOAD_DIR: str = "uploads"
     RESULTS_DIR: str = "results"
     
+    # Cloudinary
+    CLOUDINARY_CLOUD_NAME: str = ""
+    CLOUDINARY_API_KEY: str = ""
+    CLOUDINARY_API_SECRET: str = ""
+    
     # Server
     HOST: str = "0.0.0.0"
     PORT: int = 8000

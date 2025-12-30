@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
 import { ArrowLeft, Calendar, Clock, AlertCircle } from 'lucide-react';
+import { ImageComparison } from '../components/detection/ImageComparison';
 import { patientService } from '../services/patientService';
 import type { Detection } from '../types/detection.types';
 
@@ -84,6 +85,12 @@ export const DetectionView: React.FC = () => {
             )}
           </div>
         </div>
+
+        {/* Image Comparison */}
+        <ImageComparison
+          originalImageUrl={detection.original_image_url}
+          annotatedImageUrl={detection.annotated_image_url}
+        />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Card>

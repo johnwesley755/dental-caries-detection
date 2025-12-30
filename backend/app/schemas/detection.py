@@ -28,6 +28,10 @@ class DetectionResponse(BaseModel):
     dentist_id: UUID
     original_image_path: str
     annotated_image_path: Optional[str]
+    original_image_url: Optional[str]
+    annotated_image_url: Optional[str]
+    original_image_public_id: Optional[str]
+    annotated_image_public_id: Optional[str]
     image_type: Optional[str]
     detection_date: datetime
     total_teeth_detected: int
