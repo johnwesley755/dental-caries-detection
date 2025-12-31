@@ -94,9 +94,13 @@ app.include_router(api_router, prefix="/api/v1")
 # ---------------------------------------------------------
 @app.on_event("startup")
 async def startup_event():
-    print("Loading YOLOv8 model...")
-    model_loader.load_model()
-    print("Model loaded successfully!")
+    print("✅ API started successfully!")
+    print("⚠️ Model will load on first detection request (lazy loading)")
+    # Model preloading disabled to reduce memory usage on Render free tier
+    # The model will load automatically when first detection is requested
+    # print("Loading YOLOv8 model...")
+    # model_loader.load_model()
+    # print("Model loaded successfully!")
 
 # ---------------------------------------------------------
 # Health & Root Endpoints
