@@ -22,8 +22,11 @@ app = FastAPI(
 )
 
 # ---------------------------------------------------------
-# SAFE CORS CONFIGURATION (ENV-BASED)
+# CORS CONFIGURATION - FIXED FOR PRODUCTION
 # ---------------------------------------------------------
+from fastapi.responses import JSONResponse
+from fastapi import Request
+
 # Parse allowed origins from settings
 origins = []
 
@@ -40,6 +43,7 @@ if not origins:
 
 print(f"CORS Allowed Origins: {origins}")  # Debug log
 
+# Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -48,6 +52,20 @@ app.add_middleware(
     allow_headers=["*"],
     expose_headers=["*"],
 )
+
+# Explicit OPTIONS handler for all routes
+@app.options("/{full_path:path}")
+async def options_handler(request: Request):
+    """Handle OPTIONS requests for CORS preflight"""
+    return JSONResponse(
+        content={"message": "OK"},
+        headers={
+            "Access-Control-Allow-Origin": request.headers.get("origin", "*"),
+            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+            "Access-Control-Allow-Headers": "*",
+            "Access-Control-Allow-Credentials": "true",
+        }
+    )
 
 # ---------------------------------------------------------
 # Static file serving
