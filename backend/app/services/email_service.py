@@ -1,9 +1,6 @@
 # Email Service for User Management
 from typing import Optional
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-from email.mime.application import MIMEApplication
+import requests
 from ..core.config import settings
 import secrets
 import string
@@ -20,44 +17,43 @@ class EmailService:
     
     @staticmethod
     def send_email(to_email: str, subject: str, html_content: str) -> bool:
-        """Send an email via SMTP"""
+        """Send an email via Resend API"""
         try:
-            # Validate SMTP configuration
-            if not settings.SMTP_USERNAME or not settings.SMTP_PASSWORD:
-                print("ERROR: SMTP credentials not configured!")
-                print(f"SMTP_USERNAME: {'SET' if settings.SMTP_USERNAME else 'NOT SET'}")
-                print(f"SMTP_PASSWORD: {'SET' if settings.SMTP_PASSWORD else 'NOT SET'}")
+            # Validate Resend API key
+            if not settings.RESEND_API_KEY:
+                print("ERROR: RESEND_API_KEY not configured!")
                 return False
             
             print(f"Attempting to send email to: {to_email}")
-            print(f"SMTP Host: {settings.SMTP_HOST}:{settings.SMTP_PORT}")
-            print(f"SMTP Username: {settings.SMTP_USERNAME}")
+            print(f"Using Resend API")
             
-            # Create message
-            msg = MIMEMultipart('alternative')
-            msg['Subject'] = subject
-            msg['From'] = f"{settings.SMTP_FROM_NAME} <{settings.SMTP_FROM_EMAIL}>"
-            msg['To'] = to_email
+            # Send email via Resend HTTP API
+            response = requests.post(
+                "https://api.resend.com/emails",
+                headers={
+                    "Authorization": f"Bearer {settings.RESEND_API_KEY}",
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "from": f"{settings.RESEND_FROM_NAME} <{settings.RESEND_FROM_EMAIL}>",
+                    "to": [to_email],
+                    "subject": subject,
+                    "html": html_content
+                },
+                timeout=30
+            )
             
-            # Attach HTML content
-            html_part = MIMEText(html_content, 'html')
-            msg.attach(html_part)
-            
-            # Send email
-            with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT, timeout=30) as server:
-                server.set_debuglevel(1)  # Enable debug output
-                server.starttls()
-                server.login(settings.SMTP_USERNAME, settings.SMTP_PASSWORD)
-                server.send_message(msg)
-            
-            print(f"✅ Email sent successfully to: {to_email}")
-            return True
-        except smtplib.SMTPAuthenticationError as e:
-            print(f"❌ SMTP Authentication Error: {e}")
-            print("Check your SMTP_USERNAME and SMTP_PASSWORD")
-            return False
-        except smtplib.SMTPException as e:
-            print(f"❌ SMTP Error: {e}")
+            if response.status_code == 200:
+                print(f"✅ Email sent successfully to: {to_email}")
+                print(f"Response: {response.json()}")
+                return True
+            else:
+                print(f"❌ Resend API Error: {response.status_code}")
+                print(f"Response: {response.text}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            print(f"❌ Network error sending email: {type(e).__name__}: {e}")
             return False
         except Exception as e:
             print(f"❌ Failed to send email: {type(e).__name__}: {e}")
@@ -160,7 +156,7 @@ class EmailService:
         cc_email: Optional[str] = None
     ) -> bool:
         """
-        Send detection report via email with PDF attachment
+        Send detection report via email with PDF attachment using Resend API
         
         Args:
             to_email: Recipient email address
@@ -175,15 +171,12 @@ class EmailService:
             True if email sent successfully, False otherwise
         """
         try:
-            # Create message
-            msg = MIMEMultipart()
-            msg['From'] = f"{settings.SMTP_FROM_NAME} <{settings.SMTP_FROM_EMAIL}>"
-            msg['To'] = to_email
-            if cc_email:
-                msg['Cc'] = cc_email
-            msg['Subject'] = f"Dental Detection Report - {detection_id}"
+            # Validate Resend API key
+            if not settings.RESEND_API_KEY:
+                print("ERROR: RESEND_API_KEY not configured!")
+                return False
             
-            # HTML body
+            # Create HTML body
             html_body = EmailService._create_report_email_html(
                 patient_name,
                 detection_id,
@@ -191,32 +184,49 @@ class EmailService:
                 summary_stats
             )
             
-            msg.attach(MIMEText(html_body, 'html'))
+            # Convert PDF bytes to base64 for attachment
+            import base64
+            pdf_base64 = base64.b64encode(pdf_bytes).decode('utf-8')
             
-            # Attach PDF
-            pdf_attachment = MIMEApplication(pdf_bytes, _subtype='pdf')
-            pdf_attachment.add_header(
-                'Content-Disposition',
-                'attachment',
-                filename=f'Detection_Report_{detection_id}.pdf'
+            # Prepare recipients
+            recipients = [to_email]
+            if cc_email:
+                recipients.append(cc_email)
+            
+            # Send email via Resend API
+            response = requests.post(
+                "https://api.resend.com/emails",
+                headers={
+                    "Authorization": f"Bearer {settings.RESEND_API_KEY}",
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "from": f"{settings.RESEND_FROM_NAME} <{settings.RESEND_FROM_EMAIL}>",
+                    "to": recipients,
+                    "subject": f"Dental Detection Report - {detection_id}",
+                    "html": html_body,
+                    "attachments": [
+                        {
+                            "filename": f"Detection_Report_{detection_id}.pdf",
+                            "content": pdf_base64
+                        }
+                    ]
+                },
+                timeout=30
             )
-            msg.attach(pdf_attachment)
             
-            # Send email
-            with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT) as server:
-                server.starttls()
-                server.login(settings.SMTP_USERNAME, settings.SMTP_PASSWORD)
-                
-                recipients = [to_email]
-                if cc_email:
-                    recipients.append(cc_email)
-                
-                server.sendmail(settings.SMTP_FROM_EMAIL, recipients, msg.as_string())
-            
-            return True
+            if response.status_code == 200:
+                print(f"✅ Detection report sent successfully to: {to_email}")
+                return True
+            else:
+                print(f"❌ Resend API Error: {response.status_code}")
+                print(f"Response: {response.text}")
+                return False
             
         except Exception as e:
-            print(f"Failed to send detection report email: {str(e)}")
+            print(f"❌ Failed to send detection report email: {type(e).__name__}: {e}")
+            import traceback
+            traceback.print_exc()
             return False
     
     @staticmethod

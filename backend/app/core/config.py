@@ -16,13 +16,10 @@ class Settings(BaseSettings):
     CONFIDENCE_THRESHOLD: float = 0.25
     IOU_THRESHOLD: float = 0.45
     
-    # Email Configuration
-    SMTP_HOST: str = "smtp.gmail.com"
-    SMTP_PORT: int = 587
-    SMTP_USERNAME: str = ""
-    SMTP_PASSWORD: str = ""
-    SMTP_FROM_EMAIL: str = "noreply@dentalcare.com"
-    SMTP_FROM_NAME: str = "Dental Care System"
+    # Email Configuration (Resend API)
+    RESEND_API_KEY: str = ""
+    RESEND_FROM_EMAIL: str = "onboarding@resend.dev"  # Use resend.dev for testing
+    RESEND_FROM_NAME: str = "Dental Care System"
     PORTAL_URL: str = "http://localhost"
     
     # Paths
