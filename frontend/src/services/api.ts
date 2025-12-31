@@ -12,6 +12,7 @@ class ApiService {
       headers: {
         'Content-Type': 'application/json',
       },
+      withCredentials: true, // Enable CORS credentials
     });
 
     // Request interceptor to add auth token
