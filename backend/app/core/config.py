@@ -18,8 +18,8 @@ class Settings(BaseSettings):
     
     # Email Configuration (Resend API)
     RESEND_API_KEY: str = ""
-    RESEND_FROM_EMAIL: str = "onboarding@resend.dev"  # Use resend.dev for testing
-    RESEND_FROM_NAME: str = "Dental Care System"
+    RESEND_FROM_EMAIL: str = ""  # Use resend.dev for testing
+    RESEND_FROM_NAME: str = ""
     PORTAL_URL: str = "http://localhost"
     
     # Paths
