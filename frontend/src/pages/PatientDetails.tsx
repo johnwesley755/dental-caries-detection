@@ -11,6 +11,8 @@ import {
   Calendar,
   User,
   Activity,
+  Clock,
+  FileText
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
@@ -19,7 +21,7 @@ import { HistoryCard } from '../components/dashboard/HistoryCard';
 import { patientService } from '../services/patientService';
 import { detectionService } from '../services/detectionService';
 import type { Patient } from '../types/patient.types';
-import {Gender} from "../types/patient.types"
+import { Gender } from "../types/patient.types";
 import type { Detection } from '../types/detection.types';
 
 export const PatientDetails: React.FC = () => {
@@ -30,9 +32,7 @@ export const PatientDetails: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (id) {
-      loadPatientData(id);
-    }
+    if (id) loadPatientData(id);
   }, [id]);
 
   const loadPatientData = async (patientId: string) => {
@@ -42,216 +42,190 @@ export const PatientDetails: React.FC = () => {
         patientService.getPatient(patientId),
         detectionService.getPatientDetections(patientId),
       ]);
-
       setPatient(patientData);
       setDetections(detectionsData);
     } catch (error: any) {
       toast.error('Failed to load patient data');
-      console.error(error);
       navigate('/patients');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const getGenderBadgeColor = (gender?: Gender) => {
+  const getGenderBadge = (gender?: Gender) => {
     switch (gender) {
-      case Gender.MALE:
-        return 'bg-blue-100 text-blue-800';
-      case Gender.FEMALE:
-        return 'bg-pink-100 text-pink-800';
-      case Gender.OTHER:
-        return 'bg-purple-100 text-purple-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
+      case Gender.MALE: return <Badge variant="secondary" className="bg-blue-50 text-blue-700 hover:bg-blue-50">Male</Badge>;
+      case Gender.FEMALE: return <Badge variant="secondary" className="bg-pink-50 text-pink-700 hover:bg-pink-50">Female</Badge>;
+      default: return <Badge variant="secondary">Other</Badge>;
     }
   };
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-        </div>
+      <div className="min-h-screen bg-[#F4F7FE] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
     );
   }
 
-  if (!patient) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold mb-4">Patient not found</h2>
-          <Button onClick={() => navigate('/patients')}>Back to Patients</Button>
-        </div>
-      </div>
-    );
-  }
+  if (!patient) return null;
+
+  const totalCaries = detections.reduce((sum, d) => sum + d.total_caries_detected, 0);
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" onClick={() => navigate('/patients')}>
-              <ArrowLeft className="h-4 w-4" />
+    <div className="min-h-screen bg-[#F4F7FE] p-8">
+      
+      {/* Top Navigation */}
+      <div className="mb-8 flex items-center justify-between">
+        <Button 
+            variant="ghost" 
+            onClick={() => navigate('/patients')}
+            className="text-slate-500 hover:text-slate-800 hover:bg-white/50"
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" /> Back to Directory
+        </Button>
+        <div className="flex gap-3">
+            <Button variant="outline" className="bg-white border-none shadow-sm text-slate-600 hover:text-blue-600">
+                <Edit className="mr-2 h-4 w-4" /> Edit Profile
             </Button>
+            <Button onClick={() => navigate('/detection')} className="bg-blue-600 shadow-lg shadow-blue-200 text-white rounded-xl">
+                <Activity className="mr-2 h-4 w-4" /> New Analysis
+            </Button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-12 gap-8">
+        
+        {/* LEFT COLUMN: Patient Profile Card */}
+        <div className="col-span-12 lg:col-span-4 space-y-6">
+          <Card className="border-none shadow-sm bg-white rounded-[20px] overflow-hidden">
+            <CardHeader className="bg-gradient-to-br from-blue-600 to-blue-700 p-8 text-white text-center">
+                <div className="w-24 h-24 bg-white/20 backdrop-blur-md rounded-full mx-auto flex items-center justify-center text-3xl font-bold mb-4 shadow-inner">
+                    {patient.full_name.charAt(0)}
+                </div>
+                <h1 className="text-2xl font-bold">{patient.full_name}</h1>
+                <p className="opacity-80 text-sm mt-1">ID: {patient.patient_id}</p>
+                <div className="flex justify-center gap-2 mt-4">
+                    {getGenderBadge(patient.gender)}
+                    <Badge className="bg-white/20 hover:bg-white/30 text-white border-none">
+                        {patient.age} Years
+                    </Badge>
+                </div>
+            </CardHeader>
+            <CardContent className="p-8 space-y-6">
+                <div className="space-y-4">
+                    <div className="flex items-center gap-4 p-3 rounded-xl bg-gray-50/50">
+                        <div className="p-2 bg-white rounded-lg shadow-sm text-blue-600"><Phone className="h-4 w-4" /></div>
+                        <div>
+                            <p className="text-xs text-gray-400 font-medium uppercase">Phone</p>
+                            <p className="text-sm font-semibold text-slate-700">{patient.contact_number || 'N/A'}</p>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-4 p-3 rounded-xl bg-gray-50/50">
+                        <div className="p-2 bg-white rounded-lg shadow-sm text-blue-600"><Mail className="h-4 w-4" /></div>
+                        <div>
+                            <p className="text-xs text-gray-400 font-medium uppercase">Email</p>
+                            <p className="text-sm font-semibold text-slate-700 break-all">{patient.email || 'N/A'}</p>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-4 p-3 rounded-xl bg-gray-50/50">
+                        <div className="p-2 bg-white rounded-lg shadow-sm text-blue-600"><MapPin className="h-4 w-4" /></div>
+                        <div>
+                            <p className="text-xs text-gray-400 font-medium uppercase">Address</p>
+                            <p className="text-sm font-semibold text-slate-700">{patient.address || 'N/A'}</p>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-4 p-3 rounded-xl bg-gray-50/50">
+                        <div className="p-2 bg-white rounded-lg shadow-sm text-blue-600"><Clock className="h-4 w-4" /></div>
+                        <div>
+                            <p className="text-xs text-gray-400 font-medium uppercase">Registered</p>
+                            <p className="text-sm font-semibold text-slate-700">{new Date(patient.created_at).toLocaleDateString()}</p>
+                        </div>
+                    </div>
+                </div>
+
+                {patient.medical_history && (
+                    <div className="pt-6 border-t border-gray-100">
+                        <h3 className="font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                            <FileText className="h-4 w-4 text-slate-400" /> Medical History
+                        </h3>
+                        <div className="bg-yellow-50/50 p-4 rounded-xl border border-yellow-100 text-sm text-slate-600">
+                            {patient.medical_history}
+                        </div>
+                    </div>
+                )}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* RIGHT COLUMN: Stats & History */}
+        <div className="col-span-12 lg:col-span-8 space-y-8">
+            
+            {/* KPI Stats Row */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <Card className="border-none shadow-sm bg-white rounded-[20px] p-6">
+                    <div className="flex justify-between items-start">
+                        <div>
+                            <p className="text-sm font-medium text-slate-400">Total Scans</p>
+                            <h3 className="text-3xl font-bold text-slate-800 mt-2">{detections.length}</h3>
+                        </div>
+                        <div className="p-3 bg-blue-50 rounded-xl text-blue-600">
+                            <Activity className="h-6 w-6" />
+                        </div>
+                    </div>
+                </Card>
+                <Card className="border-none shadow-sm bg-white rounded-[20px] p-6">
+                    <div className="flex justify-between items-start">
+                        <div>
+                            <p className="text-sm font-medium text-slate-400">Total Issues</p>
+                            <h3 className="text-3xl font-bold text-slate-800 mt-2">{totalCaries}</h3>
+                        </div>
+                        <div className="p-3 bg-red-50 rounded-xl text-red-600">
+                            <Activity className="h-6 w-6" />
+                        </div>
+                    </div>
+                </Card>
+                <Card className="border-none shadow-sm bg-white rounded-[20px] p-6">
+                    <div className="flex justify-between items-start">
+                        <div>
+                            <p className="text-sm font-medium text-slate-400">Last Visit</p>
+                            <h3 className="text-lg font-bold text-slate-800 mt-3">
+                                {detections.length > 0 
+                                    ? new Date(detections[0].detection_date).toLocaleDateString() 
+                                    : 'Never'}
+                            </h3>
+                        </div>
+                        <div className="p-3 bg-green-50 rounded-xl text-green-600">
+                            <Calendar className="h-6 w-6" />
+                        </div>
+                    </div>
+                </Card>
+            </div>
+
+            {/* History Section */}
             <div>
-              <h1 className="text-3xl font-bold">{patient.full_name}</h1>
-              <p className="text-gray-600 mt-1">Patient ID: {patient.patient_id}</p>
+                <h2 className="text-lg font-bold text-slate-800 mb-4">Analysis History</h2>
+                {detections.length === 0 ? (
+                    <div className="bg-white rounded-[20px] p-12 text-center border-none shadow-sm">
+                        <div className="bg-gray-50 h-16 w-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <Activity className="h-8 w-8 text-gray-300" />
+                        </div>
+                        <h3 className="text-lg font-medium text-gray-900">No records found</h3>
+                        <p className="text-gray-500 mt-1 mb-6">Upload a dental X-ray to start tracking.</p>
+                        <Button onClick={() => navigate('/detection')}>Start Detection</Button>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {detections.map((detection) => (
+                            <HistoryCard
+                                key={detection.id}
+                                detection={detection}
+                                showPatientInfo={false}
+                            />
+                        ))}
+                    </div>
+                )}
             </div>
-          </div>
-          <Button variant="outline">
-            <Edit className="mr-2 h-4 w-4" />
-            Edit Patient
-          </Button>
-        </div>
-
-        {/* Patient Information */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Personal Information */}
-          <Card className="lg:col-span-2">
-            <CardHeader>
-              <CardTitle>Personal Information</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="flex items-start gap-3">
-                  <User className="h-5 w-5 text-gray-400 mt-0.5" />
-                  <div>
-                    <p className="text-sm text-gray-600">Full Name</p>
-                    <p className="font-medium">{patient.full_name}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <Calendar className="h-5 w-5 text-gray-400 mt-0.5" />
-                  <div>
-                    <p className="text-sm text-gray-600">Age</p>
-                    <p className="font-medium">{patient.age || 'N/A'}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <User className="h-5 w-5 text-gray-400 mt-0.5" />
-                  <div>
-                    <p className="text-sm text-gray-600">Gender</p>
-                    {patient.gender ? (
-                      <Badge variant="outline" className={getGenderBadgeColor(patient.gender)}>
-                        {patient.gender.toUpperCase()}
-                      </Badge>
-                    ) : (
-                      <p className="font-medium">N/A</p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <Phone className="h-5 w-5 text-gray-400 mt-0.5" />
-                  <div>
-                    <p className="text-sm text-gray-600">Contact Number</p>
-                    <p className="font-medium">{patient.contact_number || 'N/A'}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <Mail className="h-5 w-5 text-gray-400 mt-0.5" />
-                  <div>
-                    <p className="text-sm text-gray-600">Email</p>
-                    <p className="font-medium break-all">{patient.email || 'N/A'}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <MapPin className="h-5 w-5 text-gray-400 mt-0.5" />
-                  <div>
-                    <p className="text-sm text-gray-600">Address</p>
-                    <p className="font-medium">{patient.address || 'N/A'}</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Medical History */}
-              {patient.medical_history && Object.keys(patient.medical_history).length > 0 && (
-                <div className="mt-6 pt-6 border-t">
-                  <h3 className="font-semibold mb-3">Medical History</h3>
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <pre className="text-sm whitespace-pre-wrap">
-                      {JSON.stringify(patient.medical_history, null, 2)}
-                    </pre>
-                  </div>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Statistics */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Statistics</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="text-center p-4 bg-blue-50 rounded-lg">
-                <Activity className="h-8 w-8 text-blue-600 mx-auto mb-2" />
-                <p className="text-3xl font-bold text-blue-600">{detections.length}</p>
-                <p className="text-sm text-gray-600">Total Detections</p>
-              </div>
-
-              <div className="text-center p-4 bg-red-50 rounded-lg">
-                <Activity className="h-8 w-8 text-red-600 mx-auto mb-2" />
-                <p className="text-3xl font-bold text-red-600">
-                  {detections.reduce((sum, d) => sum + d.total_caries_detected, 0)}
-                </p>
-                <p className="text-sm text-gray-600">Total Caries Found</p>
-              </div>
-
-              <div className="text-center p-4 bg-green-50 rounded-lg">
-                <Calendar className="h-8 w-8 text-green-600 mx-auto mb-2" />
-                <p className="text-sm text-gray-600">Member Since</p>
-                <p className="font-medium">
-                  {new Date(patient.created_at).toLocaleDateString()}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Detection History */}
-        <div>
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold">Detection History</h2>
-            <Button onClick={() => navigate('/detection')}>
-              <Activity className="mr-2 h-4 w-4" />
-              New Detection
-            </Button>
-          </div>
-
-          {detections.length === 0 ? (
-            <div className="text-center py-12 bg-gray-50 rounded-lg">
-              <Activity className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
-                No detections yet
-              </h3>
-              <p className="text-gray-600 mb-4">
-                Start by uploading a dental image for this patient
-              </p>
-              <Button onClick={() => navigate('/detection')}>
-                <Activity className="mr-2 h-4 w-4" />
-                Upload Image
-              </Button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {detections.map((detection) => (
-                <HistoryCard
-                  key={detection.id}
-                  detection={detection}
-                  showPatientInfo={false}
-                />
-              ))}
-            </div>
-          )}
         </div>
       </div>
     </div>

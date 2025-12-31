@@ -3,19 +3,25 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Statistics } from '../components/dashboard/Statistics';
-import { HistoryCard } from '../components/dashboard/HistoryCard';
 import { Button } from '../components/ui/button';
-import { Upload, Users, Activity } from 'lucide-react';
+import { Input } from '../components/ui/input';
+import { Search, Bell, Calendar as CalendarIcon } from 'lucide-react';
 import { patientService } from '../services/patientService';
 import { detectionService } from '../services/detectionService';
+import { useAuth } from '../contexts/AuthContext';
 import type { Patient } from '../types/patient.types';
 import type { Detection } from '../types/detection.types';
 
 export const Dashboard: React.FC = () => {
   const navigate = useNavigate();
+  const { user } = useAuth(); // Get real user data
+  
   const [patients, setPatients] = useState<Patient[]>([]);
   const [detections, setDetections] = useState<Detection[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  
+  // Search State
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     loadDashboardData();
@@ -34,7 +40,6 @@ export const Dashboard: React.FC = () => {
 
       setPatients(patientsData);
       
-      // If we have patients, fetch their detections
       if (patientsData.length > 0) {
         const allDetections = await Promise.all(
           patientsData.slice(0, 10).map((p) => 
@@ -51,127 +56,107 @@ export const Dashboard: React.FC = () => {
     }
   };
 
-  // Get recent detections (last 5)
-  const recentDetections = detections
-    .sort((a, b) => new Date(b.detection_date).getTime() - new Date(a.detection_date).getTime())
-    .slice(0, 5);
+  // --- Filtering Logic ---
+  const getFilteredData = () => {
+    if (!searchQuery.trim()) {
+      return { filteredPatients: patients, filteredDetections: detections };
+    }
 
-  // Get patient name for detection
-  const getPatientName = (patientId: string) => {
-    const patient = patients.find((p) => p.id === patientId);
-    return patient?.full_name || 'Unknown Patient';
+    const lowerQuery = searchQuery.toLowerCase();
+
+    // 1. Filter Patients matching name or ID
+    const filteredPatients = patients.filter(
+      (p) => 
+        p.full_name.toLowerCase().includes(lowerQuery) || 
+        p.patient_id.toLowerCase().includes(lowerQuery)
+    );
+
+    // 2. Filter Detections matching ID OR belonging to matched patients
+    const filteredDetections = detections.filter((d) => {
+      const matchesId = d.detection_id.toLowerCase().includes(lowerQuery);
+      const matchesPatient = filteredPatients.some(p => p.id === d.patient_id);
+      return matchesId || matchesPatient;
+    });
+
+    return { filteredPatients, filteredDetections };
   };
 
-  if (isLoading) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-        </div>
-      </div>
-    );
-  }
+  const { filteredPatients, filteredDetections } = getFilteredData();
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="space-y-8">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold">Dashboard</h1>
-            <p className="text-gray-600 mt-1">
-              Overview of your dental caries detection system
-            </p>
-          </div>
-          <div className="flex gap-3">
-            <Button onClick={() => navigate('/patients')} variant="outline">
-              <Users className="mr-2 h-4 w-4" />
-              Manage Patients
-            </Button>
-            <Button onClick={() => navigate('/detection')}>
-              <Upload className="mr-2 h-4 w-4" />
-              New Detection
-            </Button>
+    <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-[#F4F7FE]">
+      
+      {/* Top Header */}
+      <header className="px-8 py-6 flex items-center justify-between sticky top-0 bg-[#F4F7FE]/90 backdrop-blur-sm z-10">
+        <div className="flex items-center gap-4 flex-1 max-w-xl">
+          <div className="relative flex-1 group">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+            <Input 
+              className="pl-12 py-6 bg-white border-none rounded-full shadow-sm text-gray-600 placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-blue-500 transition-all"
+              placeholder="Search patients, IDs, or analysis records..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
           </div>
         </div>
 
-        {/* Statistics */}
-        <Statistics patients={patients} detections={detections} />
-
-        {/* Recent Detections */}
-        <div>
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold">Recent Detections</h2>
-            <Button variant="ghost" onClick={() => navigate('/history')}>
-              <Activity className="mr-2 h-4 w-4" />
-              View All
-            </Button>
-          </div>
-
-          {recentDetections.length === 0 ? (
-            <div className="text-center py-12 bg-gray-50 rounded-lg">
-              <Activity className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
-                No detections yet
-              </h3>
-              <p className="text-gray-600 mb-4">
-                Start by uploading a dental image for analysis
-              </p>
-              <Button onClick={() => navigate('/detection')}>
-                <Upload className="mr-2 h-4 w-4" />
-                Upload Image
-              </Button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {recentDetections.map((detection) => (
-                <HistoryCard
-                  key={detection.id}
-                  detection={detection}
-                  patientName={getPatientName(detection.patient_id)}
-                  showPatientInfo={true}
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" className="bg-white rounded-full h-12 w-12 p-0 shadow-sm text-gray-500 hover:text-blue-600 transition-colors">
+            <CalendarIcon className="h-5 w-5" />
+          </Button>
+          
+          <Button variant="ghost" className="bg-white rounded-full h-12 w-12 p-0 shadow-sm text-gray-500 hover:text-blue-600 relative transition-colors">
+            <Bell className="h-5 w-5" />
+            <span className="absolute top-3 right-3 h-2 w-2 bg-red-500 rounded-full border-2 border-white"></span>
+          </Button>
+          
+          {/* User Profile Avatar - Clickable & Real Data */}
+          <div 
+            className="flex items-center gap-3 pl-2 cursor-pointer" 
+            onClick={() => navigate('/profile')}
+          >
+             <div className="text-right hidden md:block">
+                <p className="text-sm font-bold text-gray-700 leading-tight">
+                  {user?.full_name || 'User'}
+                </p>
+                <p className="text-xs text-gray-500 uppercase font-medium">
+                  {user?.role || 'Guest'}
+                </p>
+             </div>
+             <div className="h-12 w-12 bg-white rounded-full border-2 border-white shadow-sm overflow-hidden hover:ring-2 hover:ring-blue-200 transition-all">
+                <img 
+                  src={`https://ui-avatars.com/api/?name=${user?.full_name || 'User'}&background=0D8ABC&color=fff&bold=true`} 
+                  alt="Profile" 
+                  className="h-full w-full object-cover"
                 />
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div
-            className="p-6 border-2 border-dashed rounded-lg hover:border-blue-500 hover:bg-blue-50 cursor-pointer transition-colors"
-            onClick={() => navigate('/detection')}
-          >
-            <Upload className="h-8 w-8 text-blue-600 mb-3" />
-            <h3 className="font-semibold text-lg mb-2">New Detection</h3>
-            <p className="text-sm text-gray-600">
-              Upload a dental image for AI-powered caries detection
-            </p>
-          </div>
-
-          <div
-            className="p-6 border-2 border-dashed rounded-lg hover:border-green-500 hover:bg-green-50 cursor-pointer transition-colors"
-            onClick={() => navigate('/patients')}
-          >
-            <Users className="h-8 w-8 text-green-600 mb-3" />
-            <h3 className="font-semibold text-lg mb-2">Manage Patients</h3>
-            <p className="text-sm text-gray-600">
-              View, add, or edit patient information and records
-            </p>
-          </div>
-
-          <div
-            className="p-6 border-2 border-dashed rounded-lg hover:border-purple-500 hover:bg-purple-50 cursor-pointer transition-colors"
-            onClick={() => navigate('/history')}
-          >
-            <Activity className="h-8 w-8 text-purple-600 mb-3" />
-            <h3 className="font-semibold text-lg mb-2">View History</h3>
-            <p className="text-sm text-gray-600">
-              Browse all detection history and patient records
-            </p>
+             </div>
           </div>
         </div>
-      </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="flex-1 overflow-auto px-8 pb-8">
+        {isLoading ? (
+          <div className="h-full flex flex-col items-center justify-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            <p className="text-gray-400 mt-4">Loading dashboard analytics...</p>
+          </div>
+        ) : (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+             {searchQuery && (
+               <div className="mb-6 flex items-center gap-2 text-sm text-gray-500">
+                 <Search className="h-4 w-4" />
+                 Showing results for <span className="font-bold text-gray-900">"{searchQuery}"</span>
+               </div>
+             )}
+             
+             <Statistics 
+                patients={filteredPatients} 
+                detections={filteredDetections} 
+             />
+          </div>
+        )}
+      </main>
     </div>
   );
 };

@@ -1,9 +1,8 @@
 // frontend/src/components/dashboard/HistoryCard.tsx
 import React from 'react';
-import { Calendar, FileText, Activity, ArrowRight } from 'lucide-react';
+import { Calendar, ArrowRight, FileImage } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '../ui/card';
-import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import type { Detection } from '../../types/detection.types';
 import { DetectionStatus } from '../../types/detection.types';
@@ -21,123 +20,61 @@ export const HistoryCard: React.FC<HistoryCardProps> = ({
 }) => {
   const navigate = useNavigate();
 
-  const getStatusColor = (status: DetectionStatus) => {
+  const getStatusBadge = (status: DetectionStatus) => {
     switch (status) {
       case DetectionStatus.COMPLETED:
-        return 'bg-green-100 text-green-800 border-green-300';
+        return <Badge className="bg-emerald-100 text-emerald-700 border-none shadow-none font-medium hover:bg-emerald-100">Done</Badge>;
       case DetectionStatus.REVIEWED:
-        return 'bg-blue-100 text-blue-800 border-blue-300';
-      case DetectionStatus.PENDING:
-        return 'bg-yellow-100 text-yellow-800 border-yellow-300';
+        return <Badge className="bg-blue-100 text-blue-700 border-none shadow-none font-medium hover:bg-blue-100">Reviewed</Badge>;
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-300';
+        return <Badge variant="secondary" className="bg-gray-100 text-gray-600 border-none shadow-none">Pending</Badge>;
     }
   };
 
-  const getSeverityColor = (count: number) => {
-    if (count === 0) return 'text-green-600';
-    if (count <= 2) return 'text-yellow-600';
-    if (count <= 5) return 'text-orange-600';
-    return 'text-red-600';
-  };
-
   return (
-    <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-      <CardContent className="pt-6">
-        <div className="space-y-4">
-          {/* Header */}
-          <div className="flex items-start justify-between">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <FileText className="h-5 w-5 text-gray-500" />
-                <h3 className="font-semibold text-lg">{detection.detection_id}</h3>
+    <Card 
+      className="group border-none shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer bg-white rounded-[20px] overflow-hidden ring-1 ring-slate-100"
+      onClick={() => navigate(`/detection/${detection.id}`)}
+    >
+      <CardContent className="p-0">
+        <div className="p-5">
+          <div className="flex justify-between items-start mb-3">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-500 group-hover:bg-blue-500 group-hover:text-white transition-colors">
+                <FileImage className="h-5 w-5" />
               </div>
-              {showPatientInfo && patientName && (
-                <p className="text-sm text-gray-600">Patient: {patientName}</p>
-              )}
-            </div>
-            <Badge variant="outline" className={getStatusColor(detection.status)}>
-              {detection.status.toUpperCase()}
-            </Badge>
-          </div>
-
-          {/* Date and Time */}
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <Calendar className="h-4 w-4" />
-            <span>{new Date(detection.detection_date).toLocaleString()}</span>
-          </div>
-
-          {/* Statistics */}
-          <div className="grid grid-cols-3 gap-4 py-3 border-t border-b">
-            <div className="text-center">
-              <div className="flex items-center justify-center gap-1 mb-1">
-                <Activity className="h-4 w-4 text-blue-500" />
+              <div>
+                <h4 className="font-bold text-slate-800 text-sm">{detection.detection_id.substring(0, 8)}</h4>
+                {showPatientInfo && (
+                  <p className="text-xs text-slate-400">{patientName || 'Unknown Patient'}</p>
+                )}
               </div>
-              <p className="text-2xl font-bold text-blue-600">
-                {detection.total_teeth_detected}
-              </p>
-              <p className="text-xs text-gray-600">Teeth</p>
             </div>
-            <div className="text-center">
-              <div className="flex items-center justify-center gap-1 mb-1">
-                <Activity className="h-4 w-4 text-red-500" />
-              </div>
-              <p
-                className={`text-2xl font-bold ${getSeverityColor(
-                  detection.total_caries_detected
-                )}`}
-              >
-                {detection.total_caries_detected}
-              </p>
-              <p className="text-xs text-gray-600">Caries</p>
-            </div>
-            <div className="text-center">
-              <div className="flex items-center justify-center gap-1 mb-1">
-                <FileText className="h-4 w-4 text-green-500" />
-              </div>
-              <p className="text-2xl font-bold text-green-600">
-                {detection.caries_findings?.length || 0}
-              </p>
-              <p className="text-xs text-gray-600">Findings</p>
-            </div>
+            {getStatusBadge(detection.status)}
           </div>
-
-          {/* Image Type and Processing Time */}
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            <div>
-              <span className="text-gray-600">Image Type:</span>
-              <p className="font-medium">
-                {detection.image_type
-                  ? detection.image_type.charAt(0).toUpperCase() +
-                    detection.image_type.slice(1)
-                  : 'N/A'}
-              </p>
-            </div>
-            <div>
-              <span className="text-gray-600">Processing:</span>
-              <p className="font-medium">
-                {(detection.processing_time_ms / 1000).toFixed(2)}s
-              </p>
-            </div>
+          
+          <div className="grid grid-cols-2 gap-2 mt-4">
+             <div className="bg-gray-50 rounded-xl p-2 text-center">
+                <span className="block text-xl font-bold text-slate-800">{detection.total_teeth_detected}</span>
+                <span className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Teeth</span>
+             </div>
+             <div className={`rounded-xl p-2 text-center ${detection.total_caries_detected > 0 ? 'bg-red-50' : 'bg-green-50'}`}>
+                <span className={`block text-xl font-bold ${detection.total_caries_detected > 0 ? 'text-red-600' : 'text-green-600'}`}>
+                    {detection.total_caries_detected}
+                </span>
+                <span className={`text-[10px] uppercase tracking-wider font-semibold ${detection.total_caries_detected > 0 ? 'text-red-400' : 'text-green-400'}`}>
+                    Caries
+                </span>
+             </div>
           </div>
+        </div>
 
-          {/* Notes Preview */}
-          {detection.notes && (
-            <div className="text-sm">
-              <span className="text-gray-600">Notes:</span>
-              <p className="text-gray-700 line-clamp-2 mt-1">{detection.notes}</p>
-            </div>
-          )}
-
-          {/* View Details Button */}
-          <Button
-            variant="outline"
-            className="w-full"
-            onClick={() => navigate(`/detection/${detection.id}`)}
-          >
-            View Details
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
+        <div className="px-5 py-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
+          <div className="flex items-center gap-2 text-xs text-gray-400 font-medium">
+            <Calendar className="h-3 w-3" />
+            <span>{new Date(detection.detection_date).toLocaleDateString()}</span>
+          </div>
+          <ArrowRight className="h-4 w-4 text-gray-300 group-hover:text-blue-500 transform group-hover:translate-x-1 transition-all" />
         </div>
       </CardContent>
     </Card>

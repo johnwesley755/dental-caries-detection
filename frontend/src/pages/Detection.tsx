@@ -6,7 +6,7 @@ import { DetectionResult } from '../components/detection/DetectionResult';
 import { AnnotatedImage } from '../components/detection/AnnotatedImage';
 import { SeverityChart } from '../components/detection/SeverityChart';
 import { Button } from '../components/ui/button';
-import { ArrowLeft, RefreshCw } from 'lucide-react';
+import { ArrowLeft, RefreshCw, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useDetection } from '../contexts/DetectionContext';
 import { patientService } from '../services/patientService';
@@ -37,119 +37,65 @@ export const Detection: React.FC = () => {
       setPatients(data);
     } catch (err: any) {
       toast.error('Failed to load patients');
-      console.error(err);
     } finally {
       setLoadingPatients(false);
     }
   };
 
-  const handleUpload = async (
-    file: File,
-    patientId: string,
-    imageType?: ImageType,
-    notes?: string
-  ) => {
+  const handleUpload = async (file: File, patientId: string, imageType?: ImageType, notes?: string) => {
     try {
-      await createDetection(file, {
-        patient_id: patientId,
-        image_type: imageType,
-        notes: notes,
-      });
-      toast.success('Detection completed successfully!');
+      await createDetection(file, { patient_id: patientId, image_type: imageType, notes: notes });
+      toast.success('Analysis complete!');
     } catch (err: any) {
       toast.error(err.message || 'Detection failed');
     }
   };
 
-  const handleNewDetection = () => {
-    window.location.reload();
-  };
-
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="space-y-8">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" onClick={() => navigate('/dashboard')}>
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-            <div>
-              <h1 className="text-3xl font-bold">Dental Caries Detection</h1>
-              <p className="text-gray-600 mt-1">
-                Upload dental images for AI-powered caries analysis
-              </p>
-            </div>
-          </div>
-          {currentDetection && (
-            <Button onClick={handleNewDetection} variant="outline">
-              <RefreshCw className="mr-2 h-4 w-4" />
-              New Detection
-            </Button>
-          )}
+    <div className="min-h-screen bg-[#F4F7FE] p-8">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h1 className="text-3xl font-bold text-slate-800 mt-2 flex items-center gap-2">
+            <Sparkles className="h-8 w-8 text-blue-600" />
+            AI Diagnostics
+          </h1>
+          <p className="text-slate-500 mt-1">Upload dental scans for automated caries detection.</p>
         </div>
-
-        {/* Content */}
-        {!currentDetection ? (
-          /* Upload Form */
-          <div className="max-w-3xl mx-auto">
-            {loadingPatients ? (
-              <div className="flex items-center justify-center h-64">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-              </div>
-            ) : patients.length === 0 ? (
-              <div className="text-center py-12 bg-gray-50 rounded-lg">
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  No patients found
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  Please add a patient before performing detection
-                </p>
-                <Button onClick={() => navigate('/patients')}>Add Patient</Button>
-              </div>
-            ) : (
-              <ImageUpload
-                patients={patients}
-                onUpload={handleUpload}
-                isLoading={isLoading}
-              />
-            )}
-          </div>
-        ) : (
-          /* Detection Results */
-          <div className="space-y-8">
-            {/* Results and Chart */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-2">
-                <DetectionResult detection={currentDetection} />
-              </div>
-              <div>
-                <SeverityChart detection={currentDetection} />
-              </div>
-            </div>
-
-            {/* Annotated Image */}
-            <AnnotatedImage detection={currentDetection} />
-
-            {/* Action Buttons */}
-            <div className="flex justify-center gap-4">
-              <Button variant="outline" onClick={() => navigate('/history')}>
-                View All Detections
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => navigate(`/patients/${currentDetection.patient_id}`)}
-              >
-                View Patient Details
-              </Button>
-              <Button onClick={handleNewDetection}>
-                <RefreshCw className="mr-2 h-4 w-4" />
-                New Detection
-              </Button>
-            </div>
-          </div>
+        {currentDetection && (
+          <Button onClick={() => window.location.reload()} className="bg-white text-slate-700 hover:bg-slate-50 border border-slate-200 shadow-sm">
+            <RefreshCw className="mr-2 h-4 w-4" /> New Analysis
+          </Button>
         )}
       </div>
+
+      {!currentDetection ? (
+        <div className="max-w-4xl mx-auto mt-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          {loadingPatients ? (
+            <div className="flex justify-center p-12"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div></div>
+          ) : (
+            <ImageUpload patients={patients} onUpload={handleUpload} isLoading={isLoading} />
+          )}
+        </div>
+      ) : (
+        <div className="grid grid-cols-12 gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div className="col-span-12 lg:col-span-7 space-y-8">
+             <AnnotatedImage detection={currentDetection} />
+             <div className="flex gap-4">
+                <Button variant="outline" className="flex-1 h-12 rounded-xl bg-white border-none shadow-sm text-slate-600 hover:text-blue-600" onClick={() => navigate(`/patients/${currentDetection.patient_id}`)}>
+                    View Patient History
+                </Button>
+                <Button className="flex-1 h-12 rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-200 hover:bg-blue-700" onClick={() => navigate(`/detection/${currentDetection.id}`)}>
+                    View Full Report
+                </Button>
+             </div>
+          </div>
+          <div className="col-span-12 lg:col-span-5 space-y-8">
+             <DetectionResult detection={currentDetection} />
+             <SeverityChart detection={currentDetection} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

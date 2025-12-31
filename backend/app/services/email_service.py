@@ -22,6 +22,17 @@ class EmailService:
     def send_email(to_email: str, subject: str, html_content: str) -> bool:
         """Send an email via SMTP"""
         try:
+            # Validate SMTP configuration
+            if not settings.SMTP_USERNAME or not settings.SMTP_PASSWORD:
+                print("ERROR: SMTP credentials not configured!")
+                print(f"SMTP_USERNAME: {'SET' if settings.SMTP_USERNAME else 'NOT SET'}")
+                print(f"SMTP_PASSWORD: {'SET' if settings.SMTP_PASSWORD else 'NOT SET'}")
+                return False
+            
+            print(f"Attempting to send email to: {to_email}")
+            print(f"SMTP Host: {settings.SMTP_HOST}:{settings.SMTP_PORT}")
+            print(f"SMTP Username: {settings.SMTP_USERNAME}")
+            
             # Create message
             msg = MIMEMultipart('alternative')
             msg['Subject'] = subject
@@ -33,14 +44,25 @@ class EmailService:
             msg.attach(html_part)
             
             # Send email
-            with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT) as server:
+            with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT, timeout=30) as server:
+                server.set_debuglevel(1)  # Enable debug output
                 server.starttls()
                 server.login(settings.SMTP_USERNAME, settings.SMTP_PASSWORD)
                 server.send_message(msg)
             
+            print(f"✅ Email sent successfully to: {to_email}")
             return True
+        except smtplib.SMTPAuthenticationError as e:
+            print(f"❌ SMTP Authentication Error: {e}")
+            print("Check your SMTP_USERNAME and SMTP_PASSWORD")
+            return False
+        except smtplib.SMTPException as e:
+            print(f"❌ SMTP Error: {e}")
+            return False
         except Exception as e:
-            print(f"Failed to send email: {e}")
+            print(f"❌ Failed to send email: {type(e).__name__}: {e}")
+            import traceback
+            traceback.print_exc()
             return False
     
     @staticmethod

@@ -1,25 +1,24 @@
 // frontend/src/components/common/Sidebar.tsx
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { UserRole } from '../../types/auth.types';
 import {
   LayoutDashboard,
   Users,
-  ScanFace,
   History,
   UserCog,
-  User,
   LogOut,
-  ChevronLeft,
+  Settings,
+  Upload,
   ChevronRight,
+  ScanFace
 } from 'lucide-react';
 
 const Sidebar: React.FC = () => {
   const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -27,96 +26,84 @@ const Sidebar: React.FC = () => {
   };
 
   const menuItems = [
-    { path: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+    { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
     { path: '/patients', icon: Users, label: 'Patients' },
-    { path: '/detection', icon: ScanFace, label: 'Detection' },
+    { path: '/detection', icon: ScanFace, label: 'New Detection' },
     { path: '/history', icon: History, label: 'History' },
     ...(user?.role === UserRole.ADMIN
       ? [{ path: '/users', icon: UserCog, label: 'User Management' }]
       : []),
   ];
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string) => {
+    if (path === '/' && location.pathname === '/') return true;
+    if (path !== '/' && location.pathname.startsWith(path)) return true;
+    return false;
+  };
 
   return (
-    <div
-      className={`${
-        isCollapsed ? 'w-16' : 'w-64'
-      } bg-white border-r border-gray-200 h-screen flex flex-col transition-all duration-300 shadow-sm`}
-    >
-      {/* Header with Logo and Toggle */}
-      <div className="p-4 flex items-center justify-between border-b border-gray-200">
-        {!isCollapsed && (
-          <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-            DentalCare AI
-          </h1>
-        )}
-        <button
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          className="p-2 rounded-lg hover:bg-gray-100 transition-colors text-gray-600"
-        >
-          {isCollapsed ? (
-            <ChevronRight className="h-5 w-5" />
-          ) : (
-            <ChevronLeft className="h-5 w-5" />
-          )}
-        </button>
+    <aside className="w-72 bg-white m-4 rounded-3xl shadow-sm flex flex-col hidden lg:flex border border-gray-100 sticky top-4 h-[calc(100vh-2rem)]">
+      {/* Header */}
+      <div className="p-8 pb-4">
+        <h1 className="text-2xl font-bold text-blue-900 tracking-tight flex items-center gap-2">
+          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white shadow-blue-200 shadow-lg">
+            D
+          </div>
+          Dental AI
+        </h1>
       </div>
 
-      {/* User Profile Section */}
-      <Link
-        to="/profile"
-        className={`p-4 border-b border-gray-200 hover:bg-blue-50 transition-colors ${
-          isActive('/profile') ? 'bg-blue-50' : ''
-        }`}
-      >
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center flex-shrink-0 shadow-sm">
-            <User className="h-6 w-6 text-white" />
-          </div>
-          {!isCollapsed && (
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-gray-900 truncate">{user?.full_name}</p>
-              <p className="text-xs text-blue-600 uppercase tracking-wider font-medium">
-                {user?.role}
-              </p>
-            </div>
-          )}
-        </div>
-      </Link>
-
-      {/* Navigation Menu */}
-      <nav className="flex-1 py-4 overflow-y-auto">
+      {/* Navigation */}
+      <nav className="flex-1 px-4 space-y-2 mt-4 overflow-y-auto">
         {menuItems.map((item) => {
           const Icon = item.icon;
+          const active = isActive(item.path);
+          
           return (
             <Link
               key={item.path}
               to={item.path}
-              className={`flex items-center px-4 py-3 mx-2 rounded-lg transition-colors ${
-                isActive(item.path)
-                  ? 'bg-blue-600 text-white shadow-sm'
-                  : 'text-gray-700 hover:bg-gray-100'
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all duration-200 group relative ${
+                active 
+                  ? 'bg-blue-600 text-white shadow-md shadow-blue-200' 
+                  : 'text-gray-500 hover:bg-blue-50 hover:text-blue-600'
               }`}
             >
-              <Icon className="h-5 w-5 flex-shrink-0" />
-              {!isCollapsed && <span className="ml-3 font-medium">{item.label}</span>}
+              <Icon className={`h-5 w-5 ${active ? 'text-white' : 'text-gray-400 group-hover:text-blue-600'}`} />
+              <span className="font-medium">{item.label}</span>
+              {active && <ChevronRight className="h-4 w-4 absolute right-4 opacity-50" />}
             </Link>
           );
         })}
       </nav>
 
-      {/* Logout Button */}
-      <div className="p-4 border-t border-gray-200">
-        <button
+      {/* Footer / System Status */}
+      <div className="p-4 mt-auto">
+        <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white relative overflow-hidden shadow-lg shadow-blue-200">
+          <div className="relative z-10">
+            <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center mb-4 backdrop-blur-sm">
+              <Settings className="h-5 w-5" />
+            </div>
+            <p className="font-medium text-sm opacity-90">System Status</p>
+            <h3 className="text-lg font-bold mt-1 flex items-center gap-2">
+              <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+              Optimal
+            </h3>
+          </div>
+          {/* Decorative circles */}
+          <div className="absolute -right-4 -top-4 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
+          <div className="absolute -left-4 -bottom-4 w-20 h-20 bg-white/10 rounded-full blur-xl"></div>
+        </div>
+        
+        <button 
           onClick={handleLogout}
-          className="flex items-center w-full px-4 py-3 rounded-lg text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors"
+          className="flex items-center gap-3 px-4 py-3 mt-4 text-gray-500 hover:text-red-500 hover:bg-red-50 rounded-xl w-full transition-colors font-medium"
         >
-          <LogOut className="h-5 w-5 flex-shrink-0" />
-          {!isCollapsed && <span className="ml-3 font-medium">Logout</span>}
+          <LogOut className="h-5 w-5" />
+          <span>Logout</span>
         </button>
       </div>
-    </div>
+    </aside>
   );
 };
 

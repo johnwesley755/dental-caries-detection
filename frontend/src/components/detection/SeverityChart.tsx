@@ -1,6 +1,6 @@
 // frontend/src/components/detection/SeverityChart.tsx
 import React from 'react';
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import type { Detection } from '../../types/detection.types';
 import { Severity } from '../../types/detection.types';
@@ -10,159 +10,75 @@ interface SeverityChartProps {
 }
 
 export const SeverityChart: React.FC<SeverityChartProps> = ({ detection }) => {
-  // Count severity levels
-  const severityCounts = {
-    [Severity.MILD]: 0,
-    [Severity.MODERATE]: 0,
-    [Severity.SEVERE]: 0,
-  };
+  const severityCounts = { [Severity.MILD]: 0, [Severity.MODERATE]: 0, [Severity.SEVERE]: 0 };
 
   detection.caries_findings?.forEach((finding) => {
-    if (finding.severity) {
-      severityCounts[finding.severity]++;
-    }
+    if (finding.severity) severityCounts[finding.severity]++;
   });
 
-  // Prepare data for chart
   const chartData = [
-    {
-      name: 'Mild',
-      value: severityCounts[Severity.MILD],
-      color: '#FCD34D', // yellow-300
-    },
-    {
-      name: 'Moderate',
-      value: severityCounts[Severity.MODERATE],
-      color: '#FB923C', // orange-400
-    },
-    {
-      name: 'Severe',
-      value: severityCounts[Severity.SEVERE],
-      color: '#EF4444', // red-500
-    },
-  ].filter((item) => item.value > 0); // Only show non-zero values
+    { name: 'Mild', value: severityCounts[Severity.MILD], color: '#FCD34D' }, // Yellow
+    { name: 'Moderate', value: severityCounts[Severity.MODERATE], color: '#FB923C' }, // Orange
+    { name: 'Severe', value: severityCounts[Severity.SEVERE], color: '#EF4444' }, // Red
+  ].filter((item) => item.value > 0);
 
   const totalFindings = chartData.reduce((sum, item) => sum + item.value, 0);
 
-  // Custom label for pie chart
-  const renderCustomLabel = ({
-    cx,
-    cy,
-    midAngle,
-    innerRadius,
-    outerRadius,
-    percent,
-  }: any) => {
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-    const x = cx + radius * Math.cos(-midAngle * (Math.PI / 180));
-    const y = cy + radius * Math.sin(-midAngle * (Math.PI / 180));
-
-    return (
-      <text
-        x={x}
-        y={y}
-        fill="white"
-        textAnchor={x > cx ? 'start' : 'end'}
-        dominantBaseline="central"
-        className="font-bold"
-      >
-        {`${(percent * 100).toFixed(0)}%`}
-      </text>
-    );
-  };
-
   if (totalFindings === 0) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Severity Distribution</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center justify-center h-64 text-gray-500">
-            No caries findings to display
-          </div>
-        </CardContent>
+      <Card className="border-none shadow-sm bg-white rounded-[20px] h-full flex flex-col justify-center items-center p-8">
+        <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-3">
+            <span className="text-2xl text-slate-300">✓</span>
+        </div>
+        <p className="text-slate-400 font-medium">No severity data available</p>
       </Card>
     );
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Severity Distribution</CardTitle>
+    <Card className="border-none shadow-sm bg-white rounded-[20px] overflow-hidden">
+      <CardHeader className="border-b border-gray-50 pb-4">
+        <CardTitle className="text-lg font-bold text-slate-800">Severity Distribution</CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          {/* Pie Chart */}
-          <ResponsiveContainer width="100%" height={300}>
+      <CardContent className="p-6">
+        <div className="h-[200px] w-full relative">
+          <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
                 data={chartData}
                 cx="50%"
                 cy="50%"
-                labelLine={false}
-                label={renderCustomLabel}
-                outerRadius={100}
-                fill="#8884d8"
+                innerRadius={60}
+                outerRadius={80}
+                paddingAngle={5}
                 dataKey="value"
+                stroke="none"
               >
                 {chartData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
+                  <Cell key={`cell-${index}`} fill={entry.color} cornerRadius={4} />
                 ))}
               </Pie>
-              <Tooltip
-                formatter={(value: number) => [`${value} finding(s)`, 'Count']}
-              />
-              <Legend
-                verticalAlign="bottom"
-                height={36}
-                formatter={(value, entry: any) => {
-                  const item = chartData.find((d) => d.name === value);
-                  return `${value}: ${item?.value || 0}`;
-                }}
+              <Tooltip 
+                contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
               />
             </PieChart>
           </ResponsiveContainer>
-
-          {/* Summary Statistics */}
-          <div className="grid grid-cols-3 gap-4 pt-4 border-t">
-            <div className="text-center">
-              <div
-                className="w-4 h-4 rounded-full mx-auto mb-2"
-                style={{ backgroundColor: '#FCD34D' }}
-              />
-              <p className="text-2xl font-bold text-yellow-600">
-                {severityCounts[Severity.MILD]}
-              </p>
-              <p className="text-sm text-gray-600">Mild</p>
-            </div>
-            <div className="text-center">
-              <div
-                className="w-4 h-4 rounded-full mx-auto mb-2"
-                style={{ backgroundColor: '#FB923C' }}
-              />
-              <p className="text-2xl font-bold text-orange-600">
-                {severityCounts[Severity.MODERATE]}
-              </p>
-              <p className="text-sm text-gray-600">Moderate</p>
-            </div>
-            <div className="text-center">
-              <div
-                className="w-4 h-4 rounded-full mx-auto mb-2"
-                style={{ backgroundColor: '#EF4444' }}
-              />
-              <p className="text-2xl font-bold text-red-600">
-                {severityCounts[Severity.SEVERE]}
-              </p>
-              <p className="text-sm text-gray-600">Severe</p>
-            </div>
+          {/* Centered Total */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+            <span className="text-3xl font-bold text-slate-800">{totalFindings}</span>
+            <span className="text-xs text-slate-400 font-medium uppercase">Issues</span>
           </div>
+        </div>
 
-          {/* Total Count */}
-          <div className="text-center pt-4 border-t">
-            <p className="text-sm text-gray-600">Total Caries Findings</p>
-            <p className="text-3xl font-bold text-gray-900">{totalFindings}</p>
-          </div>
+        {/* Custom Legend */}
+        <div className="grid grid-cols-3 gap-2 mt-4">
+            {chartData.map((item) => (
+                <div key={item.name} className="flex flex-col items-center p-2 rounded-xl bg-slate-50">
+                    <div className="w-2 h-2 rounded-full mb-1" style={{ backgroundColor: item.color }}></div>
+                    <span className="text-xs text-slate-500">{item.name}</span>
+                    <span className="font-bold text-slate-800">{item.value}</span>
+                </div>
+            ))}
         </div>
       </CardContent>
     </Card>
