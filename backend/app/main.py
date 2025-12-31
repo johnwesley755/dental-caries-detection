@@ -24,9 +24,7 @@ app = FastAPI(
 # ---------------------------------------------------------
 # SAFE CORS CONFIGURATION (ENV-BASED)
 # ---------------------------------------------------------
-# ALLOWED_ORIGINS example:
-# http://localhost:5173,https://your-vercel-app.vercel.app
-
+# Parse allowed origins from settings
 origins = []
 
 if settings.ALLOWED_ORIGINS:
@@ -40,12 +38,15 @@ if settings.ALLOWED_ORIGINS:
 if not origins:
     origins = ["*"]
 
+print(f"CORS Allowed Origins: {origins}")  # Debug log
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 # ---------------------------------------------------------
