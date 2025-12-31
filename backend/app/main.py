@@ -32,7 +32,7 @@ origins = []
 
 if settings.ALLOWED_ORIGINS:
     origins = [
-        origin.strip()
+        origin.strip().rstrip('/')  # Remove trailing slashes
         for origin in settings.ALLOWED_ORIGINS.split(",")
         if origin.strip()
     ]
