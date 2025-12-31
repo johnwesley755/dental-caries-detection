@@ -75,15 +75,44 @@ export const Patients: React.FC = () => {
         ...formData,
         // Ensure gender is safe (optional chaining)
         gender: formData.gender?.toLowerCase(),
+        // Don't send email from backend
+        send_email: false,
       };
 
       const result = await adminService.createPatientWithAccount(dataToSend);
       
       if (result.password) {
         setGeneratedPassword(result.password);
-        toast.success('Patient created successfully');
+        
+        // Send email via EmailJS if checkbox was checked
+        if (formData.send_email && formData.create_account) {
+          try {
+            const { emailService } = await import('../services/emailService');
+            const emailSent = await emailService.sendUserCredentials({
+              to_email: formData.email,
+              to_name: formData.full_name,
+              user_email: formData.email,
+              user_password: result.password,
+              user_role: 'PATIENT',
+              portal_url: window.location.origin.includes('localhost') 
+                ? 'http://localhost:5174' 
+                : 'https://dental-caries-detection-patients.vercel.app'
+            });
+            
+            if (emailSent) {
+              toast.success('Patient created and credentials sent via email!');
+            } else {
+              toast.warning('Patient created but email failed to send. Please share credentials manually.');
+            }
+          } catch (emailError) {
+            console.error('Email sending error:', emailError);
+            toast.warning('Patient created but email failed to send. Please share credentials manually.');
+          }
+        } else {
+          toast.success('Patient created successfully');
+        }
       } else {
-        toast.success(`Patient created${formData.create_account ? ' and email sent' : ''}`);
+        toast.success('Patient created successfully');
         setShowAddModal(false);
         resetForm();
         loadPatients();

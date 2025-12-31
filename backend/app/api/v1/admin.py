@@ -166,16 +166,17 @@ async def create_patient_with_account(
     db.commit()
     db.refresh(new_patient)
     
-    # Send email with credentials
-    if request.create_account and request.send_email:
-        from ...core.config import settings
-        EmailService.send_user_credentials(
-            email=request.email,
-            password=password,
-            full_name=request.full_name,
-            role=UserRole.PATIENT.value,
-            portal_url=settings.PORTAL_URL
-        )
+    # Email sending is now handled by frontend using EmailJS
+    # Backend no longer sends emails to avoid Render SMTP restrictions
+    # if request.create_account and request.send_email:
+    #     from ...core.config import settings
+    #     EmailService.send_user_credentials(
+    #         email=request.email,
+    #         password=password,
+    #         full_name=request.full_name,
+    #         role=UserRole.PATIENT.value,
+    #         portal_url=settings.PORTAL_URL
+    #     )
     
     # Convert patient to dict for serialization
     patient_dict = {
