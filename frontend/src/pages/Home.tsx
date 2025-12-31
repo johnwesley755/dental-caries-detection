@@ -24,7 +24,6 @@ export const Home: React.FC = () => {
         <div className="absolute top-[20%] -left-[10%] w-[500px] h-[500px] rounded-full bg-purple-50/50 blur-3xl" />
       </div>
 
-      {/* Modular Sections */}
       <HeroSection />
       <FeaturesSection />
       <WorkflowSection />
