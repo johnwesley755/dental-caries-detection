@@ -29,3 +29,4 @@ class Patient(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     
     detections = relationship("Detection", back_populates="patient")
+    appointments = relationship("Appointment", back_populates="patient")

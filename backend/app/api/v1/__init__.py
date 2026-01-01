@@ -7,6 +7,8 @@ from .patient import router as patient_router
 from .admin import router as admin_router
 from .report import router as report_router
 from .chat import router as chat_router
+from .appointments import router as appointments_router
+from .notifications import router as notifications_router
 
 api_router = APIRouter()
 
@@ -18,3 +20,5 @@ api_router.include_router(patient_router, prefix="/patient", tags=["patient"])
 api_router.include_router(admin_router, prefix="/admin", tags=["admin"])
 api_router.include_router(report_router, tags=["reports"])
 api_router.include_router(chat_router, tags=["chat"])
+api_router.include_router(appointments_router, prefix="/appointments", tags=["appointments"])
+api_router.include_router(notifications_router, prefix="/notifications", tags=["notifications"])
