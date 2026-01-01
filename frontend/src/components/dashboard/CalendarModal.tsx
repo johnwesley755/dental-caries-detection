@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
-import { Calendar as BigCalendar, dateFnsLocalizer, View } from 'react-big-calendar';
+import { Calendar as BigCalendar, dateFnsLocalizer, type View } from 'react-big-calendar';
 import { format, parse, startOfWeek, getDay } from 'date-fns';
 import { appointmentService, type Appointment } from '../../services/appointmentService';
 import { AppointmentForm } from './AppointmentForm';
