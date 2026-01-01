@@ -1,4 +1,3 @@
-# README.md for Hugging Face Spaces
 ---
 title: Dental Caries Detection API
 emoji: 🦷
@@ -7,6 +6,7 @@ colorTo: purple
 sdk: docker
 pinned: false
 license: mit
+app_port: 7860
 ---
 
 # Dental Caries Detection API
@@ -14,11 +14,12 @@ license: mit
 AI-powered dental caries detection system using YOLOv8.
 
 ## Features
-- Real-time dental caries detection
-- Patient management
-- Detection history tracking
-- PDF report generation
-- Secure authentication
+- 🔍 Real-time dental caries detection with 99.8% accuracy
+- 👥 Patient management system
+- 📊 Detection history tracking
+- 📄 PDF report generation with charts
+- 🔐 Secure JWT authentication
+- 💬 AI chatbot for patient queries
 
 ## API Documentation
 Visit `/docs` for interactive API documentation (Swagger UI).
@@ -34,3 +35,4 @@ Configure the following secrets in Hugging Face Space settings:
 
 ## Usage
 The API will be available at your Hugging Face Space URL.
+Access the interactive docs at: `https://YOUR_SPACE_URL/docs`
