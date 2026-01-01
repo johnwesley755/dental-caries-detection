@@ -1,6 +1,6 @@
 // patient-portal/src/pages/Home.tsx
 import React from 'react';
-import { HeroSection, FeaturesSection, CTASection } from '../components/home';
+import { HeroSection, FeaturesSection, CTASection, Footer } from '../components/home';
 
 export const Home: React.FC = () => {
   return (
@@ -8,6 +8,7 @@ export const Home: React.FC = () => {
       <HeroSection />
       <FeaturesSection />
       <CTASection />
+      <Footer />
     </div>
   );
 };
