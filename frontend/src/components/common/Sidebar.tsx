@@ -10,11 +10,9 @@ import {
   UserCog,
   LogOut,
   Settings,
-  Upload,
   ChevronRight,
   ScanFace,
-  Calendar,
-  Bell
+  Calendar
 } from 'lucide-react';
 import { CalendarModal } from '../dashboard/CalendarModal';
 import { NotificationDropdown } from '../dashboard/NotificationDropdown';
@@ -134,4 +132,3 @@ const Sidebar: React.FC = () => {
 };
 
 export default Sidebar;
-```
