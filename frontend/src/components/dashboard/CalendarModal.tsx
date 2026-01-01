@@ -1,5 +1,6 @@
 // frontend/src/components/dashboard/CalendarModal.tsx
 import React, { useState, useEffect } from 'react';
+import { Calendar } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Calendar as BigCalendar, dateFnsLocalizer, View } from 'react-big-calendar';
 import { format, parse, startOfWeek, getDay } from 'date-fns';
@@ -7,6 +8,7 @@ import { appointmentService, type Appointment } from '../../services/appointment
 import { AppointmentForm } from './AppointmentForm';
 import { toast } from 'sonner';
 import { enUS } from 'date-fns/locale';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 const localizer = dateFnsLocalizer({
   format,
