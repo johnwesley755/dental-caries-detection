@@ -1,5 +1,5 @@
 // frontend/src/components/common/Sidebar.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { UserRole } from '../../types/auth.types';
@@ -12,13 +12,18 @@ import {
   Settings,
   Upload,
   ChevronRight,
-  ScanFace
+  ScanFace,
+  Calendar,
+  Bell
 } from 'lucide-react';
+import { CalendarModal } from '../dashboard/CalendarModal';
+import { NotificationDropdown } from '../dashboard/NotificationDropdown';
 
 const Sidebar: React.FC = () => {
   const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  const [showCalendar, setShowCalendar] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -45,12 +50,30 @@ const Sidebar: React.FC = () => {
     <aside className="w-72 bg-white m-4 rounded-3xl shadow-sm flex flex-col hidden lg:flex border border-gray-100 sticky top-4 h-[calc(100vh-2rem)]">
       {/* Header */}
       <div className="p-8 pb-4">
-        <h1 className="text-2xl font-bold text-blue-900 tracking-tight flex items-center gap-2">
-          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white shadow-blue-200 shadow-lg">
-            D
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-2xl font-bold text-blue-900 tracking-tight flex items-center gap-2">
+            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white shadow-blue-200 shadow-lg">
+              D
+            </div>
+            Dental AI
+          </h1>
+        </div>
+        
+        {/* Action Icons */}
+        <div className="flex items-center gap-2 mt-4">
+          <button
+            onClick={() => setShowCalendar(true)}
+            className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-600 transition-colors"
+            title="Calendar"
+          >
+            <Calendar className="h-5 w-5" />
+            <span className="text-sm font-medium">Calendar</span>
+          </button>
+          
+          <div className="relative">
+            <NotificationDropdown />
           </div>
-          Dental AI
-        </h1>
+        </div>
       </div>
 
       {/* Navigation */}
@@ -103,8 +126,12 @@ const Sidebar: React.FC = () => {
           <span>Logout</span>
         </button>
       </div>
+      
+      {/* Calendar Modal */}
+      <CalendarModal isOpen={showCalendar} onClose={() => setShowCalendar(false)} />
     </aside>
   );
 };
 
 export default Sidebar;
+```
