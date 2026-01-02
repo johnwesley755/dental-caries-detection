@@ -99,10 +99,10 @@ async def get_appointments(
         dentist = db.query(User).filter(User.id == appt.dentist_id).first()
         
         result.append({
-            "id": appt.id,
-            "patient_id": appt.patient_id,
+            "id": str(appt.id),
+            "patient_id": str(appt.patient_id),
             "patient_name": patient.full_name if patient else "Unknown",
-            "dentist_id": appt.dentist_id,
+            "dentist_id": str(appt.dentist_id),
             "dentist_name": dentist.full_name if dentist else "Unknown",
             "appointment_date": appt.appointment_date,
             "duration_minutes": appt.duration_minutes,
