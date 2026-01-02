@@ -26,7 +26,7 @@ async def get_detection_trends(
     Get detection trends over time
     Returns: [{"date": "2024-01-01", "count": 5}, ...]
     """
-    if current_user.role not in ['dentist', 'admin']:
+    if current_user.role not in ['DENTIST', 'ADMIN']:
         raise HTTPException(status_code=403, detail="Access denied")
     
     trends = AnalyticsService.get_detection_trends(db, days)
@@ -91,7 +91,7 @@ async def get_my_health_score(
     Get patient's current health score
     Returns: {"score": 85, "trend": "improving"}
     """
-    if current_user.role != 'patient':
+    if current_user.role != 'PATIENT':
         raise HTTPException(status_code=403, detail="Patients only")
     
     # Calculate current score
