@@ -24,7 +24,7 @@ class Appointment(Base):
     appointment_date = Column(DateTime, nullable=False)
     duration_minutes = Column(String, default="30")  # Default 30 minutes
     
-    status = Column(SQLEnum(AppointmentStatus), default=AppointmentStatus.SCHEDULED)
+    status = Column(SQLEnum(AppointmentStatus, values_callable=lambda x: [e.value for e in x]), default=AppointmentStatus.SCHEDULED)
     appointment_type = Column(String, default="checkup")  # checkup, cleaning, treatment, etc.
     
     notes = Column(Text, nullable=True)
