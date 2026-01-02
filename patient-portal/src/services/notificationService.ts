@@ -18,7 +18,7 @@ export interface Notification {
 
 class NotificationService {
   private getAuthHeader() {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('patient_token');
     return {
       headers: {
         Authorization: `Bearer ${token}`,
