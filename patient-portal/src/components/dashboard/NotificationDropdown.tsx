@@ -29,10 +29,24 @@ export const NotificationDropdown: React.FC = () => {
   useEffect(() => {
     if (isOpen && buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
-      // Position dropdown so its right edge aligns with button's right edge
+      const dropdownWidth = 384; // w-96 = 24rem = 384px
+      
+      // Calculate left position, ensuring dropdown doesn't go off-screen
+      let leftPos = rect.right - dropdownWidth;
+      
+      // If dropdown would go off left edge, align with button's left edge instead
+      if (leftPos < 8) {
+        leftPos = rect.left;
+      }
+      
+      // If dropdown would go off right edge, align right edge with screen
+      if (leftPos + dropdownWidth > window.innerWidth - 8) {
+        leftPos = window.innerWidth - dropdownWidth - 8;
+      }
+      
       setDropdownPosition({
         top: rect.bottom + 8,
-        left: rect.right - 384, // 384px = w-96 (24rem)
+        left: leftPos,
       });
     }
   }, [isOpen]);
