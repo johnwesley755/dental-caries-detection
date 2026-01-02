@@ -5,12 +5,14 @@ import { toast } from 'sonner';
 import { Statistics } from '../components/dashboard/Statistics';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
-import { Search, Bell, Calendar as CalendarIcon } from 'lucide-react';
+import { Search, Calendar as CalendarIcon } from 'lucide-react';
 import { patientService } from '../services/patientService';
 import { detectionService } from '../services/detectionService';
 import { useAuth } from '../contexts/AuthContext';
 import type { Patient } from '../types/patient.types';
 import type { Detection } from '../types/detection.types';
+import { CalendarModal } from '../components/dashboard/CalendarModal';
+import { NotificationDropdown } from '../components/dashboard/NotificationDropdown';
 
 export const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -22,6 +24,9 @@ export const Dashboard: React.FC = () => {
   
   // Search State
   const [searchQuery, setSearchQuery] = useState('');
+  
+  // Calendar Modal State
+  const [showCalendar, setShowCalendar] = useState(false);
 
   useEffect(() => {
     loadDashboardData();
@@ -101,14 +106,17 @@ export const Dashboard: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-4">
-          <Button variant="ghost" className="bg-white rounded-full h-12 w-12 p-0 shadow-sm text-gray-500 hover:text-blue-600 transition-colors">
+          <Button 
+            variant="ghost" 
+            className="bg-white rounded-full h-12 w-12 p-0 shadow-sm text-gray-500 hover:text-blue-600 transition-colors"
+            onClick={() => setShowCalendar(true)}
+          >
             <CalendarIcon className="h-5 w-5" />
           </Button>
           
-          <Button variant="ghost" className="bg-white rounded-full h-12 w-12 p-0 shadow-sm text-gray-500 hover:text-blue-600 relative transition-colors">
-            <Bell className="h-5 w-5" />
-            <span className="absolute top-3 right-3 h-2 w-2 bg-red-500 rounded-full border-2 border-white"></span>
-          </Button>
+          <div className="relative">
+            <NotificationDropdown />
+          </div>
           
           {/* User Profile Avatar - Clickable & Real Data */}
           <div 
@@ -157,6 +165,14 @@ export const Dashboard: React.FC = () => {
           </div>
         )}
       </main>
+      
+      {/* Calendar Modal */}
+      {showCalendar && (
+        <CalendarModal 
+          isOpen={showCalendar} 
+          onClose={() => setShowCalendar(false)} 
+        />
+      )}
     </div>
   );
 };
