@@ -13,6 +13,9 @@ import { Dashboard } from './pages/Dashboard';
 import { MyDetections } from './pages/MyDetections';
 import { DetectionView } from './pages/DetectionView';
 import { Profile } from './pages/Profile';
+import { Appointments } from './pages/Appointments';
+import { HealthTracker } from './pages/HealthTracker';
+import { Resources } from './pages/Resources';
 
 // Layout component for authenticated routes
 const AuthenticatedLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -88,6 +91,36 @@ function App() {
               <ProtectedRoute>
                 <AuthenticatedLayout>
                   <Profile />
+                </AuthenticatedLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/appointments"
+            element={
+              <ProtectedRoute>
+                <AuthenticatedLayout>
+                  <Appointments />
+                </AuthenticatedLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/health"
+            element={
+              <ProtectedRoute>
+                <AuthenticatedLayout>
+                  <HealthTracker />
+                </AuthenticatedLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/resources"
+            element={
+              <ProtectedRoute>
+                <AuthenticatedLayout>
+                  <Resources />
                 </AuthenticatedLayout>
               </ProtectedRoute>
             }
