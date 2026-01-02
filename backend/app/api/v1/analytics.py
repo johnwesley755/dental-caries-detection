@@ -6,7 +6,7 @@ from typing import List, Optional, Dict, Any
 from datetime import datetime, timedelta
 
 from app.core.database import get_db
-from app.api.dependencies import get_current_user
+from app.dependencies.auth import get_current_user
 from app.services.analytics_service import AnalyticsService
 from app.models import User
 
