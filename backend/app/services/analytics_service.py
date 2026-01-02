@@ -85,7 +85,7 @@ class AnalyticsService:
             func.date(User.created_at).label('date'),
             func.count(User.id).label('count')
         ).filter(
-            User.role == 'patient',
+            User.role == 'PATIENT',
             User.created_at >= start_date
         ).group_by(
             func.date(User.created_at)
