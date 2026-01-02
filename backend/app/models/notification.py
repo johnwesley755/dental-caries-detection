@@ -22,7 +22,7 @@ class Notification(Base):
     
     title = Column(String, nullable=False)
     message = Column(Text, nullable=False)
-    type = Column(SQLEnum(NotificationType), default=NotificationType.SYSTEM)
+    type = Column(SQLEnum(NotificationType, values_callable=lambda x: [e.value for e in x]), default=NotificationType.SYSTEM)
     
     is_read = Column(Boolean, default=False)
     
