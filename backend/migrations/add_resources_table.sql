@@ -1,5 +1,8 @@
+-- Drop existing resources table if it exists and recreate with correct schema
+DROP TABLE IF EXISTS resources CASCADE;
+
 -- Create resources table for educational content
-CREATE TABLE IF NOT EXISTS resources (
+CREATE TABLE resources (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     title VARCHAR(255) NOT NULL,
     description TEXT,
