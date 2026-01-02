@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS resources (
     description TEXT,
     content TEXT,
     category VARCHAR(50) NOT NULL,
-    type VARCHAR(50) NOT NULL, -- 'article', 'video', 'guide'
+    "type" VARCHAR(50) NOT NULL, -- 'article', 'video', 'guide'
     url VARCHAR(500),
     thumbnail_url VARCHAR(500),
     author VARCHAR(100),
@@ -19,12 +19,12 @@ CREATE TABLE IF NOT EXISTS resources (
 
 -- Create index for faster queries
 CREATE INDEX IF NOT EXISTS idx_resources_category ON resources(category);
-CREATE INDEX IF NOT EXISTS idx_resources_type ON resources(type);
+CREATE INDEX IF NOT EXISTS idx_resources_type ON resources("type");
 CREATE INDEX IF NOT EXISTS idx_resources_featured ON resources(is_featured);
 CREATE INDEX IF NOT EXISTS idx_resources_created_at ON resources(created_at DESC);
 
 -- Insert some initial dental health resources
-INSERT INTO resources (title, description, content, category, type, url, author, source, tags, is_featured) VALUES
+INSERT INTO resources (title, description, content, category, "type", url, author, source, tags, is_featured) VALUES
 ('Understanding Dental Caries', 'Learn about the causes, prevention, and treatment of tooth decay', 
  'Dental caries, commonly known as tooth decay or cavities, is one of the most prevalent chronic diseases worldwide. It occurs when bacteria in your mouth produce acids that attack tooth enamel...', 
  'Education', 'article', 'https://www.nidcr.nih.gov/health-info/tooth-decay', 'NIDCR', 'National Institute of Dental Research', 
