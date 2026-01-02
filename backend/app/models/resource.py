@@ -11,8 +11,8 @@ class Resource(Base):
     
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     title = Column(String(255), nullable=False)
-    description = Column(Text)
-    content = Column(Text)
+    description = Column(Text, nullable=True)
+    content = Column(Text, nullable=True)
     category = Column(String(50), nullable=False)  # Education, Hygiene, Nutrition, Treatment, Pediatric
     type = Column(String(50), nullable=False)  # article, video, guide
     url = Column(String(500))
