@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func
 from typing import List, Dict, Any
 from app.models import Detection, HealthScore, User, Appointment
+from app.models.user import UserRole
 
 class AnalyticsService:
     
@@ -85,7 +86,7 @@ class AnalyticsService:
             func.date(User.created_at).label('date'),
             func.count(User.id).label('count')
         ).filter(
-            User.role == 'PATIENT',
+            User.role == UserRole.PATIENT,
             User.created_at >= start_date
         ).group_by(
             func.date(User.created_at)
