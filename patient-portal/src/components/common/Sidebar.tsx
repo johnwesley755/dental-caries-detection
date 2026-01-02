@@ -9,9 +9,9 @@ import {
   LogOut,
   Settings,
   ChevronRight,
-  Stethoscope,
   Calendar,
-  Bell
+  Activity,
+  BookOpen
 } from 'lucide-react';
 import { CalendarModal } from '../dashboard/CalendarModal';
 import { NotificationDropdown } from '../dashboard/NotificationDropdown';
@@ -31,6 +31,9 @@ const Sidebar: React.FC = () => {
   const menuItems = [
     { path: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
     { path: '/detections', icon: FileText, label: 'My Reports' },
+    { path: '/appointments', icon: Calendar, label: 'Appointments' },
+    { path: '/health', icon: Activity, label: 'Health Tracker' },
+    { path: '/resources', icon: BookOpen, label: 'Resources' },
     { path: '/profile', icon: UserCircle, label: 'My Profile' },
   ];
 

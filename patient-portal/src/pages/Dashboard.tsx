@@ -16,6 +16,8 @@ import {
 import { motion } from 'framer-motion';
 import { patientService } from '../services/patientService';
 import type { Patient, Detection } from '../types/detection.types';
+import { HealthScoreChart } from '../components/charts/HealthScoreChart';
+import { DetectionHistoryChart } from '../components/charts/DetectionHistoryChart';
 
 // --- Utility for merging classes ---
 import { clsx, type ClassValue } from "clsx";
@@ -199,8 +201,27 @@ export const Dashboard: React.FC = () => {
           </motion.div>
         </div>
 
+        {/* Analytics Charts */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+          >
+            <HealthScoreChart />
+          </motion.div>
+          
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+          >
+            <DetectionHistoryChart />
+          </motion.div>
+        </div>
+
         {/* Recent Activity Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
             
             {/* Main List */}
             <motion.div 
