@@ -1,5 +1,5 @@
 // patient-portal/src/components/common/Sidebar.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import {
@@ -9,13 +9,18 @@ import {
   LogOut,
   Settings,
   ChevronRight,
-  Stethoscope
+  Stethoscope,
+  Calendar,
+  Bell
 } from 'lucide-react';
+import { CalendarModal } from '../dashboard/CalendarModal';
+import { NotificationDropdown } from '../dashboard/NotificationDropdown';
 
 const Sidebar: React.FC = () => {
   const { logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  const [showCalendar, setShowCalendar] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -45,6 +50,19 @@ const Sidebar: React.FC = () => {
           </div>
           DentAI <span className="text-xs font-normal text-gray-400 self-end mb-1">Patient</span>
         </h1>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="px-4 flex items-center gap-2 mb-2">
+        <button
+          onClick={() => setShowCalendar(true)}
+          className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors"
+          title="My Appointments"
+        >
+          <Calendar className="h-4 w-4" />
+          <span className="text-sm font-medium">Calendar</span>
+        </button>
+        <NotificationDropdown />
       </div>
 
       {/* Navigation */}
@@ -98,6 +116,14 @@ const Sidebar: React.FC = () => {
           <span>Logout</span>
         </button>
       </div>
+
+      {/* Calendar Modal */}
+      {showCalendar && (
+        <CalendarModal 
+          isOpen={showCalendar} 
+          onClose={() => setShowCalendar(false)} 
+        />
+      )}
     </aside>
   );
 };
