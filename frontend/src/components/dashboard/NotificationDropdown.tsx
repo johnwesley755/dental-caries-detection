@@ -1,15 +1,18 @@
 // frontend/src/components/dashboard/NotificationDropdown.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Bell, X, Check, CheckCheck } from 'lucide-react';
 import { notificationService, type Notification } from '../../services/notificationService';
 import { toast } from 'sonner';
 import { formatDistanceToNow } from 'date-fns';
+import { createPortal } from 'react-dom';
 
 export const NotificationDropdown: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, right: 0 });
 
   useEffect(() => {
     loadNotifications();
@@ -22,6 +25,16 @@ export const NotificationDropdown: React.FC = () => {
 
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    if (isOpen && buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      setDropdownPosition({
+        top: rect.bottom + 8,
+        right: window.innerWidth - rect.right,
+      });
+    }
+  }, [isOpen]);
 
   const loadNotifications = async () => {
     setLoading(true);
@@ -89,9 +102,10 @@ export const NotificationDropdown: React.FC = () => {
   };
 
   return (
-    <div className="relative">
+    <>
       {/* Bell Icon Button */}
       <button
+        ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
         className="relative p-2 rounded-full hover:bg-gray-100 transition-colors"
       >
@@ -103,17 +117,20 @@ export const NotificationDropdown: React.FC = () => {
         )}
       </button>
 
-      {/* Dropdown */}
-      {isOpen && (
+      {/* Dropdown Portal */}
+      {isOpen && createPortal(
         <>
           {/* Backdrop */}
           <div
-            className="fixed inset-0 z-40"
+            className="fixed inset-0 z-[9998]"
             onClick={() => setIsOpen(false)}
           />
 
           {/* Dropdown Content */}
-          <div className="absolute right-0 mt-2 w-96 bg-white rounded-xl shadow-2xl border border-gray-200 z-[9999] max-h-[600px] overflow-hidden flex flex-col">
+          <div 
+            className="fixed w-96 bg-white rounded-xl shadow-2xl border border-gray-200 z-[9999] max-h-[600px] overflow-hidden flex flex-col"
+            style={{ top: `${dropdownPosition.top}px`, right: `${dropdownPosition.right}px` }}
+          >
             {/* Header */}
             <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-gradient-to-r from-blue-50 to-purple-50">
               <div>
@@ -206,8 +223,9 @@ export const NotificationDropdown: React.FC = () => {
               </div>
             )}
           </div>
-        </>
+        </>,
+        document.body
       )}
-    </div>
+    </>
   );
 };

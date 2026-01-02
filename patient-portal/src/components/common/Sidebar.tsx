@@ -62,6 +62,10 @@ const Sidebar: React.FC = () => {
           <Calendar className="h-4 w-4" />
           <span className="text-sm font-medium">Calendar</span>
         </button>
+      </div>
+
+      {/* Notification Dropdown - Outside sidebar to prevent clipping */}
+      <div className="px-4 mb-2 flex justify-end">
         <NotificationDropdown />
       </div>
 
