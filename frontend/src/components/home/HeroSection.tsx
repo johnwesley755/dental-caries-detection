@@ -87,7 +87,7 @@ export const HeroSection: React.FC = () => {
           <motion.div variants={itemVariants}>
             <Button
               size="lg"
-              onClick={() => navigate('/register')}
+              onClick={() => navigate('/login')}
               className="h-14 px-10 text-lg font-semibold rounded-full shadow-lg shadow-blue-500/20 transition-all hover:scale-105 hover:shadow-blue-500/40 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
             >
               Get Started for Free
