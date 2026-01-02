@@ -12,7 +12,9 @@ import {
   Settings,
   ChevronRight,
   ScanFace,
-  Calendar
+  Calendar,
+  BarChart3,
+  FileText
 } from 'lucide-react';
 import { CalendarModal } from '../dashboard/CalendarModal';
 import { NotificationDropdown } from '../dashboard/NotificationDropdown';
@@ -33,6 +35,8 @@ const Sidebar: React.FC = () => {
     { path: '/patients', icon: Users, label: 'Patients' },
     { path: '/detection', icon: ScanFace, label: 'New Detection' },
     { path: '/history', icon: History, label: 'History' },
+    { path: '/analytics', icon: BarChart3, label: 'Analytics' },
+    { path: '/reports', icon: FileText, label: 'Reports' },
     ...(user?.role === UserRole.ADMIN
       ? [{ path: '/users', icon: UserCog, label: 'User Management' }]
       : []),

@@ -13,6 +13,9 @@ import type { Patient } from '../types/patient.types';
 import type { Detection } from '../types/detection.types';
 import { CalendarModal } from '../components/dashboard/CalendarModal';
 import { NotificationDropdown } from '../components/dashboard/NotificationDropdown';
+import { DetectionTrendsChart } from '../components/charts/DetectionTrendsChart';
+import { CariesDistributionChart } from '../components/charts/CariesDistributionChart';
+import { PatientGrowthChart } from '../components/charts/PatientGrowthChart';
 
 export const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -162,6 +165,16 @@ export const Dashboard: React.FC = () => {
                 patients={filteredPatients} 
                 detections={filteredDetections} 
              />
+             
+             {/* Analytics Charts */}
+             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+               <DetectionTrendsChart />
+               <CariesDistributionChart />
+             </div>
+             
+             <div className="mt-6">
+               <PatientGrowthChart />
+             </div>
           </div>
         )}
       </main>
