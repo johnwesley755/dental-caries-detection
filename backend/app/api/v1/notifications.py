@@ -55,13 +55,13 @@ async def get_notifications(
     
     return [
         {
-            "id": n.id,
-            "user_id": n.user_id,
+            "id": str(n.id),
+            "user_id": str(n.user_id),
             "title": n.title,
             "message": n.message,
             "type": n.type.value,
             "is_read": n.is_read,
-            "related_id": n.related_id,
+            "related_id": str(n.related_id) if n.related_id else None,
             "related_type": n.related_type,
             "created_at": n.created_at,
             "read_at": n.read_at
