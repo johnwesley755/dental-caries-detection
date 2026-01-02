@@ -41,7 +41,7 @@ async def get_caries_distribution(
     Get caries distribution by severity
     Returns: [{"severity": "mild", "count": 10}, ...]
     """
-    if current_user.role not in ['dentist', 'admin']:
+    if current_user.role not in ['DENTIST', 'ADMIN']:
         raise HTTPException(status_code=403, detail="Access denied")
     
     distribution = AnalyticsService.get_caries_distribution(db)
@@ -57,7 +57,7 @@ async def get_patient_growth(
     Get patient registration growth
     Returns: [{"date": "2024-01-01", "count": 3}, ...]
     """
-    if current_user.role not in ['dentist', 'admin']:
+    if current_user.role not in ['DENTIST', 'ADMIN']:
         raise HTTPException(status_code=403, detail="Access denied")
     
     growth = AnalyticsService.get_patient_growth(db, days)
@@ -72,7 +72,7 @@ async def get_appointment_stats(
     Get appointment statistics by status
     Returns: {"scheduled": 10, "completed": 50, "cancelled": 5}
     """
-    if current_user.role not in ['dentist', 'admin']:
+    if current_user.role not in ['DENTIST', 'ADMIN']:
         raise HTTPException(status_code=403, detail="Access denied")
     
     stats = AnalyticsService.get_appointment_stats(db)
@@ -115,7 +115,7 @@ async def get_my_health_history(
     Get patient's health score history
     Returns: [{"date": "2024-01-01", "score": 85}, ...]
     """
-    if current_user.role != 'patient':
+    if current_user.role != 'PATIENT':
         raise HTTPException(status_code=403, detail="Patients only")
     
     history = AnalyticsService.get_health_history(db, str(current_user.id), days)
@@ -130,7 +130,7 @@ async def get_my_detection_history(
     Get patient's detection history for charts
     Returns: [{"date": "2024-01-01", "caries_count": 2}, ...]
     """
-    if current_user.role != 'patient':
+    if current_user.role != 'PATIENT':
         raise HTTPException(status_code=403, detail="Patients only")
     
     history = AnalyticsService.get_detection_history(db, str(current_user.id))
