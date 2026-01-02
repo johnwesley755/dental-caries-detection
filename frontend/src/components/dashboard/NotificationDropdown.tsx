@@ -12,7 +12,7 @@ export const NotificationDropdown: React.FC = () => {
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, right: 0 });
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
 
   useEffect(() => {
     loadNotifications();
@@ -29,9 +29,10 @@ export const NotificationDropdown: React.FC = () => {
   useEffect(() => {
     if (isOpen && buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
+      // Position dropdown so its right edge aligns with button's right edge
       setDropdownPosition({
         top: rect.bottom + 8,
-        right: window.innerWidth - rect.right,
+        left: rect.right - 384, // 384px = w-96 (24rem)
       });
     }
   }, [isOpen]);
@@ -129,7 +130,7 @@ export const NotificationDropdown: React.FC = () => {
           {/* Dropdown Content */}
           <div 
             className="fixed w-96 bg-white rounded-xl shadow-2xl border border-gray-200 z-[9999] max-h-[600px] overflow-hidden flex flex-col"
-            style={{ top: `${dropdownPosition.top}px`, right: `${dropdownPosition.right}px` }}
+            style={{ top: `${dropdownPosition.top}px`, left: `${dropdownPosition.left}px` }}
           >
             {/* Header */}
             <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-gradient-to-r from-blue-50 to-purple-50">
