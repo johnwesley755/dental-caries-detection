@@ -1,9 +1,10 @@
 // patient-portal/src/App.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { AuthProvider } from './contexts/AuthContext';
 import Sidebar from './components/common/Sidebar';
+import MobileHeader from './components/common/MobileHeader';
 import { FloatingChatButton } from './components/chat/FloatingChatButton';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
 import { Home } from './pages/Home';
@@ -15,12 +16,27 @@ import { Profile } from './pages/Profile';
 
 // Layout component for authenticated routes
 const AuthenticatedLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
-    <div className="flex h-screen bg-gray-50">
-      <Sidebar />
-      <main className="flex-1 overflow-auto">
-        {children}
+    <div className="flex h-screen bg-gray-50 overflow-hidden">
+      {/* Mobile Header */}
+      <MobileHeader onMenuClick={() => setIsMobileMenuOpen(true)} />
+
+      {/* Sidebar - Desktop always visible, Mobile controlled by state */}
+      <Sidebar 
+        isOpen={isMobileMenuOpen} 
+        onClose={() => setIsMobileMenuOpen(false)} 
+      />
+
+      {/* Main Content */}
+      <main className="flex-1 overflow-auto pt-16 lg:pt-0">
+        <div className="h-full">
+          {children}
+        </div>
       </main>
+
+      {/* Floating Chat Button */}
       <FloatingChatButton />
     </div>
   );
