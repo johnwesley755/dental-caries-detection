@@ -9,6 +9,7 @@ from .report import router as report_router
 from .chat import router as chat_router
 from .appointments import router as appointments_router
 from .notifications import router as notifications_router
+from .analytics import router as analytics_router
 
 api_router = APIRouter()
 
@@ -22,3 +23,4 @@ api_router.include_router(report_router, tags=["reports"])
 api_router.include_router(chat_router, tags=["chat"])
 api_router.include_router(appointments_router, tags=["appointments"])
 api_router.include_router(notifications_router, tags=["notifications"])
+api_router.include_router(analytics_router, tags=["analytics"])
