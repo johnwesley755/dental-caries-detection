@@ -14,7 +14,7 @@ class Resource(Base):
     description = Column(Text, nullable=True)
     content = Column(Text, nullable=True)
     category = Column(String(50), nullable=False)  # Education, Hygiene, Nutrition, Treatment, Pediatric
-    type = Column(String(50), nullable=False)  # article, video, guide
+    resource_type = Column(String(50), nullable=False)  # article, video, guide
     url = Column(String(500))
     thumbnail_url = Column(String(500))
     author = Column(String(100))

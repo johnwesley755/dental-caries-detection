@@ -54,7 +54,7 @@ async def get_resources(
     
     # Filter by type
     if type:
-        query = query.filter(Resource.type == type)
+        query = query.filter(Resource.resource_type == type)
     
     # Search in title and description
     if search:
@@ -85,7 +85,7 @@ async def get_resources(
             "description": r.description,
             "content": r.content,
             "category": r.category,
-            "type": r.type,
+            "type": r.resource_type,
             "url": r.url,
             "thumbnail_url": r.thumbnail_url,
             "author": r.author,
@@ -120,7 +120,7 @@ async def get_resource(
         "description": resource.description,
         "content": resource.content,
         "category": resource.category,
-        "type": resource.type,
+        "type": resource.resource_type,
         "url": resource.url,
         "thumbnail_url": resource.thumbnail_url,
         "author": resource.author,
