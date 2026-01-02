@@ -5,7 +5,7 @@ from sqlalchemy.dialects.postgresql import UUID
 from datetime import datetime
 import uuid
 
-from ..database import Base
+from ..core.database import Base
 
 class HealthScore(Base):
     __tablename__ = "health_scores"
