@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { HeroSection, FeaturesSection, WorkflowSection, CTASection, StatisticsSection, TestimonialsSection, Footer } from '../components/home';
+import { HeroSection, ObjectivesSection, MethodologySection, FeaturesSection, ResultsSection, CTASection, Footer } from '../components/home';
 
 export const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -25,10 +25,10 @@ export const Home: React.FC = () => {
       </div>
 
       <HeroSection />
+      <ObjectivesSection />
+      <MethodologySection />
       <FeaturesSection />
-      <StatisticsSection />
-      <WorkflowSection />
-      <TestimonialsSection />
+      <ResultsSection />
       <CTASection />
       <Footer />
     </div>
