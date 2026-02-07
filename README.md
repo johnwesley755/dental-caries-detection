@@ -394,19 +394,10 @@ This project is licensed under the MIT License.
 ## 🙏 Acknowledgments
 
 - YOLOv8 for object detection
-- Groq for LLaMA 3.1 API access
+- Groq 
 - FastAPI framework
 - React ecosystem
 - Cloudinary for image storage
 
----
 
-## 📞 Support
 
-For issues and questions:
-- Create an issue on GitHub
-- Email: support@example.com
-
----
-
-**Built with ❤️ for better dental healthcare**
