@@ -7,7 +7,6 @@ import {
   FileText,
   UserCircle,
   LogOut,
-  Settings,
   ChevronRight,
   Calendar,
   Activity,
@@ -138,28 +137,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
           })}
         </nav>
 
-        {/* Footer / System Status */}
+        {/* Footer */}
         <div className="p-4 mt-auto">
-          {/* Status Card */}
-          <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white relative overflow-hidden shadow-lg shadow-blue-200">
-            <div className="relative z-10">
-              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center mb-4 backdrop-blur-sm">
-                <Settings className="h-5 w-5" />
-              </div>
-              <p className="font-medium text-sm opacity-90">System Status</p>
-              <h3 className="text-lg font-bold mt-1 flex items-center gap-2">
-                <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                Optimal
-              </h3>
-            </div>
-            {/* Decorative circles */}
-            <div className="absolute -right-4 -top-4 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
-            <div className="absolute -left-4 -bottom-4 w-20 h-20 bg-white/10 rounded-full blur-xl"></div>
-          </div>
-          
           <button 
             onClick={handleLogout}
-            className="flex items-center gap-3 px-4 py-3 mt-4 text-gray-500 hover:text-red-500 hover:bg-red-50 rounded-xl w-full transition-colors font-medium"
+            className="flex items-center gap-3 px-4 py-3 text-gray-500 hover:text-red-500 hover:bg-red-50 rounded-xl w-full transition-colors font-medium"
           >
             <LogOut className="h-5 w-5" />
             <span>Logout</span>
