@@ -4,7 +4,7 @@ from sqlalchemy.orm import relationship
 from datetime import datetime
 import uuid
 
-from app.database import Base
+from app.core.database import Base
 
 class Message(Base):
     __tablename__ = "messages"

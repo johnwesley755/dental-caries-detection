@@ -11,6 +11,7 @@ import {
   Calendar,
   Activity,
   BookOpen,
+  MessageCircle,
   X
 } from 'lucide-react';
 import { CalendarModal } from '../dashboard/CalendarModal';
@@ -37,6 +38,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
     { path: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
     { path: '/detections', icon: FileText, label: 'My Reports' },
     { path: '/appointments', icon: Calendar, label: 'Appointments' },
+    { path: '/messages', icon: MessageCircle, label: 'Messages' },
     { path: '/health', icon: Activity, label: 'Health Tracker' },
     { path: '/resources', icon: BookOpen, label: 'Resources' },
     { path: '/profile', icon: UserCircle, label: 'My Profile' },

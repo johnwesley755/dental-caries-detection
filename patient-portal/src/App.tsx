@@ -16,6 +16,7 @@ import { Profile } from './pages/Profile';
 import { Appointments } from './pages/Appointments';
 import { HealthTracker } from './pages/HealthTracker';
 import { Resources } from './pages/Resources';
+import { Messages } from './pages/Messages';
 
 // Layout component for authenticated routes
 const AuthenticatedLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -121,6 +122,16 @@ function App() {
               <ProtectedRoute>
                 <AuthenticatedLayout>
                   <Resources />
+                </AuthenticatedLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/messages"
+            element={
+              <ProtectedRoute>
+                <AuthenticatedLayout>
+                  <Messages />
                 </AuthenticatedLayout>
               </ProtectedRoute>
             }
