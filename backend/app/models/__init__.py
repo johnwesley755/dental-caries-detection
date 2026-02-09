@@ -7,3 +7,5 @@ from .notification import Notification
 from .health_score import HealthScore
 from .treatment_plan import TreatmentPlan, TreatmentPlanItem
 from .resource import Resource
+from .conversation import Conversation
+from .message import Message
