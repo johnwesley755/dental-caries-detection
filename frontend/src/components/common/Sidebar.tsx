@@ -12,6 +12,7 @@ import {
   ChevronRight,
   ScanFace,
   Calendar,
+  MessageCircle,
   X
 } from 'lucide-react';
 import { CalendarModal } from '../dashboard/CalendarModal';
@@ -38,6 +39,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
     { path: '/patients', icon: Users, label: 'Patients' },
     { path: '/detection', icon: ScanFace, label: 'New Detection' },
     { path: '/history', icon: History, label: 'History' },
+    { path: '/messages', icon: MessageCircle, label: 'Messages' },
     ...(user?.role === UserRole.ADMIN
       ? [{ path: '/users', icon: UserCog, label: 'User Management' }]
       : []),

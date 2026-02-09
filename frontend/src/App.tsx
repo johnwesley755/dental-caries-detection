@@ -15,6 +15,7 @@ import { PatientDetails } from './pages/PatientDetails';
 import { Profile } from './pages/Profile';
 import { Patients } from './pages/Patients';
 import { UserManagement } from './pages/UserManagement';
+import { Messages } from './pages/Messages';
 
 import MainLayout from './layouts/MainLayout';
 import './App.css';
@@ -46,6 +47,7 @@ function App() {
               <Route path="/patients/:id" element={<PatientDetails />} />
               <Route path="/users" element={<UserManagement />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/messages" element={<Messages />} />
             </Route>
 
             {/* Catch all */}
