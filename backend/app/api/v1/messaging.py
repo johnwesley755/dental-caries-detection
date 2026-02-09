@@ -11,7 +11,7 @@ from app.core.database import get_db
 from ...models.user import User
 from ...models.conversation import Conversation
 from ...models.message import Message
-from ..dependencies import get_current_user
+from ...dependencies.auth import get_current_user
 from pydantic import BaseModel
 
 router = APIRouter(prefix="/messaging", tags=["messaging"])
