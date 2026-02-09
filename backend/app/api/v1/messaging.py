@@ -7,11 +7,11 @@ import uuid
 import os
 import shutil
 
-from app.database import get_db
-from app.models.user import User
-from app.models.conversation import Conversation
-from app.models.message import Message
-from app.api.dependencies import get_current_user
+from app.core.database import get_db
+from ...models.user import User
+from ...models.conversation import Conversation
+from ...models.message import Message
+from ..dependencies import get_current_user
 from pydantic import BaseModel
 
 router = APIRouter(prefix="/messaging", tags=["messaging"])
