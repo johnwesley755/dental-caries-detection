@@ -1,4 +1,4 @@
-import api from './api';
+import { api } from "./api";
 
 export interface Message {
   id: string;
@@ -36,35 +36,39 @@ export interface SendMessageRequest {
 export const messagingService = {
   // Get all conversations
   getConversations: async (): Promise<Conversation[]> => {
-    const response = await api.get('/messaging/conversations');
+    const response = await api.get("/messaging/conversations");
     return response.data;
   },
 
   // Get messages for a conversation
   getMessages: async (conversationId: string): Promise<Message[]> => {
-    const response = await api.get(`/messaging/conversations/${conversationId}/messages`);
+    const response = await api.get(
+      `/messaging/conversations/${conversationId}/messages`,
+    );
     return response.data;
   },
 
   // Send a text message
   sendMessage: async (data: SendMessageRequest): Promise<Message> => {
-    const response = await api.post('/messaging/messages', data);
+    const response = await api.post("/messaging/messages", data);
     return response.data;
   },
 
   // Upload a file
-  uploadFile: async (file: File): Promise<{
+  uploadFile: async (
+    file: File,
+  ): Promise<{
     file_url: string;
     file_name: string;
     file_type: string;
     file_size: number;
   }> => {
     const formData = new FormData();
-    formData.append('file', file);
-    
-    const response = await api.post('/messaging/upload', formData, {
+    formData.append("file", file);
+
+    const response = await api.post("/messaging/upload", formData, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
     });
     return response.data;
@@ -74,18 +78,18 @@ export const messagingService = {
   sendMessageWithFile: async (
     receiverId: string,
     file: File,
-    content?: string
+    content?: string,
   ): Promise<Message> => {
     const formData = new FormData();
-    formData.append('receiver_id', receiverId);
-    formData.append('file', file);
+    formData.append("receiver_id", receiverId);
+    formData.append("file", file);
     if (content) {
-      formData.append('content', content);
+      formData.append("content", content);
     }
-    
-    const response = await api.post('/messaging/messages/with-file', formData, {
+
+    const response = await api.post("/messaging/messages/with-file", formData, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
     });
     return response.data;
@@ -93,7 +97,7 @@ export const messagingService = {
 
   // Get unread message count
   getUnreadCount: async (): Promise<number> => {
-    const response = await api.get('/messaging/unread-count');
+    const response = await api.get("/messaging/unread-count");
     return response.data.count;
   },
 

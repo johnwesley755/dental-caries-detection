@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { messagingService, Conversation, Message } from '../services/messagingService';
+import { messagingService } from '../services/messagingService';
+import type { Conversation, Message } from '../services/messagingService';
 import { MessageCircle, Send, Paperclip, X, FileText, Image as ImageIcon, Download, Loader2 } from 'lucide-react';
 
 export const Messages: React.FC = () => {
