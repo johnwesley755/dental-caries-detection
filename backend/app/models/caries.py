@@ -10,6 +10,9 @@ class CariesType(str, enum.Enum):
     enamel = "enamel"
     dentin = "dentin"
     pulp = "pulp"
+    caries = "caries"
+    cavity = "cavity"
+    crack = "crack"
 
 class Severity(str, enum.Enum):
     mild = "mild"

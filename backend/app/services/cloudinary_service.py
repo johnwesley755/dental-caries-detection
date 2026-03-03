@@ -29,17 +29,27 @@ class CloudinaryService:
             Dictionary containing url, public_id, and secure_url
         """
         try:
-            result = upload(
-                file_path,
-                folder=folder,
-                resource_type="image",
-                overwrite=False,
-                format="jpg",
-                transformation=[
-                    {'quality': "auto:good"},
-                    {'fetch_format': "auto"}
-                ]
-            )
+            # Determine resource type
+            file_ext = os.path.splitext(file_path)[1].lower()
+            resource_type = "raw" if file_ext == ".pdf" else "image"
+            
+            upload_params = {
+                "folder": folder,
+                "resource_type": resource_type,
+                "overwrite": False
+            }
+            
+            # Only add image-specific transformations if it's an image
+            if resource_type == "image":
+                upload_params.update({
+                    "format": "jpg",
+                    "transformation": [
+                        {'quality': "auto:good"},
+                        {'fetch_format': "auto"}
+                    ]
+                })
+            
+            result = upload(file_path, **upload_params)
             
             return {
                 "url": result.get("secure_url"),

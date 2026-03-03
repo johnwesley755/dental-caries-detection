@@ -10,13 +10,13 @@ export const FloatingChatButton: React.FC = () => {
     <>
       {/* Floating Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-24 right-6 w-96 max-w-[calc(100vw-3rem)] z-50 shadow-2xl rounded-lg overflow-hidden">
+        <div className="fixed bottom-24 right-4 sm:right-6 w-[360px] sm:w-[400px] max-w-[calc(100vw-2rem)] z-[60] shadow-2xl rounded-2xl overflow-hidden animate-in slide-in-from-bottom-5">
           <div className="relative">
             <button
               onClick={() => setIsOpen(false)}
-              className="absolute top-3 right-3 z-10 p-1 rounded-full bg-white/90 hover:bg-white shadow-sm"
+              className="absolute top-3 right-3 z-[70] p-1.5 rounded-full bg-white/20 hover:bg-white/40 text-white backdrop-blur transition-all"
             >
-              <X className="h-4 w-4 text-gray-600" />
+              <X className="h-5 w-5" />
             </button>
             <ChatBot />
           </div>
@@ -31,7 +31,7 @@ export const FloatingChatButton: React.FC = () => {
         >
           <MessageCircle className="h-6 w-6" />
           <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></span>
-          
+
           {/* Tooltip */}
           <div className="absolute right-full mr-3 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
             Ask about your scans

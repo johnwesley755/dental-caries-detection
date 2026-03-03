@@ -1,3 +1,28 @@
+# fastapi this is for the msi laptop
+# uvicorn[standard]
+# python-multipart
+# python-jose[cryptography]
+# passlib==1.7.4
+# bcrypt==3.2.2
+# python-dotenv
+# sqlalchemy
+# psycopg2-binary
+# alembic
+# pydantic
+# pydantic[email]
+# pydantic-settings
+# ultralytics
+# opencv-python
+# numpy
+# Pillow
+# torch
+# torchvision
+# aiofiles
+# reportlab
+# cloudinary
+# matplotlib
+
+
 fastapi
 uvicorn[standard]
 python-multipart
@@ -15,8 +40,6 @@ ultralytics
 opencv-python
 numpy
 Pillow
-torch
-torchvision
 aiofiles
 reportlab
 cloudinary

@@ -30,3 +30,8 @@ class Patient(Base):
     
     detections = relationship("Detection", back_populates="patient")
     appointments = relationship("Appointment", back_populates="patient")
+    creator = relationship("User", foreign_keys=[created_by])
+
+    @property
+    def created_by_name(self) -> str:
+        return self.creator.full_name if self.creator else "Unknown Dentist"

@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from ..models.patient import Patient
 from ..schemas.patient import PatientCreate, PatientUpdate
 from typing import List, Optional
@@ -33,13 +33,13 @@ class PatientService:
     
     @staticmethod
     def get_patient(db: Session, patient_id: UUID) -> Optional[Patient]:
-        """Get patient by ID"""
-        return db.query(Patient).filter(Patient.id == patient_id).first()
+        """Get patient by ID with creator loaded"""
+        return db.query(Patient).options(joinedload(Patient.creator)).filter(Patient.id == patient_id).first()
     
     @staticmethod
     def get_patients(db: Session, skip: int = 0, limit: int = 100) -> List[Patient]:
-        """Get all patients"""
-        return db.query(Patient).offset(skip).limit(limit).all()
+        """Get all patients with creators loaded"""
+        return db.query(Patient).options(joinedload(Patient.creator)).offset(skip).limit(limit).all()
     
     @staticmethod
     def update_patient(db: Session, patient_id: UUID, patient_update: PatientUpdate) -> Patient:

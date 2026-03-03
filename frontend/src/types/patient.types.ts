@@ -8,6 +8,7 @@ export enum Gender {
 export interface Patient {
   id: string;
   patient_id: string;
+  user_id?: string;
   full_name: string;
   age?: number;
   gender?: Gender;

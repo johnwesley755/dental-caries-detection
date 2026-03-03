@@ -43,9 +43,13 @@ class ResultProcessor:
         }
         return recommendations.get((severity, caries_type), "Dental consultation recommended")
     
-    def process_results(self, results, image_shape: tuple) -> List[Dict[str, Any]]:
+    def process_results(self, results, image_shape: tuple) -> Dict[str, Any]:
         """Process YOLOv8 results"""
-        detections = []
+        findings = []
+        teeth_count = 0
+        
+        # Real class mapping from model: {0: 'Caries', 1: 'Cavity', 2: 'Crack', 3: 'Tooth'}
+        class_mapping = {0: "caries", 1: "cavity", 2: "crack", 3: "tooth"}
         
         for result in results:
             boxes = result.boxes
@@ -54,6 +58,11 @@ class ResultProcessor:
                 bbox = box.xyxy[0].tolist()
                 confidence = float(box.conf[0])
                 class_id = int(box.cls[0])
+                class_name = class_mapping.get(class_id, "unknown")
+                
+                if class_name == "tooth":
+                    teeth_count += 1
+                    continue
                 
                 # Calculate area
                 width = bbox[2] - bbox[0]
@@ -64,11 +73,7 @@ class ResultProcessor:
                 severity = self.classify_severity(confidence, area)
                 location = self.determine_location(bbox, image_shape)
                 
-                # Simplified caries type based on class_id
-                caries_types = {0: "enamel", 1: "dentin", 2: "pulp"}
-                caries_type = caries_types.get(class_id, "enamel")
-                
-                detection = {
+                finding = {
                     "class_id": class_id,
                     "confidence": confidence,
                     "bbox": {
@@ -78,12 +83,15 @@ class ResultProcessor:
                         "height": height
                     },
                     "severity": severity,
-                    "caries_type": caries_type,
+                    "caries_type": class_name,
                     "location": location,
-                    "area_mm2": area,  # This should be calibrated in production
-                    "treatment_recommendation": self.generate_treatment_recommendation(severity, caries_type)
+                    "area_mm2": area,
+                    "treatment_recommendation": self.generate_treatment_recommendation(severity, class_name)
                 }
                 
-                detections.append(detection)
+                findings.append(finding)
         
-        return detections
+        return {
+            "findings": findings,
+            "teeth_count": teeth_count
+        }

@@ -31,6 +31,30 @@ def auth_token():
     return response.json()["access_token"]
 
 @pytest.fixture
+def patient_auth_token():
+    """Get patient authentication token"""
+    # Register patient user
+    client.post(
+        "/api/v1/auth/register",
+        json={
+            "email": "testpatient@example.com",
+            "password": "testpass123",
+            "full_name": "Test Patient User",
+            "role": "patient"
+        }
+    )
+    
+    # Login
+    response = client.post(
+        "/api/v1/auth/login/json",
+        json={
+            "email": "testpatient@example.com",
+            "password": "testpass123"
+        }
+    )
+    return response.json()["access_token"]
+
+@pytest.fixture
 def patient_id(auth_token):
     """Create test patient"""
     response = client.post(

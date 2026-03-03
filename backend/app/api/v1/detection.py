@@ -1,3 +1,4 @@
+import os
 from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Form
 from sqlalchemy.orm import Session
 from typing import List, Optional
@@ -53,6 +54,13 @@ async def create_detection(
             original_image_cloudinary=upload_result
         )
         
+        # Cleanup local original image after successful processing if it was uploaded to Cloudinary
+        if upload_result.get("cloudinary_url") and file_path and os.path.exists(file_path):
+            image_service.delete_file(file_path)
+            # Update detection record to reflect it's no longer local
+            detection.original_image_path = None
+            db.commit()
+
         return detection
     
     except Exception as e:

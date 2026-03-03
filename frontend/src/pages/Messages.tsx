@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import { messagingService } from '../services/messagingService';
 import type { Conversation, Message } from '../services/messagingService';
-import { MessageCircle, Send, Paperclip, X, FileText, Image as ImageIcon, Download, Loader2 } from 'lucide-react';
-
+import { MessageCircle, Send, Paperclip, X, FileText, Image as ImageIcon, Download, Loader2, Plus } from 'lucide-react';
+import { Button } from '../components/ui/button';
 export const Messages: React.FC = () => {
+  const location = useLocation();
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -13,13 +15,43 @@ export const Messages: React.FC = () => {
   const [sending, setSending] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [showPatientSelector, setShowPatientSelector] = useState(false);
+  const [patients, setPatients] = useState<any[]>([]);
+  const [loadingPatients, setLoadingPatients] = useState(false);
 
   // Get current user from localStorage
   const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
 
   // Load conversations on mount
   useEffect(() => {
-    loadConversations();
+    const init = async () => {
+      try {
+        const data = await messagingService.getConversations();
+        setConversations(data);
+
+        // Handle patientId from URL
+        const searchParams = new URLSearchParams(location.search);
+        const patientIdParam = searchParams.get('patientId');
+        if (patientIdParam) {
+          const existingConv = data.find(c => c.other_user_id === patientIdParam);
+          if (existingConv) {
+            setSelectedConversation(existingConv);
+          } else {
+            // Fetch patient details to start a new chat if ID is provided
+            const { patientService } = await import('../services/patientService');
+            const patient = await patientService.getPatient(patientIdParam);
+            if (patient && patient.user_id) {
+              handleStartNewChat(patient);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Failed to load conversations:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    init();
   }, []);
 
   // Load messages when conversation is selected
@@ -36,18 +68,6 @@ export const Messages: React.FC = () => {
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const loadConversations = async () => {
-    try {
-      setLoading(true);
-      const data = await messagingService.getConversations();
-      setConversations(data);
-    } catch (error) {
-      console.error('Failed to load conversations:', error);
-    } finally {
-      setLoading(false);
-    }
   };
 
   const loadMessages = async (conversationId: string) => {
@@ -82,11 +102,58 @@ export const Messages: React.FC = () => {
       setMessages([...messages, sentMessage]);
       setNewMessage('');
       setSelectedFile(null);
-      loadConversations(); // Refresh to update last message
+
+      // Refresh conversations
+      const data = await messagingService.getConversations();
+      setConversations(data);
+
+      // If it was a new conversation, select the real one
+      if (selectedConversation.id === 'new') {
+        const newConv = data.find(c => c.other_user_id === selectedConversation.other_user_id);
+        if (newConv) {
+          setSelectedConversation(newConv);
+        }
+      }
     } catch (error) {
       console.error('Failed to send message:', error);
     } finally {
       setSending(false);
+    }
+  };
+
+  const handleStartNewChat = async (patient: any) => {
+    // Check if conversation already exists
+    const existingConv = conversations.find(c => c.other_user_id === patient.user_id);
+    if (existingConv) {
+      setSelectedConversation(existingConv);
+    } else {
+      // Create a temporary conversation object
+      const tempConv: Conversation = {
+        id: 'new',
+        patient_id: patient.id,
+        dentist_id: currentUser.id,
+        other_user_id: patient.user_id,
+        other_user_name: patient.full_name,
+        other_user_role: 'PATIENT',
+        unread_count: 0
+      };
+      setSelectedConversation(tempConv);
+      setMessages([]);
+    }
+    setShowPatientSelector(false);
+  };
+
+  const loadPatients = async () => {
+    try {
+      setLoadingPatients(true);
+      const { patientService } = await import('../services/patientService');
+      const data = await patientService.getPatients();
+      // Only show patients that have a linked user account
+      setPatients(data.filter(p => p.user_id));
+    } catch (error) {
+      console.error('Failed to load patients:', error);
+    } finally {
+      setLoadingPatients(false);
     }
   };
 
@@ -140,13 +207,59 @@ export const Messages: React.FC = () => {
     <div className="h-screen flex bg-gray-50">
       {/* Conversations List */}
       <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
-        <div className="p-4 border-b border-gray-200">
-          <h2 className="text-xl font-bold text-gray-900">Patient Messages</h2>
-          <p className="text-sm text-gray-500 mt-1">Chat with your patients</p>
+        <div className="p-4 border-b border-gray-200 flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-bold text-gray-900">Patient Messages</h2>
+            <p className="text-sm text-gray-500 mt-1">Chat with your patients</p>
+          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => {
+              if (!showPatientSelector) loadPatients();
+              setShowPatientSelector(!showPatientSelector);
+            }}
+            className={showPatientSelector ? 'text-blue-600 bg-blue-50' : 'text-gray-400'}
+          >
+            {showPatientSelector ? <X className="h-5 w-5" /> : <Plus className="h-5 w-5" />}
+          </Button>
         </div>
 
         <div className="flex-1 overflow-y-auto">
-          {conversations.length === 0 ? (
+          {showPatientSelector ? (
+            <div className="animate-in fade-in slide-in-from-left-2 duration-200">
+              <div className="p-4 bg-gray-50 border-b border-gray-100">
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Select a patient</p>
+              </div>
+              {loadingPatients ? (
+                <div className="p-8 text-center">
+                  <Loader2 className="h-6 w-6 animate-spin text-blue-600 mx-auto" />
+                </div>
+              ) : patients.length === 0 ? (
+                <div className="p-8 text-center">
+                  <p className="text-sm text-gray-500">No patients found</p>
+                </div>
+              ) : (
+                patients.map(patient => (
+                  <div
+                    key={patient.id}
+                    onClick={() => handleStartNewChat(patient)}
+                    className="p-4 border-b border-gray-100 cursor-pointer hover:bg-blue-50 transition-colors group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        {patient.full_name.charAt(0)}
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900">{patient.full_name}</h4>
+                        <p className="text-xs text-gray-500">{patient.patient_id}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          ) : conversations.length === 0 ? (
             <div className="p-8 text-center">
               <MessageCircle className="h-12 w-12 text-gray-300 mx-auto mb-3" />
               <p className="text-gray-500">No conversations yet</p>
@@ -156,11 +269,10 @@ export const Messages: React.FC = () => {
               <div
                 key={conv.id}
                 onClick={() => setSelectedConversation(conv)}
-                className={`p-4 border-b border-gray-100 cursor-pointer transition-colors ${
-                  selectedConversation?.id === conv.id
-                    ? 'bg-blue-50 border-l-4 border-l-blue-600'
-                    : 'hover:bg-gray-50'
-                }`}
+                className={`p-4 border-b border-gray-100 cursor-pointer transition-colors ${selectedConversation?.id === conv.id
+                  ? 'bg-blue-50 border-l-4 border-l-blue-600'
+                  : 'hover:bg-gray-50'
+                  }`}
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
@@ -195,7 +307,7 @@ export const Messages: React.FC = () => {
             {/* Chat Header */}
             <div className="bg-white border-b border-gray-200 p-4">
               <h3 className="font-semibold text-gray-900">{selectedConversation.other_user_name}</h3>
-              <p className="text-sm text-gray-500">Patient</p>
+              <p className="text-sm text-gray-500">Patient • {selectedConversation.id === 'new' ? 'Start a new conversation' : 'Active conversation'}</p>
             </div>
 
             {/* Messages */}
@@ -206,29 +318,27 @@ export const Messages: React.FC = () => {
                   <div key={message.id} className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}>
                     <div className={`max-w-md ${isOwn ? 'items-end' : 'items-start'} flex flex-col`}>
                       <div
-                        className={`rounded-2xl px-4 py-2 ${
-                          isOwn
-                            ? 'bg-blue-600 text-white'
-                            : 'bg-white border border-gray-200 text-gray-900'
-                        }`}
+                        className={`rounded-2xl px-4 py-2 ${isOwn
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-white border border-gray-200 text-gray-900'
+                          }`}
                       >
                         {message.content && <p className="text-sm">{message.content}</p>}
-                        
+
                         {message.file_url && (
                           <div className="mt-2">
                             {message.file_type?.startsWith('image/') ? (
                               <img
-                                src={`${process.env.REACT_APP_API_URL || 'http://localhost:8000'}${message.file_url}`}
+                                src={`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}${message.file_url}`}
                                 alt={message.file_name}
                                 className="rounded-lg max-w-xs"
                               />
                             ) : (
                               <a
-                                href={`${process.env.REACT_APP_API_URL || 'http://localhost:8000'}${message.file_url}`}
+                                href={`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}${message.file_url}`}
                                 download={message.file_name}
-                                className={`flex items-center gap-2 p-2 rounded-lg ${
-                                  isOwn ? 'bg-blue-700' : 'bg-gray-50'
-                                }`}
+                                className={`flex items-center gap-2 p-2 rounded-lg ${isOwn ? 'bg-blue-700' : 'bg-gray-50'
+                                  }`}
                               >
                                 {getFileIcon(message.file_type)}
                                 <span className="text-sm">{message.file_name}</span>
@@ -262,7 +372,7 @@ export const Messages: React.FC = () => {
                   </button>
                 </div>
               )}
-              
+
               <div className="flex items-end gap-2">
                 <input
                   type="file"
@@ -277,7 +387,7 @@ export const Messages: React.FC = () => {
                 >
                   <Paperclip className="h-5 w-5" />
                 </button>
-                
+
                 <textarea
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
@@ -291,7 +401,7 @@ export const Messages: React.FC = () => {
                   className="flex-1 resize-none border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   rows={1}
                 />
-                
+
                 <button
                   onClick={handleSendMessage}
                   disabled={sending || (!newMessage.trim() && !selectedFile)}

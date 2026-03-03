@@ -1,6 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
-from sqlalchemy.orm import Session
-from sqlalchemy import or_, desc
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
+from sqlalchemy.orm import Session, joinedload
+from sqlalchemy import or_, desc, func
 from typing import List, Optional
 from datetime import datetime
 import uuid
@@ -12,9 +12,11 @@ from ...models.user import User
 from ...models.conversation import Conversation
 from ...models.message import Message
 from ...dependencies.auth import get_current_user
+from ...services.image_service import ImageService
 from pydantic import BaseModel
 
 router = APIRouter(prefix="/messaging", tags=["messaging"])
+image_service = ImageService()
 
 # Pydantic schemas
 class MessageCreate(BaseModel):
@@ -85,8 +87,11 @@ async def get_conversations(
 ):
     """Get all conversations for the current user"""
     
-    # Get conversations where user is either patient or dentist
-    conversations = db.query(Conversation).filter(
+    # Get conversations with eagerly loaded users
+    conversations = db.query(Conversation).options(
+        joinedload(Conversation.patient),
+        joinedload(Conversation.dentist)
+    ).filter(
         or_(
             Conversation.patient_id == current_user.id,
             Conversation.dentist_id == current_user.id
@@ -103,12 +108,12 @@ async def get_conversations(
             other_user = conv.patient
             other_user_id = str(conv.patient_id)
         
-        # Get unread count
-        unread_count = db.query(Message).filter(
+        # Optimized unread count
+        unread_count = db.query(func.count(Message.id)).filter(
             Message.conversation_id == conv.id,
             Message.receiver_id == current_user.id,
             Message.is_read == False
-        ).count()
+        ).scalar()
         
         # Get last message
         last_msg = db.query(Message).filter(
@@ -121,8 +126,8 @@ async def get_conversations(
             dentist_id=str(conv.dentist_id),
             last_message_at=conv.last_message_at,
             other_user_id=other_user_id,
-            other_user_name=other_user.full_name,
-            other_user_role=other_user.role.value,
+            other_user_name=other_user.full_name if other_user else "Deleted User",
+            other_user_role=other_user.role.value if other_user else "UNKNOWN",
             unread_count=unread_count,
             last_message=last_msg.content if last_msg else None
         ))
@@ -145,17 +150,20 @@ async def get_messages(
     if str(conversation.patient_id) != str(current_user.id) and str(conversation.dentist_id) != str(current_user.id):
         raise HTTPException(status_code=403, detail="Not authorized to view this conversation")
     
-    # Get messages
-    messages = db.query(Message).filter(
+    # Get messages with eagerly loaded sender and receiver
+    messages = db.query(Message).options(
+        joinedload(Message.sender),
+        joinedload(Message.receiver)
+    ).filter(
         Message.conversation_id == uuid.UUID(conversation_id)
     ).order_by(Message.created_at).all()
     
-    # Mark messages as read
+    # Mark messages as read in one query (already efficient but keeping it clean)
     db.query(Message).filter(
         Message.conversation_id == uuid.UUID(conversation_id),
         Message.receiver_id == current_user.id,
         Message.is_read == False
-    ).update({"is_read": True})
+    ).update({"is_read": True}, synchronize_session=False)
     db.commit()
     
     result = []
@@ -172,8 +180,8 @@ async def get_messages(
             file_size=msg.file_size,
             is_read=msg.is_read,
             created_at=msg.created_at,
-            sender_name=msg.sender.full_name,
-            receiver_name=msg.receiver.full_name
+            sender_name=msg.sender.full_name if msg.sender else "Deleted User",
+            receiver_name=msg.receiver.full_name if msg.receiver else "Deleted User"
         ))
     
     return result
@@ -248,21 +256,21 @@ async def upload_file(
     if file_size > 10 * 1024 * 1024:  # 10MB
         raise HTTPException(status_code=400, detail="File size exceeds 10MB limit")
     
-    # Create uploads directory if it doesn't exist
-    upload_dir = "uploads/messages"
-    os.makedirs(upload_dir, exist_ok=True)
+    # Save using ImageService (which handles local + Cloudinary)
+    upload_result = await image_service.save_upload_file(
+        file, 
+        upload_to_cloudinary=True, 
+        folder="dental-caries/messages",
+        delete_local=True
+    )
     
-    # Generate unique filename
-    file_extension = os.path.splitext(file.filename)[1]
-    unique_filename = f"{uuid.uuid4()}{file_extension}"
-    file_path = os.path.join(upload_dir, unique_filename)
-    
-    # Save file
-    with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
+    # Use Cloudinary URL if available, otherwise fallback to local path
+    file_url = upload_result.get("cloudinary_url")
+    if not file_url:
+        file_url = f"/{upload_result['local_path']}"
     
     return {
-        "file_url": f"/{file_path}",
+        "file_url": file_url,
         "file_name": file.filename,
         "file_type": file.content_type,
         "file_size": file_size
@@ -270,8 +278,8 @@ async def upload_file(
 
 @router.post("/messages/with-file", response_model=MessageResponse)
 async def send_message_with_file(
-    receiver_id: str,
-    content: Optional[str] = None,
+    receiver_id: str = Form(...),
+    content: Optional[str] = Form(None),
     file: UploadFile = File(...),
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)

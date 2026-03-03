@@ -61,12 +61,8 @@ export const messagingService = {
   }> => {
     const formData = new FormData();
     formData.append('file', file);
-    
-    const response = await api.post('/messaging/upload', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+
+    const response = await api.post('/messaging/upload', formData);
     return response.data;
   },
 
@@ -82,12 +78,8 @@ export const messagingService = {
     if (content) {
       formData.append('content', content);
     }
-    
-    const response = await api.post('/messaging/messages/with-file', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+
+    const response = await api.post('/messaging/messages/with-file', formData);
     return response.data;
   },
 

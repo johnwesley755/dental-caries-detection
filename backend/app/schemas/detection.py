@@ -26,7 +26,7 @@ class DetectionResponse(BaseModel):
     detection_id: str
     patient_id: UUID
     dentist_id: UUID
-    original_image_path: str
+    original_image_path: Optional[str]
     annotated_image_path: Optional[str]
     original_image_url: Optional[str]
     annotated_image_url: Optional[str]

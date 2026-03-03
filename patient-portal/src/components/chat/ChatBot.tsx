@@ -27,7 +27,7 @@ export const ChatBot: React.FC<ChatBotProps> = ({ detectionId }) => {
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!inputMessage.trim() || isLoading) return;
 
     const userMessage = inputMessage.trim();
@@ -56,10 +56,10 @@ export const ChatBot: React.FC<ChatBotProps> = ({ detectionId }) => {
           Ask me about your scan results. I'm here to help explain them in simple terms.
         </p>
       </CardHeader>
-      
-      <CardContent className="p-0">
+
+      <CardContent className="p-0 flex flex-col h-full">
         {/* Messages Area */}
-        <div className="h-96 overflow-y-auto p-4 space-y-4 bg-gray-50">
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#f8fbff] min-h-[350px] max-h-[70vh]">
           {messages.length === 0 && (
             <div className="flex flex-col items-center justify-center h-full text-center text-gray-500">
               <Bot className="h-12 w-12 mb-3 text-blue-400" />
@@ -71,7 +71,7 @@ export const ChatBot: React.FC<ChatBotProps> = ({ detectionId }) => {
                 <div className="flex items-start gap-2">
                   <AlertCircle className="h-4 w-4 text-yellow-600 mt-0.5 flex-shrink-0" />
                   <p className="text-xs text-yellow-800">
-                    I cannot provide medical advice or prescriptions. 
+                    I cannot provide medical advice or prescriptions.
                     Always consult your dentist for treatment.
                   </p>
                 </div>
@@ -110,13 +110,12 @@ export const ChatBot: React.FC<ChatBotProps> = ({ detectionId }) => {
                         </p>
                         <div className="flex flex-wrap gap-2 text-xs">
                           {msg.detection_context.severity && (
-                            <span className={`px-2 py-1 rounded-full font-medium ${
-                              msg.detection_context.severity.toLowerCase() === 'severe'
+                            <span className={`px-2 py-1 rounded-full font-medium ${msg.detection_context.severity.toLowerCase() === 'severe'
                                 ? 'bg-red-100 text-red-700'
                                 : msg.detection_context.severity.toLowerCase() === 'moderate'
-                                ? 'bg-orange-100 text-orange-700'
-                                : 'bg-yellow-100 text-yellow-700'
-                            }`}>
+                                  ? 'bg-orange-100 text-orange-700'
+                                  : 'bg-yellow-100 text-yellow-700'
+                              }`}>
                               {msg.detection_context.severity}
                             </span>
                           )}

@@ -36,29 +36,69 @@ class DetectionService:
         preprocessed = self.preprocessor.preprocess(image_path)
         
         # Perform detection
-        results_dir = os.path.join(settings.RESULTS_DIR, str(uuid4()))
+        results_dir = os.path.abspath(os.path.join(settings.RESULTS_DIR, str(uuid4())))
         os.makedirs(results_dir, exist_ok=True)
         
+        print(f"Starting detection. Results will be saved to: {results_dir}")
         detection_results = self.detector.detect(image_path, results_dir)
         
-        # Get annotated image path
-        annotated_path = os.path.join(results_dir, "detection", os.path.basename(image_path))
+        # Get annotated image path from YOLO results
+        base_filename = os.path.basename(image_path)
+        filename_no_ext = os.path.splitext(base_filename)[0]
         
+        # YOLO results[0].save_dir is the most reliable source
+        yolo_save_dir = detection_results["results"][0].save_dir
+        print(f"YOLO reports results saved to: {yolo_save_dir}")
+        
+        annotated_path = None
+        # Try different extensions because YOLO might convert them
+        for ext in [os.path.splitext(base_filename)[1], ".jpg", ".jpeg", ".png"]:
+            test_path = os.path.join(yolo_save_dir, f"{filename_no_ext}{ext}")
+            if os.path.exists(test_path):
+                annotated_path = test_path
+                break
+        
+        if not annotated_path:
+            # Last resort fallback to our previous discovery logic if save_dir fails
+            print("Warning: save_dir path not found, falling back to manual search.")
+            search_dirs = [
+                os.path.join(results_dir, "detection"),
+                os.path.join(os.getcwd(), "runs", "detect", os.path.basename(results_dir), "detection"),
+            ]
+            for s_dir in search_dirs:
+                for ext in [os.path.splitext(base_filename)[1], ".jpg", ".jpeg", ".png"]:
+                    test_path = os.path.join(s_dir, f"{filename_no_ext}{ext}")
+                    if os.path.exists(test_path):
+                        annotated_path = test_path
+                        break
+                if annotated_path: break
+        
+        print(f"Annotated path found: {annotated_path}")
+
         # Upload annotated image to Cloudinary if it exists
         annotated_cloudinary = None
-        if os.path.exists(annotated_path) and settings.CLOUDINARY_CLOUD_NAME:
+        if annotated_path and settings.CLOUDINARY_CLOUD_NAME:
             try:
                 from .cloudinary_service import CloudinaryService
                 cloudinary_service = CloudinaryService()
+                print(f"Uploading annotated image to Cloudinary: {annotated_path}")
                 annotated_cloudinary = cloudinary_service.upload_annotated_image(annotated_path)
+                print(f"Annotated upload successful: {annotated_cloudinary.get('url')}")
             except Exception as e:
                 print(f"Warning: Failed to upload annotated image to Cloudinary: {str(e)}")
+        else:
+            if not annotated_path:
+                print("Warning: Annotated image not found locally after detection.")
+            if not settings.CLOUDINARY_CLOUD_NAME:
+                print("Warning: Cloudinary not configured, skipping upload.")
         
         # Process results
-        detections = self.postprocessor.process_results(
+        results = self.postprocessor.process_results(
             detection_results["results"],
             preprocessed.shape
         )
+        findings = results["findings"]
+        teeth_count = results["teeth_count"]
         
         # Create detection record
         db_detection = Detection(
@@ -66,13 +106,14 @@ class DetectionService:
             patient_id=patient_id,
             dentist_id=dentist_id,
             original_image_path=image_path,
-            annotated_image_path=annotated_path if os.path.exists(annotated_path) else None,
+            annotated_image_path=annotated_path if (annotated_path and os.path.exists(annotated_path)) else None,
             original_image_url=original_image_cloudinary.get("cloudinary_url") if original_image_cloudinary else None,
             annotated_image_url=annotated_cloudinary.get("url") if annotated_cloudinary else None,
             original_image_public_id=original_image_cloudinary.get("public_id") if original_image_cloudinary else None,
             annotated_image_public_id=annotated_cloudinary.get("public_id") if annotated_cloudinary else None,
             image_type=detection_data.image_type,
-            total_caries_detected=len(detections),
+            total_teeth_detected=teeth_count,
+            total_caries_detected=len(findings),
             processing_time_ms=detection_results["processing_time_ms"],
             confidence_threshold=settings.CONFIDENCE_THRESHOLD,
             status=DetectionStatus.completed,
@@ -83,7 +124,7 @@ class DetectionService:
         db.flush()
         
         # Create caries findings
-        for det in detections:
+        for det in findings:
             caries = CariesFinding(
                 detection_id=db_detection.id,
                 caries_type=det["caries_type"],
@@ -108,6 +149,20 @@ class DetectionService:
         
         db.commit()
         db.refresh(db_detection)
+
+        # Cleanup: Delete the local annotated results directory after successful upload
+        if annotated_cloudinary and os.path.exists(results_dir):
+            try:
+                import shutil
+                shutil.rmtree(results_dir)
+                # Ensure the path in the DB reflects that it's no longer local if needed, 
+                # but many systems keep the path for audit trails. 
+                # Here we'll clear it to be consistent with storage expectations.
+                db_detection.annotated_image_path = None
+                db.commit()
+            except Exception as e:
+                print(f"Warning: Failed to cleanup results directory: {str(e)}")
+
         return db_detection
     
     @staticmethod

@@ -74,5 +74,7 @@ export interface Patient {
   email?: string;
   address?: string;
   medical_history?: any;
+  created_by: string;
+  created_by_name?: string;
   created_at: string;
 }

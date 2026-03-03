@@ -23,8 +23,8 @@ class Settings(BaseSettings):
     PORTAL_URL: str = "http://localhost"
     
     # Paths
-    UPLOAD_DIR: str = "uploads"
-    RESULTS_DIR: str = "results"
+    UPLOAD_DIR: str = os.path.abspath("uploads")
+    RESULTS_DIR: str = os.path.abspath("results")
     
     # Cloudinary
     CLOUDINARY_CLOUD_NAME: str = ""

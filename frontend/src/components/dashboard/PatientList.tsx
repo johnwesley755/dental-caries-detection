@@ -1,6 +1,6 @@
 // frontend/src/components/dashboard/PatientList.tsx
 import React, { useState } from 'react';
-import { Search, Edit, Trash2, Eye, UserPlus } from 'lucide-react';
+import { Search, Edit, Trash2, Eye, UserPlus, MessageSquare } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
@@ -120,6 +120,11 @@ export const PatientList: React.FC<PatientListProps> = ({
                   <TableCell className="text-sm text-slate-500">{patient.contact_number || '-'}</TableCell>
                   <TableCell className="text-right pr-6">
                     <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      {patient.user_id && (
+                        <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg" onClick={() => navigate(`/messages?patientId=${patient.user_id}`)}>
+                          <MessageSquare className="h-4 w-4" />
+                        </Button>
+                      )}
                       <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg" onClick={() => navigate(`/patients/${patient.id}`)}>
                         <Eye className="h-4 w-4" />
                       </Button>

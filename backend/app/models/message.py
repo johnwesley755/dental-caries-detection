@@ -10,15 +10,15 @@ class Message(Base):
     __tablename__ = "messages"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    conversation_id = Column(UUID(as_uuid=True), ForeignKey("conversations.id", ondelete="CASCADE"), nullable=False)
-    sender_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
-    receiver_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    conversation_id = Column(UUID(as_uuid=True), ForeignKey("conversations.id", ondelete="CASCADE"), nullable=False, index=True)
+    sender_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    receiver_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
     content = Column(Text, nullable=True)
     file_url = Column(String(500), nullable=True)
     file_name = Column(String(255), nullable=True)
     file_type = Column(String(50), nullable=True)
     file_size = Column(Integer, nullable=True)
-    is_read = Column(Boolean, default=False)
+    is_read = Column(Boolean, default=False, index=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 

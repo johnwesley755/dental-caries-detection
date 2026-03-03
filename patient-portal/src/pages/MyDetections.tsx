@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import { Card, CardContent } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
-import { Calendar, Eye, AlertCircle } from 'lucide-react';
+import { Calendar, Eye, AlertCircle, Plus, Upload, X, Loader2 } from 'lucide-react';
 import { patientService } from '../services/patientService';
 import type { Detection } from '../types/detection.types';
 
@@ -13,6 +13,11 @@ export const MyDetections: React.FC = () => {
   const navigate = useNavigate();
   const [detections, setDetections] = useState<Detection[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [notes, setNotes] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   useEffect(() => {
     loadDetections();
@@ -27,6 +32,37 @@ export const MyDetections: React.FC = () => {
       toast.error('Failed to load detections');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      if (file.size > 10 * 1024 * 1024) {
+        toast.error('File size must be less than 10MB');
+        return;
+      }
+      setSelectedFile(file);
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+    }
+  };
+
+  const handleUpload = async () => {
+    if (!selectedFile) return;
+    setIsUploading(true);
+    try {
+      await patientService.uploadDetection(selectedFile, notes);
+      toast.success('Detection started successfully');
+      setShowUploadModal(false);
+      setSelectedFile(null);
+      setPreviewUrl(null);
+      setNotes('');
+      loadDetections();
+    } catch (error: any) {
+      toast.error(error.response?.data?.detail || 'Failed to upload image');
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -54,9 +90,18 @@ export const MyDetections: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold">My Dental Scans</h1>
-          <p className="text-gray-600 mt-1">View all your dental examination records</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold">My Dental Scans</h1>
+            <p className="text-gray-600 mt-1">View all your dental examination records</p>
+          </div>
+          <Button
+            onClick={() => setShowUploadModal(true)}
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            New Scan
+          </Button>
         </div>
 
         {detections.length === 0 ? (
@@ -116,6 +161,77 @@ export const MyDetections: React.FC = () => {
                 </CardContent>
               </Card>
             ))}
+          </div>
+        )}
+
+        {/* Upload Modal */}
+        {showUploadModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+            <Card className="w-full max-w-lg">
+              <div className="p-6 border-b flex items-center justify-between">
+                <h2 className="text-xl font-bold">Upload New Scan</h2>
+                <Button variant="ghost" size="icon" onClick={() => setShowUploadModal(false)}>
+                  <X className="h-5 w-5" />
+                </Button>
+              </div>
+              <CardContent className="p-6 space-y-6">
+                {!selectedFile ? (
+                  <label className="flex flex-col items-center justify-center h-64 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors">
+                    <Upload className="h-12 w-12 text-gray-400 mb-2" />
+                    <span className="text-sm text-gray-600">Click or drag to upload dental image</span>
+                    <span className="text-xs text-gray-400 mt-1">JPG, PNG up to 10MB</span>
+                    <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
+                  </label>
+                ) : (
+                  <div className="space-y-4">
+                    <div className="relative rounded-xl overflow-hidden bg-gray-100 aspect-video flex items-center justify-center">
+                      {previewUrl && <img src={previewUrl} alt="Preview" className="max-h-full" />}
+                      <button
+                        onClick={() => { setSelectedFile(null); setPreviewUrl(null); }}
+                        className="absolute top-2 right-2 p-1 bg-red-600 text-white rounded-full hover:bg-red-700"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-700 mb-1 block">Notes (Optional)</label>
+                      <textarea
+                        value={notes}
+                        onChange={(e) => setNotes(e.target.value)}
+                        placeholder="e.g. Pain in upper right molar..."
+                        className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        rows={3}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex gap-4">
+                  <Button
+                    variant="outline"
+                    className="flex-1"
+                    onClick={() => setShowUploadModal(false)}
+                    disabled={isUploading}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    className="flex-1 bg-blue-600 hover:bg-blue-700"
+                    disabled={!selectedFile || isUploading}
+                    onClick={handleUpload}
+                  >
+                    {isUploading ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        Uploading...
+                      </>
+                    ) : (
+                      'Start Analysis'
+                    )}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         )}
       </div>
