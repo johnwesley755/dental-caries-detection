@@ -1,6 +1,4 @@
-import axios from 'axios';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+import { api } from './api';
 
 export interface ChatMessageRequest {
   message: string;
@@ -27,21 +25,14 @@ export const chatService = {
    * Send a message to the chatbot
    */
   sendMessage: async (message: string, detectionId?: string): Promise<ChatMessageResponse> => {
-    const token = localStorage.getItem('patient_token');
-    
-    const response = await axios.post(
-      `${API_URL}/api/v1/chat/`,
+    const response = await api.post(
+      '/chat',
       {
         message,
         detection_id: detectionId || null,
-      } as ChatMessageRequest,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
+      } as ChatMessageRequest
     );
-    
+
     return response.data;
   },
 
@@ -49,17 +40,10 @@ export const chatService = {
    * Get chat history
    */
   getChatHistory: async (limit: number = 50): Promise<ChatMessageResponse[]> => {
-    const token = localStorage.getItem('patient_token');
-    
-    const response = await axios.get(
-      `${API_URL}/api/v1/chat/history?limit=${limit}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
+    const response = await api.get(
+      `/chat/history?limit=${limit}`
     );
-    
+
     return response.data.messages;
   },
 };

@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
-import { ArrowLeft, Calendar, Clock, AlertCircle, Download } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, AlertCircle, Download, MessageCircle } from 'lucide-react';
 import { ImageComparison } from '../components/detection/ImageComparison';
 import { ChatBot } from '../components/chat/ChatBot';
 import { patientService } from '../services/patientService';
@@ -40,7 +40,7 @@ export const DetectionView: React.FC = () => {
 
   const handleDownloadPDF = async () => {
     if (!detection) return;
-    
+
     setIsDownloading(true);
     try {
       const blob = await reportService.downloadPDF(detection.id);
@@ -89,20 +89,31 @@ export const DetectionView: React.FC = () => {
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Scans
           </Button>
-          
-          <Button onClick={handleDownloadPDF} disabled={isDownloading}>
-            {isDownloading ? (
-              <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                Downloading...
-              </>
-            ) : (
-              <>
-                <Download className="h-4 w-4 mr-2" />
-                Download Report
-              </>
-            )}
-          </Button>
+
+          <div className="flex items-center gap-3">
+            <Button
+              variant="outline"
+              className="border-blue-200 text-blue-700 hover:bg-blue-50"
+              onClick={() => navigate('/messages', { state: { dentistId: detection.dentist_id, detectionId: detection.id } })}
+            >
+              <MessageCircle className="h-4 w-4 mr-2" />
+              Consult Specialist
+            </Button>
+
+            <Button onClick={handleDownloadPDF} disabled={isDownloading}>
+              {isDownloading ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Downloading...
+                </>
+              ) : (
+                <>
+                  <Download className="h-4 w-4 mr-2" />
+                  Download Report
+                </>
+              )}
+            </Button>
+          </div>
         </div>
 
         <div>

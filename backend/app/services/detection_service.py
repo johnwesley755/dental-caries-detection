@@ -184,3 +184,28 @@ class DetectionService:
         return db.query(Detection).filter(
             Detection.patient_id == patient_id
         ).offset(skip).limit(limit).all()
+    @staticmethod
+    def link_detection_to_patient(db: Session, detection_id: UUID, patient_id: UUID) -> Detection:
+        """Link an anonymous detection to a patient record"""
+        detection = db.query(Detection).filter(Detection.id == detection_id).first()
+        if not detection:
+            raise HTTPException(status_code=404, detail="Detection not found")
+        
+        # Already linked check
+        if detection.patient_id is not None:
+             return detection
+             
+        detection.patient_id = patient_id
+        
+        # Update history
+        history = DetectionHistory(
+            patient_id=patient_id,
+            detection_id=detection.id,
+            action="linked",
+            changes={"patient_id": str(patient_id)}
+        )
+        db.add(history)
+        
+        db.commit()
+        db.refresh(detection)
+        return detection

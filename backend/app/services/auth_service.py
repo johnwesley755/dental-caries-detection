@@ -28,6 +28,37 @@ class AuthService:
         db.add(db_user)
         db.commit()
         db.refresh(db_user)
+
+        # If user is a patient, create a patient record
+        if db_user.role == "PATIENT":
+            from .patient_service import PatientService
+            from ..schemas.patient import PatientCreate
+            from .detection_service import DetectionService
+            
+            patient_data = PatientCreate(
+                full_name=db_user.full_name,
+                email=db_user.email
+            )
+            patient = PatientService.create_patient(db, patient_data, user_id=db_user.id)
+            
+            # If there's an anonymous detection to link
+            if user.detection_id:
+                DetectionService.link_detection_to_patient(db, user.detection_id, patient.id)
+        
+        # If user is a dentist, create a dentist profile
+        elif db_user.role == "DENTIST" and user.profile:
+            from ..models.dentist_profile import DentistProfile
+            
+            db_profile = DentistProfile(
+                user_id=db_user.id,
+                license_number=user.profile.license_number,
+                specialization=user.profile.specialization,
+                clinic_name=user.profile.clinic_name,
+                clinic_address=user.profile.clinic_address
+            )
+            db.add(db_profile)
+            db.commit()
+
         return db_user
     
     @staticmethod

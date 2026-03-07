@@ -22,6 +22,7 @@ image_service = ImageService()
 class MessageCreate(BaseModel):
     receiver_id: str
     content: Optional[str] = None
+    detection_id: Optional[str] = None
 
 class MessageResponse(BaseModel):
     id: str
@@ -33,6 +34,7 @@ class MessageResponse(BaseModel):
     file_name: Optional[str]
     file_type: Optional[str]
     file_size: Optional[int]
+    detection_id: Optional[str]
     is_read: bool
     created_at: datetime
     sender_name: str
@@ -80,13 +82,37 @@ def get_or_create_conversation(db: Session, user1_id: uuid.UUID, user2_id: uuid.
     
     return conversation
 
+@router.get("/dentists", response_model=List[dict])
+async def get_dentists(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Get all active dentists for patient selection"""
+    from ...models.user import UserRole
+    dentists = db.query(User).filter(
+        User.role == UserRole.DENTIST,
+        User.is_active == True,
+        User.is_verified == True
+    ).all()
+    
+    return [
+        {
+            "id": str(d.id),
+            "full_name": d.full_name,
+            "email": d.email,
+            "role": d.role.value if hasattr(d.role, "value") else str(d.role)
+        }
+        for d in dentists
+    ]
+
 @router.get("/conversations", response_model=List[ConversationResponse])
 async def get_conversations(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     """Get all conversations for the current user"""
-    
+    with open("/tmp/chat_debug.log", "a") as f:
+        f.write(f"DEBUG: get_conversations for user {current_user.id} ({current_user.email})\n")
     # Get conversations with eagerly loaded users
     conversations = db.query(Conversation).options(
         joinedload(Conversation.patient),
@@ -97,6 +123,8 @@ async def get_conversations(
             Conversation.dentist_id == current_user.id
         )
     ).order_by(desc(Conversation.last_message_at)).all()
+    with open("/tmp/chat_debug.log", "a") as f:
+        f.write(f"DEBUG: Found {len(conversations)} conversations\n")
     
     result = []
     for conv in conversations:
@@ -140,14 +168,19 @@ async def get_messages(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """Get all messages in a conversation"""
-    
+    with open("/tmp/chat_debug.log", "a") as f:
+        f.write(f"DEBUG: get_messages for conv {conversation_id} user {current_user.id}\n")
     # Verify user is part of this conversation
     conversation = db.query(Conversation).filter(Conversation.id == uuid.UUID(conversation_id)).first()
     if not conversation:
+        with open("/tmp/chat_debug.log", "a") as f:
+            f.write(f"DEBUG: Conversation {conversation_id} NOT FOUND\n")
         raise HTTPException(status_code=404, detail="Conversation not found")
     
     if str(conversation.patient_id) != str(current_user.id) and str(conversation.dentist_id) != str(current_user.id):
+        with open("/tmp/chat_debug.log", "a") as f:
+            f.write(f"DEBUG: User {current_user.id} NOT AUTHORIZED for conv {conversation_id}\n")
+            f.write(f"DEBUG: Conv patient: {conversation.patient_id}, Conv dentist: {conversation.dentist_id}\n")
         raise HTTPException(status_code=403, detail="Not authorized to view this conversation")
     
     # Get messages with eagerly loaded sender and receiver
@@ -157,6 +190,8 @@ async def get_messages(
     ).filter(
         Message.conversation_id == uuid.UUID(conversation_id)
     ).order_by(Message.created_at).all()
+    with open("/tmp/chat_debug.log", "a") as f:
+        f.write(f"DEBUG: Found {len(messages)} messages for conv {conversation_id}\n")
     
     # Mark messages as read in one query (already efficient but keeping it clean)
     db.query(Message).filter(
@@ -178,6 +213,7 @@ async def get_messages(
             file_name=msg.file_name,
             file_type=msg.file_type,
             file_size=msg.file_size,
+            detection_id=str(msg.detection_id) if msg.detection_id else None,
             is_read=msg.is_read,
             created_at=msg.created_at,
             sender_name=msg.sender.full_name if msg.sender else "Deleted User",
@@ -209,7 +245,8 @@ async def send_message(
         conversation_id=conversation.id,
         sender_id=current_user.id,
         receiver_id=receiver_id,
-        content=message_data.content
+        content=message_data.content,
+        detection_id=uuid.UUID(message_data.detection_id) if message_data.detection_id else None
     )
     
     db.add(message)
@@ -230,6 +267,7 @@ async def send_message(
         file_name=message.file_name,
         file_type=message.file_type,
         file_size=message.file_size,
+        detection_id=str(message.detection_id) if message.detection_id else None,
         is_read=message.is_read,
         created_at=message.created_at,
         sender_name=current_user.full_name,
@@ -280,6 +318,7 @@ async def upload_file(
 async def send_message_with_file(
     receiver_id: str = Form(...),
     content: Optional[str] = Form(None),
+    detection_id: Optional[str] = Form(None),
     file: UploadFile = File(...),
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -308,7 +347,8 @@ async def send_message_with_file(
         file_url=file_data["file_url"],
         file_name=file_data["file_name"],
         file_type=file_data["file_type"],
-        file_size=file_data["file_size"]
+        file_size=file_data["file_size"],
+        detection_id=uuid.UUID(detection_id) if detection_id else None
     )
     
     db.add(message)
@@ -329,6 +369,7 @@ async def send_message_with_file(
         file_name=message.file_name,
         file_type=message.file_type,
         file_size=message.file_size,
+        detection_id=str(message.detection_id) if message.detection_id else None,
         is_read=message.is_read,
         created_at=message.created_at,
         sender_name=current_user.full_name,

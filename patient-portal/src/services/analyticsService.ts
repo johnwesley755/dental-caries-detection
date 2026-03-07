@@ -1,8 +1,5 @@
 // patient-portal/src/services/analyticsService.ts
-
-import axios from 'axios';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+import { api } from './api';
 
 export interface HealthScore {
   score: number;
@@ -22,21 +19,9 @@ export interface DetectionHistory {
 }
 
 class AnalyticsService {
-  private getAuthHeader() {
-    const token = localStorage.getItem('patient_token');
-    return {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-  }
-
   async getMyHealthScore(): Promise<HealthScore> {
     try {
-      const response = await axios.get(
-        `${API_URL}/api/v1/analytics/my-health-score`,
-        this.getAuthHeader()
-      );
+      const response = await api.get('/analytics/my-health-score');
       return response.data;
     } catch (error) {
       console.error('Error fetching health score:', error);
@@ -46,10 +31,7 @@ class AnalyticsService {
 
   async getMyHealthHistory(days: number = 180): Promise<HealthHistory[]> {
     try {
-      const response = await axios.get(
-        `${API_URL}/api/v1/analytics/my-health-history?days=${days}`,
-        this.getAuthHeader()
-      );
+      const response = await api.get(`/analytics/my-health-history?days=${days}`);
       return response.data;
     } catch (error) {
       console.error('Error fetching health history:', error);
@@ -59,10 +41,7 @@ class AnalyticsService {
 
   async getMyDetectionHistory(): Promise<DetectionHistory[]> {
     try {
-      const response = await axios.get(
-        `${API_URL}/api/v1/analytics/my-detection-history`,
-        this.getAuthHeader()
-      );
+      const response = await api.get('/analytics/my-detection-history');
       return response.data;
     } catch (error) {
       console.error('Error fetching detection history:', error);

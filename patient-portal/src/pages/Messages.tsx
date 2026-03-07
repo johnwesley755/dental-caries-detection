@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import { messagingService } from '../services/messagingService';
 import type { Conversation, Message } from '../services/messagingService';
-import { MessageCircle, Send, Paperclip, X, FileText, Image as ImageIcon, Download, Loader2 } from 'lucide-react';
-import { toast } from 'sonner';
+import { MessageCircle, Send, Paperclip, X, FileText, Image as ImageIcon, Download, Loader2, Search } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { useAuth } from '../contexts/AuthContext';
 import { patientService } from '../services/patientService';
 
 export const Messages: React.FC = () => {
   const { user } = useAuth();
+  const location = useLocation();
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -21,9 +22,35 @@ export const Messages: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showMobileChat, setShowMobileChat] = useState(false);
 
+  const [dentists, setDentists] = useState<any[]>([]);
+  const [showDentistSelector, setShowDentistSelector] = useState(false);
+  const [linkedDetectionId, setLinkedDetectionId] = useState<string | null>(null);
+
   useEffect(() => {
     loadInitialData();
+    loadDentists();
   }, []);
+
+  // Handle navigation state
+  useEffect(() => {
+    if (location.state?.dentistId && !loading && conversations.length > 0) {
+      handleStartNewChat(location.state.dentistId);
+      if (location.state.detectionId) {
+        setLinkedDetectionId(location.state.detectionId);
+      }
+      // Clear state after handling
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state, loading, conversations]);
+
+  const loadDentists = async () => {
+    try {
+      const data = await messagingService.getDentists();
+      setDentists(data);
+    } catch (error) {
+      console.error('Failed to load dentists:', error);
+    }
+  };
 
   const loadInitialData = async () => {
     try {
@@ -69,29 +96,36 @@ export const Messages: React.FC = () => {
     }
   };
 
-  const handleStartNewChat = async () => {
-    if (!patientInfo?.created_by) {
-      toast.error("No assigned dentist found. Please contact support.");
+  const handleStartNewChat = async (dentistId?: string) => {
+    const targetDentistId = dentistId || patientInfo?.created_by;
+
+    if (!targetDentistId) {
+      setShowDentistSelector(true);
       return;
     }
 
     // Check if conversation already exists
-    const existingConv = conversations.find(c => c.other_user_id === patientInfo.created_by);
+    const existingConv = conversations.find(c => c.other_user_id === targetDentistId);
     if (existingConv) {
       setSelectedConversation(existingConv);
+      setShowDentistSelector(false);
     } else {
+      // Find the dentist name if we have the list
+      const dentist = dentists.find(d => d.id === targetDentistId);
+
       // Create a temporary conversation object
       const tempConv: Conversation = {
         id: 'new',
         patient_id: user?.id || '',
-        dentist_id: patientInfo.created_by,
-        other_user_id: patientInfo.created_by,
-        other_user_name: patientInfo.created_by_name || "Your Dentist",
+        dentist_id: targetDentistId,
+        other_user_id: targetDentistId,
+        other_user_name: dentist?.full_name || patientInfo?.created_by_name || "Specialist",
         other_user_role: 'DENTIST',
         unread_count: 0
       };
       setSelectedConversation(tempConv);
       setMessages([]);
+      setShowDentistSelector(false);
       if (window.innerWidth < 1024) {
         setShowMobileChat(true);
       }
@@ -105,22 +139,28 @@ export const Messages: React.FC = () => {
       setSending(true);
       let sentMessage: Message;
 
+      const detectionId = linkedDetectionId;
+
       if (selectedFile) {
         sentMessage = await messagingService.sendMessageWithFile(
           selectedConversation.other_user_id,
           selectedFile,
-          newMessage.trim() || undefined
+          newMessage.trim() || undefined,
+          detectionId || undefined
         );
       } else {
         sentMessage = await messagingService.sendMessage({
           receiver_id: selectedConversation.other_user_id,
           content: newMessage.trim(),
+          detection_id: detectionId || undefined
         });
       }
 
       setMessages([...messages, sentMessage]);
       setNewMessage('');
       setSelectedFile(null);
+      setLinkedDetectionId(null); // Clear linked detection after sending
+      // ... (rest of function unchanged)
 
       // Refresh conversations
       const data = await messagingService.getConversations();
@@ -210,7 +250,7 @@ export const Messages: React.FC = () => {
               <h3 className="text-lg font-semibold text-gray-900 mb-2">No conversations yet</h3>
               <p className="text-gray-500 mb-6">Your message history with your dentist will appear here.</p>
               <Button
-                onClick={handleStartNewChat}
+                onClick={() => handleStartNewChat()}
                 className="bg-blue-600 hover:bg-blue-700 text-white px-6"
               >
                 Find Dentist
@@ -344,6 +384,26 @@ export const Messages: React.FC = () => {
 
             {/* Message Input */}
             <div className="bg-white border-t border-gray-200 p-4 lg:p-6 pb-8">
+              {linkedDetectionId && (
+                <div className="mb-3 flex items-center justify-between p-3 bg-indigo-50 border border-indigo-100 rounded-xl">
+                  <div className="flex items-center gap-2">
+                    <div className="p-1.5 bg-indigo-600 rounded-lg shadow-md">
+                      <Search className="h-4 w-4 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-indigo-900">AI Scan Linked</p>
+                      <p className="text-[10px] text-indigo-600 font-medium">This message will include your recent AI analysis.</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setLinkedDetectionId(null)}
+                    className="p-1 text-indigo-400 hover:text-red-500 hover:bg-white rounded-full transition-all"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              )}
+
               {selectedFile && (
                 <div className="mb-4 flex items-center gap-3 p-3 bg-blue-50 border border-blue-100 rounded-xl">
                   <div className="p-2 bg-white rounded-lg shadow-sm">
@@ -424,10 +484,59 @@ export const Messages: React.FC = () => {
               <p className="text-gray-500 leading-relaxed">
                 Connect directly with your specialist for consultations and support.
               </p>
+              <Button
+                onClick={() => handleStartNewChat()}
+                className="mt-6 bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 rounded-xl text-lg font-bold shadow-lg shadow-blue-200"
+              >
+                Find a Specialist
+              </Button>
             </div>
           </div>
         )}
       </div>
+
+      {/* Dentist Selection Modal */}
+      {showDentistSelector && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+            <div className="p-6 border-b border-gray-100 flex items-center justify-between bg-blue-600 text-white">
+              <h3 className="text-xl font-bold">Select a Specialist</h3>
+              <button
+                onClick={() => setShowDentistSelector(false)}
+                className="p-2 hover:bg-white/20 rounded-full transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="max-h-[60vh] overflow-y-auto p-4 space-y-3">
+              {dentists.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">
+                  <Loader2 className="h-8 w-8 animate-spin mx-auto mb-2 text-blue-400" />
+                  <p>Loading available specialists...</p>
+                </div>
+              ) : (
+                dentists.map((dentist) => (
+                  <div
+                    key={dentist.id}
+                    onClick={() => handleStartNewChat(dentist.id)}
+                    className="p-4 border border-gray-100 rounded-xl hover:bg-blue-50 hover:border-blue-200 cursor-pointer transition-all group"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        {dentist.full_name.charAt(0)}
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-gray-900">{dentist.full_name}</h4>
+                        <p className="text-xs text-gray-500">Dental Specialist</p>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

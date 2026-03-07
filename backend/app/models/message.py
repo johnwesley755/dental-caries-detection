@@ -18,6 +18,7 @@ class Message(Base):
     file_name = Column(String(255), nullable=True)
     file_type = Column(String(50), nullable=True)
     file_size = Column(Integer, nullable=True)
+    detection_id = Column(UUID(as_uuid=True), ForeignKey("detections.id", ondelete="SET NULL"), nullable=True)
     is_read = Column(Boolean, default=False, index=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -26,3 +27,4 @@ class Message(Base):
     conversation = relationship("Conversation", back_populates="messages")
     sender = relationship("User", foreign_keys=[sender_id], backref="sent_messages")
     receiver = relationship("User", foreign_keys=[receiver_id], backref="received_messages")
+    detection = relationship("Detection")

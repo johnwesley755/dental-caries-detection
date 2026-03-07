@@ -37,6 +37,10 @@ const Register: React.FC = () => {
     confirmPassword: '',
     full_name: '',
     role: UserRole.DENTIST,
+    license_number: '',
+    specialization: '',
+    clinic_name: '',
+    clinic_address: '',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const { register, isLoading } = useAuth();
@@ -73,6 +77,10 @@ const Register: React.FC = () => {
       newErrors.confirmPassword = 'Passwords do not match';
     }
 
+    if (formData.role === UserRole.DENTIST && !formData.license_number.trim()) {
+      newErrors.license_number = 'License number is required for verification';
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -88,6 +96,12 @@ const Register: React.FC = () => {
         password: formData.password,
         full_name: formData.full_name,
         role: formData.role,
+        profile: formData.role === UserRole.DENTIST ? {
+          license_number: formData.license_number,
+          specialization: formData.specialization,
+          clinic_name: formData.clinic_name,
+          clinic_address: formData.clinic_address,
+        } : undefined
       });
       navigate('/dashboard');
     } catch (err: any) {
@@ -140,9 +154,8 @@ const Register: React.FC = () => {
                   value={formData.full_name}
                   onChange={handleChange}
                   placeholder="John Doe"
-                  className={`block w-full pl-10 pr-3 py-3 border ${
-                    errors.full_name ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-primary-500 focus:border-primary-500'
-                  } rounded-lg focus:outline-none focus:ring-2 sm:text-sm transition duration-150 ease-in-out`}
+                  className={`block w-full pl-10 pr-3 py-3 border ${errors.full_name ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-primary-500 focus:border-primary-500'
+                    } rounded-lg focus:outline-none focus:ring-2 sm:text-sm transition duration-150 ease-in-out`}
                 />
               </div>
               {errors.full_name && (
@@ -168,9 +181,8 @@ const Register: React.FC = () => {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="doctor@example.com"
-                  className={`block w-full pl-10 pr-3 py-3 border ${
-                    errors.email ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-primary-500 focus:border-primary-500'
-                  } rounded-lg focus:outline-none focus:ring-2 sm:text-sm transition duration-150 ease-in-out`}
+                  className={`block w-full pl-10 pr-3 py-3 border ${errors.email ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-primary-500 focus:border-primary-500'
+                    } rounded-lg focus:outline-none focus:ring-2 sm:text-sm transition duration-150 ease-in-out`}
                 />
               </div>
               {errors.email && <p className="mt-1 text-xs text-red-600 font-medium">{errors.email}</p>}
@@ -205,6 +217,79 @@ const Register: React.FC = () => {
               </div>
             </div>
 
+            {/* Dentist Specific Fields */}
+            {formData.role === UserRole.DENTIST && (
+              <div className="space-y-6 pt-4 border-t border-gray-100">
+                <h3 className="text-sm font-bold text-primary-600 uppercase tracking-wider">Professional Credentials</h3>
+
+                <div>
+                  <label htmlFor="license_number" className="block text-sm font-semibold text-gray-700 mb-1">
+                    Medical License Number *
+                  </label>
+                  <input
+                    id="license_number"
+                    name="license_number"
+                    type="text"
+                    required
+                    value={formData.license_number}
+                    onChange={handleChange}
+                    placeholder="LIC-12345678"
+                    className={`block w-full px-3 py-3 border ${errors.license_number ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-primary-500 focus:border-primary-500'
+                      } rounded-lg focus:outline-none focus:ring-2 sm:text-sm transition duration-150 ease-in-out`}
+                  />
+                  {errors.license_number && (
+                    <p className="mt-1 text-xs text-red-600 font-medium">{errors.license_number}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label htmlFor="specialization" className="block text-sm font-semibold text-gray-700 mb-1">
+                    Specialization
+                  </label>
+                  <input
+                    id="specialization"
+                    name="specialization"
+                    type="text"
+                    value={formData.specialization}
+                    onChange={handleChange}
+                    placeholder="e.g. Orthodontics"
+                    className="block w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 sm:text-sm outline-none transition duration-150 ease-in-out"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 gap-4">
+                  <div>
+                    <label htmlFor="clinic_name" className="block text-sm font-semibold text-gray-700 mb-1">
+                      Clinic Name
+                    </label>
+                    <input
+                      id="clinic_name"
+                      name="clinic_name"
+                      type="text"
+                      value={formData.clinic_name}
+                      onChange={handleChange}
+                      placeholder="Smile Dental Clinic"
+                      className="block w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 sm:text-sm outline-none transition duration-150 ease-in-out"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="clinic_address" className="block text-sm font-semibold text-gray-700 mb-1">
+                      Clinic Address
+                    </label>
+                    <input
+                      id="clinic_address"
+                      name="clinic_address"
+                      type="text"
+                      value={formData.clinic_address}
+                      onChange={handleChange}
+                      placeholder="123 Dental St, Clinic City"
+                      className="block w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 sm:text-sm outline-none transition duration-150 ease-in-out"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Password */}
             <div>
               <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-1">
@@ -223,9 +308,8 @@ const Register: React.FC = () => {
                   value={formData.password}
                   onChange={handleChange}
                   placeholder="••••••••"
-                  className={`block w-full pl-10 pr-3 py-3 border ${
-                    errors.password ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-primary-500 focus:border-primary-500'
-                  } rounded-lg focus:outline-none focus:ring-2 sm:text-sm transition duration-150 ease-in-out`}
+                  className={`block w-full pl-10 pr-3 py-3 border ${errors.password ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-primary-500 focus:border-primary-500'
+                    } rounded-lg focus:outline-none focus:ring-2 sm:text-sm transition duration-150 ease-in-out`}
                 />
               </div>
               {errors.password && (
@@ -251,9 +335,8 @@ const Register: React.FC = () => {
                   value={formData.confirmPassword}
                   onChange={handleChange}
                   placeholder="••••••••"
-                  className={`block w-full pl-10 pr-3 py-3 border ${
-                    errors.confirmPassword ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-primary-500 focus:border-primary-500'
-                  } rounded-lg focus:outline-none focus:ring-2 sm:text-sm transition duration-150 ease-in-out`}
+                  className={`block w-full pl-10 pr-3 py-3 border ${errors.confirmPassword ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-primary-500 focus:border-primary-500'
+                    } rounded-lg focus:outline-none focus:ring-2 sm:text-sm transition duration-150 ease-in-out`}
                 />
               </div>
               {errors.confirmPassword && (
@@ -283,8 +366,8 @@ const Register: React.FC = () => {
             </div>
           </form>
         </div>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 };
 

@@ -1,20 +1,42 @@
 // patient-portal/src/components/chat/FloatingChatButton.tsx
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { MessageCircle, X } from 'lucide-react';
 import { ChatBot } from './ChatBot';
 
 export const FloatingChatButton: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (chatContainerRef.current && !chatContainerRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
 
   return (
     <>
       {/* Floating Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-24 right-4 sm:right-6 w-[360px] sm:w-[400px] max-w-[calc(100vw-2rem)] z-[60] shadow-2xl rounded-2xl overflow-hidden animate-in slide-in-from-bottom-5">
-          <div className="relative">
+        <div
+          ref={chatContainerRef}
+          className="fixed bottom-20 right-4 sm:right-6 w-[360px] sm:w-[400px] max-w-[calc(100vw-2rem)] max-h-[calc(100vh-100px)] z-[60] shadow-2xl rounded-2xl overflow-hidden animate-in slide-in-from-bottom-5 flex flex-col bg-white border border-gray-200"
+        >
+          <div className="relative flex-1 flex flex-col min-h-0">
             <button
               onClick={() => setIsOpen(false)}
-              className="absolute top-3 right-3 z-[70] p-1.5 rounded-full bg-white/20 hover:bg-white/40 text-white backdrop-blur transition-all"
+              className="absolute top-3 right-3 z-[70] p-1.5 rounded-full bg-blue-600/10 hover:bg-blue-600/20 text-blue-600 transition-all shadow-sm"
             >
               <X className="h-5 w-5" />
             </button>

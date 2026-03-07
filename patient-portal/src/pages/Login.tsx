@@ -1,19 +1,18 @@
 // patient-portal/src/pages/Login.tsx
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { motion } from 'framer-motion';
-import { 
-  Loader2, 
-  ArrowRight, 
-  Lock, 
-  Mail, 
-  Smile, 
-  ShieldCheck, 
+import {
+  Loader2,
+  ArrowRight,
+  Lock,
+  Mail,
+  Smile,
+  ShieldCheck,
   Stethoscope,
   Eye,
   EyeOff,
-  Heart,
   UserCircle
 } from 'lucide-react';
 
@@ -33,6 +32,8 @@ export const Login: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const detectionId = location.state?.detectionId;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,7 +42,11 @@ export const Login: React.FC = () => {
 
     try {
       await login(email, password);
-      navigate('/dashboard');
+      if (detectionId) {
+        navigate(`/detections/${detectionId}`);
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err: any) {
       console.error('Login error:', err);
       let errorMessage = 'Login failed. Please check your credentials.';
@@ -61,49 +66,49 @@ export const Login: React.FC = () => {
 
   return (
     <div className="w-full min-h-screen grid lg:grid-cols-2 overflow-hidden text-slate-900 bg-slate-50">
-      
+
       {/* =======================
           LEFT SIDE - LOGIN FORM 
          ======================= */}
       <div className="relative flex items-center justify-center p-4 lg:p-8 isolate">
-        
+
         {/* --- BACKGROUND LAYERS --- */}
-        <div 
+        <div
           className="absolute inset-0 -z-20 h-full w-full opacity-40"
           style={{
             backgroundImage: 'radial-gradient(#94a3b8 1px, transparent 1px)',
             backgroundSize: '24px 24px'
           }}
         />
-        
+
         {/* Animated Blobs (Softer Teal/Blue for Patients) */}
         <div className="absolute top-0 left-0 right-0 bottom-0 overflow-hidden -z-10 pointer-events-none">
-            <motion.div 
-              animate={{ 
-                scale: [1, 1.2, 1],
-                opacity: [0.2, 0.4, 0.2], 
-                rotate: [0, 45, 0]
-              }}
-              transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute top-[10%] left-[10%] h-[400px] w-[400px] rounded-full bg-teal-200/40 mix-blend-multiply blur-[90px]"
-            />
-            <motion.div 
-              animate={{ 
-                scale: [1, 1.1, 1],
-                opacity: [0.2, 0.5, 0.2],
-                x: [0, -30, 0]
-              }}
-              transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute bottom-[10%] right-[10%] h-[400px] w-[400px] rounded-full bg-blue-200/40 mix-blend-multiply blur-[90px]"
-            />
+          <motion.div
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.2, 0.4, 0.2],
+              rotate: [0, 45, 0]
+            }}
+            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute top-[10%] left-[10%] h-[400px] w-[400px] rounded-full bg-teal-200/40 mix-blend-multiply blur-[90px]"
+          />
+          <motion.div
+            animate={{
+              scale: [1, 1.1, 1],
+              opacity: [0.2, 0.5, 0.2],
+              x: [0, -30, 0]
+            }}
+            transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute bottom-[10%] right-[10%] h-[400px] w-[400px] rounded-full bg-blue-200/40 mix-blend-multiply blur-[90px]"
+          />
         </div>
 
         {/* --- MAIN CARD --- */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className="w-full max-w-[520px]" 
+          className="w-full max-w-[520px]"
         >
           {/* DIFFERENTIATOR: Patient Access Badge */}
           <div className="flex justify-center mb-6">
@@ -114,7 +119,7 @@ export const Login: React.FC = () => {
           </div>
 
           <div className="bg-white/80 backdrop-blur-xl border border-white/60 shadow-[0_20px_50px_rgb(0,0,0,0.06)] rounded-3xl p-10 lg:p-14 space-y-8 relative overflow-hidden">
-            
+
             {/* Header */}
             <div className="space-y-3 text-center">
               <h1 className="text-3xl font-bold tracking-tight text-slate-900">
@@ -127,7 +132,7 @@ export const Login: React.FC = () => {
 
             <form onSubmit={handleSubmit} className="space-y-6">
               {error && (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
                   className="p-4 text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl flex items-center gap-3"
@@ -144,7 +149,7 @@ export const Login: React.FC = () => {
                 </label>
                 <div className="relative group">
                   <div className="absolute left-4 top-4 pointer-events-none">
-                     <Mail className="h-5 w-5 text-slate-400 group-focus-within:text-blue-600 transition-colors" />
+                    <Mail className="h-5 w-5 text-slate-400 group-focus-within:text-blue-600 transition-colors" />
                   </div>
                   <input
                     id="email"
@@ -220,9 +225,13 @@ export const Login: React.FC = () => {
                 </div>
               </motion.button>
             </form>
-            
-            <div className="text-center text-xs text-slate-400 mt-4 border-t border-slate-100 pt-6">
-              <p>For account issues, please contact your dental provider directly.</p>
+            <div className="text-center pt-4 border-t border-slate-100 mt-6">
+              <p className="text-sm text-slate-500">
+                Don't have an account?{' '}
+                <Link to="/register" className="text-blue-600 font-bold hover:underline">
+                  Sign up here
+                </Link>
+              </p>
             </div>
           </div>
         </motion.div>
@@ -235,7 +244,7 @@ export const Login: React.FC = () => {
         {/* Background Image - Patient Friendly & Warm */}
         <div className="absolute inset-0 bg-slate-900">
           {/* Changed image to a consultation/patient focus */}
-          <img 
+          <img
             src="https://images.unsplash.com/photo-1606811841689-23dfddce3e95?q=80&w=1974&auto=format&fit=crop"
             alt="Patient Consultation"
             className="h-full w-full object-cover opacity-60 scale-105"
@@ -244,7 +253,7 @@ export const Login: React.FC = () => {
           <div className="absolute inset-0 bg-gradient-to-br from-blue-950/90 via-indigo-950/80 to-slate-950/90 mix-blend-multiply" />
           <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-teal-500/10 to-transparent opacity-40" />
         </div>
-        
+
         {/* Branding */}
         <div className="relative z-20 flex items-center gap-3">
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-xl">
@@ -258,11 +267,11 @@ export const Login: React.FC = () => {
 
         {/* Testimonial / Value Prop */}
         <div className="relative z-20 mt-auto max-w-lg">
-          <motion.div 
-             initial={{ opacity: 0, x: 20 }}
-             animate={{ opacity: 1, x: 0 }}
-             transition={{ delay: 0.4, duration: 0.6 }}
-             className="rounded-3xl bg-white/5 backdrop-blur-md border border-white/10 p-8 shadow-2xl"
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.4, duration: 0.6 }}
+            className="rounded-3xl bg-white/5 backdrop-blur-md border border-white/10 p-8 shadow-2xl"
           >
             <div className="mb-6 text-teal-300">
               <Smile className="h-8 w-8" />
@@ -271,13 +280,13 @@ export const Login: React.FC = () => {
               "Seeing my dental scans explained by AI made me feel so much more involved in my healthcare decisions. Truly empowering technology."
             </p>
             <footer className="flex items-center gap-4 border-t border-white/10 pt-6">
-               <div className="h-10 w-10 rounded-full bg-gradient-to-br from-teal-400 to-blue-500 flex items-center justify-center text-xs font-bold text-white shadow-lg border border-white/20">
-                 JD
-               </div>
-               <div>
-                  <div className="text-sm font-semibold text-white">Jane Doe</div>
-                  <div className="text-xs text-blue-200">Patient since 2023</div>
-               </div>
+              <div className="h-10 w-10 rounded-full bg-gradient-to-br from-teal-400 to-blue-500 flex items-center justify-center text-xs font-bold text-white shadow-lg border border-white/20">
+                JD
+              </div>
+              <div>
+                <div className="text-sm font-semibold text-white">Jane Doe</div>
+                <div className="text-xs text-blue-200">Patient since 2023</div>
+              </div>
             </footer>
           </motion.div>
         </div>

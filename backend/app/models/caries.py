@@ -40,9 +40,9 @@ class DetectionHistory(Base):
     __tablename__ = "detection_history"
     
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    patient_id = Column(UUID(as_uuid=True), ForeignKey("patients.id"), nullable=False)
+    patient_id = Column(UUID(as_uuid=True), ForeignKey("patients.id"), nullable=True)
     detection_id = Column(UUID(as_uuid=True), ForeignKey("detections.id"), nullable=False)
     action = Column(String, nullable=False)
-    performed_by = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+    performed_by = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
     timestamp = Column(DateTime(timezone=True), server_default=func.now())
     changes = Column(JSONB)

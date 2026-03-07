@@ -1,4 +1,5 @@
-from .user import User
+from .user import User, UserRole
+from .dentist_profile import DentistProfile
 from .patient import Patient
 from .detection import Detection
 from .caries import CariesFinding, DetectionHistory

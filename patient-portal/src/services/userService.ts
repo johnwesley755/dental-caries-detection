@@ -1,6 +1,4 @@
-import axios from 'axios';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+import { api } from './api';
 
 export interface UpdateProfileData {
   full_name?: string;
@@ -17,12 +15,7 @@ export const userService = {
    * Get current user information
    */
   getCurrentUser: async () => {
-    const token = localStorage.getItem('patient_token');
-    const response = await axios.get(`${API_URL}/api/v1/auth/me`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await api.get('/auth/me');
     return response.data;
   },
 
@@ -30,12 +23,7 @@ export const userService = {
    * Update user profile
    */
   updateProfile: async (data: UpdateProfileData) => {
-    const token = localStorage.getItem('patient_token');
-    const response = await axios.put(`${API_URL}/api/v1/users/me`, data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await api.put('/users/me', data);
     return response.data;
   },
 
@@ -43,15 +31,9 @@ export const userService = {
    * Change user password
    */
   changePassword: async (data: ChangePasswordData) => {
-    const token = localStorage.getItem('patient_token');
-    const response = await axios.put(
-      `${API_URL}/api/v1/users/me/password`,
-      data,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
+    const response = await api.put(
+      '/users/me/password',
+      data
     );
     return response.data;
   },

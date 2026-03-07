@@ -12,6 +12,7 @@ from .notifications import router as notifications_router
 from .analytics import router as analytics_router
 from .resources import router as resources_router
 from .messaging import router as messaging_router
+from .public_detection import router as public_router
 
 api_router = APIRouter()
 
@@ -28,3 +29,4 @@ api_router.include_router(notifications_router, tags=["notifications"])
 api_router.include_router(analytics_router, tags=["analytics"])
 api_router.include_router(resources_router, tags=["resources"])
 api_router.include_router(messaging_router, tags=["messaging"])
+api_router.include_router(public_router, prefix="/public", tags=["public"])

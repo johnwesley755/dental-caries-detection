@@ -1,7 +1,5 @@
 // patient-portal/src/services/resourceService.ts
-import axios from 'axios';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+import { api } from './api';
 
 export interface Resource {
   id: string;
@@ -20,10 +18,6 @@ export interface Resource {
   created_at: string;
 }
 
-const getAuthToken = () => {
-  return localStorage.getItem('patient_token');
-};
-
 export const resourceService = {
   async getResources(params?: {
     category?: string;
@@ -32,15 +26,10 @@ export const resourceService = {
     featured_only?: boolean;
   }): Promise<Resource[]> {
     try {
-      const token = getAuthToken();
-      
-      const response = await axios.get(`${API_URL}/api/v1/resources`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      const response = await api.get('/resources', {
         params,
       });
-      
+
       return response.data;
     } catch (error) {
       console.error('Error fetching resources:', error);
@@ -50,14 +39,8 @@ export const resourceService = {
 
   async getResource(resourceId: string): Promise<Resource> {
     try {
-      const token = getAuthToken();
-      
-      const response = await axios.get(`${API_URL}/api/v1/resources/${resourceId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      
+      const response = await api.get(`/resources/${resourceId}`);
+
       return response.data;
     } catch (error) {
       console.error('Error fetching resource:', error);
@@ -67,14 +50,8 @@ export const resourceService = {
 
   async getCategories(): Promise<string[]> {
     try {
-      const token = getAuthToken();
-      
-      const response = await axios.get(`${API_URL}/api/v1/resources/categories/list`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      
+      const response = await api.get('/resources/categories/list');
+
       return response.data;
     } catch (error) {
       console.error('Error fetching categories:', error);

@@ -13,7 +13,7 @@ class PatientService:
         return f"PAT-{datetime.now().strftime('%Y%m%d')}-{str(uuid4())[:8].upper()}"
     
     @staticmethod
-    def create_patient(db: Session, patient: PatientCreate, user_id: UUID) -> Patient:
+    def create_patient(db: Session, patient: PatientCreate, creator_id: Optional[UUID] = None, user_id: Optional[UUID] = None) -> Patient:
         """Create new patient"""
         db_patient = Patient(
             patient_id=PatientService.generate_patient_id(),
@@ -24,7 +24,8 @@ class PatientService:
             email=patient.email,
             address=patient.address,
             medical_history=patient.medical_history,
-            created_by=user_id
+            created_by=creator_id,
+            user_id=user_id
         )
         db.add(db_patient)
         db.commit()

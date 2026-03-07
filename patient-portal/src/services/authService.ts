@@ -8,22 +8,29 @@ export const authService = {
     formData.append('username', credentials.email);
     formData.append('password', credentials.password);
 
-    const response = await api.post<Token>('/api/v1/auth/login', formData, {
+    const response = await api.post<Token>('/auth/login', formData, {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     });
 
     const token = response.data.access_token;
-    
+
     // Get user info
-    const userResponse = await api.get<User>('/api/v1/auth/me', {
+    const userResponse = await api.get<User>('/auth/me', {
       headers: { Authorization: `Bearer ${token}` },
     });
 
     return { user: userResponse.data, token };
   },
 
+  async register(userData: any): Promise<void> {
+    await api.post('/auth/register', {
+      ...userData,
+      role: 'PATIENT'
+    });
+  },
+
   async getCurrentUser(): Promise<User> {
-    const response = await api.get<User>('/api/v1/auth/me');
+    const response = await api.get<User>('/auth/me');
     return response.data;
   },
 

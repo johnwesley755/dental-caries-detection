@@ -22,8 +22,8 @@ class Detection(Base):
     
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     detection_id = Column(String, unique=True, nullable=False, index=True)
-    patient_id = Column(UUID(as_uuid=True), ForeignKey("patients.id"), nullable=False, index=True)
-    dentist_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False, index=True)
+    patient_id = Column(UUID(as_uuid=True), ForeignKey("patients.id"), nullable=True, index=True)
+    dentist_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True, index=True)
     original_image_path = Column(String, nullable=True)
     annotated_image_path = Column(String, nullable=True)
     original_image_url = Column(String)  # Cloudinary URL

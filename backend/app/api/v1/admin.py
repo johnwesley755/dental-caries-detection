@@ -246,3 +246,36 @@ async def delete_user(
     db.commit()
     
     return {"message": "User deleted successfully"}
+
+@router.get("/pending-dentists")
+async def list_pending_dentists(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_admin)
+):
+    """List dentists awaiting verification - Admin only"""
+    pending_dentists = db.query(User).filter(
+        User.role == UserRole.DENTIST,
+        User.is_verified == False
+    ).all()
+    
+    # Return with profile info
+    return pending_dentists
+
+@router.post("/verify-dentist/{user_id}")
+async def verify_dentist(
+    user_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_admin)
+):
+    """Verify or approve a dentist account - Admin only"""
+    user = db.query(User).filter(User.id == user_id, User.role == UserRole.DENTIST).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Dentist not found"
+        )
+    
+    user.is_verified = True
+    db.commit()
+    
+    return {"message": f"Dentist {user.full_name} verified successfully"}

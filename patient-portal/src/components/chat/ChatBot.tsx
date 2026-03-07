@@ -46,7 +46,7 @@ export const ChatBot: React.FC<ChatBotProps> = ({ detectionId }) => {
   };
 
   return (
-    <Card className="w-full">
+    <Card className="flex flex-col h-full border-none shadow-none rounded-none overflow-hidden">
       <CardHeader className="border-b bg-gradient-to-r from-blue-50 to-blue-100">
         <CardTitle className="flex items-center gap-2 text-blue-900">
           <Bot className="h-5 w-5" />
@@ -57,9 +57,9 @@ export const ChatBot: React.FC<ChatBotProps> = ({ detectionId }) => {
         </p>
       </CardHeader>
 
-      <CardContent className="p-0 flex flex-col h-full">
+      <CardContent className="p-0 flex flex-col flex-1 min-h-0">
         {/* Messages Area */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#f8fbff] min-h-[350px] max-h-[70vh]">
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#f8fbff]">
           {messages.length === 0 && (
             <div className="flex flex-col items-center justify-center h-full text-center text-gray-500">
               <Bot className="h-12 w-12 mb-3 text-blue-400" />
@@ -111,10 +111,10 @@ export const ChatBot: React.FC<ChatBotProps> = ({ detectionId }) => {
                         <div className="flex flex-wrap gap-2 text-xs">
                           {msg.detection_context.severity && (
                             <span className={`px-2 py-1 rounded-full font-medium ${msg.detection_context.severity.toLowerCase() === 'severe'
-                                ? 'bg-red-100 text-red-700'
-                                : msg.detection_context.severity.toLowerCase() === 'moderate'
-                                  ? 'bg-orange-100 text-orange-700'
-                                  : 'bg-yellow-100 text-yellow-700'
+                              ? 'bg-red-100 text-red-700'
+                              : msg.detection_context.severity.toLowerCase() === 'moderate'
+                                ? 'bg-orange-100 text-orange-700'
+                                : 'bg-yellow-100 text-yellow-700'
                               }`}>
                               {msg.detection_context.severity}
                             </span>

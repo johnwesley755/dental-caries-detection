@@ -10,6 +10,7 @@ export interface Message {
   file_name?: string;
   file_type?: string;
   file_size?: number;
+  detection_id?: string;
   is_read: boolean;
   created_at: string;
   sender_name: string;
@@ -31,12 +32,19 @@ export interface Conversation {
 export interface SendMessageRequest {
   receiver_id: string;
   content?: string;
+  detection_id?: string;
 }
 
 export const messagingService = {
   // Get all conversations
   getConversations: async (): Promise<Conversation[]> => {
     const response = await api.get('/messaging/conversations');
+    return response.data;
+  },
+
+  // Get list of dentists
+  getDentists: async (): Promise<any[]> => {
+    const response = await api.get('/messaging/dentists');
     return response.data;
   },
 
@@ -70,13 +78,17 @@ export const messagingService = {
   sendMessageWithFile: async (
     receiverId: string,
     file: File,
-    content?: string
+    content?: string,
+    detectionId?: string
   ): Promise<Message> => {
     const formData = new FormData();
     formData.append('receiver_id', receiverId);
     formData.append('file', file);
     if (content) {
       formData.append('content', content);
+    }
+    if (detectionId) {
+      formData.append('detection_id', detectionId);
     }
 
     const response = await api.post('/messaging/messages/with-file', formData);

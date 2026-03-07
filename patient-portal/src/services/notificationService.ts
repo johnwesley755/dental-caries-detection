@@ -1,7 +1,5 @@
-// frontend/src/services/notificationService.ts
-import axios from 'axios';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+// patient-portal/src/services/notificationService.ts
+import { api } from './api';
 
 export interface Notification {
   id: string;
@@ -17,25 +15,14 @@ export interface Notification {
 }
 
 class NotificationService {
-  private getAuthHeader() {
-    const token = localStorage.getItem('patient_token');
-    return {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    };
-  }
-
   async getNotifications(unreadOnly: boolean = false, limit: number = 50): Promise<Notification[]> {
     try {
       const params = new URLSearchParams();
       if (unreadOnly) params.append('unread_only', 'true');
       params.append('limit', limit.toString());
 
-      const response = await axios.get(
-        `${API_URL}/api/v1/notifications?${params.toString()}`,
-        this.getAuthHeader()
+      const response = await api.get(
+        `/notifications?${params.toString()}`
       );
       return response.data;
     } catch (error) {
@@ -46,9 +33,8 @@ class NotificationService {
 
   async getUnreadCount(): Promise<number> {
     try {
-      const response = await axios.get(
-        `${API_URL}/api/v1/notifications/unread-count`,
-        this.getAuthHeader()
+      const response = await api.get(
+        '/notifications/unread-count'
       );
       return response.data.unread_count;
     } catch (error) {
@@ -59,10 +45,9 @@ class NotificationService {
 
   async markAsRead(notificationId: string): Promise<{ message: string }> {
     try {
-      const response = await axios.put(
-        `${API_URL}/api/v1/notifications/${notificationId}/read`,
-        {},
-        this.getAuthHeader()
+      const response = await api.put(
+        `/notifications/${notificationId}/read`,
+        {}
       );
       return response.data;
     } catch (error) {
@@ -73,10 +58,9 @@ class NotificationService {
 
   async markAllAsRead(): Promise<{ message: string }> {
     try {
-      const response = await axios.put(
-        `${API_URL}/api/v1/notifications/mark-all-read`,
-        {},
-        this.getAuthHeader()
+      const response = await api.put(
+        '/notifications/mark-all-read',
+        {}
       );
       return response.data;
     } catch (error) {
@@ -87,9 +71,8 @@ class NotificationService {
 
   async deleteNotification(notificationId: string): Promise<{ message: string }> {
     try {
-      const response = await axios.delete(
-        `${API_URL}/api/v1/notifications/${notificationId}`,
-        this.getAuthHeader()
+      const response = await api.delete(
+        `/notifications/${notificationId}`
       );
       return response.data;
     } catch (error) {

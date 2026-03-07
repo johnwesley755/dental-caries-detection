@@ -8,13 +8,22 @@ export const UserRole = {
 
 export type UserRole = (typeof UserRole)[keyof typeof UserRole];
 
+export interface DentistProfile {
+  license_number: string;
+  specialization?: string;
+  clinic_name?: string;
+  clinic_address?: string;
+}
+
 export interface User {
   id: string;
   email: string;
   full_name: string;
   role: UserRole;
   is_active: boolean;
+  is_verified: boolean;
   created_at: string;
+  profile?: DentistProfile;
 }
 
 export interface UserCreate {
@@ -22,6 +31,7 @@ export interface UserCreate {
   password: string;
   full_name: string;
   role?: UserRole;
+  profile?: DentistProfile;
 }
 
 export interface UserLogin {

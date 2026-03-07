@@ -35,57 +35,57 @@ const Login: React.FC = () => {
   return (
     // Removed 'font-sans' here to preserve your global font settings
     <div className="w-full min-h-screen grid lg:grid-cols-2 overflow-hidden">
-      
+
       {/* =======================
           LEFT SIDE - LOGIN FORM 
          ======================= */}
       <div className="relative flex items-center justify-center p-4 lg:p-8 bg-slate-50 dark:bg-slate-950 isolate">
-        
+
         {/* --- BACKGROUND LAYERS (Creating Depth) --- */}
-        
+
         {/* 1. Base Grid Pattern (Slightly darker dots on the slate background) */}
         <div className="absolute inset-0 -z-20 h-full w-full bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:24px_24px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,#000_70%,transparent_100%)] opacity-60"></div>
-        
+
         {/* 2. Animated Color Gradients (Soft glow behind the card) */}
         <div className="absolute top-0 left-0 right-0 bottom-0 overflow-hidden -z-10 pointer-events-none">
-            <motion.div 
-              animate={{ 
-                scale: [1, 1.2, 1],
-                opacity: [0.3, 0.5, 0.3], 
-                rotate: [0, 45, 0]
-              }}
-              transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute top-[10%] left-[10%] h-[400px] w-[400px] rounded-full bg-blue-200/40 mix-blend-multiply blur-[90px]"
-            />
-            <motion.div 
-              animate={{ 
-                scale: [1, 1.1, 1],
-                opacity: [0.3, 0.6, 0.3],
-                x: [0, -30, 0]
-              }}
-              transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute bottom-[10%] right-[10%] h-[400px] w-[400px] rounded-full bg-indigo-200/40 mix-blend-multiply blur-[90px]"
-            />
+          <motion.div
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.3, 0.5, 0.3],
+              rotate: [0, 45, 0]
+            }}
+            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute top-[10%] left-[10%] h-[400px] w-[400px] rounded-full bg-blue-200/40 mix-blend-multiply blur-[90px]"
+          />
+          <motion.div
+            animate={{
+              scale: [1, 1.1, 1],
+              opacity: [0.3, 0.6, 0.3],
+              x: [0, -30, 0]
+            }}
+            transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute bottom-[10%] right-[10%] h-[400px] w-[400px] rounded-full bg-indigo-200/40 mix-blend-multiply blur-[90px]"
+          />
         </div>
 
         {/* --- MAIN CARD --- */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className="w-full max-w-[480px]" 
+          className="w-full max-w-[480px]"
         >
           {/* Card Container: Pure White on Slate-50 Background = Pop */}
           <div className="bg-white border border-slate-100 shadow-[0_20px_50px_rgb(0,0,0,0.06)] rounded-3xl p-10 lg:p-12 space-y-8 relative overflow-hidden">
-            
+
             {/* Top Shine Effect */}
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500/50 to-transparent opacity-50" />
 
             {/* Header */}
             <div className="space-y-3 text-center">
-               <div className="inline-flex items-center justify-center h-14 w-14 rounded-2xl bg-blue-50 text-blue-600 mb-2 ring-1 ring-blue-100">
-                 <Activity className="h-7 w-7" />
-               </div>
+              <div className="inline-flex items-center justify-center h-14 w-14 rounded-2xl bg-blue-50 text-blue-600 mb-2 ring-1 ring-blue-100">
+                <Activity className="h-7 w-7" />
+              </div>
               <h1 className="text-3xl font-bold tracking-tight text-slate-900">
                 Welcome Back
               </h1>
@@ -96,7 +96,7 @@ const Login: React.FC = () => {
 
             <form onSubmit={handleSubmit} className="space-y-6">
               {error && (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
                   className="p-4 text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl flex items-center gap-3"
@@ -113,7 +113,7 @@ const Login: React.FC = () => {
                 </label>
                 <div className="relative group">
                   <div className="absolute left-4 top-3.5 pointer-events-none">
-                     <Mail className="h-5 w-5 text-slate-400 group-focus-within:text-blue-600 transition-colors" />
+                    <Mail className="h-5 w-5 text-slate-400 group-focus-within:text-blue-600 transition-colors" />
                   </div>
                   <input
                     id="email"
@@ -137,8 +137,8 @@ const Login: React.FC = () => {
                   <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">
                     Password
                   </label>
-                  <Link 
-                    to="/forgot-password" 
+                  <Link
+                    to="/forgot-password"
                     className="text-xs font-semibold text-blue-600 hover:text-blue-700 hover:underline"
                   >
                     Forgot password?
@@ -199,18 +199,24 @@ const Login: React.FC = () => {
             </form>
 
             <div className="relative pt-2">
-               <div className="absolute inset-0 flex items-center">
-                 <span className="w-full border-t border-slate-100" />
-               </div>
-               <div className="relative flex justify-center text-xs uppercase tracking-widest">
-                 <span className="bg-white px-3 text-slate-400 font-medium">
-                   Secure Staff Portal
-                 </span>
-               </div>
-             </div>
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-slate-100" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase tracking-widest">
+                <span className="bg-white px-3 text-slate-400 font-medium">
+                  Secure Staff Portal
+                </span>
+              </div>
+            </div>
 
             <div className="text-center text-xs text-slate-500">
-              <p>Protected by <span className="font-semibold text-slate-700">Enterprise Shield</span>. <br/> Access restricted to authorized personnel.</p>
+              <p>Protected by <span className="font-semibold text-slate-700">Enterprise Shield</span>. <br /> Access restricted to authorized personnel.</p>
+              <p className="mt-4 text-sm text-slate-600">
+                Interested in joining the network?{' '}
+                <Link to="/register" className="font-bold text-blue-600 hover:text-blue-700 transition-colors">
+                  Create a Professional Account
+                </Link>
+              </p>
             </div>
           </div>
         </motion.div>
@@ -222,7 +228,7 @@ const Login: React.FC = () => {
       <div className="hidden lg:flex relative h-full w-full flex-col p-16 text-white overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0 bg-slate-900">
-          <img 
+          <img
             src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?q=80&w=2068&auto=format&fit=crop"
             alt="Dental Technology"
             className="h-full w-full object-cover opacity-50 scale-105 saturate-50"
@@ -231,7 +237,7 @@ const Login: React.FC = () => {
           <div className="absolute inset-0 bg-gradient-to-br from-blue-950/95 via-slate-900/90 to-slate-950/90 mix-blend-multiply" />
           <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-blue-500/10 to-transparent opacity-30" />
         </div>
-        
+
         {/* Branding */}
         <div className="relative z-20 flex items-center gap-3">
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-xl">
@@ -245,11 +251,11 @@ const Login: React.FC = () => {
 
         {/* Testimonial */}
         <div className="relative z-20 mt-auto max-w-lg">
-          <motion.div 
-             initial={{ opacity: 0, x: 20 }}
-             animate={{ opacity: 1, x: 0 }}
-             transition={{ delay: 0.4, duration: 0.6 }}
-             className="rounded-3xl bg-white/5 backdrop-blur-md border border-white/10 p-8 shadow-2xl"
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.4, duration: 0.6 }}
+            className="rounded-3xl bg-white/5 backdrop-blur-md border border-white/10 p-8 shadow-2xl"
           >
             <div className="mb-6 text-blue-300">
               <Activity className="h-8 w-8" />
@@ -259,11 +265,11 @@ const Login: React.FC = () => {
             </p>
             <footer className="flex items-center justify-between border-t border-white/10 pt-6">
               <div className="flex items-center gap-3">
-                 <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-xs font-bold text-white shadow-lg">JS</div>
-                 <div>
-                    <div className="text-sm font-semibold text-white">Dr. James Smith</div>
-                    <div className="text-xs text-blue-200">Chief of Dental Surgery</div>
-                 </div>
+                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-xs font-bold text-white shadow-lg">JS</div>
+                <div>
+                  <div className="text-sm font-semibold text-white">Dr. James Smith</div>
+                  <div className="text-xs text-blue-200">Chief of Dental Surgery</div>
+                </div>
               </div>
               <div className="text-xs font-medium text-slate-400 bg-black/20 px-3 py-1 rounded-full">v2.4.0 Stable</div>
             </footer>

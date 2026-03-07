@@ -9,6 +9,7 @@ import { FloatingChatButton } from './components/chat/FloatingChatButton';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
 import { Home } from './pages/Home';
 import { Login } from './pages/Login';
+import { Register } from './pages/Register';
 import { Dashboard } from './pages/Dashboard';
 import { MyDetections } from './pages/MyDetections';
 import { DetectionView } from './pages/DetectionView';
@@ -28,9 +29,9 @@ const AuthenticatedLayout: React.FC<{ children: React.ReactNode }> = ({ children
       <MobileHeader onMenuClick={() => setIsMobileMenuOpen(true)} />
 
       {/* Sidebar - Desktop always visible, Mobile controlled by state */}
-      <Sidebar 
-        isOpen={isMobileMenuOpen} 
-        onClose={() => setIsMobileMenuOpen(false)} 
+      <Sidebar
+        isOpen={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
       />
 
       {/* Main Content */}
@@ -54,7 +55,8 @@ function App() {
           {/* Public Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
-          
+          <Route path="/register" element={<Register />} />
+
           {/* Protected Routes with Sidebar */}
           <Route
             path="/dashboard"

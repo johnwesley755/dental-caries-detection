@@ -13,6 +13,7 @@ import {
   ScanFace,
   Calendar,
   MessageCircle,
+  ShieldCheck,
   X
 } from 'lucide-react';
 import { CalendarModal } from '../dashboard/CalendarModal';
@@ -41,7 +42,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
     { path: '/history', icon: History, label: 'History' },
     { path: '/messages', icon: MessageCircle, label: 'Messages' },
     ...(user?.role === UserRole.ADMIN
-      ? [{ path: '/users', icon: UserCog, label: 'User Management' }]
+      ? [
+        { path: '/users', icon: UserCog, label: 'User Management' },
+        { path: '/verifications', icon: ShieldCheck, label: 'Dentist Verification' }
+      ]
       : []),
   ];
 
@@ -99,7 +103,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
               Dental AI
             </h1>
           </div>
-          
+
           {/* Action Icons */}
           <div className="flex items-center gap-2 mt-4">
             <button
@@ -110,7 +114,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
               <Calendar className="h-5 w-5" />
               <span className="text-sm font-medium">Calendar</span>
             </button>
-            
+
             <div className="relative hidden lg:block">
               <NotificationDropdown />
             </div>
@@ -122,17 +126,16 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
           {menuItems.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.path);
-            
+
             return (
               <Link
                 key={item.path}
                 to={item.path}
                 onClick={handleLinkClick}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all duration-200 group relative ${
-                  active 
-                    ? 'bg-blue-600 text-white shadow-md shadow-blue-200' 
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all duration-200 group relative ${active
+                    ? 'bg-blue-600 text-white shadow-md shadow-blue-200'
                     : 'text-gray-500 hover:bg-blue-50 hover:text-blue-600'
-                }`}
+                  }`}
               >
                 <Icon className={`h-5 w-5 ${active ? 'text-white' : 'text-gray-400 group-hover:text-blue-600'}`} />
                 <span className="font-medium">{item.label}</span>
@@ -144,7 +147,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
 
         {/* Footer */}
         <div className="p-4 mt-auto">
-          <button 
+          <button
             onClick={handleLogout}
             className="flex items-center gap-3 px-4 py-3 text-gray-500 hover:text-red-500 hover:bg-red-50 rounded-xl w-full transition-colors font-medium"
           >
@@ -152,7 +155,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
             <span>Logout</span>
           </button>
         </div>
-        
+
         {/* Calendar Modal */}
         <CalendarModal isOpen={showCalendar} onClose={() => setShowCalendar(false)} />
       </aside>

@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { AuthProvider } from './contexts/AuthContext';
@@ -16,6 +15,7 @@ import { Profile } from './pages/Profile';
 import { Patients } from './pages/Patients';
 import { UserManagement } from './pages/UserManagement';
 import { Messages } from './pages/Messages';
+import VerificationDashboard from './pages/VerificationDashboard';
 
 import MainLayout from './layouts/MainLayout';
 import './App.css';
@@ -48,6 +48,7 @@ function App() {
               <Route path="/users" element={<UserManagement />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/messages" element={<Messages />} />
+              <Route path="/verifications" element={<VerificationDashboard />} />
             </Route>
 
             {/* Catch all */}

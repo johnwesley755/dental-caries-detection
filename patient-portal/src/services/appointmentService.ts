@@ -1,7 +1,5 @@
-// frontend/src/services/appointmentService.ts
-import axios from 'axios';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+// patient-portal/src/services/appointmentService.ts
+import { api } from './api';
 
 export interface Appointment {
   id: string;
@@ -34,25 +32,14 @@ export interface UpdateAppointmentData {
 }
 
 class AppointmentService {
-  private getAuthHeader() {
-    const token = localStorage.getItem('patient_token');
-    return {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    };
-  }
-
   async getAppointments(status?: string, patientId?: string): Promise<Appointment[]> {
     try {
       const params = new URLSearchParams();
       if (status) params.append('status', status);
       if (patientId) params.append('patient_id', patientId);
 
-      const response = await axios.get(
-        `${API_URL}/api/v1/appointments?${params.toString()}`,
-        this.getAuthHeader()
+      const response = await api.get(
+        `/appointments?${params.toString()}`
       );
       return response.data;
     } catch (error) {
@@ -63,10 +50,9 @@ class AppointmentService {
 
   async createAppointment(data: CreateAppointmentData): Promise<{ message: string; appointment_id: string }> {
     try {
-      const response = await axios.post(
-        `${API_URL}/api/v1/appointments`,
-        data,
-        this.getAuthHeader()
+      const response = await api.post(
+        '/appointments',
+        data
       );
       return response.data;
     } catch (error) {
@@ -77,10 +63,9 @@ class AppointmentService {
 
   async updateAppointment(appointmentId: string, data: UpdateAppointmentData): Promise<{ message: string }> {
     try {
-      const response = await axios.put(
-        `${API_URL}/api/v1/appointments/${appointmentId}`,
-        data,
-        this.getAuthHeader()
+      const response = await api.put(
+        `/appointments/${appointmentId}`,
+        data
       );
       return response.data;
     } catch (error) {
@@ -91,9 +76,8 @@ class AppointmentService {
 
   async cancelAppointment(appointmentId: string): Promise<{ message: string }> {
     try {
-      const response = await axios.delete(
-        `${API_URL}/api/v1/appointments/${appointmentId}`,
-        this.getAuthHeader()
+      const response = await api.delete(
+        `/appointments/${appointmentId}`
       );
       return response.data;
     } catch (error) {
