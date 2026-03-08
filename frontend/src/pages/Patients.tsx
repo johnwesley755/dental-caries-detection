@@ -189,8 +189,8 @@ export const Patients: React.FC = () => {
                         <div>
                             <label className="text-xs text-slate-400">Temporary Password</label>
                             <div className="flex items-center justify-between bg-white p-3 rounded-xl border border-slate-200">
-                                <code className="text-blue-600 font-bold text-lg">{generatedPassword}</code>
-                                <Button size="icon" variant="ghost" className="h-8 w-8 text-slate-400 hover:text-blue-600" onClick={() => {
+                                <code className="text-orange-600 font-bold text-lg">{generatedPassword}</code>
+                                <Button size="icon" variant="ghost" className="h-8 w-8 text-slate-400 hover:text-orange-600" onClick={() => {
                                     navigator.clipboard.writeText(generatedPassword);
                                     toast.success('Password copied');
                                 }}>
@@ -219,7 +219,7 @@ export const Patients: React.FC = () => {
                   <div className="col-span-2">
                     <Label className="text-slate-500 font-medium ml-1">Full Name</Label>
                     <Input
-                      className="mt-1.5 bg-slate-50 border-none h-11 rounded-xl focus:ring-2 focus:ring-blue-100 transition-all"
+                      className="mt-1.5 bg-slate-50 border-none h-11 rounded-xl focus:ring-2 focus:ring-orange-100 transition-all"
                       placeholder="e.g. John Doe"
                       value={formData.full_name}
                       onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
@@ -231,7 +231,7 @@ export const Patients: React.FC = () => {
                   <div>
                     <Label className="text-slate-500 font-medium ml-1">Email Address</Label>
                     <Input
-                      className="mt-1.5 bg-slate-50 border-none h-11 rounded-xl focus:ring-2 focus:ring-blue-100"
+                      className="mt-1.5 bg-slate-50 border-none h-11 rounded-xl focus:ring-2 focus:ring-orange-100"
                       type="email"
                       placeholder="john@example.com"
                       value={formData.email}
@@ -244,7 +244,7 @@ export const Patients: React.FC = () => {
                   <div>
                     <Label className="text-slate-500 font-medium ml-1">Phone Number</Label>
                     <Input
-                      className="mt-1.5 bg-slate-50 border-none h-11 rounded-xl focus:ring-2 focus:ring-blue-100"
+                      className="mt-1.5 bg-slate-50 border-none h-11 rounded-xl focus:ring-2 focus:ring-orange-100"
                       placeholder="+1 (555) 000-0000"
                       value={formData.contact_number}
                       onChange={(e) => setFormData({ ...formData, contact_number: e.target.value })}
@@ -255,7 +255,7 @@ export const Patients: React.FC = () => {
                   <div>
                     <Label className="text-slate-500 font-medium ml-1">Age</Label>
                     <Input
-                      className="mt-1.5 bg-slate-50 border-none h-11 rounded-xl focus:ring-2 focus:ring-blue-100"
+                      className="mt-1.5 bg-slate-50 border-none h-11 rounded-xl focus:ring-2 focus:ring-orange-100"
                       type="number"
                       placeholder="Years"
                       // Safely handle age input
@@ -272,7 +272,7 @@ export const Patients: React.FC = () => {
                       onValueChange={(value) => setFormData({ ...formData, gender: value })}
                       disabled={isSubmitting}
                     >
-                      <SelectTrigger className="mt-1.5 bg-slate-50 border-none h-11 rounded-xl focus:ring-2 focus:ring-blue-100">
+                      <SelectTrigger className="mt-1.5 bg-slate-50 border-none h-11 rounded-xl focus:ring-2 focus:ring-orange-100">
                         <SelectValue placeholder="Select gender" />
                       </SelectTrigger>
                       <SelectContent>
@@ -286,7 +286,7 @@ export const Patients: React.FC = () => {
                   <div className="col-span-2">
                     <Label className="text-slate-500 font-medium ml-1">Address</Label>
                     <Input
-                      className="mt-1.5 bg-slate-50 border-none h-11 rounded-xl focus:ring-2 focus:ring-blue-100"
+                      className="mt-1.5 bg-slate-50 border-none h-11 rounded-xl focus:ring-2 focus:ring-orange-100"
                       placeholder="Full residential address"
                       value={formData.address}
                       onChange={(e) => setFormData({ ...formData, address: e.target.value })}
@@ -299,7 +299,7 @@ export const Patients: React.FC = () => {
                     <textarea
                       value={formData.medical_history}
                       onChange={(e) => setFormData({ ...formData, medical_history: e.target.value })}
-                      className="mt-1.5 w-full min-h-[100px] px-4 py-3 bg-slate-50 border-none rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-100 resize-none text-sm"
+                      className="mt-1.5 w-full min-h-[100px] px-4 py-3 bg-slate-50 border-none rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-100 resize-none text-sm"
                       placeholder="Enter relevant medical conditions, allergies, or past treatments..."
                       disabled={isSubmitting}
                     />
@@ -307,14 +307,14 @@ export const Patients: React.FC = () => {
                 </div>
 
                 {/* Account Options Card */}
-                <div className="bg-blue-50/50 p-5 rounded-xl border border-blue-100 space-y-3">
+                <div className="bg-orange-50/50 p-5 rounded-xl border border-orange-100 space-y-3">
                   <div className="flex items-center space-x-3">
                     <input
                       type="checkbox"
                       id="create_account"
                       checked={formData.create_account}
                       onChange={(e) => setFormData({ ...formData, create_account: e.target.checked })}
-                      className="w-5 h-5 rounded text-blue-600 focus:ring-blue-500 border-gray-300"
+                      className="w-5 h-5 rounded text-orange-600 focus:ring-orange-500 border-gray-300"
                       disabled={isSubmitting}
                     />
                     <Label htmlFor="create_account" className="font-semibold text-slate-700 cursor-pointer">
@@ -329,7 +329,7 @@ export const Patients: React.FC = () => {
                         id="send_email"
                         checked={formData.send_email}
                         onChange={(e) => setFormData({ ...formData, send_email: e.target.checked })}
-                        className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 border-gray-300"
+                        className="w-4 h-4 rounded text-orange-600 focus:ring-orange-500 border-gray-300"
                         disabled={isSubmitting}
                       />
                       <Label htmlFor="send_email" className="text-slate-600 text-sm cursor-pointer flex items-center">
@@ -354,7 +354,7 @@ export const Patients: React.FC = () => {
                   {/* UPDATE: Button now handles Loading State */}
                   <Button 
                     type="submit" 
-                    className="flex-[2] h-12 rounded-xl bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-200"
+                    className="flex-[2] h-12 rounded-xl bg-orange-600 hover:bg-orange-700 text-white shadow-lg shadow-orange-200"
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? (

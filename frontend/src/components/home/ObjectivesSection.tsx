@@ -32,9 +32,9 @@ export const ObjectivesSection: React.FC = () => {
 
   const getColorClasses = (color: string) => {
     const colors = {
-      blue: 'bg-blue-100 text-blue-600',
+      blue: 'bg-orange-100 text-orange-600',
       green: 'bg-green-100 text-green-600',
-      purple: 'bg-purple-100 text-purple-600',
+      purple: 'bg-yellow-100 text-yellow-600',
       orange: 'bg-orange-100 text-orange-600'
     };
     return colors[color as keyof typeof colors] || colors.blue;

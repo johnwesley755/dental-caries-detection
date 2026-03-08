@@ -55,7 +55,7 @@ export const PatientDetails: React.FC = () => {
 
     const getGenderBadge = (gender?: Gender) => {
         switch (gender) {
-            case Gender.MALE: return <Badge variant="secondary" className="bg-blue-50 text-blue-700 hover:bg-blue-50">Male</Badge>;
+            case Gender.MALE: return <Badge variant="secondary" className="bg-orange-50 text-orange-700 hover:bg-orange-50">Male</Badge>;
             case Gender.FEMALE: return <Badge variant="secondary" className="bg-pink-50 text-pink-700 hover:bg-pink-50">Female</Badge>;
             default: return <Badge variant="secondary">Other</Badge>;
         }
@@ -64,7 +64,7 @@ export const PatientDetails: React.FC = () => {
     if (isLoading) {
         return (
             <div className="min-h-screen bg-[#F4F7FE] flex items-center justify-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
             </div>
         );
     }
@@ -87,14 +87,14 @@ export const PatientDetails: React.FC = () => {
                 </Button>
                 <div className="flex gap-3">
                     {patient.user_id && (
-                        <Button onClick={() => navigate(`/messages?patientId=${patient.user_id}`)} variant="outline" className="bg-white border-none shadow-sm text-slate-600 hover:text-blue-600">
+                        <Button onClick={() => navigate(`/messages?patientId=${patient.user_id}`)} variant="outline" className="bg-white border-none shadow-sm text-slate-600 hover:text-orange-600">
                             <MessageSquare className="mr-2 h-4 w-4" /> Send Message
                         </Button>
                     )}
-                    <Button variant="outline" className="bg-white border-none shadow-sm text-slate-600 hover:text-blue-600">
+                    <Button variant="outline" className="bg-white border-none shadow-sm text-slate-600 hover:text-orange-600">
                         <Edit className="mr-2 h-4 w-4" /> Edit Profile
                     </Button>
-                    <Button onClick={() => navigate('/detection')} className="bg-blue-600 shadow-lg shadow-blue-200 text-white rounded-xl">
+                    <Button onClick={() => navigate('/detection')} className="bg-orange-600 shadow-lg shadow-orange-200 text-white rounded-xl">
                         <Activity className="mr-2 h-4 w-4" /> New Analysis
                     </Button>
                 </div>
@@ -105,7 +105,7 @@ export const PatientDetails: React.FC = () => {
                 {/* LEFT COLUMN: Patient Profile Card */}
                 <div className="col-span-12 lg:col-span-4 space-y-6">
                     <Card className="border-none shadow-sm bg-white rounded-[20px] overflow-hidden">
-                        <CardHeader className="bg-gradient-to-br from-blue-600 to-blue-700 p-8 text-white text-center">
+                        <CardHeader className="bg-gradient-to-br from-orange-600 to-orange-700 p-8 text-white text-center">
                             <div className="w-24 h-24 bg-white/20 backdrop-blur-md rounded-full mx-auto flex items-center justify-center text-3xl font-bold mb-4 shadow-inner">
                                 {patient.full_name.charAt(0)}
                             </div>
@@ -121,28 +121,28 @@ export const PatientDetails: React.FC = () => {
                         <CardContent className="p-8 space-y-6">
                             <div className="space-y-4">
                                 <div className="flex items-center gap-4 p-3 rounded-xl bg-gray-50/50">
-                                    <div className="p-2 bg-white rounded-lg shadow-sm text-blue-600"><Phone className="h-4 w-4" /></div>
+                                    <div className="p-2 bg-white rounded-lg shadow-sm text-orange-600"><Phone className="h-4 w-4" /></div>
                                     <div>
                                         <p className="text-xs text-gray-400 font-medium uppercase">Phone</p>
                                         <p className="text-sm font-semibold text-slate-700">{patient.contact_number || 'N/A'}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-4 p-3 rounded-xl bg-gray-50/50">
-                                    <div className="p-2 bg-white rounded-lg shadow-sm text-blue-600"><Mail className="h-4 w-4" /></div>
+                                    <div className="p-2 bg-white rounded-lg shadow-sm text-orange-600"><Mail className="h-4 w-4" /></div>
                                     <div>
                                         <p className="text-xs text-gray-400 font-medium uppercase">Email</p>
                                         <p className="text-sm font-semibold text-slate-700 break-all">{patient.email || 'N/A'}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-4 p-3 rounded-xl bg-gray-50/50">
-                                    <div className="p-2 bg-white rounded-lg shadow-sm text-blue-600"><MapPin className="h-4 w-4" /></div>
+                                    <div className="p-2 bg-white rounded-lg shadow-sm text-orange-600"><MapPin className="h-4 w-4" /></div>
                                     <div>
                                         <p className="text-xs text-gray-400 font-medium uppercase">Address</p>
                                         <p className="text-sm font-semibold text-slate-700">{patient.address || 'N/A'}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-4 p-3 rounded-xl bg-gray-50/50">
-                                    <div className="p-2 bg-white rounded-lg shadow-sm text-blue-600"><Clock className="h-4 w-4" /></div>
+                                    <div className="p-2 bg-white rounded-lg shadow-sm text-orange-600"><Clock className="h-4 w-4" /></div>
                                     <div>
                                         <p className="text-xs text-gray-400 font-medium uppercase">Registered</p>
                                         <p className="text-sm font-semibold text-slate-700">{new Date(patient.created_at).toLocaleDateString()}</p>
@@ -177,7 +177,7 @@ export const PatientDetails: React.FC = () => {
                                     <p className="text-sm font-medium text-slate-400">Total Scans</p>
                                     <h3 className="text-3xl font-bold text-slate-800 mt-2">{detections.length}</h3>
                                 </div>
-                                <div className="p-3 bg-blue-50 rounded-xl text-blue-600">
+                                <div className="p-3 bg-orange-50 rounded-xl text-orange-600">
                                     <Activity className="h-6 w-6" />
                                 </div>
                             </div>

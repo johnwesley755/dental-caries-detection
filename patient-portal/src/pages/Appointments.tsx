@@ -53,7 +53,7 @@ export const Appointments: React.FC = () => {
     switch (status.toLowerCase()) {
       case 'scheduled':
       case 'confirmed':
-        return 'bg-blue-100 text-blue-700';
+        return 'bg-teal-100 text-teal-700';
       case 'completed':
         return 'bg-green-100 text-green-700';
       case 'cancelled':
@@ -66,7 +66,7 @@ export const Appointments: React.FC = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        <Loader2 className="h-8 w-8 animate-spin text-teal-600" />
       </div>
     );
   }
@@ -83,21 +83,21 @@ export const Appointments: React.FC = () => {
       <div className="mb-6 flex gap-2 flex-wrap">
         <button
           onClick={() => setFilter('')}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filter === '' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filter === '' ? 'bg-teal-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
         >
           All
         </button>
         <button
           onClick={() => setFilter('scheduled')}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filter === 'scheduled' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filter === 'scheduled' ? 'bg-teal-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
         >
           Scheduled
         </button>
         <button
           onClick={() => setFilter('completed')}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filter === 'completed' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filter === 'completed' ? 'bg-teal-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
         >
           Completed
@@ -119,11 +119,11 @@ export const Appointments: React.FC = () => {
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                   {/* Left Side - Date & Time */}
                   <div className="flex items-start gap-4">
-                    <div className="w-16 h-16 bg-blue-50 rounded-xl flex flex-col items-center justify-center flex-shrink-0">
-                      <span className="text-2xl font-bold text-blue-600">
+                    <div className="w-16 h-16 bg-teal-50 rounded-xl flex flex-col items-center justify-center flex-shrink-0">
+                      <span className="text-2xl font-bold text-teal-600">
                         {appointmentDate.getDate()}
                       </span>
-                      <span className="text-xs text-blue-600 font-medium">
+                      <span className="text-xs text-teal-600 font-medium">
                         {appointmentDate.toLocaleDateString('en-US', { month: 'short' })}
                       </span>
                     </div>

@@ -11,7 +11,7 @@ export const Footer: React.FC = () => {
           {/* Brand */}
           <div className="col-span-1">
             <div className="flex items-center gap-2 mb-4">
-              <Activity className="h-8 w-8 text-blue-500" />
+              <Activity className="h-8 w-8 text-orange-500" />
               <span className="text-xl font-bold text-white">DentalAI</span>
             </div>
             <p className="text-sm text-gray-400">
@@ -24,22 +24,22 @@ export const Footer: React.FC = () => {
             <h3 className="text-white font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link to="/" className="hover:text-blue-400 transition-colors">
+                <Link to="/" className="hover:text-orange-400 transition-colors">
                   Home
                 </Link>
               </li>
               <li>
-                <Link to="/login" className="hover:text-blue-400 transition-colors">
+                <Link to="/login" className="hover:text-orange-400 transition-colors">
                   Login
                 </Link>
               </li>
               <li>
-                <a href="#features" className="hover:text-blue-400 transition-colors">
+                <a href="#features" className="hover:text-orange-400 transition-colors">
                   Features
                 </a>
               </li>
               <li>
-                <a href="#workflow" className="hover:text-blue-400 transition-colors">
+                <a href="#workflow" className="hover:text-orange-400 transition-colors">
                   How It Works
                 </a>
               </li>
@@ -51,22 +51,22 @@ export const Footer: React.FC = () => {
             <h3 className="text-white font-semibold mb-4">Resources</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="#" className="hover:text-blue-400 transition-colors">
+                <a href="#" className="hover:text-orange-400 transition-colors">
                   Documentation
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-blue-400 transition-colors">
+                <a href="#" className="hover:text-orange-400 transition-colors">
                   API Reference
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-blue-400 transition-colors">
+                <a href="#" className="hover:text-orange-400 transition-colors">
                   Support
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-blue-400 transition-colors">
+                <a href="#" className="hover:text-orange-400 transition-colors">
                   Privacy Policy
                 </a>
               </li>
@@ -78,15 +78,15 @@ export const Footer: React.FC = () => {
             <h3 className="text-white font-semibold mb-4">Contact</h3>
             <ul className="space-y-3 text-sm">
               <li className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-blue-500" />
+                <Mail className="h-4 w-4 text-orange-500" />
                 <span>support@dentalai.com</span>
               </li>
               <li className="flex items-center gap-2">
-                <Phone className="h-4 w-4 text-blue-500" />
+                <Phone className="h-4 w-4 text-orange-500" />
                 <span>+1 (555) 123-4567</span>
               </li>
               <li className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-blue-500" />
+                <MapPin className="h-4 w-4 text-orange-500" />
                 <span>San Francisco, CA</span>
               </li>
             </ul>

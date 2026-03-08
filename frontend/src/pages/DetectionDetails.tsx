@@ -62,13 +62,13 @@ export const DetectionDetails: React.FC = () => {
       case DetectionStatus.COMPLETED:
         return <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100 border-none px-3 py-1">Completed</Badge>;
       case DetectionStatus.REVIEWED:
-        return <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100 border-none px-3 py-1">Reviewed</Badge>;
+        return <Badge className="bg-orange-100 text-orange-700 hover:bg-orange-100 border-none px-3 py-1">Reviewed</Badge>;
       default:
         return <Badge className="bg-yellow-100 text-yellow-700 hover:bg-yellow-100 border-none px-3 py-1">Processing</Badge>;
     }
   };
 
-  if (isLoading) return <div className="min-h-screen bg-[#F4F7FE] flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div></div>;
+  if (isLoading) return <div className="min-h-screen bg-[#F4F7FE] flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div></div>;
   if (!detection) return null;
 
   return (
@@ -88,10 +88,10 @@ export const DetectionDetails: React.FC = () => {
         </div>
 
         <div className="flex gap-3">
-          <Button variant="outline" className="bg-white border-none shadow-sm text-slate-600 hover:text-blue-600" onClick={() => setShareDialogOpen(true)}>
+          <Button variant="outline" className="bg-white border-none shadow-sm text-slate-600 hover:text-orange-600" onClick={() => setShareDialogOpen(true)}>
             <Share2 className="h-4 w-4 mr-2" /> Share
           </Button>
-          <Button onClick={handleDownloadPDF} disabled={isDownloading} className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-200">
+          <Button onClick={handleDownloadPDF} disabled={isDownloading} className="bg-orange-600 hover:bg-orange-700 text-white shadow-lg shadow-orange-200">
             {isDownloading ? <span className="animate-spin mr-2">⏳</span> : <Download className="h-4 w-4 mr-2" />}
             Download PDF
           </Button>
@@ -109,7 +109,7 @@ export const DetectionDetails: React.FC = () => {
           {/* Notes Card */}
           <div className="bg-white rounded-[20px] p-6 shadow-sm">
             <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-              <FileText className="h-5 w-5 text-blue-500" /> Clinical Notes
+              <FileText className="h-5 w-5 text-orange-500" /> Clinical Notes
             </h3>
             <div className="bg-slate-50 p-4 rounded-xl text-slate-600 text-sm min-h-[100px]">
               {detection.notes

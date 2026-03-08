@@ -58,7 +58,7 @@ export const DetectionView: React.FC = () => {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600"></div>
         </div>
       </div>
     );
@@ -73,9 +73,9 @@ export const DetectionView: React.FC = () => {
       case 'severe':
         return 'bg-red-100 text-red-800';
       case 'moderate':
-        return 'bg-orange-100 text-orange-800';
+        return 'bg-teal-100 text-teal-800';
       case 'mild':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-emerald-100 text-emerald-800';
       default:
         return 'bg-gray-100 text-gray-800';
     }
@@ -93,7 +93,7 @@ export const DetectionView: React.FC = () => {
           <div className="flex items-center gap-3">
             <Button
               variant="outline"
-              className="border-blue-200 text-blue-700 hover:bg-blue-50"
+              className="border-teal-200 text-teal-700 hover:bg-teal-50"
               onClick={() => navigate('/messages', { state: { dentistId: detection.dentist_id, detectionId: detection.id } })}
             >
               <MessageCircle className="h-4 w-4 mr-2" />
@@ -148,7 +148,7 @@ export const DetectionView: React.FC = () => {
           <Card>
             <CardContent className="pt-6">
               <p className="text-sm text-gray-600">Findings</p>
-              <p className="text-3xl font-bold mt-2 text-orange-600">{detection.total_caries_detected}</p>
+              <p className="text-3xl font-bold mt-2 text-teal-600">{detection.total_caries_detected}</p>
             </CardContent>
           </Card>
           <Card>
@@ -201,7 +201,7 @@ export const DetectionView: React.FC = () => {
                       <p className="text-sm text-gray-700 mb-2">Location: {finding.location}</p>
                     )}
                     {finding.treatment_recommendation && (
-                      <p className="text-sm text-blue-700 bg-blue-50 p-2 rounded">
+                      <p className="text-sm text-teal-700 bg-teal-50 p-2 rounded">
                         <strong>Recommendation:</strong> {finding.treatment_recommendation}
                       </p>
                     )}

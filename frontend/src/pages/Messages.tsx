@@ -198,7 +198,7 @@ export const Messages: React.FC = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        <Loader2 className="h-8 w-8 animate-spin text-orange-600" />
       </div>
     );
   }
@@ -219,7 +219,7 @@ export const Messages: React.FC = () => {
               if (!showPatientSelector) loadPatients();
               setShowPatientSelector(!showPatientSelector);
             }}
-            className={showPatientSelector ? 'text-blue-600 bg-blue-50' : 'text-gray-400'}
+            className={showPatientSelector ? 'text-orange-600 bg-orange-50' : 'text-gray-400'}
           >
             {showPatientSelector ? <X className="h-5 w-5" /> : <Plus className="h-5 w-5" />}
           </Button>
@@ -233,7 +233,7 @@ export const Messages: React.FC = () => {
               </div>
               {loadingPatients ? (
                 <div className="p-8 text-center">
-                  <Loader2 className="h-6 w-6 animate-spin text-blue-600 mx-auto" />
+                  <Loader2 className="h-6 w-6 animate-spin text-orange-600 mx-auto" />
                 </div>
               ) : patients.length === 0 ? (
                 <div className="p-8 text-center">
@@ -244,10 +244,10 @@ export const Messages: React.FC = () => {
                   <div
                     key={patient.id}
                     onClick={() => handleStartNewChat(patient)}
-                    className="p-4 border-b border-gray-100 cursor-pointer hover:bg-blue-50 transition-colors group"
+                    className="p-4 border-b border-gray-100 cursor-pointer hover:bg-orange-50 transition-colors group"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                      <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 font-bold group-hover:bg-orange-600 group-hover:text-white transition-colors">
                         {patient.full_name.charAt(0)}
                       </div>
                       <div>
@@ -270,7 +270,7 @@ export const Messages: React.FC = () => {
                 key={conv.id}
                 onClick={() => setSelectedConversation(conv)}
                 className={`p-4 border-b border-gray-100 cursor-pointer transition-colors ${selectedConversation?.id === conv.id
-                  ? 'bg-blue-50 border-l-4 border-l-blue-600'
+                  ? 'bg-orange-50 border-l-4 border-l-orange-600'
                   : 'hover:bg-gray-50'
                   }`}
               >
@@ -279,7 +279,7 @@ export const Messages: React.FC = () => {
                     <div className="flex items-center gap-2">
                       <h3 className="font-semibold text-gray-900">{conv.other_user_name}</h3>
                       {conv.unread_count > 0 && (
-                        <span className="bg-blue-600 text-white text-xs px-2 py-0.5 rounded-full">
+                        <span className="bg-orange-600 text-white text-xs px-2 py-0.5 rounded-full">
                           {conv.unread_count}
                         </span>
                       )}
@@ -319,7 +319,7 @@ export const Messages: React.FC = () => {
                     <div className={`max-w-md ${isOwn ? 'items-end' : 'items-start'} flex flex-col`}>
                       <div
                         className={`rounded-2xl px-4 py-2 ${isOwn
-                          ? 'bg-blue-600 text-white'
+                          ? 'bg-orange-600 text-white'
                           : 'bg-white border border-gray-200 text-gray-900'
                           }`}
                       >
@@ -337,7 +337,7 @@ export const Messages: React.FC = () => {
                               <a
                                 href={`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}${message.file_url}`}
                                 download={message.file_name}
-                                className={`flex items-center gap-2 p-2 rounded-lg ${isOwn ? 'bg-blue-700' : 'bg-gray-50'
+                                className={`flex items-center gap-2 p-2 rounded-lg ${isOwn ? 'bg-orange-700' : 'bg-gray-50'
                                   }`}
                               >
                                 {getFileIcon(message.file_type)}
@@ -398,14 +398,14 @@ export const Messages: React.FC = () => {
                     }
                   }}
                   placeholder="Type a message..."
-                  className="flex-1 resize-none border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 resize-none border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
                   rows={1}
                 />
 
                 <button
                   onClick={handleSendMessage}
                   disabled={sending || (!newMessage.trim() && !selectedFile)}
-                  className="bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="bg-orange-600 text-white p-2 rounded-lg hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   {sending ? (
                     <Loader2 className="h-5 w-5 animate-spin" />

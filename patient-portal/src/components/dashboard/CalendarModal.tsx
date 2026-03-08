@@ -113,7 +113,7 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose })
         <DialogContent className="max-w-6xl h-[90vh] p-0 overflow-hidden">
           <DialogHeader className="px-6 py-4 border-b">
             <DialogTitle className="flex items-center gap-2 text-2xl">
-              <Calendar className="h-6 w-6 text-blue-600" />
+              <Calendar className="h-6 w-6 text-teal-600" />
               Appointment Calendar
             </DialogTitle>
           </DialogHeader>
@@ -139,7 +139,7 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose })
             {/* Legend */}
             <div className="mt-4 flex flex-wrap gap-4 text-sm">
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 bg-blue-500 rounded"></div>
+                <div className="w-4 h-4 bg-teal-500 rounded"></div>
                 <span>Scheduled</span>
               </div>
               <div className="flex items-center gap-2">
@@ -155,7 +155,7 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose })
                 <span>Cancelled</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 bg-orange-500 rounded"></div>
+                <div className="w-4 h-4 bg-teal-500 rounded"></div>
                 <span>No Show</span>
               </div>
             </div>

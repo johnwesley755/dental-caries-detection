@@ -57,7 +57,7 @@ export const Detection: React.FC = () => {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold text-slate-800 mt-2 flex items-center gap-2">
-            <Sparkles className="h-8 w-8 text-blue-600" />
+            <Sparkles className="h-8 w-8 text-orange-600" />
             AI Diagnostics
           </h1>
           <p className="text-slate-500 mt-1">Upload dental scans for automated caries detection.</p>
@@ -72,7 +72,7 @@ export const Detection: React.FC = () => {
       {!currentDetection ? (
         <div className="max-w-4xl mx-auto mt-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
           {loadingPatients ? (
-            <div className="flex justify-center p-12"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div></div>
+            <div className="flex justify-center p-12"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div></div>
           ) : (
             <ImageUpload patients={patients} onUpload={handleUpload} isLoading={isLoading} />
           )}
@@ -82,10 +82,10 @@ export const Detection: React.FC = () => {
           <div className="col-span-12 lg:col-span-7 space-y-8">
              <AnnotatedImage detection={currentDetection} />
              <div className="flex gap-4">
-                <Button variant="outline" className="flex-1 h-12 rounded-xl bg-white border-none shadow-sm text-slate-600 hover:text-blue-600" onClick={() => navigate(`/patients/${currentDetection.patient_id}`)}>
+                <Button variant="outline" className="flex-1 h-12 rounded-xl bg-white border-none shadow-sm text-slate-600 hover:text-orange-600" onClick={() => navigate(`/patients/${currentDetection.patient_id}`)}>
                     View Patient History
                 </Button>
-                <Button className="flex-1 h-12 rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-200 hover:bg-blue-700" onClick={() => navigate(`/detection/${currentDetection.id}`)}>
+                <Button className="flex-1 h-12 rounded-xl bg-orange-600 text-white shadow-lg shadow-orange-200 hover:bg-orange-700" onClick={() => navigate(`/detection/${currentDetection.id}`)}>
                     View Full Report
                 </Button>
              </div>

@@ -71,9 +71,9 @@ export const MyDetections: React.FC = () => {
       case 'completed':
         return 'bg-green-100 text-green-800';
       case 'reviewed':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-teal-100 text-teal-800';
       default:
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-emerald-100 text-emerald-800';
     }
   };
 
@@ -81,7 +81,7 @@ export const MyDetections: React.FC = () => {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600"></div>
         </div>
       </div>
     );
@@ -97,7 +97,7 @@ export const MyDetections: React.FC = () => {
           </div>
           <Button
             onClick={() => setShowUploadModal(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-white"
+            className="bg-teal-600 hover:bg-teal-700 text-white"
           >
             <Plus className="h-4 w-4 mr-2" />
             New Scan
@@ -137,7 +137,7 @@ export const MyDetections: React.FC = () => {
                       </div>
                       <div>
                         <p className="text-sm text-gray-600">Findings</p>
-                        <p className="text-2xl font-bold text-orange-600">
+                        <p className="text-2xl font-bold text-teal-600">
                           {detection.total_caries_detected}
                         </p>
                       </div>
@@ -145,7 +145,7 @@ export const MyDetections: React.FC = () => {
 
                     {detection.notes && (
                       <div className="flex items-start gap-2 text-sm">
-                        <AlertCircle className="h-4 w-4 text-blue-600 mt-0.5" />
+                        <AlertCircle className="h-4 w-4 text-teal-600 mt-0.5" />
                         <p className="text-gray-700 line-clamp-2">
                           {typeof detection.notes === 'string' ? detection.notes : JSON.stringify(detection.notes)}
                         </p>
@@ -178,7 +178,7 @@ export const MyDetections: React.FC = () => {
               </div>
               <CardContent className="p-6 space-y-6">
                 {!selectedFile ? (
-                  <label className="flex flex-col items-center justify-center h-64 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors">
+                  <label className="flex flex-col items-center justify-center h-64 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-teal-500 hover:bg-teal-50 transition-colors">
                     <Upload className="h-12 w-12 text-gray-400 mb-2" />
                     <span className="text-sm text-gray-600">Click or drag to upload dental image</span>
                     <span className="text-xs text-gray-400 mt-1">JPG, PNG up to 10MB</span>
@@ -201,7 +201,7 @@ export const MyDetections: React.FC = () => {
                         value={notes}
                         onChange={(e) => setNotes(e.target.value)}
                         placeholder="e.g. Pain in upper right molar..."
-                        className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:outline-none"
                         rows={3}
                       />
                     </div>
@@ -218,7 +218,7 @@ export const MyDetections: React.FC = () => {
                     Cancel
                   </Button>
                   <Button
-                    className="flex-1 bg-blue-600 hover:bg-blue-700"
+                    className="flex-1 bg-teal-600 hover:bg-teal-700"
                     disabled={!selectedFile || isUploading}
                     onClick={handleUpload}
                   >

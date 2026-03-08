@@ -32,7 +32,7 @@ export const Profile: React.FC = () => {
     return (
       <div className="min-h-[80vh] flex items-center justify-center bg-gray-50/50">
         <div className="flex flex-col items-center gap-4">
-          <div className="h-12 w-12 animate-spin rounded-full border-4 border-blue-600 border-t-transparent shadow-sm"></div>
+          <div className="h-12 w-12 animate-spin rounded-full border-4 border-teal-600 border-t-transparent shadow-sm"></div>
           <p className="text-sm font-medium text-gray-500 animate-pulse">Loading profile...</p>
         </div>
       </div>
@@ -44,7 +44,7 @@ export const Profile: React.FC = () => {
     if (!value) return null;
     return (
       <div className="flex items-center gap-4 p-3 rounded-lg hover:bg-slate-50 transition-colors duration-200 group">
-        <div className="flex-shrink-0 p-2.5 bg-blue-50 text-blue-600 rounded-lg group-hover:bg-blue-100 transition-colors">
+        <div className="flex-shrink-0 p-2.5 bg-teal-50 text-teal-600 rounded-lg group-hover:bg-teal-100 transition-colors">
           <Icon className="h-5 w-5" />
         </div>
         <div className="flex-1 min-w-0">
@@ -58,7 +58,7 @@ export const Profile: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50/50 pb-12">
       {/* Decorative Header Background */}
-      <div className="h-48 bg-gradient-to-r from-blue-600 to-indigo-600 w-full relative overflow-hidden">
+      <div className="h-48 bg-gradient-to-r from-teal-600 to-emerald-600 w-full relative overflow-hidden">
         <div className="absolute inset-0 bg-white/10 pattern-grid-lg opacity-20" />
       </div>
 
@@ -85,7 +85,7 @@ export const Profile: React.FC = () => {
                     </p>
                   </div>
                   <div className="flex flex-wrap gap-2 pt-1">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-teal-100 text-teal-800">
                       Patient
                     </span>
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800">
@@ -122,11 +122,11 @@ export const Profile: React.FC = () => {
               </Card>
 
               {/* Notice Section */}
-              <div className="rounded-xl border border-blue-100 bg-blue-50/50 p-4 flex gap-4 items-start">
-                <Info className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+              <div className="rounded-xl border border-teal-100 bg-teal-50/50 p-4 flex gap-4 items-start">
+                <Info className="h-5 w-5 text-teal-600 mt-0.5 flex-shrink-0" />
                 <div>
-                  <h4 className="text-sm font-semibold text-blue-900">Need to update your details?</h4>
-                  <p className="text-sm text-blue-700 mt-1">
+                  <h4 className="text-sm font-semibold text-teal-900">Need to update your details?</h4>
+                  <p className="text-sm text-teal-700 mt-1">
                     For security reasons, sensitive personal information cannot be changed directly through the portal. Please contact the dental office administration to request changes.
                   </p>
                 </div>

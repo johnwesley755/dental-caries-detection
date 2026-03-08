@@ -60,7 +60,7 @@ export const PatientList: React.FC<PatientListProps> = ({
 
   const getGenderBadge = (gender?: Gender) => {
     switch (gender) {
-      case Gender.MALE: return <Badge variant="secondary" className="bg-blue-50 text-blue-700 hover:bg-blue-50 border-none">M</Badge>;
+      case Gender.MALE: return <Badge variant="secondary" className="bg-orange-50 text-orange-700 hover:bg-orange-50 border-none">M</Badge>;
       case Gender.FEMALE: return <Badge variant="secondary" className="bg-pink-50 text-pink-700 hover:bg-pink-50 border-none">F</Badge>;
       default: return <span className="text-gray-400 text-xs">-</span>;
     }
@@ -76,7 +76,7 @@ export const PatientList: React.FC<PatientListProps> = ({
           <p className="text-sm text-slate-400 mt-1">Manage registered patients</p>
         </div>
         {onAddNew && (
-          <Button onClick={onAddNew} size="sm" className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-lg shadow-blue-200">
+          <Button onClick={onAddNew} size="sm" className="bg-orange-600 hover:bg-orange-700 text-white rounded-xl shadow-lg shadow-orange-200">
             <UserPlus className="mr-2 h-4 w-4" /> Add New
           </Button>
         )}
@@ -108,7 +108,7 @@ export const PatientList: React.FC<PatientListProps> = ({
             </TableHeader>
             <TableBody>
               {sortedPatients.map((patient) => (
-                <TableRow key={patient.id} className="border-gray-50 hover:bg-blue-50/30 transition-colors group">
+                <TableRow key={patient.id} className="border-gray-50 hover:bg-orange-50/30 transition-colors group">
                   <TableCell className="font-medium text-slate-600 pl-6">{patient.patient_id}</TableCell>
                   <TableCell>
                     <div className="flex flex-col">
@@ -121,11 +121,11 @@ export const PatientList: React.FC<PatientListProps> = ({
                   <TableCell className="text-right pr-6">
                     <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                       {patient.user_id && (
-                        <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg" onClick={() => navigate(`/messages?patientId=${patient.user_id}`)}>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-orange-600 hover:bg-orange-50 rounded-lg" onClick={() => navigate(`/messages?patientId=${patient.user_id}`)}>
                           <MessageSquare className="h-4 w-4" />
                         </Button>
                       )}
-                      <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg" onClick={() => navigate(`/patients/${patient.id}`)}>
+                      <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-orange-600 hover:bg-orange-50 rounded-lg" onClick={() => navigate(`/patients/${patient.id}`)}>
                         <Eye className="h-4 w-4" />
                       </Button>
                       {onEdit && (

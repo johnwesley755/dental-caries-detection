@@ -70,7 +70,7 @@ export const ResetPassword: React.FC = () => {
                     <p className="text-slate-500">Your password has been updated. You can now log in with your new password.</p>
                     <button
                         onClick={() => navigate('/login')}
-                        className="w-full h-14 rounded-xl bg-blue-600 text-white font-bold flex items-center justify-center gap-2 hover:bg-blue-700 transition-all"
+                        className="w-full h-14 rounded-xl bg-teal-600 text-white font-bold flex items-center justify-center gap-2 hover:bg-teal-700 transition-all"
                     >
                         Go to Login
                         <ArrowRight className="h-5 w-5" />
@@ -108,7 +108,7 @@ export const ResetPassword: React.FC = () => {
                             <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">New Password</label>
                             <div className="relative group">
                                 <div className="absolute left-4 top-4">
-                                    <Lock className="h-5 w-5 text-slate-400 group-focus-within:text-blue-600" />
+                                    <Lock className="h-5 w-5 text-slate-400 group-focus-within:text-teal-600" />
                                 </div>
                                 <input
                                     type={showPassword ? "text" : "password"}
@@ -117,7 +117,7 @@ export const ResetPassword: React.FC = () => {
                                     onChange={(e) => setPassword(e.target.value)}
                                     required
                                     minLength={8}
-                                    className="w-full h-14 pl-12 pr-12 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                                    className="w-full h-14 pl-12 pr-12 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
                                 />
                                 <button
                                     type="button"
@@ -133,7 +133,7 @@ export const ResetPassword: React.FC = () => {
                             <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Confirm Password</label>
                             <div className="relative group">
                                 <div className="absolute left-4 top-4">
-                                    <Lock className="h-5 w-5 text-slate-400 group-focus-within:text-blue-600" />
+                                    <Lock className="h-5 w-5 text-slate-400 group-focus-within:text-teal-600" />
                                 </div>
                                 <input
                                     type={showPassword ? "text" : "password"}
@@ -141,7 +141,7 @@ export const ResetPassword: React.FC = () => {
                                     value={confirmPassword}
                                     onChange={(e) => setConfirmPassword(e.target.value)}
                                     required
-                                    className="w-full h-14 pl-12 pr-12 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                                    className="w-full h-14 pl-12 pr-12 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
                                 />
                             </div>
                         </div>
@@ -151,14 +151,14 @@ export const ResetPassword: React.FC = () => {
                             whileTap={{ scale: 0.99 }}
                             type="submit"
                             disabled={isLoading || !token}
-                            className="w-full h-14 rounded-xl bg-blue-600 text-white font-bold flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 disabled:opacity-50"
+                            className="w-full h-14 rounded-xl bg-teal-600 text-white font-bold flex items-center justify-center gap-2 shadow-lg shadow-teal-500/20 disabled:opacity-50"
                         >
                             {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <span>Update Password</span>}
                         </motion.button>
                     </form>
 
                     <div className="text-center pt-4 border-t border-slate-100">
-                        <Link to="/login" className="text-sm font-bold text-slate-400 hover:text-blue-600 transition-colors">
+                        <Link to="/login" className="text-sm font-bold text-slate-400 hover:text-teal-600 transition-colors">
                             Cancel and go back
                         </Link>
                     </div>

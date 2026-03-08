@@ -96,8 +96,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
         {/* Header */}
         <div className="p-8 pb-4">
           <div className="flex items-center justify-between mb-4">
-            <h1 className="text-2xl font-bold text-blue-900 tracking-tight flex items-center gap-2">
-              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white shadow-blue-200 shadow-lg">
+            <h1 className="text-2xl font-bold text-orange-900 tracking-tight flex items-center gap-2">
+              <div className="w-8 h-8 bg-orange-600 rounded-lg flex items-center justify-center text-white shadow-orange-200 shadow-lg">
                 D
               </div>
               Dental AI
@@ -108,7 +108,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
           <div className="flex items-center gap-2 mt-4">
             <button
               onClick={() => setShowCalendar(true)}
-              className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-600 transition-colors"
+              className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-orange-50 hover:bg-orange-100 text-orange-600 transition-colors"
               title="Calendar"
             >
               <Calendar className="h-5 w-5" />
@@ -133,11 +133,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
                 to={item.path}
                 onClick={handleLinkClick}
                 className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all duration-200 group relative ${active
-                    ? 'bg-blue-600 text-white shadow-md shadow-blue-200'
-                    : 'text-gray-500 hover:bg-blue-50 hover:text-blue-600'
+                    ? 'bg-orange-600 text-white shadow-md shadow-orange-200'
+                    : 'text-gray-500 hover:bg-orange-50 hover:text-orange-600'
                   }`}
               >
-                <Icon className={`h-5 w-5 ${active ? 'text-white' : 'text-gray-400 group-hover:text-blue-600'}`} />
+                <Icon className={`h-5 w-5 ${active ? 'text-white' : 'text-gray-400 group-hover:text-orange-600'}`} />
                 <span className="font-medium">{item.label}</span>
                 {active && <ChevronRight className="h-4 w-4 absolute right-4 opacity-50" />}
               </Link>

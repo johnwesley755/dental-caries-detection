@@ -52,7 +52,7 @@ export const VerifyEmail: React.FC = () => {
                 {status === 'loading' && (
                     <div className="space-y-6">
                         <div className="flex justify-center">
-                            <div className="h-20 w-20 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
+                            <div className="h-20 w-20 rounded-full bg-teal-50 flex items-center justify-center text-teal-600">
                                 <Loader2 className="h-10 w-10 animate-spin" />
                             </div>
                         </div>
@@ -72,7 +72,7 @@ export const VerifyEmail: React.FC = () => {
                         <p className="text-slate-500">Your email has been successfully verified. You can now access all features of the patient portal.</p>
                         <button
                             onClick={() => navigate('/login')}
-                            className="w-full h-14 rounded-xl bg-blue-600 text-white font-bold flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 hover:bg-blue-700 transition-all shadow-xl shadow-blue-500/30"
+                            className="w-full h-14 rounded-xl bg-teal-600 text-white font-bold flex items-center justify-center gap-2 shadow-lg shadow-teal-500/20 hover:bg-teal-700 transition-all shadow-xl shadow-teal-500/30"
                         >
                             Go to Login
                             <ArrowRight className="h-5 w-5" />

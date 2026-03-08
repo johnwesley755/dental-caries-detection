@@ -30,7 +30,7 @@ export const DetectionHistoryChart: React.FC = () => {
   if (loading) {
     return (
       <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 h-[450px] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600"></div>
       </div>
     );
   }
@@ -53,9 +53,9 @@ export const DetectionHistoryChart: React.FC = () => {
       
       {/* Statistics */}
       <div className="grid grid-cols-2 gap-4 mb-6">
-        <div className="bg-orange-50 rounded-lg p-4">
-          <p className="text-sm text-orange-600 font-medium mb-1">Total Caries</p>
-          <p className="text-3xl font-bold text-orange-900">{totalCaries}</p>
+        <div className="bg-teal-50 rounded-lg p-4">
+          <p className="text-sm text-teal-600 font-medium mb-1">Total Caries</p>
+          <p className="text-3xl font-bold text-teal-900">{totalCaries}</p>
         </div>
         <div className="bg-purple-50 rounded-lg p-4">
           <p className="text-sm text-purple-600 font-medium mb-1">Average Per Visit</p>
@@ -104,7 +104,7 @@ export const DetectionHistoryChart: React.FC = () => {
           <p className="text-xs text-slate-500">0 caries</p>
         </div>
         <div className="text-center">
-          <div className="w-4 h-4 bg-orange-500 rounded mx-auto mb-1"></div>
+          <div className="w-4 h-4 bg-teal-500 rounded mx-auto mb-1"></div>
           <p className="text-xs text-slate-600 font-medium">Mild</p>
           <p className="text-xs text-slate-500">1-2 caries</p>
         </div>

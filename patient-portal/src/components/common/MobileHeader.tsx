@@ -22,10 +22,10 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({ onMenuClick }) => {
 
         {/* Logo */}
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white shadow-lg">
+          <div className="w-8 h-8 bg-teal-600 rounded-lg flex items-center justify-center text-white shadow-lg">
             <Activity className="h-5 w-5" />
           </div>
-          <h1 className="text-lg font-bold text-blue-900">DentAI <span className="text-xs font-normal text-gray-400">Patient</span></h1>
+          <h1 className="text-lg font-bold text-teal-900">DentAI <span className="text-xs font-normal text-gray-400">Patient</span></h1>
         </div>
 
         {/* Notification */}

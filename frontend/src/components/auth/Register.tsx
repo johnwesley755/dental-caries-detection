@@ -3,32 +3,30 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { UserRole } from '../../types/auth.types';
 import { validateEmail, validatePassword } from '../../utils/validation';
-import Loader from '../common/Loader';
+import { motion } from 'framer-motion';
+import {
+  Loader2,
+  ArrowRight,
+  Lock,
+  Mail,
+  ShieldCheck,
+  Stethoscope,
+  Eye,
+  EyeOff,
+  User,
+  Heart,
+  Briefcase,
+  FileText,
+  Building,
+  MapPin
+} from 'lucide-react';
 
-// Inline Icons for professional look without adding dependencies
-const UserIcon = () => (
-  <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-  </svg>
-);
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 
-const MailIcon = () => (
-  <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
-  </svg>
-);
-
-const LockIcon = () => (
-  <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-  </svg>
-);
-
-const BadgeIcon = () => (
-  <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-  </svg>
-);
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 const Register: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -42,6 +40,8 @@ const Register: React.FC = () => {
     clinic_name: '',
     clinic_address: '',
   });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const { register, isLoading } = useAuth();
   const navigate = useNavigate();
@@ -54,6 +54,7 @@ const Register: React.FC = () => {
     setErrors({
       ...errors,
       [e.target.name]: '',
+      submit: ''
     });
   };
 
@@ -112,262 +113,301 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary-50 via-gray-50 to-gray-100">
-      <div className="max-w-md w-full space-y-8">
-        <div className="text-center">
-          {/* Optional: Add Logo Here */}
-          {/* <img className="mx-auto h-12 w-auto" src="/logo.png" alt="Logo" /> */}
-          <h2 className="mt-6 text-3xl font-extrabold text-gray-900 tracking-tight">
-            Create an Account
-          </h2>
-          <p className="mt-2 text-sm text-gray-600">
-            Join us to manage your dental practice efficiently
-          </p>
+    <div className="w-full min-h-screen grid lg:grid-cols-2 overflow-hidden text-slate-900 bg-slate-50">
+
+      {/* LEFT SIDE - REGISTER FORM */}
+      <div className="relative flex items-center justify-center p-4 lg:p-8 isolate overflow-y-auto w-full max-h-screen">
+        <div
+          className="absolute inset-0 -z-20 h-full w-full opacity-40 fixed"
+          style={{
+            backgroundImage: 'radial-gradient(#94a3b8 1px, transparent 1px)',
+            backgroundSize: '24px 24px'
+          }}
+        />
+
+        <div className="absolute top-0 left-0 right-0 bottom-0 overflow-hidden -z-10 pointer-events-none fixed">
+          <motion.div
+            animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.4, 0.2] }}
+            transition={{ duration: 10, repeat: Infinity }}
+            className="absolute top-[10%] left-[10%] h-[400px] w-[400px] rounded-full bg-orange-200/40 blur-[90px]"
+          />
+          <motion.div
+            animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.5, 0.2] }}
+            transition={{ duration: 15, repeat: Infinity }}
+            className="absolute bottom-[10%] right-[10%] h-[400px] w-[400px] rounded-full bg-orange-200/40 blur-[90px]"
+          />
         </div>
 
-        <div className="mt-8 bg-white py-8 px-4 shadow-xl rounded-2xl sm:px-10 border border-gray-100">
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            {errors.submit && (
-              <div className="rounded-lg bg-red-50 p-4 border-l-4 border-red-500 animate-pulse">
-                <div className="flex">
-                  <div className="ml-3">
-                    <p className="text-sm text-red-700 font-medium">{errors.submit}</p>
-                  </div>
-                </div>
-              </div>
-            )}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="w-full max-w-[520px] my-auto"
+        >
+          <div className="bg-white/80 backdrop-blur-xl border border-white/60 shadow-xl rounded-3xl p-8 lg:p-12 space-y-8 my-8">
+            <div className="space-y-3 text-center">
+              <h1 className="text-3xl font-bold tracking-tight">Create Account</h1>
+              <p className="text-slate-500">Join DentalAI to manage your dental practice</p>
+            </div>
 
-            {/* Full Name */}
-            <div>
-              <label htmlFor="full_name" className="block text-sm font-semibold text-gray-700 mb-1">
-                Full Name
-              </label>
-              <div className="relative rounded-md shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <UserIcon />
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {errors.submit && (
+                <div className="p-4 text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl flex items-center gap-3">
+                  <ShieldCheck className="h-5 w-5 shrink-0" />
+                  <span>{errors.submit}</span>
                 </div>
-                <input
-                  id="full_name"
-                  name="full_name"
-                  type="text"
-                  required
-                  value={formData.full_name}
-                  onChange={handleChange}
-                  placeholder="John Doe"
-                  className={`block w-full pl-10 pr-3 py-3 border ${errors.full_name ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-primary-500 focus:border-primary-500'
-                    } rounded-lg focus:outline-none focus:ring-2 sm:text-sm transition duration-150 ease-in-out`}
-                />
-              </div>
-              {errors.full_name && (
-                <p className="mt-1 text-xs text-red-600 font-medium">{errors.full_name}</p>
               )}
-            </div>
 
-            {/* Email */}
-            <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-1">
-                Email Address
-              </label>
-              <div className="relative rounded-md shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <MailIcon />
-                </div>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="doctor@example.com"
-                  className={`block w-full pl-10 pr-3 py-3 border ${errors.email ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-primary-500 focus:border-primary-500'
-                    } rounded-lg focus:outline-none focus:ring-2 sm:text-sm transition duration-150 ease-in-out`}
-                />
-              </div>
-              {errors.email && <p className="mt-1 text-xs text-red-600 font-medium">{errors.email}</p>}
-            </div>
-
-            {/* Role */}
-            <div>
-              <label htmlFor="role" className="block text-sm font-semibold text-gray-700 mb-1">
-                Role
-              </label>
-              <div className="relative rounded-md shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <BadgeIcon />
-                </div>
-                <select
-                  id="role"
-                  name="role"
-                  value={formData.role}
-                  onChange={handleChange}
-                  className="block w-full pl-10 pr-10 py-3 border border-gray-300 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 sm:text-sm transition duration-150 ease-in-out appearance-none"
-                >
-                  <option value={UserRole.DENTIST}>Dentist</option>
-                  <option value={UserRole.ASSISTANT}>Assistant</option>
-                  <option value={UserRole.ADMIN}>Admin</option>
-                </select>
-                {/* Custom chevron for select */}
-                <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                  <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            {/* Dentist Specific Fields */}
-            {formData.role === UserRole.DENTIST && (
-              <div className="space-y-6 pt-4 border-t border-gray-100">
-                <h3 className="text-sm font-bold text-primary-600 uppercase tracking-wider">Professional Credentials</h3>
-
-                <div>
-                  <label htmlFor="license_number" className="block text-sm font-semibold text-gray-700 mb-1">
-                    Medical License Number *
-                  </label>
+              <div className="space-y-2">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Full Name</label>
+                <div className="relative group">
+                  <User className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-orange-600 transition-colors" />
                   <input
-                    id="license_number"
-                    name="license_number"
+                    name="full_name"
                     type="text"
+                    placeholder="John Doe"
+                    value={formData.full_name}
+                    onChange={handleChange}
                     required
-                    value={formData.license_number}
-                    onChange={handleChange}
-                    placeholder="LIC-12345678"
-                    className={`block w-full px-3 py-3 border ${errors.license_number ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-primary-500 focus:border-primary-500'
-                      } rounded-lg focus:outline-none focus:ring-2 sm:text-sm transition duration-150 ease-in-out`}
+                    className={cn(
+                      "flex h-14 w-full rounded-xl border bg-slate-50/50 px-4 py-3 pl-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all",
+                      errors.full_name ? "border-red-300" : "border-slate-200"
+                    )}
                   />
-                  {errors.license_number && (
-                    <p className="mt-1 text-xs text-red-600 font-medium">{errors.license_number}</p>
-                  )}
                 </div>
+                {errors.full_name && <p className="text-xs text-red-600 font-medium ml-1">{errors.full_name}</p>}
+              </div>
 
-                <div>
-                  <label htmlFor="specialization" className="block text-sm font-semibold text-gray-700 mb-1">
-                    Specialization
-                  </label>
+              <div className="space-y-2">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Email Address</label>
+                <div className="relative group">
+                  <Mail className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-orange-600 transition-colors" />
                   <input
-                    id="specialization"
-                    name="specialization"
-                    type="text"
-                    value={formData.specialization}
+                    name="email"
+                    type="email"
+                    placeholder="you@example.com"
+                    value={formData.email}
                     onChange={handleChange}
-                    placeholder="e.g. Orthodontics"
-                    className="block w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 sm:text-sm outline-none transition duration-150 ease-in-out"
+                    required
+                    className={cn(
+                      "flex h-14 w-full rounded-xl border bg-slate-50/50 px-4 py-3 pl-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all",
+                      errors.email ? "border-red-300" : "border-slate-200"
+                    )}
                   />
                 </div>
+                {errors.email && <p className="text-xs text-red-600 font-medium ml-1">{errors.email}</p>}
+              </div>
 
-                <div className="grid grid-cols-1 gap-4">
-                  <div>
-                    <label htmlFor="clinic_name" className="block text-sm font-semibold text-gray-700 mb-1">
-                      Clinic Name
-                    </label>
-                    <input
-                      id="clinic_name"
-                      name="clinic_name"
-                      type="text"
-                      value={formData.clinic_name}
-                      onChange={handleChange}
-                      placeholder="Smile Dental Clinic"
-                      className="block w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 sm:text-sm outline-none transition duration-150 ease-in-out"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="clinic_address" className="block text-sm font-semibold text-gray-700 mb-1">
-                      Clinic Address
-                    </label>
-                    <input
-                      id="clinic_address"
-                      name="clinic_address"
-                      type="text"
-                      value={formData.clinic_address}
-                      onChange={handleChange}
-                      placeholder="123 Dental St, Clinic City"
-                      className="block w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 sm:text-sm outline-none transition duration-150 ease-in-out"
-                    />
+              <div className="space-y-2">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Role</label>
+                <div className="relative group">
+                  <Briefcase className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-orange-600 transition-colors" />
+                  <select
+                    name="role"
+                    value={formData.role}
+                    onChange={handleChange}
+                    className="appearance-none flex h-14 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pl-12 pr-10 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all"
+                  >
+                    <option value={UserRole.DENTIST}>Dentist</option>
+                    <option value={UserRole.ASSISTANT}>Assistant</option>
+                    <option value={UserRole.ADMIN}>Admin</option>
+                  </select>
+                  <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none">
+                    <svg className="h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                    </svg>
                   </div>
                 </div>
               </div>
-            )}
 
-            {/* Password */}
-            <div>
-              <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-1">
-                Password
-              </label>
-              <div className="relative rounded-md shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <LockIcon />
+              {/* Dentist fields */}
+              {formData.role === UserRole.DENTIST && (
+                <div className="space-y-6 pt-4 border-t border-slate-100">
+                  <h3 className="text-sm font-bold text-slate-600 uppercase tracking-wider">Professional Credentials</h3>
+
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">License Number *</label>
+                    <div className="relative group">
+                      <FileText className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-orange-600 transition-colors" />
+                      <input
+                        name="license_number"
+                        type="text"
+                        placeholder="LIC-123456"
+                        value={formData.license_number}
+                        onChange={handleChange}
+                        required
+                        className={cn(
+                          "flex h-14 w-full rounded-xl border bg-slate-50/50 px-4 py-3 pl-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all",
+                          errors.license_number ? "border-red-300" : "border-slate-200"
+                        )}
+                      />
+                    </div>
+                    {errors.license_number && <p className="text-xs text-red-600 font-medium ml-1">{errors.license_number}</p>}
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Specialization</label>
+                    <div className="relative group">
+                      <Stethoscope className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-orange-600 transition-colors" />
+                      <input
+                        name="specialization"
+                        type="text"
+                        placeholder="e.g. Orthodontics"
+                        value={formData.specialization}
+                        onChange={handleChange}
+                        className="flex h-14 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pl-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Clinic Name</label>
+                      <div className="relative group">
+                        <Building className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-orange-600 transition-colors" />
+                        <input
+                          name="clinic_name"
+                          type="text"
+                          placeholder="Smile Dental"
+                          value={formData.clinic_name}
+                          onChange={handleChange}
+                          className="flex h-14 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pl-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Clinic Address</label>
+                      <div className="relative group">
+                        <MapPin className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-orange-600 transition-colors" />
+                        <input
+                          name="clinic_address"
+                          type="text"
+                          placeholder="123 Dental St"
+                          value={formData.clinic_address}
+                          onChange={handleChange}
+                          className="flex h-14 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pl-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all"
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="new-password"
-                  required
-                  value={formData.password}
-                  onChange={handleChange}
-                  placeholder="••••••••"
-                  className={`block w-full pl-10 pr-3 py-3 border ${errors.password ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-primary-500 focus:border-primary-500'
-                    } rounded-lg focus:outline-none focus:ring-2 sm:text-sm transition duration-150 ease-in-out`}
-                />
-              </div>
-              {errors.password && (
-                <p className="mt-1 text-xs text-red-600 font-medium">{errors.password}</p>
               )}
-            </div>
 
-            {/* Confirm Password */}
-            <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-semibold text-gray-700 mb-1">
-                Confirm Password
-              </label>
-              <div className="relative rounded-md shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <LockIcon />
+              <div className="space-y-2">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Password</label>
+                <div className="relative group">
+                  <Lock className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-orange-600 transition-colors" />
+                  <input
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                    className={cn(
+                      "flex h-14 w-full rounded-xl border bg-slate-50/50 px-4 py-3 pl-12 pr-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all",
+                      errors.password ? "border-red-300" : "border-slate-200"
+                    )}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-4 text-slate-400 hover:text-slate-600 focus:outline-none transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
                 </div>
-                <input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type="password"
-                  autoComplete="new-password"
-                  required
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  placeholder="••••••••"
-                  className={`block w-full pl-10 pr-3 py-3 border ${errors.confirmPassword ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-primary-500 focus:border-primary-500'
-                    } rounded-lg focus:outline-none focus:ring-2 sm:text-sm transition duration-150 ease-in-out`}
-                />
+                {errors.password && <p className="text-xs text-red-600 font-medium ml-1">{errors.password}</p>}
               </div>
-              {errors.confirmPassword && (
-                <p className="mt-1 text-xs text-red-600 font-medium">{errors.confirmPassword}</p>
-              )}
-            </div>
 
-            {/* Submit Button */}
-            <div className="pt-2">
-              <button
+              <div className="space-y-2">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Confirm Password</label>
+                <div className="relative group">
+                  <Lock className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-orange-600 transition-colors" />
+                  <input
+                    name="confirmPassword"
+                    type={showConfirmPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    required
+                    className={cn(
+                      "flex h-14 w-full rounded-xl border bg-slate-50/50 px-4 py-3 pl-12 pr-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all",
+                      errors.confirmPassword ? "border-red-300" : "border-slate-200"
+                    )}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-4 top-4 text-slate-400 hover:text-slate-600 focus:outline-none transition-colors"
+                  >
+                    {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
+                </div>
+                {errors.confirmPassword && <p className="text-xs text-red-600 font-medium ml-1">{errors.confirmPassword}</p>}
+              </div>
+
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 type="submit"
                 disabled={isLoading}
-                className="group relative text-black w-full flex justify-center py-3 px-4 border border-transparent text-sm font-bold rounded-lg text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 shadow-lg hover:shadow-xl transition duration-200 ease-in-out disabled:opacity-70 disabled:cursor-not-allowed transform hover:-translate-y-0.5"
+                className={cn(
+                  "w-full rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-4 py-4 text-sm font-bold text-white shadow-xl hover:shadow-orange-500/40 transition-all duration-200",
+                  isLoading && "opacity-70 cursor-not-allowed"
+                )}
               >
-                {isLoading ? <Loader size="sm" /> : 'Register Account'}
-              </button>
-            </div>
+                <div className="flex items-center justify-center gap-2">
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                      <span>Creating Account...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Start Your Journey</span>
+                      <ArrowRight className="h-5 w-5" />
+                    </>
+                  )}
+                </div>
+              </motion.button>
+            </form>
 
-            {/* Login Link */}
-            <div className="text-center mt-4">
-              <p className="text-sm text-gray-600">
+            <div className="text-center pt-4">
+              <p className="text-sm text-slate-500">
                 Already have an account?{' '}
-                <Link to="/login" className="font-semibold text-primary-600 hover:text-primary-500 transition-colors duration-200">
-                  Sign in here
+                <Link to="/login" className="text-orange-600 font-bold hover:underline">
+                  Login here
                 </Link>
               </p>
             </div>
-          </form>
+          </div>
+        </motion.div>
+      </div>
+
+      <div className="hidden lg:flex relative h-full w-full flex-col p-16 text-white overflow-hidden bg-slate-900 sticky top-0 h-screen">
+        <img
+          src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?q=80&w=2070&auto=format&fit=crop"
+          alt="Modern Dentistry"
+          className="absolute inset-0 h-full w-full object-cover opacity-60"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-orange-950/90 via-amber-950/80 to-slate-950/90 mix-blend-multiply" />
+
+        <div className="relative z-20 flex items-center gap-3">
+          <Stethoscope className="h-8 w-8 text-orange-300" />
+          <span className="text-2xl font-bold">DentalAI<span className="text-orange-400">Diagnostics</span></span>
         </div>
-      </div >
-    </div >
+
+        <div className="relative z-20 mt-auto max-w-lg">
+          <div className="rounded-3xl bg-white/5 backdrop-blur-md border border-white/10 p-8">
+            <Heart className="h-8 w-8 text-orange-300 mb-4" />
+            <p className="text-xl font-light leading-relaxed mb-6">
+              "Your dental health is our priority. Get instant AI insights and connect with top-tier professionals."
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

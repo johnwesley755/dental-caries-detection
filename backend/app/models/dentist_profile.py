@@ -19,4 +19,4 @@ class DentistProfile(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     
     # Relationships
-    user = relationship("User", backref="profile")
+    user = relationship("User", back_populates="profile")

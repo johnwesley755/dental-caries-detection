@@ -48,7 +48,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ patients, onUpload, is
 
   return (
     <Card className="w-full border-none shadow-sm bg-white rounded-[20px] overflow-hidden">
-      <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6">
+      <CardHeader className="bg-gradient-to-r from-orange-600 to-orange-700 text-white p-6">
         <CardTitle className="flex items-center gap-2 text-lg">
           <FileUp className="h-5 w-5" /> Upload New Scan
         </CardTitle>
@@ -60,7 +60,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ patients, onUpload, is
             <div className="space-y-2">
               <Label className="text-slate-600 font-semibold">Select Patient *</Label>
               <Select value={selectedPatient} onValueChange={setSelectedPatient}>
-                <SelectTrigger className="h-12 rounded-xl bg-slate-50 border-none focus:ring-2 focus:ring-blue-100">
+                <SelectTrigger className="h-12 rounded-xl bg-slate-50 border-none focus:ring-2 focus:ring-orange-100">
                   <SelectValue placeholder="Search or select patient" />
                 </SelectTrigger>
                 <SelectContent>
@@ -74,7 +74,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ patients, onUpload, is
             <div className="space-y-2">
               <Label className="text-slate-600 font-semibold">Scan Type</Label>
               <Select value={imageType} onValueChange={(v) => setImageType(v as ImageType)}>
-                <SelectTrigger className="h-12 rounded-xl bg-slate-50 border-none focus:ring-2 focus:ring-blue-100">
+                <SelectTrigger className="h-12 rounded-xl bg-slate-50 border-none focus:ring-2 focus:ring-orange-100">
                   <SelectValue placeholder="e.g. Panoramic, Bitewing" />
                 </SelectTrigger>
                 <SelectContent>
@@ -93,11 +93,11 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ patients, onUpload, is
               <div
                 {...getRootProps()}
                 className={`border-2 border-dashed rounded-[20px] p-10 text-center cursor-pointer transition-all duration-300 ${
-                  isDragActive ? 'border-blue-500 bg-blue-50' : 'border-slate-200 hover:border-blue-400 hover:bg-slate-50'
+                  isDragActive ? 'border-orange-500 bg-orange-50' : 'border-slate-200 hover:border-orange-400 hover:bg-slate-50'
                 }`}
               >
                 <input {...getInputProps()} />
-                <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4 text-blue-500">
+                <div className="w-16 h-16 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-4 text-orange-500">
                   <ImageIcon className="h-8 w-8" />
                 </div>
                 <p className="text-lg font-medium text-slate-700">Drag & drop or click to upload</p>
@@ -131,11 +131,11 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ patients, onUpload, is
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={3}
-              className="bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-blue-100 resize-none p-4"
+              className="bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-orange-100 resize-none p-4"
             />
           </div>
 
-          <Button type="submit" disabled={!selectedFile || !selectedPatient || isLoading} className="w-full h-12 text-lg rounded-xl bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-200">
+          <Button type="submit" disabled={!selectedFile || !selectedPatient || isLoading} className="w-full h-12 text-lg rounded-xl bg-orange-600 hover:bg-orange-700 shadow-lg shadow-orange-200">
             {isLoading ? 'Processing Scan...' : 'Run Analysis'}
           </Button>
         </form>

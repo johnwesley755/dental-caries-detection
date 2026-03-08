@@ -88,7 +88,7 @@ export const Register: React.FC = () => {
                     <motion.div
                         animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.5, 0.2] }}
                         transition={{ duration: 15, repeat: Infinity }}
-                        className="absolute bottom-[10%] right-[10%] h-[400px] w-[400px] rounded-full bg-blue-200/40 blur-[90px]"
+                        className="absolute bottom-[10%] right-[10%] h-[400px] w-[400px] rounded-full bg-teal-200/40 blur-[90px]"
                     />
                 </div>
 
@@ -114,14 +114,14 @@ export const Register: React.FC = () => {
                             <div className="space-y-2">
                                 <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Full Name</label>
                                 <div className="relative group">
-                                    <User className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-blue-600 transition-colors" />
+                                    <User className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-teal-600 transition-colors" />
                                     <input
                                         type="text"
                                         placeholder="John Doe"
                                         value={fullName}
                                         onChange={(e) => setFullName(e.target.value)}
                                         required
-                                        className="flex h-14 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pl-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                                        className="flex h-14 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pl-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
                                     />
                                 </div>
                             </div>
@@ -129,14 +129,14 @@ export const Register: React.FC = () => {
                             <div className="space-y-2">
                                 <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Email Address</label>
                                 <div className="relative group">
-                                    <Mail className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-blue-600 transition-colors" />
+                                    <Mail className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-teal-600 transition-colors" />
                                     <input
                                         type="email"
                                         placeholder="you@example.com"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                         required
-                                        className="flex h-14 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pl-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                                        className="flex h-14 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pl-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
                                     />
                                 </div>
                             </div>
@@ -144,14 +144,14 @@ export const Register: React.FC = () => {
                             <div className="space-y-2">
                                 <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Password</label>
                                 <div className="relative group">
-                                    <Lock className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-blue-600 transition-colors" />
+                                    <Lock className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-teal-600 transition-colors" />
                                     <input
                                         type={showPassword ? "text" : "password"}
                                         placeholder="••••••••"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                         required
-                                        className="flex h-14 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pl-12 pr-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                                        className="flex h-14 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pl-12 pr-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
                                     />
                                     <button
                                         type="button"
@@ -169,7 +169,7 @@ export const Register: React.FC = () => {
                                 type="submit"
                                 disabled={isLoading}
                                 className={cn(
-                                    "w-full rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-4 text-sm font-bold text-white shadow-xl hover:shadow-blue-500/40 transition-all duration-200",
+                                    "w-full rounded-xl bg-gradient-to-r from-teal-600 to-emerald-600 px-4 py-4 text-sm font-bold text-white shadow-xl hover:shadow-teal-500/40 transition-all duration-200",
                                     isLoading && "opacity-70 cursor-not-allowed"
                                 )}
                             >
@@ -192,7 +192,7 @@ export const Register: React.FC = () => {
                         <div className="text-center pt-4">
                             <p className="text-sm text-slate-500">
                                 Already have an account?{' '}
-                                <Link to="/login" className="text-blue-600 font-bold hover:underline">
+                                <Link to="/login" className="text-teal-600 font-bold hover:underline">
                                     Login here
                                 </Link>
                             </p>
@@ -207,11 +207,11 @@ export const Register: React.FC = () => {
                     alt="Modern Dentistry"
                     className="absolute inset-0 h-full w-full object-cover opacity-60"
                 />
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-950/90 via-indigo-950/80 to-slate-950/90 mix-blend-multiply" />
+                <div className="absolute inset-0 bg-gradient-to-br from-teal-950/90 via-emerald-950/80 to-slate-950/90 mix-blend-multiply" />
 
                 <div className="relative z-20 flex items-center gap-3">
-                    <Stethoscope className="h-8 w-8 text-blue-300" />
-                    <span className="text-2xl font-bold">DentAI<span className="text-blue-400">Diagnostics</span></span>
+                    <Stethoscope className="h-8 w-8 text-teal-300" />
+                    <span className="text-2xl font-bold">DentAI<span className="text-teal-400">Diagnostics</span></span>
                 </div>
 
                 <div className="relative z-20 mt-auto max-w-lg">

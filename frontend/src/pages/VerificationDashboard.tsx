@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { api } from '../services/api'; // Assuming there is a central api service
 import type { User } from '../types/auth.types';
 import { toast } from 'sonner';
-import Loader from '../components/common/Loader';
+import { Loader2 } from 'lucide-react';
 
 const VerificationDashboard: React.FC = () => {
     const [pendingDentists, setPendingDentists] = useState<User[]>([]);
@@ -35,7 +35,7 @@ const VerificationDashboard: React.FC = () => {
         }
     };
 
-    if (isLoading) return <Loader size="lg" />;
+    if (isLoading) return <div className="p-8 flex items-center justify-center"><Loader2 className="h-10 w-10 animate-spin text-primary" /></div>;
 
     return (
         <div className="p-8">
@@ -77,7 +77,7 @@ const VerificationDashboard: React.FC = () => {
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">
-                                            <div className="inline-flex items-center px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 text-xs font-bold">
+                                            <div className="inline-flex items-center px-2.5 py-1 rounded-md bg-orange-50 text-orange-700 text-xs font-bold">
                                                 {dentist.profile?.license_number || 'N/A'}
                                             </div>
                                             <div className="text-xs text-gray-500 mt-1">{dentist.profile?.specialization || 'General Dentistry'}</div>

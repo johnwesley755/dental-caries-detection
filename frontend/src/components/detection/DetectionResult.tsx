@@ -45,8 +45,8 @@ export const DetectionResult: React.FC<DetectionResultProps> = ({ detection }) =
           label="Teeth Detected" 
           value={detection.total_teeth_detected} 
           icon={Layers} 
-          colorClass="text-blue-600" 
-          bgClass="bg-blue-50" 
+          colorClass="text-orange-600" 
+          bgClass="bg-orange-50" 
         />
         <MetricCard 
           label="Caries Found" 
@@ -66,8 +66,8 @@ export const DetectionResult: React.FC<DetectionResultProps> = ({ detection }) =
           label="Process Time" 
           value={`${(detection.processing_time_ms / 1000).toFixed(2)}s`} 
           icon={Clock} 
-          colorClass="text-purple-600" 
-          bgClass="bg-purple-50" 
+          colorClass="text-yellow-600" 
+          bgClass="bg-yellow-50" 
         />
       </div>
 
@@ -91,13 +91,13 @@ export const DetectionResult: React.FC<DetectionResultProps> = ({ detection }) =
               </TableHeader>
               <TableBody>
                 {detection.caries_findings.map((finding) => (
-                  <TableRow key={finding.id} className="border-gray-50 hover:bg-blue-50/30">
+                  <TableRow key={finding.id} className="border-gray-50 hover:bg-orange-50/30">
                     <TableCell className="font-bold text-slate-700 pl-6">#{finding.tooth_number || '?'}</TableCell>
                     <TableCell>{getSeverityBadge(finding.severity)}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <div className="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                          <div className="h-full bg-blue-500 rounded-full" style={{ width: `${finding.confidence_score * 100}%` }}></div>
+                          <div className="h-full bg-orange-500 rounded-full" style={{ width: `${finding.confidence_score * 100}%` }}></div>
                         </div>
                         <span className="text-xs text-slate-500 font-medium">{(finding.confidence_score * 100).toFixed(0)}%</span>
                       </div>

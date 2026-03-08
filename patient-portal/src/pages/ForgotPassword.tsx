@@ -94,7 +94,7 @@ export const ForgotPassword: React.FC = () => {
                                     </label>
                                     <div className="relative group">
                                         <div className="absolute left-4 top-4">
-                                            <Mail className="h-5 w-5 text-slate-400 group-focus-within:text-blue-600" />
+                                            <Mail className="h-5 w-5 text-slate-400 group-focus-within:text-teal-600" />
                                         </div>
                                         <input
                                             type="email"
@@ -102,7 +102,7 @@ export const ForgotPassword: React.FC = () => {
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
                                             required
-                                            className="flex h-14 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pl-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                                            className="flex h-14 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pl-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500"
                                         />
                                     </div>
                                 </div>
@@ -112,7 +112,7 @@ export const ForgotPassword: React.FC = () => {
                                     whileTap={{ scale: 0.98 }}
                                     type="submit"
                                     disabled={isLoading}
-                                    className="w-full rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-4 text-sm font-bold text-white shadow-xl shadow-blue-500/20 disabled:opacity-70"
+                                    className="w-full rounded-xl bg-gradient-to-r from-teal-600 to-emerald-600 px-4 py-4 text-sm font-bold text-white shadow-xl shadow-teal-500/20 disabled:opacity-70"
                                 >
                                     <div className="flex items-center justify-center gap-2">
                                         {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <span>Send Reset Link</span>}
@@ -121,7 +121,7 @@ export const ForgotPassword: React.FC = () => {
                             </form>
                         ) : (
                             <div className="space-y-6">
-                                <div className="p-6 bg-blue-50 rounded-2xl border border-blue-100 text-blue-700 text-sm leading-relaxed">
+                                <div className="p-6 bg-teal-50 rounded-2xl border border-teal-100 text-teal-700 text-sm leading-relaxed">
                                     <p>Didn't receive the email? Check your spam folder or try again in a few minutes.</p>
                                 </div>
                                 <Button
@@ -135,7 +135,7 @@ export const ForgotPassword: React.FC = () => {
                         )}
 
                         <div className="text-center pt-4 border-t border-slate-100">
-                            <Link to="/login" className="inline-flex items-center gap-2 text-sm text-blue-600 font-bold hover:underline">
+                            <Link to="/login" className="inline-flex items-center gap-2 text-sm text-teal-600 font-bold hover:underline">
                                 <ArrowLeft className="h-4 w-4" />
                                 Back to Login
                             </Link>
@@ -152,11 +152,11 @@ export const ForgotPassword: React.FC = () => {
                         alt="Dental Care"
                         className="h-full w-full object-cover opacity-60"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue-950/90 via-indigo-950/80 to-slate-950/90 mix-blend-multiply" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-teal-950/90 via-emerald-950/80 to-slate-950/90 mix-blend-multiply" />
                 </div>
                 <div className="relative z-20 flex items-center gap-3">
-                    <Stethoscope className="h-8 w-8 text-blue-400" />
-                    <span className="text-2xl font-bold tracking-tight">DentAI<span className="text-blue-400">Diagnostics</span></span>
+                    <Stethoscope className="h-8 w-8 text-teal-400" />
+                    <span className="text-2xl font-bold tracking-tight">DentAI<span className="text-teal-400">Diagnostics</span></span>
                 </div>
                 <div className="relative z-20 mt-auto">
                     <div className="max-w-md p-8 rounded-3xl bg-white/5 backdrop-blur-md border border-white/10">

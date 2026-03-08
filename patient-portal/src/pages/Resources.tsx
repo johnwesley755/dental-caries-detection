@@ -66,7 +66,7 @@ export const Resources: React.FC = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        <Loader2 className="h-8 w-8 animate-spin text-teal-600" />
       </div>
     );
   }
@@ -89,7 +89,7 @@ export const Resources: React.FC = () => {
             placeholder="Search resources..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
           />
         </div>
 
@@ -98,7 +98,7 @@ export const Resources: React.FC = () => {
           <button
             onClick={() => setSelectedCategory('')}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              selectedCategory === '' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              selectedCategory === '' ? 'bg-teal-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
             All Categories
@@ -108,7 +108,7 @@ export const Resources: React.FC = () => {
               key={category}
               onClick={() => setSelectedCategory(category)}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                selectedCategory === category ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                selectedCategory === category ? 'bg-teal-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
               {category}
@@ -126,8 +126,8 @@ export const Resources: React.FC = () => {
               <div key={category}>
                 {/* Category Header */}
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <Icon className="h-5 w-5 text-blue-600" />
+                  <div className="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center">
+                    <Icon className="h-5 w-5 text-teal-600" />
                   </div>
                   <h2 className="text-xl font-semibold text-gray-900">{category}</h2>
                   <span className="text-sm text-gray-500">({categoryResources.length})</span>
@@ -143,12 +143,12 @@ export const Resources: React.FC = () => {
                         href={resource.url || '#'}
                         target={resource.url ? '_blank' : undefined}
                         rel={resource.url ? 'noopener noreferrer' : undefined}
-                        className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md hover:border-blue-200 transition-all group"
+                        className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md hover:border-teal-200 transition-all group"
                       >
                         {/* Featured Badge */}
                         {resource.is_featured && (
                           <div className="mb-3">
-                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
                               Featured
                             </span>
                           </div>
@@ -156,13 +156,13 @@ export const Resources: React.FC = () => {
 
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex items-center gap-2">
-                            <TypeIcon className="h-5 w-5 text-blue-600" />
-                            <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2">
+                            <TypeIcon className="h-5 w-5 text-teal-600" />
+                            <h3 className="text-lg font-semibold text-gray-900 group-hover:text-teal-600 transition-colors line-clamp-2">
                               {resource.title}
                             </h3>
                           </div>
                           {resource.url && (
-                            <ExternalLink className="h-4 w-4 text-gray-400 group-hover:text-blue-600 transition-colors flex-shrink-0 ml-2" />
+                            <ExternalLink className="h-4 w-4 text-gray-400 group-hover:text-teal-600 transition-colors flex-shrink-0 ml-2" />
                           )}
                         </div>
 

@@ -47,12 +47,12 @@ export const ChatBot: React.FC<ChatBotProps> = ({ detectionId }) => {
 
   return (
     <Card className="flex flex-col h-full border-none shadow-none rounded-none overflow-hidden">
-      <CardHeader className="border-b bg-gradient-to-r from-blue-50 to-blue-100">
-        <CardTitle className="flex items-center gap-2 text-blue-900">
+      <CardHeader className="border-b bg-gradient-to-r from-teal-50 to-teal-100">
+        <CardTitle className="flex items-center gap-2 text-teal-900">
           <Bot className="h-5 w-5" />
           Dental Health Assistant
         </CardTitle>
-        <p className="text-sm text-blue-700 mt-1">
+        <p className="text-sm text-teal-700 mt-1">
           Ask me about your scan results. I'm here to help explain them in simple terms.
         </p>
       </CardHeader>
@@ -62,15 +62,15 @@ export const ChatBot: React.FC<ChatBotProps> = ({ detectionId }) => {
         <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#f8fbff]">
           {messages.length === 0 && (
             <div className="flex flex-col items-center justify-center h-full text-center text-gray-500">
-              <Bot className="h-12 w-12 mb-3 text-blue-400" />
+              <Bot className="h-12 w-12 mb-3 text-teal-400" />
               <p className="font-medium">Welcome! How can I help you today?</p>
               <p className="text-sm mt-2 max-w-md">
                 I can explain your dental scan results, severity levels, and next steps.
               </p>
-              <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg max-w-md">
+              <div className="mt-4 p-3 bg-emerald-50 border border-emerald-200 rounded-lg max-w-md">
                 <div className="flex items-start gap-2">
-                  <AlertCircle className="h-4 w-4 text-yellow-600 mt-0.5 flex-shrink-0" />
-                  <p className="text-xs text-yellow-800">
+                  <AlertCircle className="h-4 w-4 text-emerald-600 mt-0.5 flex-shrink-0" />
+                  <p className="text-xs text-emerald-800">
                     I cannot provide medical advice or prescriptions.
                     Always consult your dentist for treatment.
                   </p>
@@ -84,11 +84,11 @@ export const ChatBot: React.FC<ChatBotProps> = ({ detectionId }) => {
               {/* User Message */}
               <div className="flex justify-end">
                 <div className="flex items-start gap-2 max-w-[80%]">
-                  <div className="bg-blue-600 text-white rounded-lg px-4 py-2 shadow-sm">
+                  <div className="bg-teal-600 text-white rounded-lg px-4 py-2 shadow-sm">
                     <p className="text-sm">{msg.user_message}</p>
                   </div>
-                  <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-                    <User className="h-4 w-4 text-blue-600" />
+                  <div className="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center flex-shrink-0">
+                    <User className="h-4 w-4 text-teal-600" />
                   </div>
                 </div>
               </div>
@@ -96,7 +96,7 @@ export const ChatBot: React.FC<ChatBotProps> = ({ detectionId }) => {
               {/* Bot Response */}
               <div className="flex justify-start">
                 <div className="flex items-start gap-2 max-w-[80%]">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center flex-shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center flex-shrink-0">
                     <Bot className="h-4 w-4 text-white" />
                   </div>
                   <div className="bg-white border border-gray-200 rounded-lg px-4 py-3 shadow-sm">
@@ -113,13 +113,13 @@ export const ChatBot: React.FC<ChatBotProps> = ({ detectionId }) => {
                             <span className={`px-2 py-1 rounded-full font-medium ${msg.detection_context.severity.toLowerCase() === 'severe'
                               ? 'bg-red-100 text-red-700'
                               : msg.detection_context.severity.toLowerCase() === 'moderate'
-                                ? 'bg-orange-100 text-orange-700'
-                                : 'bg-yellow-100 text-yellow-700'
+                                ? 'bg-teal-100 text-teal-700'
+                                : 'bg-emerald-100 text-emerald-700'
                               }`}>
                               {msg.detection_context.severity}
                             </span>
                           )}
-                          <span className="px-2 py-1 rounded-full bg-blue-100 text-blue-700 font-medium">
+                          <span className="px-2 py-1 rounded-full bg-teal-100 text-teal-700 font-medium">
                             {msg.detection_context.total_caries} caries
                           </span>
                           {msg.detection_context.confidence_avg && (
@@ -139,12 +139,12 @@ export const ChatBot: React.FC<ChatBotProps> = ({ detectionId }) => {
           {isLoading && (
             <div className="flex justify-start">
               <div className="flex items-start gap-2">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center">
                   <Bot className="h-4 w-4 text-white" />
                 </div>
                 <div className="bg-white border border-gray-200 rounded-lg px-4 py-3">
                   <div className="flex items-center gap-2">
-                    <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
+                    <Loader2 className="h-4 w-4 animate-spin text-teal-600" />
                     <span className="text-sm text-gray-600">Thinking...</span>
                   </div>
                 </div>
@@ -169,7 +169,7 @@ export const ChatBot: React.FC<ChatBotProps> = ({ detectionId }) => {
             <Button
               type="submit"
               disabled={!inputMessage.trim() || isLoading}
-              className="bg-blue-600 hover:bg-blue-700"
+              className="bg-teal-600 hover:bg-teal-700"
             >
               {isLoading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />

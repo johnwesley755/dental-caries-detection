@@ -25,7 +25,7 @@ export const HistoryCard: React.FC<HistoryCardProps> = ({
       case DetectionStatus.COMPLETED:
         return <Badge className="bg-emerald-100 text-emerald-700 border-none shadow-none font-medium hover:bg-emerald-100">Done</Badge>;
       case DetectionStatus.REVIEWED:
-        return <Badge className="bg-blue-100 text-blue-700 border-none shadow-none font-medium hover:bg-blue-100">Reviewed</Badge>;
+        return <Badge className="bg-orange-100 text-orange-700 border-none shadow-none font-medium hover:bg-orange-100">Reviewed</Badge>;
       default:
         return <Badge variant="secondary" className="bg-gray-100 text-gray-600 border-none shadow-none">Pending</Badge>;
     }
@@ -40,7 +40,7 @@ export const HistoryCard: React.FC<HistoryCardProps> = ({
         <div className="p-5">
           <div className="flex justify-between items-start mb-3">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-500 group-hover:bg-blue-500 group-hover:text-white transition-colors">
+              <div className="h-10 w-10 rounded-full bg-orange-50 flex items-center justify-center text-orange-500 group-hover:bg-orange-500 group-hover:text-white transition-colors">
                 <FileImage className="h-5 w-5" />
               </div>
               <div>
@@ -74,7 +74,7 @@ export const HistoryCard: React.FC<HistoryCardProps> = ({
             <Calendar className="h-3 w-3" />
             <span>{new Date(detection.detection_date).toLocaleDateString()}</span>
           </div>
-          <ArrowRight className="h-4 w-4 text-gray-300 group-hover:text-blue-500 transform group-hover:translate-x-1 transition-all" />
+          <ArrowRight className="h-4 w-4 text-gray-300 group-hover:text-orange-500 transform group-hover:translate-x-1 transition-all" />
         </div>
       </CardContent>
     </Card>

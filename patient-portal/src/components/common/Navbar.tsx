@@ -20,20 +20,20 @@ export const Navbar: React.FC = () => {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex items-center gap-2">
-              <Activity className="h-8 w-8 text-blue-600" />
+              <Activity className="h-8 w-8 text-teal-600" />
               <span className="text-xl font-bold text-gray-900">My Dental Health</span>
             </Link>
             {isAuthenticated && (
               <div className="hidden sm:ml-8 sm:flex sm:space-x-6">
                 <Link
                   to="/dashboard"
-                  className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
+                  className="text-gray-700 hover:text-teal-600 px-3 py-2 text-sm font-medium transition-colors"
                 >
                   Dashboard
                 </Link>
                 <Link
                   to="/detections"
-                  className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
+                  className="text-gray-700 hover:text-teal-600 px-3 py-2 text-sm font-medium transition-colors"
                 >
                   My Scans
                 </Link>
@@ -44,7 +44,7 @@ export const Navbar: React.FC = () => {
           <div className="flex items-center gap-4">
             {isAuthenticated ? (
               <>
-                <Link to="/profile" className="flex items-center gap-2 text-gray-700 hover:text-blue-600">
+                <Link to="/profile" className="flex items-center gap-2 text-gray-700 hover:text-teal-600">
                   <User className="h-5 w-5" />
                   <span className="hidden sm:block text-sm font-medium">{user?.full_name}</span>
                 </Link>

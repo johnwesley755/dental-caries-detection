@@ -36,7 +36,7 @@ export const FloatingChatButton: React.FC = () => {
           <div className="relative flex-1 flex flex-col min-h-0">
             <button
               onClick={() => setIsOpen(false)}
-              className="absolute top-3 right-3 z-[70] p-1.5 rounded-full bg-blue-600/10 hover:bg-blue-600/20 text-blue-600 transition-all shadow-sm"
+              className="absolute top-3 right-3 z-[70] p-1.5 rounded-full bg-teal-600/10 hover:bg-teal-600/20 text-teal-600 transition-all shadow-sm"
             >
               <X className="h-5 w-5" />
             </button>
@@ -49,7 +49,7 @@ export const FloatingChatButton: React.FC = () => {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-br from-blue-600 to-blue-700 text-white rounded-full shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-200 flex items-center justify-center z-50 group"
+          className="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-br from-teal-600 to-teal-700 text-white rounded-full shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-200 flex items-center justify-center z-50 group"
         >
           <MessageCircle className="h-6 w-6" />
           <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></span>

@@ -28,3 +28,4 @@ class User(Base):
     
     # Relationships
     chat_messages = relationship("ChatMessage", back_populates="user")
+    profile = relationship("DentistProfile", back_populates="user", uselist=False)

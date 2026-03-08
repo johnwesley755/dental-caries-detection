@@ -29,7 +29,7 @@ export const PatientGrowthChart: React.FC = () => {
   if (loading) {
     return (
       <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 h-[400px] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
       </div>
     );
   }
@@ -51,13 +51,13 @@ export const PatientGrowthChart: React.FC = () => {
       </div>
       
       <div className="grid grid-cols-2 gap-4 mb-6">
-        <div className="bg-blue-50 rounded-lg p-4">
-          <p className="text-sm text-blue-600 font-medium mb-1">Total New Patients</p>
-          <p className="text-3xl font-bold text-blue-900">{totalNewPatients}</p>
+        <div className="bg-orange-50 rounded-lg p-4">
+          <p className="text-sm text-orange-600 font-medium mb-1">Total New Patients</p>
+          <p className="text-3xl font-bold text-orange-900">{totalNewPatients}</p>
         </div>
-        <div className="bg-purple-50 rounded-lg p-4">
-          <p className="text-sm text-purple-600 font-medium mb-1">Average Per Day</p>
-          <p className="text-3xl font-bold text-purple-900">{avgPerDay}</p>
+        <div className="bg-yellow-50 rounded-lg p-4">
+          <p className="text-sm text-yellow-600 font-medium mb-1">Average Per Day</p>
+          <p className="text-3xl font-bold text-yellow-900">{avgPerDay}</p>
         </div>
       </div>
       

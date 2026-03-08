@@ -147,7 +147,7 @@ export const NotificationDropdown: React.FC = () => {
             style={{ top: `${dropdownPosition.top}px`, left: `${dropdownPosition.left}px` }}
           >
             {/* Header */}
-            <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-gradient-to-r from-blue-50 to-purple-50">
+            <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-gradient-to-r from-orange-50 to-yellow-50">
               <div>
                 <h3 className="text-lg font-bold text-gray-900">Notifications</h3>
                 <p className="text-sm text-gray-500">{unreadCount} unread</p>
@@ -155,7 +155,7 @@ export const NotificationDropdown: React.FC = () => {
               {unreadCount > 0 && (
                 <button
                   onClick={handleMarkAllAsRead}
-                  className="text-sm text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"
+                  className="text-sm text-orange-600 hover:text-orange-700 font-medium flex items-center gap-1"
                 >
                   <CheckCheck className="h-4 w-4" />
                   Mark all read
@@ -167,7 +167,7 @@ export const NotificationDropdown: React.FC = () => {
             <div className="overflow-y-auto flex-1">
               {loading ? (
                 <div className="p-8 text-center text-gray-500">
-                  <div className="animate-spin h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full mx-auto"></div>
+                  <div className="animate-spin h-8 w-8 border-4 border-orange-500 border-t-transparent rounded-full mx-auto"></div>
                   <p className="mt-2">Loading...</p>
                 </div>
               ) : notifications.length === 0 ? (
@@ -181,7 +181,7 @@ export const NotificationDropdown: React.FC = () => {
                     <div
                       key={notification.id}
                       className={`p-4 hover:bg-gray-50 transition-colors ${
-                        !notification.is_read ? 'bg-blue-50/50' : ''
+                        !notification.is_read ? 'bg-orange-50/50' : ''
                       }`}
                     >
                       <div className="flex items-start gap-3">
@@ -208,7 +208,7 @@ export const NotificationDropdown: React.FC = () => {
                             {!notification.is_read && (
                               <button
                                 onClick={() => handleMarkAsRead(notification.id)}
-                                className="text-xs text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"
+                                className="text-xs text-orange-600 hover:text-orange-700 font-medium flex items-center gap-1"
                               >
                                 <Check className="h-3 w-3" />
                                 Mark read
@@ -231,7 +231,7 @@ export const NotificationDropdown: React.FC = () => {
                     setIsOpen(false);
                     // Navigate to notifications page if you have one
                   }}
-                  className="w-full text-center text-sm text-blue-600 hover:text-blue-700 font-medium"
+                  className="w-full text-center text-sm text-orange-600 hover:text-orange-700 font-medium"
                 >
                   View all notifications
                 </button>

@@ -37,7 +37,7 @@ export const HealthScoreChart: React.FC = () => {
   if (loading) {
     return (
       <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 h-[450px] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600"></div>
       </div>
     );
   }
@@ -66,8 +66,8 @@ export const HealthScoreChart: React.FC = () => {
 
   const getScoreColor = () => {
     if (currentScore >= 80) return 'text-green-600';
-    if (currentScore >= 60) return 'text-blue-600';
-    if (currentScore >= 40) return 'text-orange-600';
+    if (currentScore >= 60) return 'text-teal-600';
+    if (currentScore >= 40) return 'text-teal-600';
     return 'text-red-600';
   };
 
@@ -121,8 +121,8 @@ export const HealthScoreChart: React.FC = () => {
         </LineChart>
       </ResponsiveContainer>
       
-      <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-        <p className="text-sm text-blue-900">
+      <div className="mt-4 p-4 bg-teal-50 rounded-lg">
+        <p className="text-sm text-teal-900">
           <strong>💡 Tip:</strong> Maintain a score above 70 for optimal oral health. Regular checkups help improve your score!
         </p>
       </div>

@@ -98,9 +98,9 @@ export const Dashboard: React.FC = () => {
       <header className="px-8 py-6 flex items-center justify-between sticky top-0 bg-[#F4F7FE]/90 backdrop-blur-sm z-10">
         <div className="flex items-center gap-4 flex-1 max-w-xl">
           <div className="relative flex-1 group">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
             <Input 
-              className="pl-12 py-6 bg-white border-none rounded-full shadow-sm text-gray-600 placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-blue-500 transition-all"
+              className="pl-12 py-6 bg-white border-none rounded-full shadow-sm text-gray-600 placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-orange-500 transition-all"
               placeholder="Search patients, IDs, or analysis records..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -111,7 +111,7 @@ export const Dashboard: React.FC = () => {
         <div className="flex items-center gap-4">
           <Button 
             variant="ghost" 
-            className="bg-white rounded-full h-12 w-12 p-0 shadow-sm text-gray-500 hover:text-blue-600 transition-colors"
+            className="bg-white rounded-full h-12 w-12 p-0 shadow-sm text-gray-500 hover:text-orange-600 transition-colors"
             onClick={() => setShowCalendar(true)}
           >
             <CalendarIcon className="h-5 w-5" />
@@ -134,7 +134,7 @@ export const Dashboard: React.FC = () => {
                   {user?.role || 'Guest'}
                 </p>
              </div>
-             <div className="h-12 w-12 bg-white rounded-full border-2 border-white shadow-sm overflow-hidden hover:ring-2 hover:ring-blue-200 transition-all">
+             <div className="h-12 w-12 bg-white rounded-full border-2 border-white shadow-sm overflow-hidden hover:ring-2 hover:ring-orange-200 transition-all">
                 <img 
                   src={`https://ui-avatars.com/api/?name=${user?.full_name || 'User'}&background=0D8ABC&color=fff&bold=true`} 
                   alt="Profile" 
@@ -149,7 +149,7 @@ export const Dashboard: React.FC = () => {
       <main className="flex-1 overflow-auto px-8 pb-8">
         {isLoading ? (
           <div className="h-full flex flex-col items-center justify-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
             <p className="text-gray-400 mt-4">Loading dashboard analytics...</p>
           </div>
         ) : (

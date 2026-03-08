@@ -10,3 +10,4 @@ from .treatment_plan import TreatmentPlan, TreatmentPlanItem
 from .resource import Resource
 from .conversation import Conversation
 from .message import Message
+from .chat import ChatMessage

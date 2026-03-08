@@ -51,14 +51,14 @@ export const HealthTracker: React.FC = () => {
 
   const getScoreColor = (score: number) => {
     if (score >= 80) return 'text-green-600';
-    if (score >= 60) return 'text-yellow-600';
+    if (score >= 60) return 'text-emerald-600';
     return 'text-red-600';
   };
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        <Loader2 className="h-8 w-8 animate-spin text-teal-600" />
       </div>
     );
   }
@@ -96,7 +96,7 @@ export const HealthTracker: React.FC = () => {
         </div>
 
         {/* Health Status */}
-        <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white">
+        <div className="bg-gradient-to-br from-teal-500 to-teal-600 rounded-2xl p-6 text-white">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
               <Activity className="h-6 w-6" />
@@ -126,9 +126,9 @@ export const HealthTracker: React.FC = () => {
       </div>
 
       {/* Health Tips */}
-      <div className="mt-8 bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-6">
+      <div className="mt-8 bg-gradient-to-br from-teal-50 to-teal-100 rounded-2xl p-6">
         <div className="flex items-start gap-4">
-          <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center flex-shrink-0">
+          <div className="w-12 h-12 bg-teal-600 rounded-xl flex items-center justify-center flex-shrink-0">
             <Activity className="h-6 w-6 text-white" />
           </div>
           <div>

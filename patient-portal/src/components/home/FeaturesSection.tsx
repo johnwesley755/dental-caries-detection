@@ -21,8 +21,8 @@ const features = [
     icon: Smartphone,
     bg: "bg-white",
     text: "text-slate-900",
-    accent: "bg-blue-600",
-    badge: "bg-blue-50 text-blue-700 border-blue-100",
+    accent: "bg-teal-600",
+    badge: "bg-teal-50 text-teal-700 border-teal-100",
     layout: "right"
   },
   {
@@ -45,7 +45,7 @@ const features = [
     description: "Our AI analyzes your scans to predict potential issues before they happen. Track gum health and cavity risks on a visual timeline.",
     image: "https://images.unsplash.com/photo-1551076805-e1869033e561?q=80&w=2532&auto=format&fit=crop",
     icon: TrendingUp,
-    bg: "bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100",
+    bg: "bg-gradient-to-br from-emerald-100 via-purple-100 to-pink-100",
     text: "text-slate-900",
     accent: "bg-purple-600",
     badge: "bg-white/60 text-purple-700 border-purple-200 backdrop-blur",
@@ -98,7 +98,7 @@ const FeatureCard = ({ feature, index, range }: { feature: typeof features[0], i
             <ul className="space-y-4">
               {['Instant access', 'Secure encryption', '24/7 Availability'].map((item, i) => (
                 <li key={i} className={`flex items-center gap-3 text-lg font-medium ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-                  <div className={`flex items-center justify-center w-6 h-6 rounded-full ${isDark ? 'bg-emerald-500/20 text-emerald-400' : 'bg-blue-100 text-blue-600'}`}>
+                  <div className={`flex items-center justify-center w-6 h-6 rounded-full ${isDark ? 'bg-emerald-500/20 text-emerald-400' : 'bg-teal-100 text-teal-600'}`}>
                     <Check className="w-4 h-4" />
                   </div>
                   {item}
@@ -122,13 +122,13 @@ const FeatureCard = ({ feature, index, range }: { feature: typeof features[0], i
               {/* Floating UI Elements (Visily Style) */}
               <div className="absolute top-6 left-6 z-20 flex gap-2">
                 <div className="w-3 h-3 rounded-full bg-red-500/80" />
-                <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
+                <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
                 <div className="w-3 h-3 rounded-full bg-green-500/80" />
               </div>
 
               {/* Cursor Interaction Mockup */}
               <div className="absolute bottom-10 right-10 z-20 bg-white/90 backdrop-blur p-4 rounded-2xl shadow-xl flex items-center gap-3 animate-bounce duration-[3000ms]">
-                 <div className={`p-2 rounded-lg ${isDark ? 'bg-emerald-100 text-emerald-600' : 'bg-blue-100 text-blue-600'}`}>
+                 <div className={`p-2 rounded-lg ${isDark ? 'bg-emerald-100 text-emerald-600' : 'bg-teal-100 text-teal-600'}`}>
                     <MousePointer2 className="w-5 h-5" />
                  </div>
                  <div>

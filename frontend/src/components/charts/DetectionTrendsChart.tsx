@@ -29,7 +29,7 @@ export const DetectionTrendsChart: React.FC = () => {
   if (loading) {
     return (
       <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 h-[400px] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
       </div>
     );
   }
@@ -44,7 +44,7 @@ export const DetectionTrendsChart: React.FC = () => {
         <select
           value={days}
           onChange={(e) => setDays(Number(e.target.value))}
-          className="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          className="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
         >
           <option value={7}>Last 7 days</option>
           <option value={30}>Last 30 days</option>

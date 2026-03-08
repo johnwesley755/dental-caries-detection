@@ -43,7 +43,7 @@ export const NewDetection: React.FC = () => {
             {/* Header */}
             <div className="max-w-4xl mx-auto mb-8">
                 <div className="flex items-center gap-3 mb-4">
-                    <div className="h-12 w-12 rounded-2xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600">
+                    <div className="h-12 w-12 rounded-2xl bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center text-teal-600">
                         <Sparkles className="h-6 w-6" />
                     </div>
                     <div>
@@ -61,9 +61,9 @@ export const NewDetection: React.FC = () => {
                             {/* Left Side: Upload Area */}
                             <div className="space-y-6">
                                 {!preview ? (
-                                    <label className="flex flex-col items-center justify-center aspect-square rounded-2xl bg-slate-50 border-2 border-dashed border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer group">
-                                        <div className="h-16 w-16 rounded-full bg-blue-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                                            <Upload className="h-8 w-8 text-blue-600" />
+                                    <label className="flex flex-col items-center justify-center aspect-square rounded-2xl bg-slate-50 border-2 border-dashed border-slate-200 hover:border-teal-500 hover:bg-teal-50 transition-all cursor-pointer group">
+                                        <div className="h-16 w-16 rounded-full bg-teal-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                            <Upload className="h-8 w-8 text-teal-600" />
                                         </div>
                                         <span className="text-lg font-semibold text-slate-900">Choose Dental Image</span>
                                         <span className="text-sm text-slate-500 mt-2 text-center px-6">
@@ -89,7 +89,7 @@ export const NewDetection: React.FC = () => {
                                                 value={notes}
                                                 onChange={(e) => setNotes(e.target.value)}
                                                 placeholder="Tell us about any specific concerns..."
-                                                className="w-full h-24 p-4 rounded-xl border border-slate-100 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all resize-none text-sm"
+                                                className="w-full h-24 p-4 rounded-xl border border-slate-100 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none transition-all resize-none text-sm"
                                             />
                                         </div>
                                     </div>
@@ -98,7 +98,7 @@ export const NewDetection: React.FC = () => {
                                 <Button
                                     onClick={handleUpload}
                                     disabled={!file || isAnalyzing}
-                                    className="w-full h-14 text-lg font-bold bg-blue-600 hover:bg-blue-700 rounded-xl shadow-lg shadow-blue-600/20"
+                                    className="w-full h-14 text-lg font-bold bg-teal-600 hover:bg-teal-700 rounded-xl shadow-lg shadow-teal-600/20"
                                 >
                                     {isAnalyzing ? (
                                         <>
@@ -128,8 +128,8 @@ export const NewDetection: React.FC = () => {
                                     </div>
 
                                     <div className="flex items-start gap-4">
-                                        <div className="h-10 w-10 rounded-xl bg-blue-100 flex items-center justify-center shrink-0">
-                                            <CheckCircle2 className="h-5 w-5 text-blue-600" />
+                                        <div className="h-10 w-10 rounded-xl bg-teal-100 flex items-center justify-center shrink-0">
+                                            <CheckCircle2 className="h-5 w-5 text-teal-600" />
                                         </div>
                                         <div>
                                             <h4 className="font-bold text-slate-900">Instant Results</h4>
@@ -138,12 +138,12 @@ export const NewDetection: React.FC = () => {
                                     </div>
                                 </div>
 
-                                <div className="bg-amber-50 border border-amber-100 rounded-2xl p-6">
+                                <div className="bg-teal-50 border border-teal-100 rounded-2xl p-6">
                                     <div className="flex gap-3">
-                                        <AlertCircle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
+                                        <AlertCircle className="h-5 w-5 text-teal-600 shrink-0 mt-0.5" />
                                         <div className="space-y-1">
-                                            <p className="text-sm font-bold text-amber-900">Health Advice</p>
-                                            <p className="text-xs text-amber-800 leading-relaxed">
+                                            <p className="text-sm font-bold text-teal-900">Health Advice</p>
+                                            <p className="text-xs text-teal-800 leading-relaxed">
                                                 This screening tool is not a medical diagnosis. Always consult with your verified dentist for clinical decisions.
                                             </p>
                                         </div>

@@ -32,16 +32,16 @@ export const StatisticsSection: React.FC = () => {
 
   const getColorClasses = (color: string) => {
     const colors = {
-      blue: 'bg-blue-100 text-blue-600',
+      blue: 'bg-orange-100 text-orange-600',
       green: 'bg-green-100 text-green-600',
-      purple: 'bg-purple-100 text-purple-600',
+      purple: 'bg-yellow-100 text-yellow-600',
       orange: 'bg-orange-100 text-orange-600'
     };
     return colors[color as keyof typeof colors] || colors.blue;
   };
 
   return (
-    <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
+    <section className="py-20 bg-gradient-to-br from-gray-50 to-orange-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">

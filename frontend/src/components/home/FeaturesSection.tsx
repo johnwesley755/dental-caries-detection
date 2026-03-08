@@ -18,9 +18,9 @@ const features: Feature[] = [
     icon: Activity,
     title: 'AI-Powered Detection',
     description: 'State-of-the-art machine learning algorithms identifying dental caries with 99.8% precision.',
-    color: 'text-blue-600',
-    bgColor: 'bg-blue-50',
-    borderColor: 'border-blue-100'
+    color: 'text-orange-600',
+    bgColor: 'bg-orange-50',
+    borderColor: 'border-orange-100'
   },
   {
     icon: Shield,
@@ -42,9 +42,9 @@ const features: Feature[] = [
     icon: Users,
     title: 'Patient History',
     description: 'Centralized management for longitudinal tracking of patient dental health and records.',
-    color: 'text-purple-600',
-    bgColor: 'bg-purple-50',
-    borderColor: 'border-purple-100'
+    color: 'text-yellow-600',
+    bgColor: 'bg-yellow-50',
+    borderColor: 'border-yellow-100'
   },
 ];
 

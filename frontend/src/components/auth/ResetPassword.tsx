@@ -92,7 +92,7 @@ export const ResetPassword: React.FC = () => {
                 className="max-w-[500px] w-full"
             >
                 <div className="bg-white border border-slate-100 shadow-[0_20px_50px_rgb(0,0,0,0.06)] rounded-3xl p-10 space-y-8 relative overflow-hidden">
-                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500/50 to-transparent opacity-50" />
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-orange-500/50 to-transparent opacity-50" />
 
                     <div className="text-center space-y-3">
                         <h1 className="text-3xl font-bold tracking-tight text-slate-900">Set New Password</h1>
@@ -111,7 +111,7 @@ export const ResetPassword: React.FC = () => {
                             <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">New Password</label>
                             <div className="relative group">
                                 <div className="absolute left-4 top-3.5 pointer-events-none">
-                                    <Lock className="h-5 w-5 text-slate-400 group-focus-within:text-blue-600 transition-colors" />
+                                    <Lock className="h-5 w-5 text-slate-400 group-focus-within:text-orange-600 transition-colors" />
                                 </div>
                                 <input
                                     type={showPassword ? "text" : "password"}
@@ -120,7 +120,7 @@ export const ResetPassword: React.FC = () => {
                                     onChange={(e) => setPassword(e.target.value)}
                                     required
                                     minLength={8}
-                                    className="w-full h-12 pl-12 pr-12 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm"
+                                    className="w-full h-12 pl-12 pr-12 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all text-sm"
                                 />
                                 <button
                                     type="button"
@@ -136,7 +136,7 @@ export const ResetPassword: React.FC = () => {
                             <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Confirm Password</label>
                             <div className="relative group">
                                 <div className="absolute left-4 top-3.5 pointer-events-none">
-                                    <Lock className="h-5 w-5 text-slate-400 group-focus-within:text-blue-600 transition-colors" />
+                                    <Lock className="h-5 w-5 text-slate-400 group-focus-within:text-orange-600 transition-colors" />
                                 </div>
                                 <input
                                     type={showPassword ? "text" : "password"}
@@ -144,7 +144,7 @@ export const ResetPassword: React.FC = () => {
                                     value={confirmPassword}
                                     onChange={(e) => setConfirmPassword(e.target.value)}
                                     required
-                                    className="w-full h-12 pl-12 pr-12 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm"
+                                    className="w-full h-12 pl-12 pr-12 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all text-sm"
                                 />
                             </div>
                         </div>
@@ -161,7 +161,7 @@ export const ResetPassword: React.FC = () => {
                     </form>
 
                     <div className="text-center pt-4 border-t border-slate-100">
-                        <Link to="/login" className="text-sm font-bold text-slate-400 hover:text-blue-600 transition-colors">
+                        <Link to="/login" className="text-sm font-bold text-slate-400 hover:text-orange-600 transition-colors">
                             Cancel and return to Login
                         </Link>
                     </div>

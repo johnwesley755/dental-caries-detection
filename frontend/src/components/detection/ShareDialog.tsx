@@ -105,13 +105,13 @@ export const ShareDialog: React.FC<ShareDialogProps> = ({
             <Label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Report Link</Label>
             <div className="flex gap-2">
               <div className="relative flex-1 group">
-                <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-hover:text-blue-500 transition-colors">
+                <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-hover:text-orange-500 transition-colors">
                   <LinkIcon className="h-4 w-4" />
                 </div>
                 <Input 
                   readOnly 
                   value={shareUrl}
-                  className="pl-10 h-11 bg-slate-50 border-slate-200 text-slate-600 font-medium text-sm focus-visible:ring-blue-500 rounded-xl"
+                  className="pl-10 h-11 bg-slate-50 border-slate-200 text-slate-600 font-medium text-sm focus-visible:ring-orange-500 rounded-xl"
                 />
               </div>
               <Button 
@@ -140,13 +140,13 @@ export const ShareDialog: React.FC<ShareDialogProps> = ({
                   placeholder="doctor@clinic.com" 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="h-11 bg-slate-50 border-slate-200 rounded-xl focus-visible:ring-blue-500"
+                  className="h-11 bg-slate-50 border-slate-200 rounded-xl focus-visible:ring-orange-500"
                   onKeyDown={(e) => e.key === 'Enter' && handleSendEmail()}
                />
                <Button 
                   onClick={handleSendEmail} 
                   disabled={isSending || !email} 
-                  className="h-11 px-6 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium shadow-md shadow-blue-100 transition-all"
+                  className="h-11 px-6 bg-orange-600 hover:bg-orange-700 text-white rounded-xl font-medium shadow-md shadow-orange-100 transition-all"
                >
                   {isSending ? (
                     <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

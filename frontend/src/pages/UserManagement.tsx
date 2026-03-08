@@ -96,8 +96,8 @@ export const UserManagement: React.FC = () => {
 
   const getRoleBadge = (role: string) => {
     switch (role.toUpperCase()) {
-      case 'ADMIN': return <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-200 border-none">Admin</Badge>;
-      case 'DENTIST': return <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-200 border-none">Dentist</Badge>;
+      case 'ADMIN': return <Badge className="bg-yellow-100 text-yellow-700 hover:bg-yellow-200 border-none">Admin</Badge>;
+      case 'DENTIST': return <Badge className="bg-orange-100 text-orange-700 hover:bg-orange-200 border-none">Dentist</Badge>;
       case 'ASSISTANT': return <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-200 border-none">Assistant</Badge>;
       default: return <Badge variant="outline" className="text-gray-500">User</Badge>;
     }
@@ -128,12 +128,12 @@ export const UserManagement: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-2">
-            <Shield className="h-8 w-8 text-blue-600" />
+            <Shield className="h-8 w-8 text-orange-600" />
             User Management
           </h1>
           <p className="text-slate-500 mt-1">Manage system access and team roles.</p>
         </div>
-        <Button onClick={() => setShowCreateModal(true)} className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-200 rounded-xl h-11 px-6">
+        <Button onClick={() => setShowCreateModal(true)} className="bg-orange-600 hover:bg-orange-700 text-white shadow-lg shadow-orange-200 rounded-xl h-11 px-6">
           <UserPlus className="h-4 w-4 mr-2" />
           Add Team Member
         </Button>
@@ -147,7 +147,7 @@ export const UserManagement: React.FC = () => {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                 <Input 
                     placeholder="Search users..." 
-                    className="pl-9 h-9 bg-slate-50 border-none rounded-lg focus:ring-1 focus:ring-blue-200"
+                    className="pl-9 h-9 bg-slate-50 border-none rounded-lg focus:ring-1 focus:ring-orange-200"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -156,7 +156,7 @@ export const UserManagement: React.FC = () => {
         
         <CardContent className="p-0">
           {isLoading ? (
-            <div className="p-12 flex justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>
+            <div className="p-12 flex justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600"></div></div>
           ) : (
             <div className="overflow-x-auto">
               <Table>
@@ -171,7 +171,7 @@ export const UserManagement: React.FC = () => {
                 </TableHeader>
                 <TableBody>
                   {filteredUsers.map((u) => (
-                    <TableRow key={u.id} className="border-gray-50 hover:bg-blue-50/30 transition-colors group">
+                    <TableRow key={u.id} className="border-gray-50 hover:bg-orange-50/30 transition-colors group">
                       <TableCell className="pl-6 font-medium text-slate-700">
                         <div className="flex items-center gap-3">
                             <div className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 font-bold text-xs">
@@ -238,8 +238,8 @@ export const UserManagement: React.FC = () => {
                     <div>
                         <label className="text-xs text-slate-400">Temporary Password</label>
                         <div className="flex items-center justify-between bg-white p-3 rounded-xl border border-slate-200 mt-1">
-                            <code className="text-blue-600 font-bold font-mono text-lg">{generatedPassword}</code>
-                            <Button size="icon" variant="ghost" className="h-8 w-8 text-slate-400 hover:text-blue-600" onClick={() => {
+                            <code className="text-orange-600 font-bold font-mono text-lg">{generatedPassword}</code>
+                            <Button size="icon" variant="ghost" className="h-8 w-8 text-slate-400 hover:text-orange-600" onClick={() => {
                                 navigator.clipboard.writeText(generatedPassword);
                                 toast.success('Password copied');
                             }}>
@@ -267,7 +267,7 @@ export const UserManagement: React.FC = () => {
                             value={formData.full_name}
                             onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
                             required
-                            className="mt-1.5 bg-slate-50 border-none h-11 rounded-xl focus:ring-2 focus:ring-blue-100"
+                            className="mt-1.5 bg-slate-50 border-none h-11 rounded-xl focus:ring-2 focus:ring-orange-100"
                             placeholder="e.g. Dr. Sarah Smith"
                         />
                     </div>
@@ -280,7 +280,7 @@ export const UserManagement: React.FC = () => {
                             value={formData.email}
                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                             required
-                            className="mt-1.5 bg-slate-50 border-none h-11 rounded-xl focus:ring-2 focus:ring-blue-100"
+                            className="mt-1.5 bg-slate-50 border-none h-11 rounded-xl focus:ring-2 focus:ring-orange-100"
                             placeholder="sarah@clinic.com"
                         />
                     </div>
@@ -291,7 +291,7 @@ export const UserManagement: React.FC = () => {
                             value={formData.role}
                             onValueChange={(value: any) => setFormData({ ...formData, role: value })}
                         >
-                            <SelectTrigger className="mt-1.5 bg-slate-50 border-none h-11 rounded-xl focus:ring-2 focus:ring-blue-100">
+                            <SelectTrigger className="mt-1.5 bg-slate-50 border-none h-11 rounded-xl focus:ring-2 focus:ring-orange-100">
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
@@ -303,14 +303,14 @@ export const UserManagement: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="bg-blue-50/50 p-4 rounded-xl border border-blue-100">
+                <div className="bg-orange-50/50 p-4 rounded-xl border border-orange-100">
                     <div className="flex items-center space-x-3">
                         <input
                             type="checkbox"
                             id="send_email"
                             checked={formData.send_email}
                             onChange={(e) => setFormData({ ...formData, send_email: e.target.checked })}
-                            className="w-5 h-5 rounded text-blue-600 focus:ring-blue-500 border-gray-300"
+                            className="w-5 h-5 rounded text-orange-600 focus:ring-orange-500 border-gray-300"
                         />
                         <Label htmlFor="send_email" className="cursor-pointer text-slate-700 font-medium flex items-center">
                             <Mail className="h-4 w-4 mr-2 text-slate-500" />
@@ -323,7 +323,7 @@ export const UserManagement: React.FC = () => {
                   <Button type="button" variant="ghost" onClick={() => setShowCreateModal(false)} className="flex-1 h-12 rounded-xl text-slate-500 hover:bg-slate-50">
                     Cancel
                   </Button>
-                  <Button type="submit" className="flex-[2] h-12 rounded-xl bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-200 font-medium">
+                  <Button type="submit" className="flex-[2] h-12 rounded-xl bg-orange-600 hover:bg-orange-700 text-white shadow-lg shadow-orange-200 font-medium">
                     Create Account
                   </Button>
                 </div>

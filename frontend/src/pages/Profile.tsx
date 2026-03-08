@@ -128,12 +128,12 @@ export const Profile: React.FC = () => {
           <motion.div 
              animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
              transition={{ duration: 10, repeat: Infinity }}
-             className="absolute top-[-10%] left-[-10%] h-[600px] w-[600px] rounded-full bg-blue-200/30 mix-blend-multiply blur-[100px]" 
+             className="absolute top-[-10%] left-[-10%] h-[600px] w-[600px] rounded-full bg-orange-200/30 mix-blend-multiply blur-[100px]" 
           />
           <motion.div 
              animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
              transition={{ duration: 15, repeat: Infinity }}
-             className="absolute bottom-[-10%] right-[-10%] h-[600px] w-[600px] rounded-full bg-indigo-200/30 mix-blend-multiply blur-[100px]" 
+             className="absolute bottom-[-10%] right-[-10%] h-[600px] w-[600px] rounded-full bg-amber-200/30 mix-blend-multiply blur-[100px]" 
           />
       </div>
 
@@ -157,11 +157,11 @@ export const Profile: React.FC = () => {
           className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6 mb-8 flex flex-col md:flex-row items-center md:items-start gap-6 relative overflow-hidden"
         >
           {/* Decorative Top Gradient Line */}
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-500" />
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange-500 to-amber-500" />
 
           {/* Avatar Logo (No Upload) */}
           <div className="flex-shrink-0">
-             <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white text-2xl font-bold shadow-lg shadow-blue-500/20">
+             <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-orange-600 to-amber-700 flex items-center justify-center text-white text-2xl font-bold shadow-lg shadow-orange-500/20">
                 {user?.full_name ? getInitials(user.full_name) : <User />}
              </div>
           </div>
@@ -171,7 +171,7 @@ export const Profile: React.FC = () => {
              <h2 className="text-2xl font-bold text-slate-900">{user?.full_name}</h2>
              <p className="text-slate-500 font-medium">{user?.email}</p>
              <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 mt-3">
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold border border-blue-100 uppercase tracking-wide">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-orange-50 text-orange-700 text-xs font-semibold border border-orange-100 uppercase tracking-wide">
                    <Shield className="h-3 w-3" />
                    {user?.role}
                 </span>
@@ -195,7 +195,7 @@ export const Profile: React.FC = () => {
           >
             <div className="flex items-center justify-between mb-6">
                <div className="flex items-center gap-3">
-                  <div className="p-2.5 bg-blue-50 text-blue-600 rounded-xl">
+                  <div className="p-2.5 bg-orange-50 text-orange-600 rounded-xl">
                      <User className="h-5 w-5" />
                   </div>
                   <h3 className="text-lg font-bold text-slate-900">Personal Details</h3>
@@ -203,7 +203,7 @@ export const Profile: React.FC = () => {
                {!isEditing && (
                   <button 
                      onClick={() => setIsEditing(true)}
-                     className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                     className="p-2 text-slate-400 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
                      title="Edit Profile"
                   >
                      <Edit2 className="h-4 w-4" />
@@ -218,7 +218,7 @@ export const Profile: React.FC = () => {
                      <input
                         value={profileData.full_name}
                         onChange={(e) => setProfileData({ ...profileData, full_name: e.target.value })}
-                        className="flex h-11 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                        className="flex h-11 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all"
                      />
                   ) : (
                      <div className="flex h-11 w-full items-center rounded-xl bg-slate-50 px-4 text-sm font-medium text-slate-900 border border-slate-100">
@@ -234,7 +234,7 @@ export const Profile: React.FC = () => {
                         type="email"
                         value={profileData.email}
                         onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
-                        className="flex h-11 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                        className="flex h-11 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all"
                      />
                   ) : (
                      <div className="flex h-11 w-full items-center rounded-xl bg-slate-50 px-4 text-sm font-medium text-slate-900 border border-slate-100">
@@ -278,7 +278,7 @@ export const Profile: React.FC = () => {
           >
             <div className="flex items-center justify-between mb-6">
                <div className="flex items-center gap-3">
-                  <div className="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl">
+                  <div className="p-2.5 bg-amber-50 text-amber-600 rounded-xl">
                      <Lock className="h-5 w-5" />
                   </div>
                   <h3 className="text-lg font-bold text-slate-900">Security</h3>
@@ -309,7 +309,7 @@ export const Profile: React.FC = () => {
                         type="password"
                         value={passwordData.old_password}
                         onChange={(e) => setPasswordData({ ...passwordData, old_password: e.target.value })}
-                        className="flex h-11 w-full rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                        className="flex h-11 w-full rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
                         placeholder="••••••••"
                      />
                   </div>
@@ -319,7 +319,7 @@ export const Profile: React.FC = () => {
                         type="password"
                         value={passwordData.new_password}
                         onChange={(e) => setPasswordData({ ...passwordData, new_password: e.target.value })}
-                        className="flex h-11 w-full rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                        className="flex h-11 w-full rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
                         placeholder="••••••••"
                      />
                   </div>
@@ -329,7 +329,7 @@ export const Profile: React.FC = () => {
                         type="password"
                         value={passwordData.confirm_password}
                         onChange={(e) => setPasswordData({ ...passwordData, confirm_password: e.target.value })}
-                        className="flex h-11 w-full rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                        className="flex h-11 w-full rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
                         placeholder="••••••••"
                      />
                   </div>
@@ -341,7 +341,7 @@ export const Profile: React.FC = () => {
                   <button 
                      onClick={handlePasswordChange} 
                      disabled={loading}
-                     className="flex-1 flex items-center justify-center px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-blue-600 text-white text-sm font-semibold rounded-xl shadow-md hover:shadow-lg transition-all disabled:opacity-70"
+                     className="flex-1 flex items-center justify-center px-4 py-2.5 bg-gradient-to-r from-amber-600 to-orange-600 text-white text-sm font-semibold rounded-xl shadow-md hover:shadow-lg transition-all disabled:opacity-70"
                   >
                      {loading ? <Activity className="animate-spin h-4 w-4 mr-2" /> : <Save className="h-4 w-4 mr-2" />}
                      Update

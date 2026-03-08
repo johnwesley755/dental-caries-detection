@@ -30,7 +30,7 @@ export const ImageComparison: React.FC<ImageComparisonProps> = ({ originalImageU
             variant="ghost"
             size="sm"
             onClick={() => setViewMode('split')}
-            className={`h-8 rounded-lg px-3 text-xs font-medium ${viewMode === 'split' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-500 hover:text-slate-800'}`}
+            className={`h-8 rounded-lg px-3 text-xs font-medium ${viewMode === 'split' ? 'bg-white shadow-sm text-orange-600' : 'text-slate-500 hover:text-slate-800'}`}
           >
             <Columns2 className="h-3.5 w-3.5 mr-2" /> Side-by-Side
           </Button>
@@ -38,7 +38,7 @@ export const ImageComparison: React.FC<ImageComparisonProps> = ({ originalImageU
             variant="ghost"
             size="sm"
             onClick={() => setViewMode('slider')}
-            className={`h-8 rounded-lg px-3 text-xs font-medium ${viewMode === 'slider' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-500 hover:text-slate-800'}`}
+            className={`h-8 rounded-lg px-3 text-xs font-medium ${viewMode === 'slider' ? 'bg-white shadow-sm text-orange-600' : 'text-slate-500 hover:text-slate-800'}`}
           >
             <SlidersHorizontal className="h-3.5 w-3.5 mr-2" /> Slider Overlay
           </Button>
@@ -73,7 +73,7 @@ export const ImageComparison: React.FC<ImageComparisonProps> = ({ originalImageU
             {/* Slider Handle */}
             <div className="absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize" style={{ left: `${sliderPosition}%` }}>
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-white rounded-full shadow-lg flex items-center justify-center">
-                    <SlidersHorizontal className="h-4 w-4 text-blue-600" />
+                    <SlidersHorizontal className="h-4 w-4 text-orange-600" />
                 </div>
             </div>
 

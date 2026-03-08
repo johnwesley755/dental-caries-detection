@@ -63,9 +63,9 @@ export const QuickScan: React.FC = () => {
                                 {/* Upload Area */}
                                 <div className="space-y-6">
                                     {!preview ? (
-                                        <label className="flex flex-col items-center justify-center aspect-square rounded-2xl bg-white border-2 border-dashed border-blue-200 hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer group">
-                                            <div className="h-16 w-16 rounded-full bg-blue-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                                                <Upload className="h-8 w-8 text-blue-600" />
+                                        <label className="flex flex-col items-center justify-center aspect-square rounded-2xl bg-white border-2 border-dashed border-teal-200 hover:border-teal-500 hover:bg-teal-50 transition-all cursor-pointer group">
+                                            <div className="h-16 w-16 rounded-full bg-teal-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                                <Upload className="h-8 w-8 text-teal-600" />
                                             </div>
                                             <span className="text-lg font-semibold text-slate-900">Upload Dental Image</span>
                                             <span className="text-sm text-slate-500 mt-2 text-center px-6">
@@ -90,7 +90,7 @@ export const QuickScan: React.FC = () => {
                                     <Button
                                         onClick={handleAnalyze}
                                         disabled={!file || isAnalyzing}
-                                        className="w-full h-14 text-lg font-bold bg-blue-600 hover:bg-blue-700 rounded-xl shadow-lg shadow-blue-600/20"
+                                        className="w-full h-14 text-lg font-bold bg-teal-600 hover:bg-teal-700 rounded-xl shadow-lg shadow-teal-600/20"
                                     >
                                         {isAnalyzing ? (
                                             <>
@@ -122,18 +122,18 @@ export const QuickScan: React.FC = () => {
                                                     </div>
                                                 </div>
                                                 <div className="flex items-start gap-4">
-                                                    <div className="h-10 w-10 rounded-xl bg-blue-100 flex items-center justify-center shrink-0">
-                                                        <CheckCircle2 className="h-5 w-5 text-blue-600" />
+                                                    <div className="h-10 w-10 rounded-xl bg-teal-100 flex items-center justify-center shrink-0">
+                                                        <CheckCircle2 className="h-5 w-5 text-teal-600" />
                                                     </div>
                                                     <div>
                                                         <h4 className="font-bold text-slate-900">92% Accuracy</h4>
                                                         <p className="text-slate-600 text-sm">Trained on 100k+ clinical dental examinations for precision.</p>
                                                     </div>
                                                 </div>
-                                                <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-6">
+                                                <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-6">
                                                     <div className="flex gap-3">
-                                                        <AlertCircle className="h-5 w-5 text-yellow-600 shrink-0 mt-0.5" />
-                                                        <p className="text-sm text-yellow-800 leading-relaxed">
+                                                        <AlertCircle className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
+                                                        <p className="text-sm text-emerald-800 leading-relaxed">
                                                             <strong>Medical Disclaimer:</strong> This AI screening is for information only. Always seek a professional opinion from a licensed dentist.
                                                         </p>
                                                     </div>
@@ -167,7 +167,7 @@ export const QuickScan: React.FC = () => {
                                                         To view detailed markings and receive professional verification, create your free patient account.
                                                     </p>
                                                     <Link to="/register" state={{ detectionId: result.id }}>
-                                                        <Button className="w-full h-14 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-lg font-bold group">
+                                                        <Button className="w-full h-14 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-lg font-bold group">
                                                             Save Results & Talk to Dentist
                                                             <ArrowRight className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" />
                                                         </Button>

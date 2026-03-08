@@ -61,16 +61,16 @@ export const HeroSection: React.FC = () => {
   }, []);
 
   return (
-    <div className="relative w-full min-h-screen overflow-hidden bg-slate-50/50 selection:bg-indigo-100 selection:text-indigo-900 font-sans">
+    <div className="relative w-full min-h-screen overflow-hidden bg-slate-50/50 selection:bg-amber-100 selection:text-amber-900 font-sans">
       
       {/* =========================================
           1. AMBIENT BACKGROUND LAYER
       ========================================= */}
       <div className="absolute inset-0 pointer-events-none z-0">
         {/* Soft Colorful Blobs */}
-        <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-blue-100/40 rounded-full blur-[100px] mix-blend-multiply" />
-        <div className="absolute top-[10%] right-[-10%] w-[40vw] h-[40vw] bg-purple-100/40 rounded-full blur-[100px] mix-blend-multiply" />
-        <div className="absolute bottom-[-10%] left-[20%] w-[40vw] h-[40vw] bg-indigo-50/50 rounded-full blur-[100px] mix-blend-multiply" />
+        <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-orange-100/40 rounded-full blur-[100px] mix-blend-multiply" />
+        <div className="absolute top-[10%] right-[-10%] w-[40vw] h-[40vw] bg-yellow-100/40 rounded-full blur-[100px] mix-blend-multiply" />
+        <div className="absolute bottom-[-10%] left-[20%] w-[40vw] h-[40vw] bg-amber-50/50 rounded-full blur-[100px] mix-blend-multiply" />
 
         {/* Floating Icons */}
         <motion.div style={{ y: yBackground }} className="absolute inset-0 w-full h-full">
@@ -96,12 +96,12 @@ export const HeroSection: React.FC = () => {
         <div className="max-w-[90rem] mx-auto px-6 lg:px-12 flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center gap-2.5 cursor-pointer group" onClick={() => navigate('/')}>
-            <div className="relative w-9 h-9 flex items-center justify-center bg-indigo-600 rounded-xl shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition-transform duration-300">
+            <div className="relative w-9 h-9 flex items-center justify-center bg-amber-600 rounded-xl shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform duration-300">
               <Stethoscope className="w-5 h-5 text-white relative z-10" />
               <div className="absolute inset-0 bg-white/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
             <span className="text-xl font-bold tracking-tight text-slate-900">
-              DentalAI<span className="text-indigo-600">.Dx</span>
+              DentalAI<span className="text-amber-600">.Dx</span>
             </span>
           </div>
 
@@ -111,10 +111,10 @@ export const HeroSection: React.FC = () => {
               <a 
                 key={item} 
                 href={`#${item.toLowerCase()}`} 
-                className="text-sm font-medium text-slate-600 hover:text-indigo-600 transition-colors relative group"
+                className="text-sm font-medium text-slate-600 hover:text-amber-600 transition-colors relative group"
               >
                 {item}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-indigo-600 transition-all group-hover:w-full" />
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-amber-600 transition-all group-hover:w-full" />
               </a>
             ))}
           </nav>
@@ -153,7 +153,7 @@ export const HeroSection: React.FC = () => {
                 ))}
                 <hr className="border-slate-100" />
                 <button onClick={() => navigate('/login')} className="text-left font-semibold text-slate-900 py-2">Log in</button>
-                <button onClick={() => navigate('/register')} className="w-full py-3 bg-indigo-600 text-white rounded-lg font-semibold">Get Started</button>
+                <button onClick={() => navigate('/register')} className="w-full py-3 bg-amber-600 text-white rounded-lg font-semibold">Get Started</button>
               </div>
             </motion.div>
           )}
@@ -179,17 +179,17 @@ export const HeroSection: React.FC = () => {
           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
           className="absolute top-40 right-[10%] hidden 2xl:block"
         >
-          <Feather className="w-16 h-16 text-purple-400 drop-shadow-sm" strokeWidth={1.5} />
+          <Feather className="w-16 h-16 text-yellow-400 drop-shadow-sm" strokeWidth={1.5} />
         </motion.div>
 
 
         <div className="w-full max-w-[85rem] mx-auto px-4 text-center relative z-20">
           
           {/* Version Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-indigo-100 text-indigo-700 text-sm font-medium mb-8 shadow-sm hover:shadow-md transition-shadow cursor-default">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-amber-100 text-amber-700 text-sm font-medium mb-8 shadow-sm hover:shadow-md transition-shadow cursor-default">
             <span className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-indigo-600"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-600"></span>
             </span>
             <span>New: Auto-Report Generation v2.0</span>
           </div>
@@ -197,7 +197,7 @@ export const HeroSection: React.FC = () => {
           {/* Heading */}
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight text-slate-900 leading-[1.1] mb-8">
             Make your diagnostics look <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-yellow-600 to-amber-600">
               as good as they sound
             </span>
           </h1>
@@ -212,11 +212,11 @@ export const HeroSection: React.FC = () => {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-24">
             <button
               onClick={() => navigate('/register')}
-              className="group relative h-14 px-8 bg-indigo-600 text-white rounded-2xl text-lg font-semibold hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-500/20 hover:shadow-indigo-500/30 hover:-translate-y-0.5 flex items-center gap-2 overflow-hidden"
+              className="group relative h-14 px-8 bg-amber-600 text-white rounded-2xl text-lg font-semibold hover:bg-amber-700 transition-all shadow-xl shadow-amber-500/20 hover:shadow-amber-500/30 hover:-translate-y-0.5 flex items-center gap-2 overflow-hidden"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute inset-0 bg-gradient-to-r from-amber-500 to-amber-600 opacity-0 group-hover:opacity-100 transition-opacity" />
               <div className="relative flex items-center gap-2">
-                <Sparkles className="w-5 h-5 fill-indigo-200/50" />
+                <Sparkles className="w-5 h-5 fill-amber-200/50" />
                 <span>Start Analyzing Free</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </div>
@@ -248,11 +248,11 @@ export const HeroSection: React.FC = () => {
               
               {/* --- LEFT CARD: Upload Source --- */}
               <div className="flex-1 flex flex-col gap-6">
-                <div className="bg-white rounded-[2rem] p-8 border border-slate-100 shadow-lg shadow-slate-200/50 group hover:border-indigo-100 transition-colors duration-300">
+                <div className="bg-white rounded-[2rem] p-8 border border-slate-100 shadow-lg shadow-slate-200/50 group hover:border-amber-100 transition-colors duration-300">
                   
                   {/* Icon Header */}
-                  <div className="w-14 h-14 bg-indigo-50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                    <FileText className="w-7 h-7 text-indigo-600" />
+                  <div className="w-14 h-14 bg-amber-50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <FileText className="w-7 h-7 text-amber-600" />
                   </div>
                   
                   <h3 className="text-2xl font-bold text-slate-900 mb-3">Start from any source</h3>
@@ -285,7 +285,7 @@ export const HeroSection: React.FC = () => {
                 </div>
 
                 {/* Instant Analysis Card (Purple Gradient) */}
-                <div className="flex-1 bg-gradient-to-br from-indigo-600 to-purple-700 rounded-[2rem] p-8 text-white relative overflow-hidden shadow-xl shadow-indigo-500/20 group hover:shadow-indigo-500/30 transition-shadow">
+                <div className="flex-1 bg-gradient-to-br from-amber-600 to-yellow-700 rounded-[2rem] p-8 text-white relative overflow-hidden shadow-xl shadow-amber-500/20 group hover:shadow-amber-500/30 transition-shadow">
                   {/* Subtle Noise Texture Overlay */}
                   <div className="absolute inset-0 opacity-[0.03] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay"></div>
                   
@@ -294,7 +294,7 @@ export const HeroSection: React.FC = () => {
                        <Zap className="w-6 h-6 text-yellow-300 fill-yellow-300" />
                     </div>
                     <h3 className="text-2xl font-bold mb-2">Instant Analysis</h3>
-                    <p className="text-indigo-100 text-lg">AI processing in &lt; 2 seconds.</p>
+                    <p className="text-amber-100 text-lg">AI processing in &lt; 2 seconds.</p>
                   </div>
                   {/* Decorative Glow */}
                   <div className="absolute -right-12 -bottom-12 w-64 h-64 bg-white/10 rounded-full blur-3xl group-hover:scale-125 transition-transform duration-700 ease-in-out" />
@@ -312,7 +312,7 @@ export const HeroSection: React.FC = () => {
                       <ShieldCheck className="w-3 h-3" /> HIPAA Compliant
                     </span>
                   </div>
-                  <button className="text-sm font-semibold text-indigo-600 hover:text-indigo-700 flex items-center gap-1 hover:underline decoration-2 underline-offset-4">
+                  <button className="text-sm font-semibold text-amber-600 hover:text-amber-700 flex items-center gap-1 hover:underline decoration-2 underline-offset-4">
                     Export Report <ChevronRight className="w-4 h-4" />
                   </button>
                 </div>
@@ -329,7 +329,7 @@ export const HeroSection: React.FC = () => {
                     
                     {/* Scanning Animation Line */}
                     <motion.div 
-                      className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent shadow-[0_0_20px_rgba(34,211,238,0.8)] z-20"
+                      className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-orange-400 to-transparent shadow-[0_0_20px_rgba(34,211,238,0.8)] z-20"
                       animate={{ top: ['0%', '100%', '0%'] }}
                       transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
                     />
@@ -359,10 +359,10 @@ export const HeroSection: React.FC = () => {
                   {/* Right Sidebar Stats */}
                   <div className="flex-1 flex flex-col gap-4">
                     {/* Confidence Widget */}
-                    <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:border-indigo-100 transition-colors">
+                    <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:border-amber-100 transition-colors">
                       <div className="flex justify-between items-center mb-4">
                         <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Confidence</span>
-                        <Activity className="w-4 h-4 text-indigo-500" />
+                        <Activity className="w-4 h-4 text-amber-500" />
                       </div>
                       <div className="flex items-baseline gap-2 mb-3">
                         <span className="text-4xl font-bold text-slate-800">98.5%</span>
@@ -373,7 +373,7 @@ export const HeroSection: React.FC = () => {
                           initial={{ width: 0 }}
                           whileInView={{ width: '98.5%' }}
                           transition={{ duration: 1.5, ease: "easeOut" }}
-                          className="bg-indigo-600 h-full rounded-full shadow-[0_0_10px_rgba(79,70,229,0.4)]" 
+                          className="bg-amber-600 h-full rounded-full shadow-[0_0_10px_rgba(79,70,229,0.4)]" 
                         />
                       </div>
                     </div>

@@ -226,7 +226,7 @@ export const Messages: React.FC = () => {
     return (
       <div className="flex items-center justify-center h-screen bg-gray-50">
         <div className="flex flex-col items-center gap-4">
-          <Loader2 className="h-10 w-10 animate-spin text-blue-600" />
+          <Loader2 className="h-10 w-10 animate-spin text-teal-600" />
           <p className="text-gray-500 font-medium">Loading conversations...</p>
         </div>
       </div>
@@ -248,14 +248,14 @@ export const Messages: React.FC = () => {
         <div className="flex-1 overflow-y-auto">
           {conversations.length === 0 ? (
             <div className="p-8 text-center flex flex-col items-center justify-center h-full">
-              <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mb-4">
-                <MessageCircle className="h-8 w-8 text-blue-400" />
+              <div className="w-16 h-16 bg-teal-50 rounded-full flex items-center justify-center mb-4">
+                <MessageCircle className="h-8 w-8 text-teal-400" />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">No conversations yet</h3>
               <p className="text-gray-500 mb-6">Your message history with your dentist will appear here.</p>
               <Button
                 onClick={() => handleStartNewChat()}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-6"
+                className="bg-teal-600 hover:bg-teal-700 text-white px-6"
               >
                 Find Dentist
               </Button>
@@ -266,7 +266,7 @@ export const Messages: React.FC = () => {
                 key={conv.id}
                 onClick={() => setSelectedConversation(conv)}
                 className={`p-4 border-b border-gray-100 cursor-pointer transition-all duration-200 ${selectedConversation?.id === conv.id
-                  ? 'bg-blue-50 border-l-4 border-l-blue-600'
+                  ? 'bg-teal-50 border-l-4 border-l-teal-600'
                   : 'hover:bg-gray-50'
                   }`}
               >
@@ -281,11 +281,11 @@ export const Messages: React.FC = () => {
                       )}
                     </div>
                     <div className="flex items-center justify-between">
-                      <p className={`text-sm mt-1 truncate ${conv.unread_count > 0 ? 'text-blue-600 font-medium' : 'text-gray-500'}`}>
+                      <p className={`text-sm mt-1 truncate ${conv.unread_count > 0 ? 'text-teal-600 font-medium' : 'text-gray-500'}`}>
                         {conv.last_message || 'No messages yet'}
                       </p>
                       {conv.unread_count > 0 && (
-                        <span className="bg-blue-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full ml-2 flex-shrink-0 animate-pulse">
+                        <span className="bg-teal-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full ml-2 flex-shrink-0 animate-pulse">
                           {conv.unread_count}
                         </span>
                       )}
@@ -309,7 +309,7 @@ export const Messages: React.FC = () => {
             <div className="bg-white border-b border-gray-200 p-4 flex items-center gap-4">
               <button
                 onClick={() => setShowMobileChat(false)}
-                className="lg:hidden p-2 -ml-2 text-gray-500 hover:text-blue-600 transition-colors"
+                className="lg:hidden p-2 -ml-2 text-gray-500 hover:text-teal-600 transition-colors"
               >
                 <X className="h-6 w-6" />
               </button>
@@ -331,7 +331,7 @@ export const Messages: React.FC = () => {
                     <div className={`max-w-[85%] lg:max-w-[70%] ${isOwn ? 'items-end' : 'items-start'} flex flex-col group`}>
                       <div
                         className={`rounded-2xl px-4 py-3 shadow-sm transition-all duration-200 ${isOwn
-                          ? 'bg-blue-600 text-white rounded-tr-none'
+                          ? 'bg-teal-600 text-white rounded-tr-none'
                           : 'bg-white border border-gray-100 text-gray-900 rounded-tl-none'
                           }`}
                       >
@@ -352,7 +352,7 @@ export const Messages: React.FC = () => {
                                     download
                                     className="p-2 bg-white/90 rounded-full opacity-0 group-hover/img:opacity-100 transition-opacity shadow-lg"
                                   >
-                                    <Download className="h-4 w-4 text-blue-600" />
+                                    <Download className="h-4 w-4 text-teal-600" />
                                   </a>
                                 </div>
                               </div>
@@ -360,10 +360,10 @@ export const Messages: React.FC = () => {
                               <a
                                 href={`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}${message.file_url}`}
                                 download={message.file_name}
-                                className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${isOwn ? 'bg-blue-700 text-white' : 'bg-blue-50 text-blue-900 border border-blue-100'
+                                className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${isOwn ? 'bg-teal-700 text-white' : 'bg-teal-50 text-teal-900 border border-teal-100'
                                   }`}
                               >
-                                <div className={`p-2 rounded-lg ${isOwn ? 'bg-blue-800' : 'bg-white shadow-sm'}`}>
+                                <div className={`p-2 rounded-lg ${isOwn ? 'bg-teal-800' : 'bg-white shadow-sm'}`}>
                                   {getFileIcon(message.file_type)}
                                 </div>
                                 <div className="flex-1 min-w-0">
@@ -389,19 +389,19 @@ export const Messages: React.FC = () => {
             {/* Message Input */}
             <div className="bg-white border-t border-gray-200 p-4 lg:p-6 pb-8">
               {linkedDetectionId && (
-                <div className="mb-3 flex items-center justify-between p-3 bg-indigo-50 border border-indigo-100 rounded-xl">
+                <div className="mb-3 flex items-center justify-between p-3 bg-emerald-50 border border-emerald-100 rounded-xl">
                   <div className="flex items-center gap-2">
-                    <div className="p-1.5 bg-indigo-600 rounded-lg shadow-md">
+                    <div className="p-1.5 bg-emerald-600 rounded-lg shadow-md">
                       <Search className="h-4 w-4 text-white" />
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-indigo-900">AI Scan Linked</p>
-                      <p className="text-[10px] text-indigo-600 font-medium">This message will include your recent AI analysis.</p>
+                      <p className="text-xs font-bold text-emerald-900">AI Scan Linked</p>
+                      <p className="text-[10px] text-emerald-600 font-medium">This message will include your recent AI analysis.</p>
                     </div>
                   </div>
                   <button
                     onClick={() => setLinkedDetectionId(null)}
-                    className="p-1 text-indigo-400 hover:text-red-500 hover:bg-white rounded-full transition-all"
+                    className="p-1 text-emerald-400 hover:text-red-500 hover:bg-white rounded-full transition-all"
                   >
                     <X className="h-4 w-4" />
                   </button>
@@ -409,17 +409,17 @@ export const Messages: React.FC = () => {
               )}
 
               {selectedFile && (
-                <div className="mb-4 flex items-center gap-3 p-3 bg-blue-50 border border-blue-100 rounded-xl">
+                <div className="mb-4 flex items-center gap-3 p-3 bg-teal-50 border border-teal-100 rounded-xl">
                   <div className="p-2 bg-white rounded-lg shadow-sm">
                     {getFileIcon(selectedFile.type)}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-bold text-blue-900 truncate">{selectedFile.name}</p>
-                    <p className="text-[10px] text-blue-600">Attachment Ready</p>
+                    <p className="text-xs font-bold text-teal-900 truncate">{selectedFile.name}</p>
+                    <p className="text-[10px] text-teal-600">Attachment Ready</p>
                   </div>
                   <button
                     onClick={() => setSelectedFile(null)}
-                    className="p-1.5 text-blue-400 hover:text-red-500 hover:bg-white rounded-full transition-all"
+                    className="p-1.5 text-teal-400 hover:text-red-500 hover:bg-white rounded-full transition-all"
                   >
                     <X className="h-4 w-4" />
                   </button>
@@ -438,7 +438,7 @@ export const Messages: React.FC = () => {
                   variant="outline"
                   size="icon"
                   onClick={() => fileInputRef.current?.click()}
-                  className="p-2 h-10 w-10 text-gray-400 hover:text-blue-600 hover:border-blue-200 transition-all rounded-xl"
+                  className="p-2 h-10 w-10 text-gray-400 hover:text-teal-600 hover:border-teal-200 transition-all rounded-xl"
                 >
                   <Paperclip className="h-5 w-5" />
                 </Button>
@@ -459,7 +459,7 @@ export const Messages: React.FC = () => {
                       }
                     }}
                     placeholder="Type a message..."
-                    className="w-full resize-none border border-gray-300 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all min-h-[44px] max-h-[150px] bg-gray-50 focus:bg-white shadow-inner"
+                    className="w-full resize-none border border-gray-300 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all min-h-[44px] max-h-[150px] bg-gray-50 focus:bg-white shadow-inner"
                     rows={1}
                   />
                 </div>
@@ -467,7 +467,7 @@ export const Messages: React.FC = () => {
                 <Button
                   onClick={handleSendMessage}
                   disabled={sending || (!newMessage.trim() && !selectedFile)}
-                  className="h-10 w-10 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-blue-200"
+                  className="h-10 w-10 bg-teal-600 text-white rounded-xl hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-teal-200"
                 >
                   {sending ? (
                     <Loader2 className="h-5 w-5 animate-spin" />
@@ -481,8 +481,8 @@ export const Messages: React.FC = () => {
         ) : (
           <div className="flex-1 flex items-center justify-center p-8 bg-gray-50">
             <div className="text-center max-w-sm">
-              <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl shadow-blue-50">
-                <MessageCircle className="h-10 w-10 text-blue-600" />
+              <div className="w-20 h-20 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl shadow-teal-50">
+                <MessageCircle className="h-10 w-10 text-teal-600" />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-3">Your Dental Chat</h3>
               <p className="text-gray-500 leading-relaxed">
@@ -490,7 +490,7 @@ export const Messages: React.FC = () => {
               </p>
               <Button
                 onClick={() => handleStartNewChat()}
-                className="mt-6 bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 rounded-xl text-lg font-bold shadow-lg shadow-blue-200"
+                className="mt-6 bg-teal-600 hover:bg-teal-700 text-white px-8 py-6 rounded-xl text-lg font-bold shadow-lg shadow-teal-200"
               >
                 Find a Specialist
               </Button>
@@ -503,7 +503,7 @@ export const Messages: React.FC = () => {
       {showDentistSelector && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
           <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
-            <div className="p-6 border-b border-gray-100 flex items-center justify-between bg-blue-600 text-white">
+            <div className="p-6 border-b border-gray-100 flex items-center justify-between bg-teal-600 text-white">
               <h3 className="text-xl font-bold">Select a Specialist</h3>
               <button
                 onClick={() => setShowDentistSelector(false)}
@@ -516,8 +516,8 @@ export const Messages: React.FC = () => {
               {isLoadingDentists ? (
                 <div className="text-center py-12 text-gray-500">
                   <div className="relative w-16 h-16 mx-auto mb-4">
-                    <div className="absolute inset-0 border-4 border-blue-100 rounded-full"></div>
-                    <div className="absolute inset-0 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                    <div className="absolute inset-0 border-4 border-teal-100 rounded-full"></div>
+                    <div className="absolute inset-0 border-4 border-teal-600 border-t-transparent rounded-full animate-spin"></div>
                   </div>
                   <p className="font-medium animate-pulse">Searching for specialists...</p>
                 </div>
@@ -536,10 +536,10 @@ export const Messages: React.FC = () => {
                   <div
                     key={dentist.id}
                     onClick={() => handleStartNewChat(dentist.id)}
-                    className="p-4 border border-gray-100 rounded-xl hover:bg-blue-50 hover:border-blue-200 cursor-pointer transition-all group"
+                    className="p-4 border border-gray-100 rounded-xl hover:bg-teal-50 hover:border-teal-200 cursor-pointer transition-all group"
                   >
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                      <div className="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center text-teal-600 font-bold group-hover:bg-teal-600 group-hover:text-white transition-colors">
                         {dentist.full_name.charAt(0)}
                       </div>
                       <div>
