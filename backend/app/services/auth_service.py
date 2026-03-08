@@ -4,7 +4,9 @@ from ..schemas.user import UserCreate
 from ..core.security import get_password_hash, verify_password, create_access_token
 from fastapi import HTTPException, status
 from datetime import timedelta
+from typing import Optional
 from ..core.config import settings
+from .email_service import EmailService
 
 class AuthService:
     @staticmethod
@@ -26,8 +28,16 @@ class AuthService:
             role=user.role
         )
         db.add(db_user)
-        db.commit()
         db.refresh(db_user)
+
+        # Send verification email
+        verification_token = self.create_access_token_for_user(db_user, expires_delta=timedelta(hours=24))
+        EmailService.send_verification_email(
+            email=db_user.email,
+            full_name=db_user.full_name,
+            token=verification_token,
+            role=db_user.role
+        )
 
         # If user is a patient, create a patient record
         if db_user.role == "PATIENT":
@@ -74,11 +84,78 @@ class AuthService:
         return user
     
     @staticmethod
-    def create_access_token_for_user(user: User) -> str:
+    def create_access_token_for_user(user: User, expires_delta: Optional[timedelta] = None) -> str:
         """Create access token"""
-        access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+        if not expires_delta:
+            expires_delta = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+        
         access_token = create_access_token(
             data={"sub": user.email},
-            expires_delta=access_token_expires
+            expires_delta=expires_delta
         )
         return access_token
+
+    @staticmethod
+    def verify_email(db: Session, token: str) -> bool:
+        """Verify user's email"""
+        from ..core.security import decode_access_token
+        
+        payload = decode_access_token(token)
+        if not payload:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid or expired verification token"
+            )
+            
+        email = payload.get("sub")
+        user = db.query(User).filter(User.email == email).first()
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="User not found"
+            )
+            
+        user.is_email_verified = True
+        db.commit()
+        return True
+
+    @staticmethod
+    def initiate_password_reset(db: Session, email: str, role: str) -> bool:
+        """Initiate password reset process"""
+        user = db.query(User).filter(User.email == email, User.role == role).first()
+        if not user:
+            # We return True even if user not found for security (prevent email enumeration)
+            return True
+            
+        reset_token = AuthService.create_access_token_for_user(user, expires_delta=timedelta(hours=1))
+        EmailService.send_password_reset_email(
+            email=user.email,
+            full_name=user.full_name,
+            token=reset_token,
+            role=user.role
+        )
+        return True
+
+    @staticmethod
+    def complete_password_reset(db: Session, token: str, new_password: str) -> bool:
+        """Complete password reset using token"""
+        from ..core.security import decode_access_token, get_password_hash
+        
+        payload = decode_access_token(token)
+        if not payload:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid or expired reset token"
+            )
+            
+        email = payload.get("sub")
+        user = db.query(User).filter(User.email == email).first()
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="User not found"
+            )
+            
+        user.password_hash = get_password_hash(new_password)
+        db.commit()
+        return True

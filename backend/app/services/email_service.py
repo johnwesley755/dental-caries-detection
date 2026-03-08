@@ -354,3 +354,124 @@ class EmailService:
         """
         
         return html
+
+    @staticmethod
+    def send_verification_email(
+        email: str,
+        full_name: str,
+        token: str,
+        role: str
+    ) -> bool:
+        """Send email verification link to user"""
+        from ..core.config import settings
+        
+        # Determine portal URL based on role
+        if role.upper() == "PATIENT":
+            base_url = settings.PATIENT_PORTAL_URL
+        else:
+            base_url = settings.FRONTEND_URL
+            
+        verification_url = f"{base_url}/verify-email?token={token}"
+        subject = "Verify Your Email - Dental Care System"
+        
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+                .header {{ background: #3b82f6; color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }}
+                .content {{ background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; border: 1px solid #e5e7eb; }}
+                .button {{ display: inline-block; padding: 12px 30px; background: #3b82f6; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; font-weight: bold; }}
+                .footer {{ text-align: center; margin-top: 20px; color: #666; font-size: 12px; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>Verify Your Email</h1>
+                </div>
+                <div class="content">
+                    <p>Hello <strong>{full_name}</strong>,</p>
+                    <p>Thank you for registering! Please click the button below to verify your email address and activate your account.</p>
+                    <p style="text-align: center;">
+                        <a href="{verification_url}" class="button">Verify Email Address</a>
+                    </p>
+                    <p>If the button doesn't work, you can copy and paste this link into your browser:</p>
+                    <p style="word-break: break-all; color: #3b82f6;">{verification_url}</p>
+                    <p>This link will expire in 24 hours.</p>
+                </div>
+                <div class="footer">
+                    <p>&copy; 2024 Dental Care System. All rights reserved.</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        # Log the link for development if email fails or is not configured
+        print(f"DEBUG: Verification link for {email}: {verification_url}")
+        
+        return EmailService.send_email(email, subject, html_content)
+
+    @staticmethod
+    def send_password_reset_email(
+        email: str,
+        full_name: str,
+        token: str,
+        role: str
+    ) -> bool:
+        """Send password reset link to user"""
+        from ..core.config import settings
+        
+        # Determine portal URL based on role
+        if role.upper() == "PATIENT":
+            base_url = settings.PATIENT_PORTAL_URL
+        else:
+            base_url = settings.FRONTEND_URL
+            
+        reset_url = f"{base_url}/reset-password?token={token}"
+        subject = "Reset Your Password - Dental Care System"
+        
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+                .header {{ background: #ef4444; color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }}
+                .content {{ background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; border: 1px solid #e5e7eb; }}
+                .button {{ display: inline-block; padding: 12px 30px; background: #ef4444; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; font-weight: bold; }}
+                .footer {{ text-align: center; margin-top: 20px; color: #666; font-size: 12px; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>Password Reset Request</h1>
+                </div>
+                <div class="content">
+                    <p>Hello <strong>{full_name}</strong>,</p>
+                    <p>We received a request to reset your password. If you didn't make this request, you can safely ignore this email.</p>
+                    <p>To reset your password, click the button below:</p>
+                    <p style="text-align: center;">
+                        <a href="{reset_url}" class="button">Reset Password</a>
+                    </p>
+                    <p>If the button doesn't work, you can copy and paste this link into your browser:</p>
+                    <p style="word-break: break-all; color: #ef4444;">{reset_url}</p>
+                    <p>This link will expire in 1 hour.</p>
+                </div>
+                <div class="footer">
+                    <p>&copy; 2024 Dental Care System. All rights reserved.</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        # Log the link for development
+        print(f"DEBUG: Password reset link for {email}: {reset_url}")
+        
+        return EmailService.send_email(email, subject, html_content)

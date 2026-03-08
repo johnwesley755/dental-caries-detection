@@ -197,6 +197,14 @@ export const Login: React.FC = () => {
                     {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                   </button>
                 </div>
+                <div className="flex justify-end">
+                  <Link
+                    to="/forgot-password"
+                    className="text-xs font-bold text-blue-600 hover:underline"
+                  >
+                    Forgot Password?
+                  </Link>
+                </div>
               </div>
 
               {/* Submit Button */}

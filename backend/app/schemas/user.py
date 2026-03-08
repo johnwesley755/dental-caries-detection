@@ -32,20 +32,16 @@ class UserResponse(UserBase):
     id: UUID
     is_active: bool
     is_verified: bool
+    is_email_verified: bool
     created_at: datetime
     profile: Optional[DentistProfileResponse] = None
+
+    class Config:
+        from_attributes = True
 
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
-
-class UserResponse(UserBase):
-    id: UUID
-    is_active: bool
-    created_at: datetime
-    
-    class Config:
-        from_attributes = True
 
 class Token(BaseModel):
     access_token: str
@@ -53,3 +49,11 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     email: Optional[str] = None
+
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+    role: str # PATIENT or DENTIST
+
+class ResetPasswordRequest(BaseModel):
+    token: str
+    new_password: str = Field(..., min_length=8)

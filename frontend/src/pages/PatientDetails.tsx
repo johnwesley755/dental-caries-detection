@@ -156,7 +156,9 @@ export const PatientDetails: React.FC = () => {
                                         <FileText className="h-4 w-4 text-slate-400" /> Medical History
                                     </h3>
                                     <div className="bg-yellow-50/50 p-4 rounded-xl border border-yellow-100 text-sm text-slate-600">
-                                        {patient.medical_history}
+                                        {typeof patient.medical_history === 'string'
+                                            ? patient.medical_history
+                                            : JSON.stringify(patient.medical_history)}
                                     </div>
                                 </div>
                             )}

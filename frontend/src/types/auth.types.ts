@@ -22,8 +22,19 @@ export interface User {
   role: UserRole;
   is_active: boolean;
   is_verified: boolean;
+  is_email_verified: boolean;
   created_at: string;
   profile?: DentistProfile;
+}
+
+export interface ForgotPasswordRequest {
+  email: string;
+  role: string;
+}
+
+export interface ResetPasswordRequest {
+  token: string;
+  new_password: string;
 }
 
 export interface UserCreate {

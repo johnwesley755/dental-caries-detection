@@ -12,6 +12,7 @@ import {
   Activity,
   BookOpen,
   MessageCircle,
+  ScanFace,
   X
 } from 'lucide-react';
 import { CalendarModal } from '../dashboard/CalendarModal';
@@ -36,6 +37,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
   // Patient Portal specific menu items
   const menuItems = [
     { path: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+    { path: '/new-detection', icon: ScanFace, label: 'New Scan' },
     { path: '/detections', icon: FileText, label: 'My Reports' },
     { path: '/appointments', icon: Calendar, label: 'Appointments' },
     { path: '/messages', icon: MessageCircle, label: 'Messages' },
@@ -119,17 +121,16 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
           {menuItems.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.path);
-            
+
             return (
               <Link
                 key={item.path}
                 to={item.path}
                 onClick={handleLinkClick}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all duration-200 group relative ${
-                  active 
-                    ? 'bg-blue-600 text-white shadow-md shadow-blue-200' 
-                    : 'text-gray-500 hover:bg-blue-50 hover:text-blue-600'
-                }`}
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all duration-200 group relative ${active
+                  ? 'bg-blue-600 text-white shadow-md shadow-blue-200'
+                  : 'text-gray-500 hover:bg-blue-50 hover:text-blue-600'
+                  }`}
               >
                 <Icon className={`h-5 w-5 ${active ? 'text-white' : 'text-gray-400 group-hover:text-blue-600'}`} />
                 <span className="font-medium">{item.label}</span>
@@ -141,7 +142,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
 
         {/* Footer */}
         <div className="p-4 mt-auto">
-          <button 
+          <button
             onClick={handleLogout}
             className="flex items-center gap-3 px-4 py-3 text-gray-500 hover:text-red-500 hover:bg-red-50 rounded-xl w-full transition-colors font-medium"
           >
@@ -152,9 +153,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
 
         {/* Calendar Modal */}
         {showCalendar && (
-          <CalendarModal 
-            isOpen={showCalendar} 
-            onClose={() => setShowCalendar(false)} 
+          <CalendarModal
+            isOpen={showCalendar}
+            onClose={() => setShowCalendar(false)}
           />
         )}
       </aside>

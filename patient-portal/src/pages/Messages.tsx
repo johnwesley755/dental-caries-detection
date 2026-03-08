@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { messagingService } from '../services/messagingService';
 import type { Conversation, Message } from '../services/messagingService';
-import { MessageCircle, Send, Paperclip, X, FileText, Image as ImageIcon, Download, Loader2, Search } from 'lucide-react';
+import { MessageCircle, Send, Paperclip, X, FileText, Image as ImageIcon, Download, Loader2, Search, UserCircle } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { useAuth } from '../contexts/AuthContext';
 import { patientService } from '../services/patientService';
@@ -23,6 +23,7 @@ export const Messages: React.FC = () => {
   const [showMobileChat, setShowMobileChat] = useState(false);
 
   const [dentists, setDentists] = useState<any[]>([]);
+  const [isLoadingDentists, setIsLoadingDentists] = useState(false);
   const [showDentistSelector, setShowDentistSelector] = useState(false);
   const [linkedDetectionId, setLinkedDetectionId] = useState<string | null>(null);
 
@@ -45,10 +46,13 @@ export const Messages: React.FC = () => {
 
   const loadDentists = async () => {
     try {
+      setIsLoadingDentists(true);
       const data = await messagingService.getDentists();
       setDentists(data);
     } catch (error) {
       console.error('Failed to load dentists:', error);
+    } finally {
+      setIsLoadingDentists(false);
     }
   };
 
@@ -509,10 +513,23 @@ export const Messages: React.FC = () => {
               </button>
             </div>
             <div className="max-h-[60vh] overflow-y-auto p-4 space-y-3">
-              {dentists.length === 0 ? (
-                <div className="text-center py-8 text-gray-500">
-                  <Loader2 className="h-8 w-8 animate-spin mx-auto mb-2 text-blue-400" />
-                  <p>Loading available specialists...</p>
+              {isLoadingDentists ? (
+                <div className="text-center py-12 text-gray-500">
+                  <div className="relative w-16 h-16 mx-auto mb-4">
+                    <div className="absolute inset-0 border-4 border-blue-100 rounded-full"></div>
+                    <div className="absolute inset-0 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                  </div>
+                  <p className="font-medium animate-pulse">Searching for specialists...</p>
+                </div>
+              ) : dentists.length === 0 ? (
+                <div className="text-center py-12 px-6">
+                  <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-400">
+                    <UserCircle className="h-10 w-10" />
+                  </div>
+                  <h4 className="font-bold text-gray-900 mb-2">No Specialists Available</h4>
+                  <p className="text-sm text-gray-500 leading-relaxed">
+                    There are currently no verified specialists available. Please check back later or contact support.
+                  </p>
                 </div>
               ) : (
                 dentists.map((dentist) => (

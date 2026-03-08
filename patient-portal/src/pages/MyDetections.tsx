@@ -146,7 +146,9 @@ export const MyDetections: React.FC = () => {
                     {detection.notes && (
                       <div className="flex items-start gap-2 text-sm">
                         <AlertCircle className="h-4 w-4 text-blue-600 mt-0.5" />
-                        <p className="text-gray-700 line-clamp-2">{detection.notes}</p>
+                        <p className="text-gray-700 line-clamp-2">
+                          {typeof detection.notes === 'string' ? detection.notes : JSON.stringify(detection.notes)}
+                        </p>
                       </div>
                     )}
 

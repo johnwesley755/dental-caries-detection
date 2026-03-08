@@ -9,7 +9,19 @@ export interface User {
   full_name: string;
   role: UserRole;
   is_active: boolean;
+  is_verified: boolean;
+  is_email_verified: boolean;
   created_at: string;
+}
+
+export interface ForgotPasswordRequest {
+  email: string;
+  role: string;
+}
+
+export interface ResetPasswordRequest {
+  token: string;
+  new_password: string;
 }
 
 export interface UserLogin {

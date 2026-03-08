@@ -18,6 +18,10 @@ import { Appointments } from './pages/Appointments';
 import { HealthTracker } from './pages/HealthTracker';
 import { Resources } from './pages/Resources';
 import { Messages } from './pages/Messages';
+import { NewDetection } from './pages/NewDetection';
+import { ForgotPassword } from './pages/ForgotPassword';
+import { ResetPassword } from './pages/ResetPassword';
+import { VerifyEmail } from './pages/VerifyEmail';
 
 // Layout component for authenticated routes
 const AuthenticatedLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -56,6 +60,9 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/verify-email" element={<VerifyEmail />} />
 
           {/* Protected Routes with Sidebar */}
           <Route
@@ -134,6 +141,16 @@ function App() {
               <ProtectedRoute>
                 <AuthenticatedLayout>
                   <Messages />
+                </AuthenticatedLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/new-detection"
+            element={
+              <ProtectedRoute>
+                <AuthenticatedLayout>
+                  <NewDetection />
                 </AuthenticatedLayout>
               </ProtectedRoute>
             }

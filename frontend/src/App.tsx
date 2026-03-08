@@ -5,7 +5,11 @@ import { DetectionProvider } from './contexts/DetectionContext';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
 
 import Login from './components/auth/Login';
+import ForgotPassword from './components/auth/ForgotPassword';
+import ResetPassword from './components/auth/ResetPassword';
+import VerifyEmail from './components/auth/VerifyEmail';
 import { Home } from './pages/Home';
+
 import { Dashboard } from './pages/Dashboard';
 import { Detection } from './pages/Detection';
 import { DetectionDetails } from './pages/DetectionDetails';
@@ -30,6 +34,9 @@ function App() {
             {/* 🌍 Public Routes (NO Navbar / Footer) */}
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/verify-email" element={<VerifyEmail />} />
 
             {/* 🔐 Protected Routes (WITH Navbar / Footer) */}
             <Route

@@ -168,7 +168,9 @@ export const DetectionView: React.FC = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-700">{detection.notes}</p>
+              <p className="text-gray-700">
+                {typeof detection.notes === 'string' ? detection.notes : JSON.stringify(detection.notes)}
+              </p>
             </CardContent>
           </Card>
         )}

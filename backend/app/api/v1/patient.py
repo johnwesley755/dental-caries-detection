@@ -71,11 +71,26 @@ async def get_my_detection(
     if not patient:
         raise HTTPException(status_code=404, detail="Patient record not found")
     
-    # Get detection
-    detection = db.query(Detection).filter(
-        Detection.detection_id == detection_id,
-        Detection.patient_id == patient.id
-    ).first()
+    # Try to find by UUID first, then by string detection_id
+    detection = None
+    
+    # Try UUID
+    from uuid import UUID
+    try:
+        val = UUID(detection_id)
+        detection = db.query(Detection).filter(
+            Detection.id == val,
+            Detection.patient_id == patient.id
+        ).first()
+    except (ValueError, TypeError):
+        pass
+        
+    # Try human-readable ID
+    if not detection:
+        detection = db.query(Detection).filter(
+            Detection.detection_id == detection_id,
+            Detection.patient_id == patient.id
+        ).first()
     
     if not detection:
         raise HTTPException(status_code=404, detail="Detection not found or access denied")

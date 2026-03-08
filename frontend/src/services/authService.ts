@@ -30,4 +30,16 @@ export const authService = {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
   },
+
+  async forgotPassword(email: string, role: string = 'DENTIST'): Promise<void> {
+    await api.post('/auth/forgot-password', { email, role });
+  },
+
+  async resetPassword(data: any): Promise<void> {
+    await api.post('/auth/reset-password', data);
+  },
+
+  async verifyEmail(token: string): Promise<void> {
+    await api.get(`/auth/verify-email?token=${token}`);
+  },
 };

@@ -86,7 +86,7 @@ export const DetectionDetails: React.FC = () => {
             <span className="flex items-center gap-1 bg-white px-2 py-0.5 rounded-md border border-slate-200 text-xs font-mono">{detection.detection_id}</span>
           </div>
         </div>
-        
+
         <div className="flex gap-3">
           <Button variant="outline" className="bg-white border-none shadow-sm text-slate-600 hover:text-blue-600" onClick={() => setShareDialogOpen(true)}>
             <Share2 className="h-4 w-4 mr-2" /> Share
@@ -105,14 +105,16 @@ export const DetectionDetails: React.FC = () => {
             originalImageUrl={detection.original_image_url}
             annotatedImageUrl={detection.annotated_image_url}
           />
-          
+
           {/* Notes Card */}
           <div className="bg-white rounded-[20px] p-6 shadow-sm">
             <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
               <FileText className="h-5 w-5 text-blue-500" /> Clinical Notes
             </h3>
             <div className="bg-slate-50 p-4 rounded-xl text-slate-600 text-sm min-h-[100px]">
-              {detection.notes || "No additional notes provided for this analysis."}
+              {detection.notes
+                ? (typeof detection.notes === 'string' ? detection.notes : JSON.stringify(detection.notes))
+                : "No additional notes provided for this analysis."}
             </div>
           </div>
         </div>

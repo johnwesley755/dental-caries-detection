@@ -39,18 +39,10 @@ export const Appointments: React.FC = () => {
     }
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
-  };
 
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleTimeString('en-US', { 
+    return date.toLocaleTimeString('en-US', {
       hour: 'numeric',
       minute: '2-digit',
       hour12: true
@@ -91,25 +83,22 @@ export const Appointments: React.FC = () => {
       <div className="mb-6 flex gap-2 flex-wrap">
         <button
           onClick={() => setFilter('')}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-            filter === '' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-          }`}
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filter === '' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
         >
           All
         </button>
         <button
           onClick={() => setFilter('scheduled')}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-            filter === 'scheduled' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-          }`}
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filter === 'scheduled' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
         >
           Scheduled
         </button>
         <button
           onClick={() => setFilter('completed')}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-            filter === 'completed' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-          }`}
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filter === 'completed' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
         >
           Completed
         </button>
@@ -162,7 +151,9 @@ export const Appointments: React.FC = () => {
                         {appointment.notes && (
                           <div className="flex items-start gap-2 mt-2">
                             <MapPin className="h-4 w-4 mt-0.5" />
-                            <span className="text-xs">{appointment.notes}</span>
+                            <span className="text-xs">
+                              {typeof appointment.notes === 'string' ? appointment.notes : JSON.stringify(appointment.notes)}
+                            </span>
                           </div>
                         )}
                       </div>
@@ -172,7 +163,7 @@ export const Appointments: React.FC = () => {
                   {/* Right Side - Actions */}
                   {isUpcoming && appointment.status !== 'cancelled' && (
                     <div className="flex flex-col sm:flex-row gap-2">
-                      <button 
+                      <button
                         onClick={() => handleCancel(appointment.id)}
                         className="px-4 py-2 border border-red-300 text-red-700 rounded-lg hover:bg-red-50 transition-colors text-sm font-medium"
                       >
