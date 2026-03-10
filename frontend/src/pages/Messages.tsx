@@ -4,6 +4,7 @@ import { messagingService } from '../services/messagingService';
 import type { Conversation, Message } from '../services/messagingService';
 import { MessageCircle, Send, Paperclip, X, FileText, Image as ImageIcon, Download, Loader2, Plus } from 'lucide-react';
 import { Button } from '../components/ui/button';
+import { LoadingSpinner } from '../components/common/LoadingSpinner';
 export const Messages: React.FC = () => {
   const location = useLocation();
   const [conversations, setConversations] = useState<Conversation[]>([]);
@@ -198,7 +199,7 @@ export const Messages: React.FC = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <Loader2 className="h-8 w-8 animate-spin text-orange-600" />
+        <LoadingSpinner size="sm" />
       </div>
     );
   }
@@ -233,7 +234,7 @@ export const Messages: React.FC = () => {
               </div>
               {loadingPatients ? (
                 <div className="p-8 text-center">
-                  <Loader2 className="h-6 w-6 animate-spin text-orange-600 mx-auto" />
+                  <LoadingSpinner size="sm" />
                 </div>
               ) : patients.length === 0 ? (
                 <div className="p-8 text-center">
@@ -408,7 +409,7 @@ export const Messages: React.FC = () => {
                   className="bg-orange-600 text-white p-2 rounded-lg hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   {sending ? (
-                    <Loader2 className="h-5 w-5 animate-spin" />
+                    <LoadingSpinner size="sm" />
                   ) : (
                     <Send className="h-5 w-5" />
                   )}

@@ -7,6 +7,7 @@ import { Card, CardContent } from '../ui/card';
 import { api } from '../../services/api';
 import { toast } from 'sonner';
 import { Link } from 'react-router-dom';
+import { LoadingSpinner } from '../../components/common/LoadingSpinner';
 
 export const QuickScan: React.FC = () => {
     const [file, setFile] = useState<File | null>(null);
@@ -94,7 +95,7 @@ export const QuickScan: React.FC = () => {
                                     >
                                         {isAnalyzing ? (
                                             <>
-                                                <Loader2 className="h-5 w-5 mr-3 animate-spin" />
+                                                <LoadingSpinner size="sm" />
                                                 AI is Analyzing...
                                             </>
                                         ) : (

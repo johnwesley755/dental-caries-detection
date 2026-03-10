@@ -17,6 +17,7 @@ import { detectionService } from '../services/detectionService';
 import type { Patient } from '../types/patient.types';
 import type { Detection } from '../types/detection.types';
 import { DetectionStatus } from '../types/detection.types';
+import { LoadingSpinner } from '../components/common/LoadingSpinner';
 
 export const History: React.FC = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
@@ -108,9 +109,7 @@ export const History: React.FC = () => {
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-        </div>
+        <LoadingSpinner size="lg" />
       </div>
     );
   }

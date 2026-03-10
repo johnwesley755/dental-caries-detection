@@ -5,6 +5,7 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { analyticsService, type PatientGrowth } from '../../services/analyticsService';
 import { format } from 'date-fns';
 import { TrendingUp } from 'lucide-react';
+import { LoadingSpinner } from '../../components/common/LoadingSpinner';
 
 export const PatientGrowthChart: React.FC = () => {
   const [data, setData] = useState<PatientGrowth[]>([]);
@@ -28,9 +29,7 @@ export const PatientGrowthChart: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 h-[400px] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
-      </div>
+      <LoadingSpinner size="lg" />
     );
   }
 
@@ -65,8 +64,8 @@ export const PatientGrowthChart: React.FC = () => {
         <AreaChart data={data}>
           <defs>
             <linearGradient id="colorPatients" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.4}/>
-              <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.05}/>
+              <stop offset="5%" stopColor="#f97316" stopOpacity={0.4}/>
+              <stop offset="95%" stopColor="#f97316" stopOpacity={0.05}/>
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -88,7 +87,7 @@ export const PatientGrowthChart: React.FC = () => {
           <Area 
             type="monotone" 
             dataKey="count" 
-            stroke="#3b82f6" 
+            stroke="#f97316" 
             strokeWidth={2}
             fillOpacity={1} 
             fill="url(#colorPatients)"

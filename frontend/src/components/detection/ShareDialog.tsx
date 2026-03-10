@@ -7,6 +7,7 @@ import { Label } from '../ui/label';
 import { toast } from 'sonner';
 import { Download, Mail, Copy, Check, Link as LinkIcon, X } from 'lucide-react';
 import { reportService } from '../../services/reportService';
+import { LoadingSpinner } from '../../components/common/LoadingSpinner';
 
 interface ShareDialogProps {
   open: boolean;
@@ -149,7 +150,7 @@ export const ShareDialog: React.FC<ShareDialogProps> = ({
                   className="h-11 px-6 bg-orange-600 hover:bg-orange-700 text-white rounded-xl font-medium shadow-md shadow-orange-100 transition-all"
                >
                   {isSending ? (
-                    <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <LoadingSpinner size="md" />
                   ) : (
                     'Send'
                   )}
@@ -167,7 +168,7 @@ export const ShareDialog: React.FC<ShareDialogProps> = ({
             >
               {isDownloading ? (
                 <>
-                  <div className="h-4 w-4 border-2 border-slate-400 border-t-transparent rounded-full animate-spin mr-2" />
+                  <LoadingSpinner size="md" />
                   Generating PDF...
                 </>
               ) : (

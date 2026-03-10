@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { patientService } from '@/services/patientService';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { LoadingSpinner } from '../components/common/LoadingSpinner';
 
 export const NewDetection: React.FC = () => {
     const [file, setFile] = useState<File | null>(null);
@@ -102,7 +103,7 @@ export const NewDetection: React.FC = () => {
                                 >
                                     {isAnalyzing ? (
                                         <>
-                                            <Loader2 className="h-5 w-5 mr-3 animate-spin" />
+                                            <LoadingSpinner size="sm" />
                                             AI Analyzing...
                                         </>
                                     ) : (

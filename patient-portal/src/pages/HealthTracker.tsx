@@ -5,6 +5,7 @@ import { HealthScoreChart } from '../components/charts/HealthScoreChart';
 import { DetectionHistoryChart } from '../components/charts/DetectionHistoryChart';
 import { analyticsService } from '../services/analyticsService';
 import { toast } from 'sonner';
+import { LoadingSpinner } from '../components/common/LoadingSpinner';
 
 export const HealthTracker: React.FC = () => {
   const [healthScore, setHealthScore] = useState<any>(null);
@@ -58,7 +59,7 @@ export const HealthTracker: React.FC = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full">
-        <Loader2 className="h-8 w-8 animate-spin text-teal-600" />
+        <LoadingSpinner size="sm" />
       </div>
     );
   }

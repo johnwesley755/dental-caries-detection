@@ -1,9 +1,11 @@
 // frontend/src/types/patient.types.ts
-export enum Gender {
-  MALE = 'male',
-  FEMALE = 'female',
-  OTHER = 'other'
-}
+export const Gender = {
+  MALE: 'male',
+  FEMALE: 'female',
+  OTHER: 'other'
+} as const;
+
+export type Gender = (typeof Gender)[keyof typeof Gender];
 
 export interface Patient {
   id: string;

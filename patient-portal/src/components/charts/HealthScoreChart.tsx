@@ -5,6 +5,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { analyticsService, type HealthHistory } from '../../services/analyticsService';
 import { format } from 'date-fns';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import { LoadingSpinner } from '../../components/common/LoadingSpinner';
 
 export const HealthScoreChart: React.FC = () => {
   const [data, setData] = useState<HealthHistory[]>([]);
@@ -36,9 +37,7 @@ export const HealthScoreChart: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 h-[450px] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600"></div>
-      </div>
+      <LoadingSpinner size="lg" />
     );
   }
 
@@ -112,9 +111,9 @@ export const HealthScoreChart: React.FC = () => {
           <Line 
             type="monotone" 
             dataKey="score" 
-            stroke="#3b82f6" 
+            stroke="#14b8a6" 
             strokeWidth={3}
-            dot={{ fill: '#3b82f6', r: 5 }}
+            dot={{ fill: '#14b8a6', r: 5 }}
             activeDot={{ r: 7 }}
             name="Health Score"
           />

@@ -22,6 +22,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../components/
 import { Label } from '../components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table';
+import { LoadingSpinner } from '../components/common/LoadingSpinner';
 
 export const UserManagement: React.FC = () => {
   const { user } = useAuth();
@@ -156,7 +157,7 @@ export const UserManagement: React.FC = () => {
         
         <CardContent className="p-0">
           {isLoading ? (
-            <div className="p-12 flex justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600"></div></div>
+            <LoadingSpinner size="lg" />
           ) : (
             <div className="overflow-x-auto">
               <Table>

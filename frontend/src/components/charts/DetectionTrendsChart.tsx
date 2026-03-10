@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { analyticsService, type DetectionTrend } from '../../services/analyticsService';
 import { format } from 'date-fns';
+import { LoadingSpinner } from '../../components/common/LoadingSpinner';
 
 export const DetectionTrendsChart: React.FC = () => {
   const [data, setData] = useState<DetectionTrend[]>([]);
@@ -28,9 +29,7 @@ export const DetectionTrendsChart: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 h-[400px] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
-      </div>
+      <LoadingSpinner size="lg" />
     );
   }
 
@@ -74,9 +73,9 @@ export const DetectionTrendsChart: React.FC = () => {
           <Line 
             type="monotone" 
             dataKey="count" 
-            stroke="#3b82f6" 
+            stroke="#f97316" 
             strokeWidth={3}
-            dot={{ fill: '#3b82f6', r: 5 }}
+            dot={{ fill: '#f97316', r: 5 }}
             activeDot={{ r: 7 }}
             name="Detections"
           />

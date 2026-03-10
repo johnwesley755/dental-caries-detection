@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { BookOpen, Video, FileText, ExternalLink, Loader2, Search } from 'lucide-react';
 import { resourceService, Resource } from '../services/resourceService';
 import { toast } from 'sonner';
+import { LoadingSpinner } from '../components/common/LoadingSpinner';
 
 export const Resources: React.FC = () => {
   const [resources, setResources] = useState<Resource[]>([]);
@@ -66,7 +67,7 @@ export const Resources: React.FC = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full">
-        <Loader2 className="h-8 w-8 animate-spin text-teal-600" />
+        <LoadingSpinner size="sm" />
       </div>
     );
   }

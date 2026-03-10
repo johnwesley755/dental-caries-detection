@@ -15,6 +15,7 @@ import { reportService } from '../services/reportService';
 import type { Detection } from '../types/detection.types';
 import type { Patient } from '../types/patient.types';
 import { DetectionStatus } from '../types/detection.types';
+import { LoadingSpinner } from '../components/common/LoadingSpinner';
 
 export const DetectionDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -68,7 +69,7 @@ export const DetectionDetails: React.FC = () => {
     }
   };
 
-  if (isLoading) return <div className="min-h-screen bg-[#F4F7FE] flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div></div>;
+  if (isLoading) return <LoadingSpinner size="lg" />;
   if (!detection) return null;
 
   return (
@@ -92,7 +93,7 @@ export const DetectionDetails: React.FC = () => {
             <Share2 className="h-4 w-4 mr-2" /> Share
           </Button>
           <Button onClick={handleDownloadPDF} disabled={isDownloading} className="bg-orange-600 hover:bg-orange-700 text-white shadow-lg shadow-orange-200">
-            {isDownloading ? <span className="animate-spin mr-2">⏳</span> : <Download className="h-4 w-4 mr-2" />}
+            {isDownloading ? <LoadingSpinner size="sm" className="mr-2" /> : <Download className="h-4 w-4 mr-2" />}
             Download PDF
           </Button>
         </div>

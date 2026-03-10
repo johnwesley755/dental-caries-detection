@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import { analyticsService, type CariesDistribution } from '../../services/analyticsService';
+import { LoadingSpinner } from '../../components/common/LoadingSpinner';
 
 const COLORS = {
   mild: '#10b981',
@@ -38,9 +39,7 @@ export const CariesDistributionChart: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 h-[400px] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
-      </div>
+      <LoadingSpinner size="lg" />
     );
   }
 
@@ -81,7 +80,7 @@ export const CariesDistributionChart: React.FC = () => {
             labelLine={false}
             label={renderCustomLabel}
             outerRadius={110}
-            fill="#8884d8"
+            fill="#f97316"
             dataKey="count"
           >
             {data.map((entry, index) => (

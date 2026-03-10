@@ -5,6 +5,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { analyticsService, type DetectionHistory } from '../../services/analyticsService';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
+import { LoadingSpinner } from '../../components/common/LoadingSpinner';
 
 export const DetectionHistoryChart: React.FC = () => {
   const [data, setData] = useState<DetectionHistory[]>([]);
@@ -29,9 +30,7 @@ export const DetectionHistoryChart: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 h-[450px] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600"></div>
-      </div>
+      <LoadingSpinner size="lg" />
     );
   }
 

@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { chatService, ChatMessageResponse } from '../../services/chatService';
+import { LoadingSpinner } from '../../components/common/LoadingSpinner';
 
 interface ChatBotProps {
   detectionId?: string;
@@ -144,7 +145,7 @@ export const ChatBot: React.FC<ChatBotProps> = ({ detectionId }) => {
                 </div>
                 <div className="bg-white border border-gray-200 rounded-lg px-4 py-3">
                   <div className="flex items-center gap-2">
-                    <Loader2 className="h-4 w-4 animate-spin text-teal-600" />
+                    <LoadingSpinner size="sm" />
                     <span className="text-sm text-gray-600">Thinking...</span>
                   </div>
                 </div>
@@ -172,7 +173,7 @@ export const ChatBot: React.FC<ChatBotProps> = ({ detectionId }) => {
               className="bg-teal-600 hover:bg-teal-700"
             >
               {isLoading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <LoadingSpinner size="sm" />
               ) : (
                 <Send className="h-4 w-4" />
               )}

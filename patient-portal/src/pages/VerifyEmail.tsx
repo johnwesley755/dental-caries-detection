@@ -3,8 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { authService } from '../services/authService';
 import { motion } from 'framer-motion';
+import { LoadingSpinner } from '../components/common/LoadingSpinner';
 import {
-    Loader2,
     CheckCircle2,
     XCircle,
     ArrowRight,
@@ -53,7 +53,7 @@ export const VerifyEmail: React.FC = () => {
                     <div className="space-y-6">
                         <div className="flex justify-center">
                             <div className="h-20 w-20 rounded-full bg-teal-50 flex items-center justify-center text-teal-600">
-                                <Loader2 className="h-10 w-10 animate-spin" />
+                                <LoadingSpinner size="sm" />
                             </div>
                         </div>
                         <h1 className="text-3xl font-bold text-slate-900">Verifying Email</h1>

@@ -6,6 +6,7 @@ import { MessageCircle, Send, Paperclip, X, FileText, Image as ImageIcon, Downlo
 import { Button } from '../components/ui/button';
 import { useAuth } from '../contexts/AuthContext';
 import { patientService } from '../services/patientService';
+import { LoadingSpinner } from '../components/common/LoadingSpinner';
 
 export const Messages: React.FC = () => {
   const { user } = useAuth();
@@ -226,7 +227,7 @@ export const Messages: React.FC = () => {
     return (
       <div className="flex items-center justify-center h-screen bg-gray-50">
         <div className="flex flex-col items-center gap-4">
-          <Loader2 className="h-10 w-10 animate-spin text-teal-600" />
+          <LoadingSpinner size="sm" />
           <p className="text-gray-500 font-medium">Loading conversations...</p>
         </div>
       </div>
@@ -470,7 +471,7 @@ export const Messages: React.FC = () => {
                   className="h-10 w-10 bg-teal-600 text-white rounded-xl hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-teal-200"
                 >
                   {sending ? (
-                    <Loader2 className="h-5 w-5 animate-spin" />
+                    <LoadingSpinner size="sm" />
                   ) : (
                     <Send className="h-5 w-5" />
                   )}
@@ -517,7 +518,7 @@ export const Messages: React.FC = () => {
                 <div className="text-center py-12 text-gray-500">
                   <div className="relative w-16 h-16 mx-auto mb-4">
                     <div className="absolute inset-0 border-4 border-teal-100 rounded-full"></div>
-                    <div className="absolute inset-0 border-4 border-teal-600 border-t-transparent rounded-full animate-spin"></div>
+                    <LoadingSpinner size="md" />
                   </div>
                   <p className="font-medium animate-pulse">Searching for specialists...</p>
                 </div>

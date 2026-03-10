@@ -15,6 +15,7 @@ import {
 // --- Utility for merging classes ---
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { LoadingSpinner } from '../components/common/LoadingSpinner';
 
 function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
@@ -115,7 +116,7 @@ export const ForgotPassword: React.FC = () => {
                                     className="w-full rounded-xl bg-gradient-to-r from-teal-600 to-emerald-600 px-4 py-4 text-sm font-bold text-white shadow-xl shadow-teal-500/20 disabled:opacity-70"
                                 >
                                     <div className="flex items-center justify-center gap-2">
-                                        {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <span>Send Reset Link</span>}
+                                        {isLoading ? <LoadingSpinner size="sm" /> : <span>Send Reset Link</span>}
                                     </div>
                                 </motion.button>
                             </form>

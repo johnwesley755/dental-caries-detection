@@ -3,8 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { authService } from '../../services/authService';
 import { motion } from 'framer-motion';
+import { LoadingSpinner } from '../../components/common/LoadingSpinner';
 import {
-    Loader2,
     Lock,
     ShieldCheck,
     Eye,
@@ -12,9 +12,6 @@ import {
     CheckCircle2,
     ArrowRight
 } from 'lucide-react';
-
-
-
 
 export const ResetPassword: React.FC = () => {
     const [searchParams] = useSearchParams();
@@ -156,7 +153,7 @@ export const ResetPassword: React.FC = () => {
                             disabled={isLoading || !token}
                             className="w-full h-14 rounded-xl bg-slate-900 text-white font-bold flex items-center justify-center gap-2 shadow-lg shadow-slate-900/10 disabled:opacity-50 hover:bg-slate-800 transition-all"
                         >
-                            {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <span>Update Password</span>}
+                            {isLoading ? <LoadingSpinner size="sm" /> : <span>Update Password</span>}
                         </motion.button>
                     </form>
 

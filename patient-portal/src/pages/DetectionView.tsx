@@ -11,6 +11,7 @@ import { ChatBot } from '../components/chat/ChatBot';
 import { patientService } from '../services/patientService';
 import { reportService } from '../services/reportService';
 import type { Detection } from '../types/detection.types';
+import { LoadingSpinner } from '../components/common/LoadingSpinner';
 
 export const DetectionView: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -57,9 +58,7 @@ export const DetectionView: React.FC = () => {
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600"></div>
-        </div>
+        <LoadingSpinner size="lg" />
       </div>
     );
   }
@@ -103,7 +102,7 @@ export const DetectionView: React.FC = () => {
             <Button onClick={handleDownloadPDF} disabled={isDownloading}>
               {isDownloading ? (
                 <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  <LoadingSpinner size="md" />
                   Downloading...
                 </>
               ) : (

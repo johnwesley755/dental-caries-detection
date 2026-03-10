@@ -24,6 +24,7 @@ import { detectionService } from '../services/detectionService';
 import type { Patient } from '../types/patient.types';
 import { Gender } from "../types/patient.types";
 import type { Detection } from '../types/detection.types';
+import { LoadingSpinner } from '../components/common/LoadingSpinner';
 
 export const PatientDetails: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -63,9 +64,7 @@ export const PatientDetails: React.FC = () => {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen bg-[#F4F7FE] flex items-center justify-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
-            </div>
+            <LoadingSpinner size="lg" />
         );
     }
 

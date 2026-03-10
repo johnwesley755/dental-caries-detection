@@ -6,6 +6,7 @@ import { User, Mail, Phone, MapPin, Calendar, ShieldCheck, Activity, Info } from
 import { patientService } from '../services/patientService';
 import { useAuth } from '../contexts/AuthContext';
 import type { Patient } from '../types/detection.types';
+import { LoadingSpinner } from '../components/common/LoadingSpinner';
 
 export const Profile: React.FC = () => {
   const { user } = useAuth();
@@ -31,10 +32,7 @@ export const Profile: React.FC = () => {
   if (isLoading) {
     return (
       <div className="min-h-[80vh] flex items-center justify-center bg-gray-50/50">
-        <div className="flex flex-col items-center gap-4">
-          <div className="h-12 w-12 animate-spin rounded-full border-4 border-teal-600 border-t-transparent shadow-sm"></div>
-          <p className="text-sm font-medium text-gray-500 animate-pulse">Loading profile...</p>
-        </div>
+        <LoadingSpinner size="md" text="Loading profile..." />
       </div>
     );
   }
@@ -64,7 +62,7 @@ export const Profile: React.FC = () => {
 
       <div className="container mx-auto px-4 -mt-20 relative z-10">
         <div className="max-w-5xl mx-auto space-y-8">
-          
+
           {/* Main Profile Header Card */}
           <Card className="border-none shadow-lg overflow-hidden">
             <CardContent className="p-0">
@@ -75,7 +73,7 @@ export const Profile: React.FC = () => {
                   </div>
                   <div className="absolute -bottom-2 -right-2 bg-green-500 h-6 w-6 border-4 border-white rounded-full" title="Active Status"></div>
                 </div>
-                
+
                 <div className="flex-1 space-y-2 pb-2">
                   <div>
                     <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">{patient?.full_name}</h1>
@@ -149,17 +147,17 @@ export const Profile: React.FC = () => {
                   <div className="space-y-4">
                     <InfoRow icon={ShieldCheck} label="System ID" value={patient?.patient_id} />
                     <InfoRow icon={Mail} label="Login Email" value={user?.email || patient?.email} />
-                    <InfoRow 
-                      icon={Activity} 
-                      label="Member Since" 
+                    <InfoRow
+                      icon={Activity}
+                      label="Member Since"
                       value={patient?.created_at ? new Date(patient.created_at).toLocaleDateString(undefined, {
                         year: 'numeric',
                         month: 'long',
                         day: 'numeric'
-                      }) : undefined} 
+                      }) : undefined}
                     />
                   </div>
-                  
+
                   <div className="pt-6 mt-6 border-t border-slate-100">
                     <div className="bg-slate-50 rounded-lg p-4 text-center">
                       <p className="text-xs text-slate-500 font-medium">Account Status</p>

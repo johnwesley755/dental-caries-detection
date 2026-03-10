@@ -13,6 +13,7 @@ import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Mail, CheckCircle2, Copy, Loader2 } from 'lucide-react'; // Added Loader2
+import { LoadingSpinner } from '../components/common/LoadingSpinner';
 
 export const Patients: React.FC = () => {
   const { user } = useAuth();
@@ -359,7 +360,7 @@ export const Patients: React.FC = () => {
                   >
                     {isSubmitting ? (
                       <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        <LoadingSpinner size="sm" />
                         Creating...
                       </>
                     ) : (

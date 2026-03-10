@@ -16,6 +16,7 @@ import { NotificationDropdown } from '../components/dashboard/NotificationDropdo
 import { DetectionTrendsChart } from '../components/charts/DetectionTrendsChart';
 import { CariesDistributionChart } from '../components/charts/CariesDistributionChart';
 import { PatientGrowthChart } from '../components/charts/PatientGrowthChart';
+import { LoadingSpinner } from '../components/common/LoadingSpinner';
 
 export const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -148,10 +149,7 @@ export const Dashboard: React.FC = () => {
       {/* Main Content */}
       <main className="flex-1 overflow-auto px-8 pb-8">
         {isLoading ? (
-          <div className="h-full flex flex-col items-center justify-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
-            <p className="text-gray-400 mt-4">Loading dashboard analytics...</p>
-          </div>
+          <LoadingSpinner size="lg" text="Loading dashboard analytics..." className="h-full" />
         ) : (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
              {searchQuery && (

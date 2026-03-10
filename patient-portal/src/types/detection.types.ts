@@ -1,28 +1,32 @@
 // patient-portal/src/types/detection.types.ts
-export enum ImageType {
-  INTRAORAL = 'intraoral',
-  BITEWING = 'bitewing',
-  PERIAPICAL = 'periapical',
-  PANORAMIC = 'panoramic'
-}
+export const ImageType = {
+  INTRAORAL: 'intraoral',
+  BITEWING: 'bitewing',
+  PERIAPICAL: 'periapical',
+  PANORAMIC: 'panoramic'
+} as const;
+export type ImageType = (typeof ImageType)[keyof typeof ImageType];
 
-export enum DetectionStatus {
-  PENDING = 'pending',
-  COMPLETED = 'completed',
-  REVIEWED = 'reviewed'
-}
+export const DetectionStatus = {
+  PENDING: 'pending',
+  COMPLETED: 'completed',
+  REVIEWED: 'reviewed'
+} as const;
+export type DetectionStatus = (typeof DetectionStatus)[keyof typeof DetectionStatus];
 
-export enum CariesType {
-  ENAMEL = 'enamel',
-  DENTIN = 'dentin',
-  PULP = 'pulp'
-}
+export const CariesType = {
+  ENAMEL: 'enamel',
+  DENTIN: 'dentin',
+  PULP: 'pulp'
+} as const;
+export type CariesType = (typeof CariesType)[keyof typeof CariesType];
 
-export enum Severity {
-  MILD = 'mild',
-  MODERATE = 'moderate',
-  SEVERE = 'severe'
-}
+export const Severity = {
+  MILD: 'mild',
+  MODERATE: 'moderate',
+  SEVERE: 'severe'
+} as const;
+export type Severity = (typeof Severity)[keyof typeof Severity];
 
 export interface BoundingBox {
   x: number;

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Calendar, Clock, MapPin, User, Loader2 } from 'lucide-react';
 import { appointmentService, Appointment } from '../services/appointmentService';
 import { toast } from 'sonner';
+import { LoadingSpinner } from '../components/common/LoadingSpinner';
 
 export const Appointments: React.FC = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
@@ -66,7 +67,7 @@ export const Appointments: React.FC = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full">
-        <Loader2 className="h-8 w-8 animate-spin text-teal-600" />
+        <LoadingSpinner size="sm" />
       </div>
     );
   }

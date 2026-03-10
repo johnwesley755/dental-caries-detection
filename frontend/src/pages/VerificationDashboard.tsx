@@ -3,6 +3,7 @@ import { api } from '../services/api'; // Assuming there is a central api servic
 import type { User } from '../types/auth.types';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
+import { LoadingSpinner } from '../components/common/LoadingSpinner';
 
 const VerificationDashboard: React.FC = () => {
     const [pendingDentists, setPendingDentists] = useState<User[]>([]);
@@ -35,7 +36,7 @@ const VerificationDashboard: React.FC = () => {
         }
     };
 
-    if (isLoading) return <div className="p-8 flex items-center justify-center"><Loader2 className="h-10 w-10 animate-spin text-primary" /></div>;
+    if (isLoading) return <div className="p-8 flex items-center justify-center"><LoadingSpinner size="sm" /></div>;
 
     return (
         <div className="p-8">

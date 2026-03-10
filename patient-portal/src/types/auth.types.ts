@@ -1,7 +1,8 @@
 // patient-portal/src/types/auth.types.ts
-export enum UserRole {
-  PATIENT = 'patient'
-}
+export const UserRole = {
+  PATIENT: 'patient'
+} as const;
+export type UserRole = (typeof UserRole)[keyof typeof UserRole];
 
 export interface User {
   id: string;

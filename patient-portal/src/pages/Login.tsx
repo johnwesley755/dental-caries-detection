@@ -19,6 +19,7 @@ import {
 // --- Utility for merging classes ---
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { LoadingSpinner } from '../components/common/LoadingSpinner';
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -221,7 +222,7 @@ export const Login: React.FC = () => {
                 <div className="flex items-center justify-center gap-2">
                   {isLoading ? (
                     <>
-                      <Loader2 className="h-5 w-5 animate-spin" />
+                      <LoadingSpinner size="sm" />
                       <span>Verifying...</span>
                     </>
                   ) : (

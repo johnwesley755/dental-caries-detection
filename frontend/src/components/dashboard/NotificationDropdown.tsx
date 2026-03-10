@@ -5,6 +5,7 @@ import { notificationService, type Notification } from '../../services/notificat
 import { toast } from 'sonner';
 import { formatDistanceToNow } from 'date-fns';
 import { createPortal } from 'react-dom';
+import { LoadingSpinner } from '../../components/common/LoadingSpinner';
 
 export const NotificationDropdown: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -167,7 +168,7 @@ export const NotificationDropdown: React.FC = () => {
             <div className="overflow-y-auto flex-1">
               {loading ? (
                 <div className="p-8 text-center text-gray-500">
-                  <div className="animate-spin h-8 w-8 border-4 border-orange-500 border-t-transparent rounded-full mx-auto"></div>
+                  <LoadingSpinner size="md" />
                   <p className="mt-2">Loading...</p>
                 </div>
               ) : notifications.length === 0 ? (

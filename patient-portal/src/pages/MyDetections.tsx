@@ -8,6 +8,7 @@ import { Button } from '../components/ui/button';
 import { Calendar, Eye, AlertCircle, Plus, Upload, X, Loader2 } from 'lucide-react';
 import { patientService } from '../services/patientService';
 import type { Detection } from '../types/detection.types';
+import { LoadingSpinner } from '../components/common/LoadingSpinner';
 
 export const MyDetections: React.FC = () => {
   const navigate = useNavigate();
@@ -80,9 +81,7 @@ export const MyDetections: React.FC = () => {
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600"></div>
-        </div>
+        <LoadingSpinner size="lg" />
       </div>
     );
   }
@@ -224,7 +223,7 @@ export const MyDetections: React.FC = () => {
                   >
                     {isUploading ? (
                       <>
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        <LoadingSpinner size="sm" />
                         Uploading...
                       </>
                     ) : (

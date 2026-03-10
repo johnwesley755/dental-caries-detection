@@ -12,6 +12,7 @@ import { useDetection } from '../contexts/DetectionContext';
 import { patientService } from '../services/patientService';
 import type { Patient } from '../types/patient.types';
 import type { ImageType } from '../types/detection.types';
+import { LoadingSpinner } from '../components/common/LoadingSpinner';
 
 export const Detection: React.FC = () => {
   const navigate = useNavigate();
@@ -72,7 +73,7 @@ export const Detection: React.FC = () => {
       {!currentDetection ? (
         <div className="max-w-4xl mx-auto mt-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
           {loadingPatients ? (
-            <div className="flex justify-center p-12"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div></div>
+            <LoadingSpinner size="lg" />
           ) : (
             <ImageUpload patients={patients} onUpload={handleUpload} isLoading={isLoading} />
           )}
