@@ -24,8 +24,6 @@ class Detection(Base):
     detection_id = Column(String, unique=True, nullable=False, index=True)
     patient_id = Column(UUID(as_uuid=True), ForeignKey("patients.id"), nullable=True, index=True)
     dentist_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True, index=True)
-    original_image_path = Column(String, nullable=True)
-    annotated_image_path = Column(String, nullable=True)
     original_image_url = Column(String)  # Cloudinary URL
     annotated_image_url = Column(String)  # Cloudinary URL
     original_image_public_id = Column(String)  # For Cloudinary deletion

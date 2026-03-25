@@ -5,7 +5,6 @@ from uuid import UUID
 class CariesFindingResponse(BaseModel):
     id: UUID
     detection_id: UUID
-    tooth_number: Optional[int]
     caries_type: Optional[str]
     severity: Optional[str]
     confidence_score: float

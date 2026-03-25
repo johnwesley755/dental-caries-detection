@@ -44,3 +44,4 @@ aiofiles
 reportlab
 cloudinary
 matplotlib
+psycopg2
