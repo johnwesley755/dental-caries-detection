@@ -9,14 +9,13 @@ import {
     Phone,
     MapPin,
     Calendar,
-    User,
     Activity,
     Clock,
     FileText,
     MessageSquare
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
+import { Card, CardContent, CardHeader } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { HistoryCard } from '../components/dashboard/HistoryCard';
 import { patientService } from '../services/patientService';
@@ -73,7 +72,7 @@ export const PatientDetails: React.FC = () => {
     const totalCaries = detections.reduce((sum, d) => sum + d.total_caries_detected, 0);
 
     return (
-        <div className="min-h-screen bg-[#F4F7FE] p-8">
+        <div className="min-h-screen bg-orange-50 p-8">
 
             {/* Top Navigation */}
             <div className="mb-8 flex items-center justify-between">

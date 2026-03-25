@@ -73,7 +73,7 @@ export const DetectionDetails: React.FC = () => {
   if (!detection) return null;
 
   return (
-    <div className="min-h-screen bg-[#F4F7FE] p-8">
+    <div className="min-h-screen bg-orange-50 p-8">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>

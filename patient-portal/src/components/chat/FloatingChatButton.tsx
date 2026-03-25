@@ -1,10 +1,13 @@
 // patient-portal/src/components/chat/FloatingChatButton.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageCircle, X } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 import { ChatBot } from './ChatBot';
 
 export const FloatingChatButton: React.FC = () => {
+  const { pathname } = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -24,6 +27,11 @@ export const FloatingChatButton: React.FC = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isOpen]);
+
+  // Don't show the floating AI chatbot on the real messages page to avoid confusion and overlap
+  if (pathname === '/messages') {
+    return null;
+  }
 
   return (
     <>

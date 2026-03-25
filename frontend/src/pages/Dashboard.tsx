@@ -21,14 +21,14 @@ import { LoadingSpinner } from '../components/common/LoadingSpinner';
 export const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth(); // Get real user data
-  
+
   const [patients, setPatients] = useState<Patient[]>([]);
   const [detections, setDetections] = useState<Detection[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  
+
   // Search State
   const [searchQuery, setSearchQuery] = useState('');
-  
+
   // Calendar Modal State
   const [showCalendar, setShowCalendar] = useState(false);
 
@@ -48,10 +48,10 @@ export const Dashboard: React.FC = () => {
       ]);
 
       setPatients(patientsData);
-      
+
       if (patientsData.length > 0) {
         const allDetections = await Promise.all(
-          patientsData.slice(0, 10).map((p) => 
+          patientsData.slice(0, 10).map((p) =>
             detectionService.getPatientDetections(p.id).catch(() => [])
           )
         );
@@ -75,8 +75,8 @@ export const Dashboard: React.FC = () => {
 
     // 1. Filter Patients matching name or ID
     const filteredPatients = patients.filter(
-      (p) => 
-        p.full_name.toLowerCase().includes(lowerQuery) || 
+      (p) =>
+        p.full_name.toLowerCase().includes(lowerQuery) ||
         p.patient_id.toLowerCase().includes(lowerQuery)
     );
 
@@ -93,14 +93,14 @@ export const Dashboard: React.FC = () => {
   const { filteredPatients, filteredDetections } = getFilteredData();
 
   return (
-    <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-[#F4F7FE]">
-      
+    <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-orange-50">
+
       {/* Top Header */}
-      <header className="px-8 py-6 flex items-center justify-between sticky top-0 bg-[#F4F7FE]/90 backdrop-blur-sm z-10">
+      <header className="px-8 py-6 flex items-center justify-between sticky top-0 bg-orange-50/90 backdrop-blur-sm z-10">
         <div className="flex items-center gap-4 flex-1 max-w-xl">
           <div className="relative flex-1 group">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
-            <Input 
+            <Input
               className="pl-12 py-6 bg-white border-none rounded-full shadow-sm text-gray-600 placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-orange-500 transition-all"
               placeholder="Search patients, IDs, or analysis records..."
               value={searchQuery}
@@ -110,38 +110,38 @@ export const Dashboard: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-4">
-          <Button 
-            variant="ghost" 
+          <Button
+            variant="ghost"
             className="bg-white rounded-full h-12 w-12 p-0 shadow-sm text-gray-500 hover:text-orange-600 transition-colors"
             onClick={() => setShowCalendar(true)}
           >
             <CalendarIcon className="h-5 w-5" />
           </Button>
-          
+
           <div className="relative">
             <NotificationDropdown />
           </div>
-          
+
           {/* User Profile Avatar - Clickable & Real Data */}
-          <div 
-            className="flex items-center gap-3 pl-2 cursor-pointer" 
+          <div
+            className="flex items-center gap-3 pl-2 cursor-pointer"
             onClick={() => navigate('/profile')}
           >
-             <div className="text-right hidden md:block">
-                <p className="text-sm font-bold text-gray-700 leading-tight">
-                  {user?.full_name || 'User'}
-                </p>
-                <p className="text-xs text-gray-500 uppercase font-medium">
-                  {user?.role || 'Guest'}
-                </p>
-             </div>
-             <div className="h-12 w-12 bg-white rounded-full border-2 border-white shadow-sm overflow-hidden hover:ring-2 hover:ring-orange-200 transition-all">
-                <img 
-                  src={`https://ui-avatars.com/api/?name=${user?.full_name || 'User'}&background=0D8ABC&color=fff&bold=true`} 
-                  alt="Profile" 
-                  className="h-full w-full object-cover"
-                />
-             </div>
+            <div className="text-right hidden md:block">
+              <p className="text-sm font-bold text-gray-700 leading-tight">
+                {user?.full_name || 'User'}
+              </p>
+              <p className="text-xs text-gray-500 uppercase font-medium">
+                {user?.role || 'Guest'}
+              </p>
+            </div>
+            <div className="h-12 w-12 bg-white rounded-full border-2 border-white shadow-sm overflow-hidden hover:ring-2 hover:ring-orange-200 transition-all">
+              <img
+                src={`https://ui-avatars.com/api/?name=${user?.full_name || 'User'}&background=f97316&color=fff&bold=true`}
+                alt="Profile"
+                className="h-full w-full object-cover"
+              />
+            </div>
           </div>
         </div>
       </header>
@@ -152,36 +152,36 @@ export const Dashboard: React.FC = () => {
           <LoadingSpinner size="lg" text="Loading dashboard analytics..." className="h-full" />
         ) : (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-             {searchQuery && (
-               <div className="mb-6 flex items-center gap-2 text-sm text-gray-500">
-                 <Search className="h-4 w-4" />
-                 Showing results for <span className="font-bold text-gray-900">"{searchQuery}"</span>
-               </div>
-             )}
-             
-             <Statistics 
-                patients={filteredPatients} 
-                detections={filteredDetections} 
-             />
-             
-             {/* Analytics Charts */}
-             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
-               <DetectionTrendsChart />
-               <CariesDistributionChart />
-             </div>
-             
-             <div className="mt-6">
-               <PatientGrowthChart />
-             </div>
+            {searchQuery && (
+              <div className="mb-6 flex items-center gap-2 text-sm text-gray-500">
+                <Search className="h-4 w-4" />
+                Showing results for <span className="font-bold text-gray-900">"{searchQuery}"</span>
+              </div>
+            )}
+
+            <Statistics
+              patients={filteredPatients}
+              detections={filteredDetections}
+            />
+
+            {/* Analytics Charts */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+              <DetectionTrendsChart />
+              <CariesDistributionChart />
+            </div>
+
+            <div className="mt-6">
+              <PatientGrowthChart />
+            </div>
           </div>
         )}
       </main>
-      
+
       {/* Calendar Modal */}
       {showCalendar && (
-        <CalendarModal 
-          isOpen={showCalendar} 
-          onClose={() => setShowCalendar(false)} 
+        <CalendarModal
+          isOpen={showCalendar}
+          onClose={() => setShowCalendar(false)}
         />
       )}
     </div>

@@ -53,7 +53,7 @@ export const Detection: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F4F7FE] p-8">
+    <div className="min-h-screen bg-orange-50 p-8">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
@@ -81,19 +81,19 @@ export const Detection: React.FC = () => {
       ) : (
         <div className="grid grid-cols-12 gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
           <div className="col-span-12 lg:col-span-7 space-y-8">
-             <AnnotatedImage detection={currentDetection} />
-             <div className="flex gap-4">
-                <Button variant="outline" className="flex-1 h-12 rounded-xl bg-white border-none shadow-sm text-slate-600 hover:text-orange-600" onClick={() => navigate(`/patients/${currentDetection.patient_id}`)}>
-                    View Patient History
-                </Button>
-                <Button className="flex-1 h-12 rounded-xl bg-orange-600 text-white shadow-lg shadow-orange-200 hover:bg-orange-700" onClick={() => navigate(`/detection/${currentDetection.id}`)}>
-                    View Full Report
-                </Button>
-             </div>
+            <AnnotatedImage detection={currentDetection} />
+            <div className="flex gap-4">
+              <Button variant="outline" className="flex-1 h-12 rounded-xl bg-white border-none shadow-sm text-slate-600 hover:text-orange-600" onClick={() => navigate(`/patients/${currentDetection.patient_id}`)}>
+                View Patient History
+              </Button>
+              <Button className="flex-1 h-12 rounded-xl bg-orange-600 text-white shadow-lg shadow-orange-200 hover:bg-orange-700" onClick={() => navigate(`/detection/${currentDetection.id}`)}>
+                View Full Report
+              </Button>
+            </div>
           </div>
           <div className="col-span-12 lg:col-span-5 space-y-8">
-             <DetectionResult detection={currentDetection} />
-             <SeverityChart detection={currentDetection} />
+            <DetectionResult detection={currentDetection} />
+            <SeverityChart detection={currentDetection} />
           </div>
         </div>
       )}

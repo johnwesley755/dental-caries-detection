@@ -5,15 +5,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Badge } from '../components/ui/badge';
-import { 
-  UserPlus, 
-  Trash2, 
-  Mail, 
-  Shield, 
-  CheckCircle2, 
-  Copy, 
-  MoreHorizontal, 
-  Search 
+import {
+  UserPlus,
+  Trash2,
+  Mail,
+  Shield,
+  CheckCircle2,
+  Copy,
+  Search
 } from 'lucide-react';
 import { adminService, type CreateUserRequest } from '../services/adminService';
 import { useAuth } from '../contexts/AuthContext';
@@ -30,7 +29,7 @@ export const UserManagement: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  
+
   const [formData, setFormData] = useState<CreateUserRequest>({
     email: '',
     full_name: '',
@@ -59,7 +58,7 @@ export const UserManagement: React.FC = () => {
     e.preventDefault();
     try {
       const result = await adminService.createUser(formData);
-      
+
       if (result.password) {
         setGeneratedPassword(result.password);
       } else {
@@ -104,14 +103,14 @@ export const UserManagement: React.FC = () => {
     }
   };
 
-  const filteredUsers = users.filter(u => 
-    u.full_name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+  const filteredUsers = users.filter(u =>
+    u.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     u.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   if (user?.role !== UserRole.ADMIN) {
     return (
-      <div className="min-h-screen bg-[#F4F7FE] flex items-center justify-center p-4">
+      <div className="min-h-screen bg-orange-50 flex items-center justify-center p-4">
         <Card className="max-w-md w-full border-none shadow-lg bg-white rounded-[20px]">
           <CardContent className="py-12 text-center">
             <Shield className="h-16 w-16 text-red-500 mx-auto mb-4" />
@@ -124,7 +123,7 @@ export const UserManagement: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#F4F7FE] p-8">
+    <div className="min-h-screen bg-orange-50 p-8">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
@@ -143,18 +142,18 @@ export const UserManagement: React.FC = () => {
       {/* Main Content Card */}
       <Card className="border-none shadow-sm bg-white rounded-[20px] overflow-hidden">
         <CardHeader className="px-6 py-5 border-b border-gray-50 bg-white flex flex-row items-center justify-between">
-            <CardTitle className="text-lg font-bold text-slate-800">Registered Users</CardTitle>
-            <div className="relative w-64">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-                <Input 
-                    placeholder="Search users..." 
-                    className="pl-9 h-9 bg-slate-50 border-none rounded-lg focus:ring-1 focus:ring-orange-200"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                />
-            </div>
+          <CardTitle className="text-lg font-bold text-slate-800">Registered Users</CardTitle>
+          <div className="relative w-64">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <Input
+              placeholder="Search users..."
+              className="pl-9 h-9 bg-slate-50 border-none rounded-lg focus:ring-1 focus:ring-orange-200"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
         </CardHeader>
-        
+
         <CardContent className="p-0">
           {isLoading ? (
             <LoadingSpinner size="lg" />
@@ -175,10 +174,10 @@ export const UserManagement: React.FC = () => {
                     <TableRow key={u.id} className="border-gray-50 hover:bg-orange-50/30 transition-colors group">
                       <TableCell className="pl-6 font-medium text-slate-700">
                         <div className="flex items-center gap-3">
-                            <div className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 font-bold text-xs">
-                                {u.full_name.charAt(0)}
-                            </div>
-                            {u.full_name}
+                          <div className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 font-bold text-xs">
+                            {u.full_name.charAt(0)}
+                          </div>
+                          {u.full_name}
                         </div>
                       </TableCell>
                       <TableCell className="text-slate-500">{u.email}</TableCell>
@@ -215,39 +214,39 @@ export const UserManagement: React.FC = () => {
         <DialogContent className="max-w-md bg-white rounded-[24px] p-0 border-none shadow-2xl overflow-hidden">
           <DialogHeader className="px-8 pt-8 pb-4 bg-white">
             <DialogTitle className="text-2xl font-bold text-slate-800">
-                {generatedPassword ? 'User Created' : 'New Team Member'}
+              {generatedPassword ? 'User Created' : 'New Team Member'}
             </DialogTitle>
           </DialogHeader>
-          
+
           <div className="px-8 pb-8">
             {generatedPassword ? (
               <div className="space-y-6">
                 <div className="bg-emerald-50 rounded-2xl p-6 text-center border border-emerald-100">
-                    <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <CheckCircle2 className="h-8 w-8 text-emerald-600" />
-                    </div>
-                    <h3 className="text-lg font-bold text-emerald-900">Success!</h3>
-                    <p className="text-emerald-700 mt-1 text-sm">Account created successfully.</p>
+                  <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <CheckCircle2 className="h-8 w-8 text-emerald-600" />
+                  </div>
+                  <h3 className="text-lg font-bold text-emerald-900">Success!</h3>
+                  <p className="text-emerald-700 mt-1 text-sm">Account created successfully.</p>
                 </div>
-                
+
                 <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100 space-y-4">
-                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Login Credentials</h4>
-                    <div>
-                        <label className="text-xs text-slate-400">Email</label>
-                        <div className="font-medium text-slate-700">{formData.email}</div>
+                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Login Credentials</h4>
+                  <div>
+                    <label className="text-xs text-slate-400">Email</label>
+                    <div className="font-medium text-slate-700">{formData.email}</div>
+                  </div>
+                  <div>
+                    <label className="text-xs text-slate-400">Temporary Password</label>
+                    <div className="flex items-center justify-between bg-white p-3 rounded-xl border border-slate-200 mt-1">
+                      <code className="text-orange-600 font-bold font-mono text-lg">{generatedPassword}</code>
+                      <Button size="icon" variant="ghost" className="h-8 w-8 text-slate-400 hover:text-orange-600" onClick={() => {
+                        navigator.clipboard.writeText(generatedPassword);
+                        toast.success('Password copied');
+                      }}>
+                        <Copy className="h-4 w-4" />
+                      </Button>
                     </div>
-                    <div>
-                        <label className="text-xs text-slate-400">Temporary Password</label>
-                        <div className="flex items-center justify-between bg-white p-3 rounded-xl border border-slate-200 mt-1">
-                            <code className="text-orange-600 font-bold font-mono text-lg">{generatedPassword}</code>
-                            <Button size="icon" variant="ghost" className="h-8 w-8 text-slate-400 hover:text-orange-600" onClick={() => {
-                                navigator.clipboard.writeText(generatedPassword);
-                                toast.success('Password copied');
-                            }}>
-                                <Copy className="h-4 w-4" />
-                            </Button>
-                        </div>
-                    </div>
+                  </div>
                 </div>
 
                 <Button onClick={() => {
@@ -261,63 +260,63 @@ export const UserManagement: React.FC = () => {
             ) : (
               <form onSubmit={handleCreateUser} className="space-y-5">
                 <div className="space-y-4">
-                    <div>
-                        <Label className="text-slate-500 font-medium ml-1">Full Name</Label>
-                        <Input
-                            id="full_name"
-                            value={formData.full_name}
-                            onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
-                            required
-                            className="mt-1.5 bg-slate-50 border-none h-11 rounded-xl focus:ring-2 focus:ring-orange-100"
-                            placeholder="e.g. Dr. Sarah Smith"
-                        />
-                    </div>
+                  <div>
+                    <Label className="text-slate-500 font-medium ml-1">Full Name</Label>
+                    <Input
+                      id="full_name"
+                      value={formData.full_name}
+                      onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
+                      required
+                      className="mt-1.5 bg-slate-50 border-none h-11 rounded-xl focus:ring-2 focus:ring-orange-100"
+                      placeholder="e.g. Dr. Sarah Smith"
+                    />
+                  </div>
 
-                    <div>
-                        <Label className="text-slate-500 font-medium ml-1">Email Address</Label>
-                        <Input
-                            id="email"
-                            type="email"
-                            value={formData.email}
-                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                            required
-                            className="mt-1.5 bg-slate-50 border-none h-11 rounded-xl focus:ring-2 focus:ring-orange-100"
-                            placeholder="sarah@clinic.com"
-                        />
-                    </div>
+                  <div>
+                    <Label className="text-slate-500 font-medium ml-1">Email Address</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      required
+                      className="mt-1.5 bg-slate-50 border-none h-11 rounded-xl focus:ring-2 focus:ring-orange-100"
+                      placeholder="sarah@clinic.com"
+                    />
+                  </div>
 
-                    <div>
-                        <Label className="text-slate-500 font-medium ml-1">Role</Label>
-                        <Select
-                            value={formData.role}
-                            onValueChange={(value: any) => setFormData({ ...formData, role: value })}
-                        >
-                            <SelectTrigger className="mt-1.5 bg-slate-50 border-none h-11 rounded-xl focus:ring-2 focus:ring-orange-100">
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value={UserRole.DENTIST}>Dentist</SelectItem>
-                                <SelectItem value={UserRole.ASSISTANT}>Assistant</SelectItem>
-                                <SelectItem value={UserRole.ADMIN}>Administrator</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
+                  <div>
+                    <Label className="text-slate-500 font-medium ml-1">Role</Label>
+                    <Select
+                      value={formData.role}
+                      onValueChange={(value: any) => setFormData({ ...formData, role: value })}
+                    >
+                      <SelectTrigger className="mt-1.5 bg-slate-50 border-none h-11 rounded-xl focus:ring-2 focus:ring-orange-100">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value={UserRole.DENTIST}>Dentist</SelectItem>
+                        <SelectItem value={UserRole.ASSISTANT}>Assistant</SelectItem>
+                        <SelectItem value={UserRole.ADMIN}>Administrator</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
 
                 <div className="bg-orange-50/50 p-4 rounded-xl border border-orange-100">
-                    <div className="flex items-center space-x-3">
-                        <input
-                            type="checkbox"
-                            id="send_email"
-                            checked={formData.send_email}
-                            onChange={(e) => setFormData({ ...formData, send_email: e.target.checked })}
-                            className="w-5 h-5 rounded text-orange-600 focus:ring-orange-500 border-gray-300"
-                        />
-                        <Label htmlFor="send_email" className="cursor-pointer text-slate-700 font-medium flex items-center">
-                            <Mail className="h-4 w-4 mr-2 text-slate-500" />
-                            Email credentials to user
-                        </Label>
-                    </div>
+                  <div className="flex items-center space-x-3">
+                    <input
+                      type="checkbox"
+                      id="send_email"
+                      checked={formData.send_email}
+                      onChange={(e) => setFormData({ ...formData, send_email: e.target.checked })}
+                      className="w-5 h-5 rounded text-orange-600 focus:ring-orange-500 border-gray-300"
+                    />
+                    <Label htmlFor="send_email" className="cursor-pointer text-slate-700 font-medium flex items-center">
+                      <Mail className="h-4 w-4 mr-2 text-slate-500" />
+                      Email credentials to user
+                    </Label>
+                  </div>
                 </div>
 
                 <div className="flex gap-3 pt-2">

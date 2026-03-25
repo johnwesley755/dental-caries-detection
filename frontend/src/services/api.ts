@@ -1,5 +1,5 @@
 // frontend/src/services/api.ts
-import axios, {type AxiosInstance, AxiosError } from 'axios';
+import axios, { type AxiosInstance, AxiosError } from 'axios';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
@@ -9,9 +9,6 @@ class ApiService {
   constructor() {
     this.api = axios.create({
       baseURL: `${API_BASE_URL}/api/v1`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
       withCredentials: true, // Enable CORS credentials
     });
 

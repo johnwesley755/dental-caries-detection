@@ -12,7 +12,7 @@ import { Label } from '../components/ui/label';
 import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
-import { Mail, CheckCircle2, Copy, Loader2 } from 'lucide-react'; // Added Loader2
+import { Mail, CheckCircle2, Copy } from 'lucide-react';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
 
 export const Patients: React.FC = () => {
@@ -20,7 +20,7 @@ export const Patients: React.FC = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
-  
+
   // NEW: State to track form submission status
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -67,10 +67,10 @@ export const Patients: React.FC = () => {
 
   const handleAddPatient = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // 1. Start Loading
     setIsSubmitting(true);
-    
+
     try {
       const dataToSend = {
         ...formData,
@@ -81,10 +81,10 @@ export const Patients: React.FC = () => {
       };
 
       const result = await adminService.createPatientWithAccount(dataToSend);
-      
+
       if (result.password) {
         setGeneratedPassword(result.password);
-        
+
         // Send email via EmailJS if checkbox was checked
         if (formData.send_email && formData.create_account) {
           try {
@@ -95,11 +95,11 @@ export const Patients: React.FC = () => {
               user_email: formData.email,
               user_password: result.password,
               user_role: 'PATIENT',
-              portal_url: window.location.origin.includes('localhost') 
-                ? 'http://localhost:5174' 
+              portal_url: window.location.origin.includes('localhost')
+                ? 'http://localhost:5174'
                 : 'https://dental-caries-detection-patients.vercel.app'
             });
-            
+
             if (emailSent) {
               toast.success('Patient created and credentials sent via email!');
             } else {
@@ -145,7 +145,7 @@ export const Patients: React.FC = () => {
   const isAdmin = user?.role === UserRole.ADMIN;
 
   return (
-    <div className="min-h-screen bg-[#F4F7FE] p-8">
+    <div className="min-h-screen bg-orange-50 p-8">
       {/* Reusing the styled PatientList component */}
       <PatientList
         patients={patients}
@@ -165,47 +165,47 @@ export const Patients: React.FC = () => {
               {generatedPassword ? 'Registration Complete' : 'Register New Patient'}
             </DialogTitle>
           </DialogHeader>
-          
+
           <div className="px-8 pb-8 max-h-[70vh] overflow-y-auto custom-scrollbar">
             {generatedPassword ? (
               <div className="space-y-6">
                 <div className="bg-emerald-50 rounded-2xl p-6 text-center border border-emerald-100">
-                    <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <CheckCircle2 className="h-8 w-8 text-emerald-600" />
-                    </div>
-                    <h3 className="text-lg font-bold text-emerald-900">Success!</h3>
-                    <p className="text-emerald-700 mt-1">Patient account has been successfully created.</p>
+                  <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <CheckCircle2 className="h-8 w-8 text-emerald-600" />
+                  </div>
+                  <h3 className="text-lg font-bold text-emerald-900">Success!</h3>
+                  <p className="text-emerald-700 mt-1">Patient account has been successfully created.</p>
                 </div>
 
                 {formData.create_account && (
                   <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
                     <h4 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">Account Credentials</h4>
                     <div className="space-y-4">
-                        <div>
-                            <label className="text-xs text-slate-400">Login Email</label>
-                            <div className="flex items-center justify-between bg-white p-3 rounded-xl border border-slate-200">
-                                <code className="text-slate-700 font-medium">{formData.email}</code>
-                            </div>
+                      <div>
+                        <label className="text-xs text-slate-400">Login Email</label>
+                        <div className="flex items-center justify-between bg-white p-3 rounded-xl border border-slate-200">
+                          <code className="text-slate-700 font-medium">{formData.email}</code>
                         </div>
-                        <div>
-                            <label className="text-xs text-slate-400">Temporary Password</label>
-                            <div className="flex items-center justify-between bg-white p-3 rounded-xl border border-slate-200">
-                                <code className="text-orange-600 font-bold text-lg">{generatedPassword}</code>
-                                <Button size="icon" variant="ghost" className="h-8 w-8 text-slate-400 hover:text-orange-600" onClick={() => {
-                                    navigator.clipboard.writeText(generatedPassword);
-                                    toast.success('Password copied');
-                                }}>
-                                    <Copy className="h-4 w-4" />
-                                </Button>
-                            </div>
+                      </div>
+                      <div>
+                        <label className="text-xs text-slate-400">Temporary Password</label>
+                        <div className="flex items-center justify-between bg-white p-3 rounded-xl border border-slate-200">
+                          <code className="text-orange-600 font-bold text-lg">{generatedPassword}</code>
+                          <Button size="icon" variant="ghost" className="h-8 w-8 text-slate-400 hover:text-orange-600" onClick={() => {
+                            navigator.clipboard.writeText(generatedPassword);
+                            toast.success('Password copied');
+                          }}>
+                            <Copy className="h-4 w-4" />
+                          </Button>
                         </div>
+                      </div>
                     </div>
                     <p className="text-xs text-slate-400 mt-4 text-center">
-                        Please share these credentials with the patient securely.
+                      Please share these credentials with the patient securely.
                     </p>
                   </div>
                 )}
-                
+
                 <Button onClick={() => {
                   setShowAddModal(false);
                   resetForm();
@@ -342,19 +342,19 @@ export const Patients: React.FC = () => {
                 </div>
 
                 <div className="flex gap-3 pt-4">
-                  <Button 
-                    type="button" 
-                    variant="ghost" 
-                    onClick={() => setShowAddModal(false)} 
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={() => setShowAddModal(false)}
                     className="flex-1 h-12 rounded-xl text-slate-500 hover:bg-slate-50"
                     disabled={isSubmitting}
                   >
                     Cancel
                   </Button>
-                  
+
                   {/* UPDATE: Button now handles Loading State */}
-                  <Button 
-                    type="submit" 
+                  <Button
+                    type="submit"
                     className="flex-[2] h-12 rounded-xl bg-orange-600 hover:bg-orange-700 text-white shadow-lg shadow-orange-200"
                     disabled={isSubmitting}
                   >

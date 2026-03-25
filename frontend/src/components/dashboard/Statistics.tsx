@@ -27,11 +27,11 @@ interface StatisticsProps {
 
 export const Statistics: React.FC<StatisticsProps> = ({ patients, detections }) => {
   const navigate = useNavigate();
-  
+
   // --- Data Processing ---
   const totalPatients = patients.length;
   const totalDetections = detections.length;
-  
+
   // Recent detections for the "Table" section
   const recentDetections = detections
     .sort((a, b) => new Date(b.detection_date).getTime() - new Date(a.detection_date).getTime())
@@ -41,12 +41,12 @@ export const Statistics: React.FC<StatisticsProps> = ({ patients, detections }) 
   const chartData = useMemo(() => {
     const data = [];
     const today = new Date();
-    const daysToShow = 14; 
-    
+    const daysToShow = 14;
+
     for (let i = daysToShow - 1; i >= 0; i--) {
       const d = new Date(today);
       d.setDate(today.getDate() - i);
-      
+
       // Label: "Nov 15"
       const dateLabel = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
       // Key: "2023-11-15" for comparison
@@ -71,14 +71,14 @@ export const Statistics: React.FC<StatisticsProps> = ({ patients, detections }) 
 
   // 2. GAUGE / SCAN RATE LOGIC
   const rawRate = totalPatients > 0 ? Math.round((totalDetections / totalPatients) * 100) : 0;
-  const visualRate = Math.min(rawRate, 100); 
-  
+  const visualRate = Math.min(rawRate, 100);
+
   const pieData = [
     { name: 'Scanned', value: visualRate },
     { name: 'Remaining', value: 100 - visualRate },
   ];
-  
-  const PIE_COLORS = ['#3B82F6', '#F1F5F9'];
+
+  const PIE_COLORS = ['#f97316', '#F1F5F9'];
 
   // --- Components ---
 
@@ -99,10 +99,10 @@ export const Statistics: React.FC<StatisticsProps> = ({ patients, detections }) 
         <h3 className="text-3xl font-bold text-slate-800 tracking-tight">{value}</h3>
         <p className="text-sm text-slate-400 font-medium mt-1">{title}</p>
         <div className="mt-4 pt-4 border-t border-gray-50 flex items-center gap-2">
-           <div className="h-1.5 flex-1 bg-gray-100 rounded-full overflow-hidden">
-              <div className="h-full bg-orange-500 rounded-full" style={{ width: '65%' }}></div>
-           </div>
-           <span className="text-xs text-gray-400">65% Target</span>
+          <div className="h-1.5 flex-1 bg-gray-100 rounded-full overflow-hidden">
+            <div className="h-full bg-orange-500 rounded-full" style={{ width: '65%' }}></div>
+          </div>
+          <span className="text-xs text-gray-400">65% Target</span>
         </div>
       </CardContent>
     </Card>
@@ -110,22 +110,22 @@ export const Statistics: React.FC<StatisticsProps> = ({ patients, detections }) 
 
   return (
     <div className="grid grid-cols-12 gap-6">
-      
+
       {/* LEFT COLUMN: KPI STACK */}
       <div className="col-span-12 lg:col-span-3 flex flex-col gap-6">
-        <KPICard 
-          title="Total Patients" 
-          value={totalPatients} 
-          trend={12} 
-          icon={User} 
+        <KPICard
+          title="Total Patients"
+          value={totalPatients}
+          trend={12}
+          icon={User}
         />
-        <KPICard 
-          title="Total Analyses" 
-          value={totalDetections} 
-          trend={8.5} 
-          icon={FileText} 
+        <KPICard
+          title="Total Analyses"
+          value={totalDetections}
+          trend={8.5}
+          icon={FileText}
         />
-        
+
         {/* Simplified Summary Card */}
         <Card className="border-none shadow-sm bg-orange-600 text-white rounded-[20px] relative overflow-hidden mt-auto">
           <CardContent className="p-6 relative z-10">
@@ -141,7 +141,7 @@ export const Statistics: React.FC<StatisticsProps> = ({ patients, detections }) 
 
       {/* RIGHT COLUMN: MAIN CONTENT */}
       <div className="col-span-12 lg:col-span-9 flex flex-col gap-6">
-        
+
         {/* TOP ROW: LARGE LINE/AREA CHART */}
         <Card className="border-none shadow-sm bg-white rounded-[20px] overflow-hidden">
           <CardContent className="p-6">
@@ -159,35 +159,35 @@ export const Statistics: React.FC<StatisticsProps> = ({ patients, detections }) 
                 <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                   <defs>
                     <linearGradient id="colorDetections" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#3B82F6" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="#f97316" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="#f97316" stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
-                  <XAxis 
-                    dataKey="date" 
-                    axisLine={false} 
-                    tickLine={false} 
-                    tick={{fill: '#94A3B8', fontSize: 12}} 
-                    dy={10} 
+                  <XAxis
+                    dataKey="date"
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fill: '#94A3B8', fontSize: 12 }}
+                    dy={10}
                     interval="preserveStartEnd"
                   />
-                  <YAxis 
-                    axisLine={false} 
-                    tickLine={false} 
-                    tick={{fill: '#94A3B8', fontSize: 12}} 
+                  <YAxis
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fill: '#94A3B8', fontSize: 12 }}
                     allowDecimals={false}
                   />
-                  <Tooltip 
+                  <Tooltip
                     contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
                   />
-                  <Area 
-                    type="monotone" 
-                    dataKey="detections" 
-                    stroke="#3B82F6" 
-                    strokeWidth={3} 
-                    fillOpacity={1} 
-                    fill="url(#colorDetections)" 
+                  <Area
+                    type="monotone"
+                    dataKey="detections"
+                    stroke="#f97316"
+                    strokeWidth={3}
+                    fillOpacity={1}
+                    fill="url(#colorDetections)"
                     animationDuration={1500}
                   />
                 </AreaChart>
@@ -198,7 +198,7 @@ export const Statistics: React.FC<StatisticsProps> = ({ patients, detections }) 
 
         {/* BOTTOM ROW: GRID */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          
+
           {/* 1. Circular Progress (Gauge) */}
           <Card className="border-none shadow-sm bg-white rounded-[20px]">
             <CardContent className="p-6 flex flex-col items-center justify-center h-full">
@@ -237,26 +237,26 @@ export const Statistics: React.FC<StatisticsProps> = ({ patients, detections }) 
               </div>
               <div className="flex flex-col">
                 {recentDetections.length === 0 ? (
-                    <div className="p-6 text-center text-sm text-gray-400">No activity</div>
+                  <div className="p-6 text-center text-sm text-gray-400">No activity</div>
                 ) : (
-                    recentDetections.map((d) => (
-                    <div 
-                        key={d.id} 
-                        className="flex items-center justify-between px-6 py-3 hover:bg-gray-50 cursor-pointer transition-colors border-l-2 border-transparent hover:border-orange-500"
-                        onClick={() => navigate(`/detection/${d.id}`)}
+                  recentDetections.map((d) => (
+                    <div
+                      key={d.id}
+                      className="flex items-center justify-between px-6 py-3 hover:bg-gray-50 cursor-pointer transition-colors border-l-2 border-transparent hover:border-orange-500"
+                      onClick={() => navigate(`/detection/${d.id}`)}
                     >
-                        <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-3">
                         <div className={`h-2 w-2 rounded-full ${d.total_caries_detected > 0 ? 'bg-red-500' : 'bg-green-500'}`}></div>
                         <div>
-                            <p className="text-sm font-semibold text-slate-700">{d.detection_id.substring(0, 8)}</p>
-                            <p className="text-xs text-slate-400">{new Date(d.detection_date).toLocaleDateString()}</p>
+                          <p className="text-sm font-semibold text-slate-700">{d.detection_id.substring(0, 8)}</p>
+                          <p className="text-xs text-slate-400">{new Date(d.detection_date).toLocaleDateString()}</p>
                         </div>
-                        </div>
-                        <span className="text-xs font-medium text-slate-600 bg-slate-100 px-2 py-1 rounded-md">
+                      </div>
+                      <span className="text-xs font-medium text-slate-600 bg-slate-100 px-2 py-1 rounded-md">
                         {d.total_caries_detected} Caries
-                        </span>
+                      </span>
                     </div>
-                    ))
+                  ))
                 )}
               </div>
             </CardContent>
@@ -269,9 +269,9 @@ export const Statistics: React.FC<StatisticsProps> = ({ patients, detections }) 
               <div className="h-[140px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={chartData}>
-                    <Bar dataKey="caries" fill="#3B82F6" radius={[4, 4, 4, 4]} barSize={8} />
+                    <Bar dataKey="caries" fill="#f97316" radius={[4, 4, 4, 4]} barSize={8} />
                     <Bar dataKey="detections" fill="#E2E8F0" radius={[4, 4, 4, 4]} barSize={8} />
-                    <Tooltip cursor={{fill: 'transparent'}} contentStyle={{ borderRadius: '8px', border: 'none' }} />
+                    <Tooltip cursor={{ fill: 'transparent' }} contentStyle={{ borderRadius: '8px', border: 'none' }} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
