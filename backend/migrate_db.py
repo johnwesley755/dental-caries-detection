@@ -7,8 +7,8 @@ from app.models import (
     Conversation, Message, ChatMessage
 )
 
-local_db_url = "postgresql://dental_user:dental@123@localhost:5432/postgres"
-neon_db_url = "postgresql://neondb_owner:npg_P0LSRcwUetV5@ep-orange-term-ah7lzul9-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require"
+local_db_url = "postgresql://postgres@localhost:5432/dental-caries"
+neon_db_url = "postgresql://neondb_owner:npg_P0LSRcwUetV5@ep-orange-term-ah7lzul9-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
 
 print("1. Creating native tables using SQLAlchemy (Bulletproof Schema Creation)...")
 try:
@@ -39,14 +39,14 @@ except subprocess.CalledProcessError as e:
 
 print("\n3. Injecting data into local PostgreSQL...")
 env = os.environ.copy()
-env["PGPASSWORD"] = "dental@123"
+# env["PGPASSWORD"] = "dental@123" # assuming local trust auth or no password
 
 restore_command = [
     "psql",
     "-h", "localhost",
     "-p", "5432",
-    "-U", "dental_user",
-    "-d", "dental_db",
+    "-U", "postgres",
+    "-d", "dental-caries",
     "-f", "neon_data_only.sql"
 ]
 

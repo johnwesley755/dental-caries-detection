@@ -2,10 +2,10 @@
 -- PostgreSQL database dump
 --
 
-\restrict bLd7EUU8R1WCbVGY6mTZMDjCvX4gk6tuvvWEZufCGYVIrclvpgXsCeSF3KEqQNe
+\restrict BvB8PLN7tPgx663rjTC0lH9LjrfqdxhfzdZA1tGQgnhbSoCL0mYyAcrLlDkXYVd
 
 -- Dumped from database version 17.8 (a284a84)
--- Dumped by pg_dump version 18.3 (Debian 18.3-1.pgdg12+1)
+-- Dumped by pg_dump version 17.9
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -693,5 +693,5 @@ INSERT INTO public.resources (id, title, description, content, category, resourc
 -- PostgreSQL database dump complete
 --
 
-\unrestrict bLd7EUU8R1WCbVGY6mTZMDjCvX4gk6tuvvWEZufCGYVIrclvpgXsCeSF3KEqQNe
+\unrestrict BvB8PLN7tPgx663rjTC0lH9LjrfqdxhfzdZA1tGQgnhbSoCL0mYyAcrLlDkXYVd
 

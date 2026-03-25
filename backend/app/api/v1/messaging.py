@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import or_, desc, func
 from typing import List, Optional
-from datetime import datetime
+from datetime import datetime, timezone
 import uuid
 import os
 import shutil
@@ -148,6 +148,20 @@ async def get_conversations(
             Message.conversation_id == conv.id
         ).order_by(desc(Message.created_at)).first()
         
+        last_message_preview = None
+        if last_msg:
+            if last_msg.content:
+                last_message_preview = last_msg.content
+            elif last_msg.file_url:
+                if last_msg.file_type and last_msg.file_type.startswith('image/'):
+                    last_message_preview = "📷 Photo"
+                else:
+                    last_message_preview = f"📎 {last_msg.file_name or 'File'}"
+            elif last_msg.detection_id:
+                last_message_preview = "🔍 New Detection"
+            else:
+                last_message_preview = "Sent a message"
+
         result.append(ConversationResponse(
             id=str(conv.id),
             patient_id=str(conv.patient_id),
@@ -157,7 +171,7 @@ async def get_conversations(
             other_user_name=other_user.full_name if other_user else "Deleted User",
             other_user_role=other_user.role.value if other_user else "UNKNOWN",
             unread_count=unread_count,
-            last_message=last_msg.content if last_msg else None
+            last_message=last_message_preview
         ))
     
     return result
@@ -246,13 +260,15 @@ async def send_message(
         sender_id=current_user.id,
         receiver_id=receiver_id,
         content=message_data.content,
-        detection_id=uuid.UUID(message_data.detection_id) if message_data.detection_id else None
+        detection_id=uuid.UUID(message_data.detection_id) if message_data.detection_id else None,
+        is_read=False,
+        created_at=datetime.now(timezone.utc)
     )
     
     db.add(message)
     
     # Update conversation last_message_at
-    conversation.last_message_at = datetime.utcnow()
+    conversation.last_message_at = datetime.now(timezone.utc)
     
     db.commit()
     db.refresh(message)
@@ -348,13 +364,15 @@ async def send_message_with_file(
         file_name=file_data["file_name"],
         file_type=file_data["file_type"],
         file_size=file_data["file_size"],
-        detection_id=uuid.UUID(detection_id) if detection_id else None
+        detection_id=uuid.UUID(detection_id) if detection_id else None,
+        is_read=False,
+        created_at=datetime.now(timezone.utc)
     )
     
     db.add(message)
     
     # Update conversation last_message_at
-    conversation.last_message_at = datetime.utcnow()
+    conversation.last_message_at = datetime.now(timezone.utc)
     
     db.commit()
     db.refresh(message)

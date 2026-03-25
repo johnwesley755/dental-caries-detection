@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { messagingService } from '../services/messagingService';
 import type { Conversation, Message } from '../services/messagingService';
-import { MessageCircle, Send, Paperclip, X, FileText, Image as ImageIcon, Download, Loader2, Search, UserCircle } from 'lucide-react';
+import { MessageCircle, Send, Paperclip, X, FileText, Image as ImageIcon, Download, Loader2, Search, UserCircle, Check, CheckCheck } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { useAuth } from '../contexts/AuthContext';
 import { patientService } from '../services/patientService';
@@ -223,6 +223,19 @@ export const Messages: React.FC = () => {
     return <FileText className="h-5 w-5" />;
   };
 
+  const getFileUrl = (url: string) => {
+    if (!url) return '';
+    let finalUrl = '';
+    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('//')) {
+      finalUrl = url.startsWith('//') ? `https:${url}` : url;
+    } else {
+      const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+      finalUrl = `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
+    }
+    console.log('File Access:', { original: url, resolved: finalUrl });
+    return finalUrl;
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen bg-gray-50">
@@ -235,7 +248,7 @@ export const Messages: React.FC = () => {
   }
 
   return (
-    <div className="h-[calc(100vh-4rem)] lg:h-screen flex bg-gray-50 overflow-hidden">
+    <div className="h-full flex bg-gray-50 overflow-hidden">
       {/* Conversations List */}
       <div className={`
         ${showMobileChat ? 'hidden' : 'flex'} 
@@ -325,63 +338,89 @@ export const Messages: React.FC = () => {
 
             {/* Messages Area */}
             <div className="flex-1 overflow-y-auto p-4 lg:p-6 space-y-6 bg-[#f8fbff]">
-              {messages.map((message) => {
+              {messages.map((message, index) => {
                 const isOwn = message.sender_id === user?.id;
-                return (
-                  <div key={message.id} className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}>
-                    <div className={`max-w-[85%] lg:max-w-[70%] ${isOwn ? 'items-end' : 'items-start'} flex flex-col group`}>
-                      <div
-                        className={`rounded-2xl px-4 py-3 shadow-sm transition-all duration-200 ${isOwn
-                          ? 'bg-teal-600 text-white rounded-tr-none'
-                          : 'bg-white border border-gray-100 text-gray-900 rounded-tl-none'
-                          }`}
-                      >
-                        {message.content && <p className="text-sm leading-relaxed">{message.content}</p>}
+                const prevMessage = index > 0 ? messages[index - 1] : null;
+                const showDateHeader = !prevMessage || 
+                  new Date(message.created_at).toDateString() !== new Date(prevMessage.created_at).toDateString();
 
-                        {message.file_url && (
-                          <div className="mt-3">
-                            {message.file_type?.startsWith('image/') ? (
-                              <div className="relative group/img overflow-hidden rounded-lg">
-                                <img
-                                  src={`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}${message.file_url}`}
-                                  alt={message.file_name}
-                                  className="max-w-full rounded-lg transition-transform duration-300 group-hover/img:scale-105"
-                                />
-                                <div className="absolute inset-0 bg-black/0 group-hover/img:bg-black/10 transition-colors flex items-center justify-center">
-                                  <a
-                                    href={`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}${message.file_url}`}
-                                    download
-                                    className="p-2 bg-white/90 rounded-full opacity-0 group-hover/img:opacity-100 transition-opacity shadow-lg"
-                                  >
-                                    <Download className="h-4 w-4 text-teal-600" />
-                                  </a>
-                                </div>
-                              </div>
-                            ) : (
-                              <a
-                                href={`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}${message.file_url}`}
-                                download={message.file_name}
-                                className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${isOwn ? 'bg-teal-700 text-white' : 'bg-teal-50 text-teal-900 border border-teal-100'
-                                  }`}
-                              >
-                                <div className={`p-2 rounded-lg ${isOwn ? 'bg-teal-800' : 'bg-white shadow-sm'}`}>
-                                  {getFileIcon(message.file_type)}
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                  <p className="text-xs font-bold truncate">{message.file_name}</p>
-                                  <p className="text-[10px] opacity-70">Download File</p>
-                                </div>
-                                <Download className="h-4 w-4 opacity-50" />
-                              </a>
-                            )}
-                          </div>
-                        )}
+                return (
+                  <React.Fragment key={message.id}>
+                    {showDateHeader && (
+                      <div className="flex justify-center my-8">
+                        <div className="bg-white/80 backdrop-blur shadow-sm border border-gray-100 text-gray-500 text-[10px] font-bold px-4 py-1.5 rounded-full uppercase tracking-widest leading-none">
+                          {formatDate(message.created_at)}
+                        </div>
                       </div>
-                      <span className="text-[10px] font-bold text-gray-400 mt-1 uppercase opacity-0 group-hover:opacity-100 transition-opacity">
-                        {formatTime(message.created_at)}
-                      </span>
+                    )}
+                    <div className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}>
+                      <div className={`max-w-[85%] lg:max-w-[70%] ${isOwn ? 'items-end' : 'items-start'} flex flex-col group`}>
+                        <div
+                          className={`rounded-2xl px-4 py-3 shadow-sm transition-all duration-200 ${isOwn
+                            ? 'bg-teal-600 text-white rounded-tr-none'
+                            : 'bg-white border border-gray-100 text-gray-900 rounded-tl-none'
+                            }`}
+                        >
+                          {message.content && <p className="text-sm leading-relaxed">{message.content}</p>}
+
+                          {message.file_url && (
+                            <div className="mt-3">
+                              {message.file_type?.startsWith('image/') ? (
+                                <div className="relative group/img overflow-hidden rounded-lg">
+                                  <img
+                                    src={getFileUrl(message.file_url)}
+                                    alt={message.file_name}
+                                    className="max-w-full rounded-lg transition-transform duration-300 group-hover/img:scale-105"
+                                  />
+                                  <div className="absolute inset-0 bg-black/0 group-hover/img:bg-black/10 transition-colors flex items-center justify-center">
+                                    <a
+                                      href={getFileUrl(message.file_url)}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="p-2 bg-white/90 rounded-full opacity-0 group-hover/img:opacity-100 transition-opacity shadow-lg"
+                                    >
+                                      <Download className="h-4 w-4 text-teal-600" />
+                                    </a>
+                                  </div>
+                                </div>
+                              ) : (
+                                <a
+                                  href={getFileUrl(message.file_url)}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${isOwn ? 'bg-teal-700 text-white' : 'bg-teal-50 text-teal-900 border border-teal-100'
+                                    }`}
+                                >
+                                  <div className={`p-2 rounded-lg ${isOwn ? 'bg-teal-800' : 'bg-white shadow-sm'}`}>
+                                    {getFileIcon(message.file_type)}
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <p className="text-xs font-bold truncate">{message.file_name}</p>
+                                    <p className="text-[10px] opacity-70">Download File</p>
+                                  </div>
+                                  <Download className="h-4 w-4 opacity-50" />
+                                </a>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-1.5 mt-1.5 px-1">
+                          <span className="text-[10px] font-bold text-gray-400 uppercase transition-opacity">
+                            {formatTime(message.created_at)}
+                          </span>
+                          {isOwn && (
+                            <div className="flex items-center">
+                              {message.is_read ? (
+                                <CheckCheck className="h-3.5 w-3.5 text-blue-500" strokeWidth={3} />
+                              ) : (
+                                <Check className="h-3.5 w-3.5 text-gray-400" strokeWidth={3} />
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  </React.Fragment>
                 );
               })}
               <div ref={messagesEndRef} />

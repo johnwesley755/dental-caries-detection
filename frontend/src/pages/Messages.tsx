@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { messagingService } from '../services/messagingService';
 import type { Conversation, Message } from '../services/messagingService';
-import { MessageCircle, Send, Paperclip, X, FileText, Image as ImageIcon, Download, Loader2, Plus } from 'lucide-react';
+import { MessageCircle, Send, Paperclip, X, FileText, Image as ImageIcon, Download, Loader2, Plus, Check, CheckCheck } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
 export const Messages: React.FC = () => {
@@ -19,6 +19,7 @@ export const Messages: React.FC = () => {
   const [showPatientSelector, setShowPatientSelector] = useState(false);
   const [patients, setPatients] = useState<any[]>([]);
   const [loadingPatients, setLoadingPatients] = useState(false);
+  const [showMobileChat, setShowMobileChat] = useState(false);
 
   // Get current user from localStorage
   const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
@@ -59,6 +60,9 @@ export const Messages: React.FC = () => {
   useEffect(() => {
     if (selectedConversation) {
       loadMessages(selectedConversation.id);
+      if (window.innerWidth < 1024) {
+        setShowMobileChat(true);
+      }
     }
   }, [selectedConversation]);
 
@@ -196,6 +200,19 @@ export const Messages: React.FC = () => {
     return <FileText className="h-5 w-5" />;
   };
 
+  const getFileUrl = (url: string) => {
+    if (!url) return '';
+    let finalUrl = '';
+    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('//')) {
+      finalUrl = url.startsWith('//') ? `https:${url}` : url;
+    } else {
+      const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+      finalUrl = `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
+    }
+    console.log('File Access:', { original: url, resolved: finalUrl });
+    return finalUrl;
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -205,9 +222,12 @@ export const Messages: React.FC = () => {
   }
 
   return (
-    <div className="h-screen flex bg-gray-50">
+    <div className="h-full flex bg-gray-50 overflow-hidden">
       {/* Conversations List */}
-      <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
+      <div className={`
+        ${showMobileChat ? 'hidden' : 'flex'} 
+        lg:flex w-full lg:w-80 bg-white border-r border-gray-200 flex-col
+      `}>
         <div className="p-4 border-b border-gray-200 flex items-center justify-between">
           <div>
             <h2 className="text-xl font-bold text-gray-900">Patient Messages</h2>
@@ -302,58 +322,94 @@ export const Messages: React.FC = () => {
       </div>
 
       {/* Chat Window */}
-      <div className="flex-1 flex flex-col">
+      <div className={`
+        ${showMobileChat ? 'flex' : 'hidden'} 
+        lg:flex flex-1 flex-col bg-white h-full relative
+      `}>
         {selectedConversation ? (
           <>
             {/* Chat Header */}
-            <div className="bg-white border-b border-gray-200 p-4">
-              <h3 className="font-semibold text-gray-900">{selectedConversation.other_user_name}</h3>
-              <p className="text-sm text-gray-500">Patient • {selectedConversation.id === 'new' ? 'Start a new conversation' : 'Active conversation'}</p>
+            <div className="bg-white border-b border-gray-200 p-4 flex items-center gap-4">
+              <button
+                onClick={() => setShowMobileChat(false)}
+                className="lg:hidden p-2 -ml-2 text-gray-500 hover:text-orange-600 transition-colors"
+              >
+                <X className="h-6 w-6" />
+              </button>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-semibold text-gray-900 truncate">{selectedConversation.other_user_name}</h3>
+                <p className="text-sm text-gray-500 truncate">Patient • {selectedConversation.id === 'new' ? 'Start a new conversation' : 'Active conversation'}</p>
+              </div>
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              {messages.map((message) => {
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50/50">
+              {messages.map((message, index) => {
                 const isOwn = message.sender_id === currentUser?.id;
-                return (
-                  <div key={message.id} className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}>
-                    <div className={`max-w-md ${isOwn ? 'items-end' : 'items-start'} flex flex-col`}>
-                      <div
-                        className={`rounded-2xl px-4 py-2 ${isOwn
-                          ? 'bg-orange-600 text-white'
-                          : 'bg-white border border-gray-200 text-gray-900'
-                          }`}
-                      >
-                        {message.content && <p className="text-sm">{message.content}</p>}
+                const prevMessage = index > 0 ? messages[index - 1] : null;
+                const showDateHeader = !prevMessage || 
+                  new Date(message.created_at).toDateString() !== new Date(prevMessage.created_at).toDateString();
 
-                        {message.file_url && (
-                          <div className="mt-2">
-                            {message.file_type?.startsWith('image/') ? (
-                              <img
-                                src={`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}${message.file_url}`}
-                                alt={message.file_name}
-                                className="rounded-lg max-w-xs"
-                              />
-                            ) : (
-                              <a
-                                href={`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}${message.file_url}`}
-                                download={message.file_name}
-                                className={`flex items-center gap-2 p-2 rounded-lg ${isOwn ? 'bg-orange-700' : 'bg-gray-50'
-                                  }`}
-                              >
-                                {getFileIcon(message.file_type)}
-                                <span className="text-sm">{message.file_name}</span>
-                                <Download className="h-4 w-4 ml-auto" />
-                              </a>
-                            )}
-                          </div>
-                        )}
+                return (
+                  <React.Fragment key={message.id}>
+                    {showDateHeader && (
+                      <div className="flex justify-center my-6">
+                        <div className="bg-gray-200 text-gray-600 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                          {formatDate(message.created_at)}
+                        </div>
                       </div>
-                      <span className="text-xs text-gray-400 mt-1">
-                        {formatTime(message.created_at)}
-                      </span>
+                    )}
+                    <div className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}>
+                      <div className={`max-w-md ${isOwn ? 'items-end' : 'items-start'} flex flex-col`}>
+                        <div
+                          className={`rounded-2xl px-4 py-2 shadow-sm ${isOwn
+                            ? 'bg-orange-600 text-white rounded-tr-none'
+                            : 'bg-white border border-gray-200 text-gray-900 rounded-tl-none'
+                            }`}
+                        >
+                          {message.content && <p className="text-sm">{message.content}</p>}
+
+                          {message.file_url && (
+                            <div className="mt-2 text-white">
+                              {message.file_type?.startsWith('image/') ? (
+                                <img
+                                  src={getFileUrl(message.file_url)}
+                                  alt={message.file_name}
+                                  className="rounded-lg max-w-xs"
+                                />
+                              ) : (
+                                <a
+                                  href={getFileUrl(message.file_url)}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className={`flex items-center gap-2 p-2 rounded-lg ${isOwn ? 'bg-orange-700' : 'bg-gray-50 text-gray-900 border border-gray-100'
+                                    }`}
+                                >
+                                  {getFileIcon(message.file_type)}
+                                  <span className="text-sm truncate max-w-[150px]">{message.file_name}</span>
+                                  <Download className="h-4 w-4 ml-auto" />
+                                </a>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-1 mt-1">
+                          <span className="text-[10px] font-bold text-gray-400 uppercase">
+                            {formatTime(message.created_at)}
+                          </span>
+                          {isOwn && (
+                            <div className="flex items-center">
+                              {message.is_read ? (
+                                <CheckCheck className="h-3 w-3 text-blue-500" strokeWidth={3} />
+                              ) : (
+                                <Check className="h-3 w-3 text-gray-400" strokeWidth={3} />
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  </React.Fragment>
                 );
               })}
               <div ref={messagesEndRef} />

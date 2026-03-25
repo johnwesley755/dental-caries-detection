@@ -50,6 +50,7 @@ class Settings(BaseSettings):
     # Server
     HOST: str = "0.0.0.0"
     PORT: int = 8000
+    DB_SSL_MODE: str = "prefer"  # 'require' for Neon, 'prefer' or 'disable' for local Postgres
     
     # CORS - Support both local and production URLs (hardcoded)
     ALLOWED_ORIGINS: str = "http://localhost:3000,http://localhost:5173,http://localhost:5174,https://dental-caries-detection.vercel.app,https://dental-caries-detection-patients.vercel.app"

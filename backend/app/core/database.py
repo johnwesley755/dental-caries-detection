@@ -12,7 +12,7 @@ engine = create_engine(
     pool_size=20,
     max_overflow=10,
     connect_args={
-        "sslmode": "require",
+        "sslmode": settings.DB_SSL_MODE,
         "connect_timeout": 10,
     }
 )
