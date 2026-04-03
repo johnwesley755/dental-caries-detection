@@ -38,7 +38,7 @@ export const DetectionResult: React.FC<DetectionResultProps> = ({ detection }) =
   
   const getSeverityBadge = (severity?: Severity) => {
     switch (severity) {
-      case Severity.MILD: return <Badge className="bg-yellow-50 text-yellow-700 hover:bg-yellow-100 border-none px-2 py-0.5 rounded-lg font-black text-[10px] uppercase">Mild</Badge>;
+      case Severity.MILD: return <Badge className="bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border-none px-2 py-0.5 rounded-lg font-black text-[10px] uppercase">Mild</Badge>;
       case Severity.MODERATE: return <Badge className="bg-primary/10 text-primary hover:bg-primary/20 border-none px-2 py-0.5 rounded-lg font-black text-[10px] uppercase">Moderate</Badge>;
       case Severity.SEVERE: return <Badge className="bg-red-50 text-red-700 hover:bg-red-100 border-none px-2 py-0.5 rounded-lg font-black text-[10px] uppercase">Severe</Badge>;
       default: return <Badge variant="outline" className="text-[10px] font-black uppercase">Unknown</Badge>;

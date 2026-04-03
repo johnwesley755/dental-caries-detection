@@ -31,7 +31,7 @@ export const MethodologySection: React.FC = () => {
   ];
 
   return (
-    <section id="methodology" className="py-20 bg-gradient-to-br from-gray-50 to-orange-50">
+    <section id="methodology" className="py-20 bg-gradient-to-br from-gray-50 to-blue-50/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -48,12 +48,12 @@ export const MethodologySection: React.FC = () => {
             return (
               <div key={index} className="relative">
                 {/* Step Number */}
-                <div className="absolute -top-4 -left-4 w-12 h-12 bg-orange-600 text-white rounded-full flex items-center justify-center font-bold text-lg shadow-lg z-10">
+                <div className="absolute -top-4 -left-4 w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center font-bold text-lg shadow-lg z-10">
                   {index + 1}
                 </div>
 
                 <div className="bg-white rounded-2xl p-6 pt-8 shadow-sm border border-gray-100 hover:shadow-md transition-all h-full">
-                  <div className="w-12 h-12 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-blue-50 text-primary flex items-center justify-center mb-4">
                     <Icon className="h-6 w-6" />
                   </div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">{step.title}</h3>
@@ -61,7 +61,7 @@ export const MethodologySection: React.FC = () => {
                   <ul className="space-y-1">
                     {step.details.map((detail, idx) => (
                       <li key={idx} className="text-xs text-gray-500 flex items-center gap-2">
-                        <div className="w-1.5 h-1.5 bg-orange-400 rounded-full" />
+                        <div className="w-1.5 h-1.5 bg-blue-400 rounded-full" />
                         {detail}
                       </li>
                     ))}

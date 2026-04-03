@@ -19,7 +19,7 @@ const Navbar: React.FC = () => {
         <div className="flex justify-between h-16">
           <div className="flex">
             <Link to="/" className="flex items-center">
-              <span className="text-2xl font-bold text-primary-600">
+              <span className="text-2xl font-bold text-primary">
                 DentalCare AI
               </span>
             </Link>
@@ -67,13 +67,13 @@ const Navbar: React.FC = () => {
                   <span className="text-sm font-semibold text-gray-900 leading-tight">
                     {user?.full_name}
                   </span>
-                  <span className="text-xs font-medium text-primary-600 uppercase tracking-wider">
+                  <span className="text-xs font-medium text-primary uppercase tracking-wider">
                     {user?.role}
                   </span>
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-colors shadow-sm"
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors shadow-sm"
                 >
                   Logout
                 </button>
@@ -81,7 +81,7 @@ const Navbar: React.FC = () => {
             ) : (
               <Link
                 to="/login"
-                className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium"
+                className="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-md text-sm font-medium"
               >
                 Login
               </Link>

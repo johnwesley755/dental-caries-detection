@@ -57,7 +57,7 @@ export const NotificationDropdown: React.FC = () => {
     try {
       const data = await notificationService.getNotifications(false, 20);
       setNotifications(data);
-    } catch (error) {
+    } catch {
       console.error('Failed to load notifications');
     } finally {
       setLoading(false);
@@ -68,7 +68,7 @@ export const NotificationDropdown: React.FC = () => {
     try {
       const count = await notificationService.getUnreadCount();
       setUnreadCount(count);
-    } catch (error) {
+    } catch {
       console.error('Failed to load unread count');
     }
   };
@@ -80,7 +80,7 @@ export const NotificationDropdown: React.FC = () => {
         prev.map(n => n.id === notificationId ? { ...n, is_read: true } : n)
       );
       setUnreadCount(prev => Math.max(0, prev - 1));
-    } catch (error) {
+    } catch {
       toast.error('Failed to mark as read');
     }
   };
@@ -91,7 +91,7 @@ export const NotificationDropdown: React.FC = () => {
       setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
       setUnreadCount(0);
       toast.success('All notifications marked as read');
-    } catch (error) {
+    } catch {
       toast.error('Failed to mark all as read');
     }
   };
@@ -101,7 +101,7 @@ export const NotificationDropdown: React.FC = () => {
       await notificationService.deleteNotification(notificationId);
       setNotifications(prev => prev.filter(n => n.id !== notificationId));
       toast.success('Notification deleted');
-    } catch (error) {
+    } catch {
       toast.error('Failed to delete notification');
     }
   };
@@ -148,21 +148,21 @@ export const NotificationDropdown: React.FC = () => {
             style={{ top: `${dropdownPosition.top}px`, left: `${dropdownPosition.left}px` }}
           >
             {/* Header */}
-            <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-gradient-to-r from-orange-50 to-yellow-50">
-              <div>
-                <h3 className="text-lg font-bold text-gray-900">Notifications</h3>
-                <p className="text-sm text-gray-500">{unreadCount} unread</p>
+            <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-gradient-to-r from-blue-50 to-indigo-50">
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900">Notifications</h3>
+                  <p className="text-sm text-gray-500">{unreadCount} unread</p>
+                </div>
+                {unreadCount > 0 && (
+                  <button
+                    onClick={handleMarkAllAsRead}
+                    className="text-sm text-primary hover:text-blue-800 font-medium flex items-center gap-1"
+                  >
+                    <CheckCheck className="h-4 w-4" />
+                    Mark all read
+                  </button>
+                )}
               </div>
-              {unreadCount > 0 && (
-                <button
-                  onClick={handleMarkAllAsRead}
-                  className="text-sm text-orange-600 hover:text-orange-700 font-medium flex items-center gap-1"
-                >
-                  <CheckCheck className="h-4 w-4" />
-                  Mark all read
-                </button>
-              )}
-            </div>
 
             {/* Notifications List */}
             <div className="overflow-y-auto flex-1">
@@ -182,7 +182,7 @@ export const NotificationDropdown: React.FC = () => {
                     <div
                       key={notification.id}
                       className={`p-4 hover:bg-gray-50 transition-colors ${
-                        !notification.is_read ? 'bg-orange-50/50' : ''
+                        !notification.is_read ? 'bg-blue-50/50' : ''
                       }`}
                     >
                       <div className="flex items-start gap-3">
@@ -206,15 +206,15 @@ export const NotificationDropdown: React.FC = () => {
                             <span className="text-xs text-gray-400">
                               {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true })}
                             </span>
-                            {!notification.is_read && (
-                              <button
-                                onClick={() => handleMarkAsRead(notification.id)}
-                                className="text-xs text-orange-600 hover:text-orange-700 font-medium flex items-center gap-1"
-                              >
-                                <Check className="h-3 w-3" />
-                                Mark read
-                              </button>
-                            )}
+                              {!notification.is_read && (
+                                <button
+                                  onClick={() => handleMarkAsRead(notification.id)}
+                                  className="text-xs text-primary hover:text-blue-800 font-medium flex items-center gap-1"
+                                >
+                                  <Check className="h-3 w-3" />
+                                  Mark read
+                                </button>
+                              )}
                           </div>
                         </div>
                       </div>
@@ -232,7 +232,7 @@ export const NotificationDropdown: React.FC = () => {
                     setIsOpen(false);
                     // Navigate to notifications page if you have one
                   }}
-                  className="w-full text-center text-sm text-orange-600 hover:text-orange-700 font-medium"
+                  className="w-full text-center text-sm text-primary hover:text-blue-800 font-medium"
                 >
                   View all notifications
                 </button>

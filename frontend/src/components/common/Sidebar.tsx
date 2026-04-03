@@ -25,6 +25,15 @@ interface SidebarProps {
   onClose?: () => void;
 }
 
+// Three dots colors
+const Dots: React.FC<{ isExpanded: boolean, setIsExpanded: (v: boolean) => void }> = ({ isExpanded, setIsExpanded }) => (
+  <div className={`flex items-center gap-2 ${isExpanded ? 'mb-8' : 'mb-8 justify-center'}`}>
+    <div className="w-3 h-3 rounded-full bg-red-400 cursor-pointer hover:bg-red-500 transition-colors" onClick={() => setIsExpanded(!isExpanded)} />
+    <div className="w-3 h-3 rounded-full bg-blue-400 cursor-pointer hover:bg-blue-500 transition-colors" onClick={() => setIsExpanded(!isExpanded)} />
+    <div className="w-3 h-3 rounded-full bg-emerald-400 cursor-pointer hover:bg-emerald-500 transition-colors" onClick={() => setIsExpanded(!isExpanded)} />
+  </div>
+);
+
 const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
   const { user, logout } = useAuth();
   const location = useLocation();
@@ -62,15 +71,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
     if (onClose) onClose();
   };
 
-  // Three dots colors
-  const Dots = () => (
-    <div className={`flex items-center gap-2 ${isExpanded ? 'mb-8' : 'mb-8 justify-center'}`}>
-      <div className="w-3 h-3 rounded-full bg-red-400 cursor-pointer hover:bg-red-500 transition-colors" onClick={() => setIsExpanded(!isExpanded)} />
-      <div className="w-3 h-3 rounded-full bg-amber-400 cursor-pointer hover:bg-amber-500 transition-colors" onClick={() => setIsExpanded(!isExpanded)} />
-      <div className="w-3 h-3 rounded-full bg-emerald-400 cursor-pointer hover:bg-emerald-500 transition-colors" onClick={() => setIsExpanded(!isExpanded)} />
-    </div>
-  );
-
   return (
     <>
       {/* Mobile Overlay */}
@@ -106,11 +106,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
         {/* Content Wrapper */}
         <div className="flex flex-col h-full overflow-hidden pt-6">
           <div className="px-6 flex flex-col shrink-0">
-            <Dots />
+            <Dots isExpanded={isExpanded} setIsExpanded={setIsExpanded} />
 
             {/* Logo */}
             <div className={`flex items-center ${isExpanded ? 'gap-3 mb-6' : 'justify-center mb-6'} transition-all`}>
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center shrink-0 shadow-sm">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center shrink-0 shadow-sm">
                 <span className="text-white font-bold text-lg">D</span>
               </div>
               {isExpanded && (
@@ -127,7 +127,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
                 <input
                   type="text"
                   placeholder="Search"
-                  className="block w-full pl-9 pr-3 py-2 border-0 rounded-xl bg-slate-50 text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-orange-500/20 sm:text-sm transition-all"
+                  className="block w-full pl-9 pr-3 py-2 border-0 rounded-xl bg-slate-50 text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-blue-500/20 sm:text-sm transition-all"
                 />
               </div>
             ) : (
@@ -153,14 +153,14 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
                   className={`
                     flex items-center ${isExpanded ? 'px-3' : 'justify-center px-0'} py-2.5 rounded-xl transition-all duration-200 group relative
                     ${active
-                      ? 'bg-orange-500 text-white shadow-md shadow-orange-500/20'
-                      : 'text-slate-500 hover:bg-slate-50 hover:text-orange-600'
+                      ? 'bg-blue-600 text-white shadow-md shadow-blue-600/20'
+                      : 'text-slate-500 hover:bg-slate-50 hover:text-blue-600'
                     }
                   `}
                   title={!isExpanded ? item.label : undefined}
                 >
                   <div className="relative flex items-center justify-center">
-                    <Icon className={`h-5 w-5 shrink-0 transition-colors ${active ? 'text-white' : 'text-slate-400 group-hover:text-orange-500'}`} strokeWidth={active ? 2.5 : 2} />
+                    <Icon className={`h-5 w-5 shrink-0 transition-colors ${active ? 'text-white' : 'text-slate-400 group-hover:text-blue-600'}`} strokeWidth={active ? 2.5 : 2} />
                     {item.dot && !isExpanded && !active && (
                       <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
                     )}
@@ -199,13 +199,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
                       className={`
                         flex items-center ${isExpanded ? 'px-3' : 'justify-center px-0'} py-2.5 rounded-xl transition-all duration-200 group relative
                         ${active
-                          ? 'bg-orange-500 text-white shadow-md shadow-orange-500/20'
-                          : 'text-slate-500 hover:bg-slate-50 hover:text-orange-600'
+                          ? 'bg-blue-600 text-white shadow-md shadow-blue-600/20'
+                          : 'text-slate-500 hover:bg-slate-50 hover:text-blue-600'
                         }
                       `}
                       title={!isExpanded ? item.label : undefined}
                     >
-                      <Icon className={`h-5 w-5 shrink-0 transition-colors ${active ? 'text-white' : 'text-slate-400 group-hover:text-orange-500'}`} strokeWidth={active ? 2.5 : 2} />
+                      <Icon className={`h-5 w-5 shrink-0 transition-colors ${active ? 'text-white' : 'text-slate-400 group-hover:text-blue-600'}`} strokeWidth={active ? 2.5 : 2} />
                       {isExpanded && <span className={`ml-3 text-sm font-medium ${active ? 'text-white' : ''}`}>{item.label}</span>}
                     </Link>
                   );
@@ -218,7 +218,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
           <div className="bg-slate-50 border-t border-slate-100 p-4 shrink-0 transition-all rounded-b-2xl">
             <div className={`flex items-center ${isExpanded ? 'justify-between' : 'justify-center'}`}>
               <div className="flex items-center gap-3 overflow-hidden">
-                <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-orange-200 to-amber-200 shrink-0 border border-white shadow-sm flex items-center justify-center overflow-hidden text-orange-700 font-bold uppercase">
+                <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-200 to-indigo-200 shrink-0 border border-white shadow-sm flex items-center justify-center overflow-hidden text-blue-700 font-bold">
                   {user?.full_name ? user.full_name.charAt(0) : 'U'}
                 </div>
                 {isExpanded && (

@@ -50,13 +50,13 @@ export const PatientGrowthChart: React.FC = () => {
       </div>
       
       <div className="grid grid-cols-2 gap-4 mb-6">
-        <div className="bg-orange-50 rounded-lg p-4">
-          <p className="text-sm text-orange-600 font-medium mb-1">Total New Patients</p>
-          <p className="text-3xl font-bold text-orange-900">{totalNewPatients}</p>
+        <div className="bg-blue-50 rounded-lg p-4">
+          <p className="text-sm text-primary font-medium mb-1">Total New Patients</p>
+          <p className="text-3xl font-bold text-blue-900">{totalNewPatients}</p>
         </div>
-        <div className="bg-yellow-50 rounded-lg p-4">
-          <p className="text-sm text-yellow-600 font-medium mb-1">Average Per Day</p>
-          <p className="text-3xl font-bold text-yellow-900">{avgPerDay}</p>
+        <div className="bg-indigo-50 rounded-lg p-4">
+          <p className="text-sm text-indigo-600 font-medium mb-1">Average Per Day</p>
+          <p className="text-3xl font-bold text-indigo-900">{avgPerDay}</p>
         </div>
       </div>
       
@@ -64,8 +64,8 @@ export const PatientGrowthChart: React.FC = () => {
         <AreaChart data={data}>
           <defs>
             <linearGradient id="colorPatients" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#f97316" stopOpacity={0.4}/>
-              <stop offset="95%" stopColor="#f97316" stopOpacity={0.05}/>
+              <stop offset="5%" stopColor="#003d9b" stopOpacity={0.4}/>
+              <stop offset="95%" stopColor="#003d9b" stopOpacity={0.05}/>
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -87,7 +87,7 @@ export const PatientGrowthChart: React.FC = () => {
           <Area 
             type="monotone" 
             dataKey="count" 
-            stroke="#f97316" 
+            stroke="#003d9b" 
             strokeWidth={2}
             fillOpacity={1} 
             fill="url(#colorPatients)"

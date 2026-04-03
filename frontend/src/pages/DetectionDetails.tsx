@@ -66,7 +66,7 @@ export const DetectionDetails: React.FC = () => {
       case DetectionStatus.REVIEWED:
         return <Badge className="bg-primary/10 text-primary hover:bg-primary/10 border-none px-3 py-1">Reviewed</Badge>;
       default:
-        return <Badge className="bg-yellow-100 text-yellow-700 hover:bg-yellow-100 border-none px-3 py-1">Processing</Badge>;
+        return <Badge className="bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border-none px-3 py-1">Processing</Badge>;
     }
   };
 

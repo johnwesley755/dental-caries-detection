@@ -30,16 +30,16 @@ export const ResultsSection: React.FC = () => {
       value: '0.97',
       label: 'F1-Score',
       description: 'Balanced performance',
-      color: 'orange'
+      color: 'primary'
     }
   ];
 
   const getColorClasses = (color: string) => {
     const colors = {
-      blue: 'from-orange-500 to-orange-600',
-      green: 'from-green-500 to-green-600',
-      purple: 'from-yellow-500 to-yellow-600',
-      orange: 'from-orange-500 to-orange-600'
+      blue: 'from-primary to-blue-700',
+      green: 'from-emerald-500 to-emerald-600',
+      purple: 'from-indigo-500 to-indigo-600',
+      primary: 'from-primary to-blue-700'
     };
     return colors[color as keyof typeof colors] || colors.blue;
   };
@@ -75,11 +75,11 @@ export const ResultsSection: React.FC = () => {
         </div>
 
         {/* Additional Info */}
-        <div className="mt-12 bg-gradient-to-br from-orange-50 to-yellow-50 rounded-2xl p-8">
+        <div className="mt-12 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-8">
           <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Key Achievements</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
             <div>
-              <div className="text-3xl font-bold text-orange-600 mb-2">10,000+</div>
+              <div className="text-3xl font-bold text-primary mb-2">10,000+</div>
               <div className="text-gray-700">Training Images</div>
             </div>
             <div>
@@ -87,7 +87,7 @@ export const ResultsSection: React.FC = () => {
               <div className="text-gray-700">Average Processing Time</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-yellow-600 mb-2">4</div>
+              <div className="text-3xl font-bold text-indigo-600 mb-2">4</div>
               <div className="text-gray-700">Severity Levels Classified</div>
             </div>
           </div>

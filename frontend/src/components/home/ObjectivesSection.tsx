@@ -26,16 +26,16 @@ export const ObjectivesSection: React.FC = () => {
       icon: TrendingUp,
       title: 'Patient Management',
       description: 'Create a comprehensive system for tracking patient history, detections, and treatment progress',
-      color: 'orange'
+      color: 'primary'
     }
   ];
 
   const getColorClasses = (color: string) => {
     const colors = {
-      blue: 'bg-orange-100 text-orange-600',
-      green: 'bg-green-100 text-green-600',
-      purple: 'bg-yellow-100 text-yellow-600',
-      orange: 'bg-orange-100 text-orange-600'
+      blue: 'bg-blue-50 text-primary',
+      green: 'bg-emerald-50 text-emerald-600',
+      purple: 'bg-indigo-50 text-indigo-600',
+      primary: 'bg-blue-50 text-primary'
     };
     return colors[color as keyof typeof colors] || colors.blue;
   };

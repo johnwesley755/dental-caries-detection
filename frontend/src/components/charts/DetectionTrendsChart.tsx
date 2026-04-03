@@ -43,7 +43,7 @@ export const DetectionTrendsChart: React.FC = () => {
         <select
           value={days}
           onChange={(e) => setDays(Number(e.target.value))}
-          className="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+          className="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-primary"
         >
           <option value={7}>Last 7 days</option>
           <option value={30}>Last 30 days</option>
@@ -73,9 +73,9 @@ export const DetectionTrendsChart: React.FC = () => {
           <Line 
             type="monotone" 
             dataKey="count" 
-            stroke="#f97316" 
+            stroke="#003d9b" 
             strokeWidth={3}
-            dot={{ fill: '#f97316', r: 5 }}
+            dot={{ fill: '#003d9b', r: 5 }}
             activeDot={{ r: 7 }}
             name="Detections"
           />

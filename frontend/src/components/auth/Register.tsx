@@ -130,12 +130,12 @@ const Register: React.FC = () => {
           <motion.div
             animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.4, 0.2] }}
             transition={{ duration: 10, repeat: Infinity }}
-            className="absolute top-[10%] left-[10%] h-[400px] w-[400px] rounded-full bg-orange-200/40 blur-[90px]"
+            className="absolute top-[10%] left-[10%] h-[400px] w-[400px] rounded-full bg-blue-200/40 blur-[90px]"
           />
           <motion.div
             animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.5, 0.2] }}
             transition={{ duration: 15, repeat: Infinity }}
-            className="absolute bottom-[10%] right-[10%] h-[400px] w-[400px] rounded-full bg-orange-200/40 blur-[90px]"
+            className="absolute bottom-[10%] right-[10%] h-[400px] w-[400px] rounded-full bg-blue-200/40 blur-[90px]"
           />
         </div>
 
@@ -161,7 +161,7 @@ const Register: React.FC = () => {
               <div className="space-y-2">
                 <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Full Name</label>
                 <div className="relative group">
-                  <User className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-orange-600 transition-colors" />
+                  <User className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-primary transition-colors" />
                   <input
                     name="full_name"
                     type="text"
@@ -170,7 +170,7 @@ const Register: React.FC = () => {
                     onChange={handleChange}
                     required
                     className={cn(
-                      "flex h-14 w-full rounded-xl border bg-slate-50/50 px-4 py-3 pl-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all",
+                      "flex h-14 w-full rounded-xl border bg-slate-50/50 px-4 py-3 pl-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all",
                       errors.full_name ? "border-red-300" : "border-slate-200"
                     )}
                   />
@@ -181,7 +181,7 @@ const Register: React.FC = () => {
               <div className="space-y-2">
                 <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Email Address</label>
                 <div className="relative group">
-                  <Mail className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-orange-600 transition-colors" />
+                  <Mail className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-primary transition-colors" />
                   <input
                     name="email"
                     type="email"
@@ -190,7 +190,7 @@ const Register: React.FC = () => {
                     onChange={handleChange}
                     required
                     className={cn(
-                      "flex h-14 w-full rounded-xl border bg-slate-50/50 px-4 py-3 pl-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all",
+                      "flex h-14 w-full rounded-xl border bg-slate-50/50 px-4 py-3 pl-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all",
                       errors.email ? "border-red-300" : "border-slate-200"
                     )}
                   />
@@ -201,12 +201,12 @@ const Register: React.FC = () => {
               <div className="space-y-2">
                 <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Role</label>
                 <div className="relative group">
-                  <Briefcase className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-orange-600 transition-colors" />
+                  <Briefcase className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-primary transition-colors" />
                   <select
                     name="role"
                     value={formData.role}
                     onChange={handleChange}
-                    className="appearance-none flex h-14 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pl-12 pr-10 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all"
+                    className="appearance-none flex h-14 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pl-12 pr-10 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                   >
                     <option value={UserRole.DENTIST}>Dentist</option>
                     <option value={UserRole.ASSISTANT}>Assistant</option>
@@ -228,7 +228,7 @@ const Register: React.FC = () => {
                   <div className="space-y-2">
                     <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">License Number *</label>
                     <div className="relative group">
-                      <FileText className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-orange-600 transition-colors" />
+                      <FileText className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-primary transition-colors" />
                       <input
                         name="license_number"
                         type="text"
@@ -237,7 +237,7 @@ const Register: React.FC = () => {
                         onChange={handleChange}
                         required
                         className={cn(
-                          "flex h-14 w-full rounded-xl border bg-slate-50/50 px-4 py-3 pl-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all",
+                          "flex h-14 w-full rounded-xl border bg-slate-50/50 px-4 py-3 pl-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all",
                           errors.license_number ? "border-red-300" : "border-slate-200"
                         )}
                       />
@@ -248,14 +248,14 @@ const Register: React.FC = () => {
                   <div className="space-y-2">
                     <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Specialization</label>
                     <div className="relative group">
-                      <Stethoscope className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-orange-600 transition-colors" />
+                      <Stethoscope className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-primary transition-colors" />
                       <input
                         name="specialization"
                         type="text"
                         placeholder="e.g. Orthodontics"
                         value={formData.specialization}
                         onChange={handleChange}
-                        className="flex h-14 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pl-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all"
+                        className="flex h-14 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pl-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                       />
                     </div>
                   </div>
@@ -264,14 +264,14 @@ const Register: React.FC = () => {
                     <div className="space-y-2">
                       <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Clinic Name</label>
                       <div className="relative group">
-                        <Building className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-orange-600 transition-colors" />
+                        <Building className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-primary transition-colors" />
                         <input
                           name="clinic_name"
                           type="text"
                           placeholder="Smile Dental"
                           value={formData.clinic_name}
                           onChange={handleChange}
-                          className="flex h-14 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pl-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all"
+                          className="flex h-14 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pl-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                         />
                       </div>
                     </div>
@@ -279,14 +279,14 @@ const Register: React.FC = () => {
                     <div className="space-y-2">
                       <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Clinic Address</label>
                       <div className="relative group">
-                        <MapPin className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-orange-600 transition-colors" />
+                        <MapPin className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-primary transition-colors" />
                         <input
                           name="clinic_address"
                           type="text"
                           placeholder="123 Dental St"
                           value={formData.clinic_address}
                           onChange={handleChange}
-                          className="flex h-14 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pl-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all"
+                          className="flex h-14 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pl-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                         />
                       </div>
                     </div>
@@ -297,7 +297,7 @@ const Register: React.FC = () => {
               <div className="space-y-2">
                 <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Password</label>
                 <div className="relative group">
-                  <Lock className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-orange-600 transition-colors" />
+                  <Lock className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-primary transition-colors" />
                   <input
                     name="password"
                     type={showPassword ? "text" : "password"}
@@ -306,7 +306,7 @@ const Register: React.FC = () => {
                     onChange={handleChange}
                     required
                     className={cn(
-                      "flex h-14 w-full rounded-xl border bg-slate-50/50 px-4 py-3 pl-12 pr-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all",
+                      "flex h-14 w-full rounded-xl border bg-slate-50/50 px-4 py-3 pl-12 pr-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all",
                       errors.password ? "border-red-300" : "border-slate-200"
                     )}
                   />
@@ -324,7 +324,7 @@ const Register: React.FC = () => {
               <div className="space-y-2">
                 <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Confirm Password</label>
                 <div className="relative group">
-                  <Lock className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-orange-600 transition-colors" />
+                  <Lock className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-primary transition-colors" />
                   <input
                     name="confirmPassword"
                     type={showConfirmPassword ? "text" : "password"}
@@ -333,7 +333,7 @@ const Register: React.FC = () => {
                     onChange={handleChange}
                     required
                     className={cn(
-                      "flex h-14 w-full rounded-xl border bg-slate-50/50 px-4 py-3 pl-12 pr-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all",
+                      "flex h-14 w-full rounded-xl border bg-slate-50/50 px-4 py-3 pl-12 pr-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all",
                       errors.confirmPassword ? "border-red-300" : "border-slate-200"
                     )}
                   />
@@ -354,7 +354,7 @@ const Register: React.FC = () => {
                 type="submit"
                 disabled={isLoading}
                 className={cn(
-                  "w-full rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-4 py-4 text-sm font-bold text-white shadow-xl hover:shadow-orange-500/40 transition-all duration-200",
+                  "w-full rounded-xl bg-gradient-to-r from-primary to-blue-700 px-4 py-4 text-sm font-bold text-white shadow-xl hover:shadow-primary/40 transition-all duration-200",
                   isLoading && "opacity-70 cursor-not-allowed"
                 )}
               >
@@ -377,7 +377,7 @@ const Register: React.FC = () => {
             <div className="text-center pt-4">
               <p className="text-sm text-slate-500">
                 Already have an account?{' '}
-                <Link to="/login" className="text-orange-600 font-bold hover:underline">
+                <Link to="/login" className="text-primary font-bold hover:underline">
                   Login here
                 </Link>
               </p>
@@ -392,16 +392,16 @@ const Register: React.FC = () => {
           alt="Modern Dentistry"
           className="absolute inset-0 h-full w-full object-cover opacity-60"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-orange-950/90 via-amber-950/80 to-slate-950/90 mix-blend-multiply" />
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-950/90 via-indigo-950/80 to-slate-950/90 mix-blend-multiply" />
 
         <div className="relative z-20 flex items-center gap-3">
-          <Stethoscope className="h-8 w-8 text-orange-300" />
-          <span className="text-2xl font-bold">DentalAI<span className="text-orange-400">Diagnostics</span></span>
+          <Stethoscope className="h-8 w-8 text-blue-300" />
+          <span className="text-2xl font-bold">DentalAI<span className="text-blue-400">Diagnostics</span></span>
         </div>
 
         <div className="relative z-20 mt-auto max-w-lg">
           <div className="rounded-3xl bg-white/5 backdrop-blur-md border border-white/10 p-8">
-            <Heart className="h-8 w-8 text-orange-300 mb-4" />
+            <Heart className="h-8 w-8 text-blue-300 mb-4" />
             <p className="text-xl font-light leading-relaxed mb-6">
               "Your dental health is our priority. Get instant AI insights and connect with top-tier professionals."
             </p>

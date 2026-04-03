@@ -56,7 +56,7 @@ const Login: React.FC = () => {
               rotate: [0, 45, 0]
             }}
             transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-[10%] left-[10%] h-[400px] w-[400px] rounded-full bg-orange-200/40 mix-blend-multiply blur-[90px]"
+            className="absolute top-[10%] left-[10%] h-[400px] w-[400px] rounded-full bg-blue-200/40 mix-blend-multiply blur-[90px]"
           />
           <motion.div
             animate={{
@@ -65,7 +65,7 @@ const Login: React.FC = () => {
               x: [0, -30, 0]
             }}
             transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute bottom-[10%] right-[10%] h-[400px] w-[400px] rounded-full bg-amber-200/40 mix-blend-multiply blur-[90px]"
+            className="absolute bottom-[10%] right-[10%] h-[400px] w-[400px] rounded-full bg-indigo-200/40 mix-blend-multiply blur-[90px]"
           />
         </div>
 
@@ -80,11 +80,11 @@ const Login: React.FC = () => {
           <div className="bg-white border border-slate-100 shadow-[0_20px_50px_rgb(0,0,0,0.06)] rounded-3xl p-10 lg:p-12 space-y-8 relative overflow-hidden">
 
             {/* Top Shine Effect */}
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-orange-500/50 to-transparent opacity-50" />
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-600/50 to-transparent opacity-50" />
 
             {/* Header */}
             <div className="space-y-3 text-center">
-              <div className="inline-flex items-center justify-center h-14 w-14 rounded-2xl bg-orange-50 text-orange-600 mb-2 ring-1 ring-orange-100">
+              <div className="inline-flex items-center justify-center h-14 w-14 rounded-2xl bg-blue-50 text-blue-600 mb-2 ring-1 ring-blue-100">
                 <Activity className="h-7 w-7" />
               </div>
               <h1 className="text-3xl font-bold tracking-tight text-slate-900">
@@ -114,7 +114,7 @@ const Login: React.FC = () => {
                 </label>
                 <div className="relative group">
                   <div className="absolute left-4 top-3.5 pointer-events-none">
-                    <Mail className="h-5 w-5 text-slate-400 group-focus-within:text-orange-600 transition-colors" />
+                    <Mail className="h-5 w-5 text-slate-400 group-focus-within:text-blue-600 transition-colors" />
                   </div>
                   <input
                     id="email"
@@ -125,7 +125,7 @@ const Login: React.FC = () => {
                     required
                     className={cn(
                       "flex h-12 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pl-12 text-sm transition-all duration-200",
-                      "placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500",
+                      "placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500",
                       "hover:bg-slate-50 hover:border-slate-300"
                     )}
                   />
@@ -140,14 +140,14 @@ const Login: React.FC = () => {
                   </label>
                   <Link
                     to="/forgot-password"
-                    className="text-xs font-semibold text-orange-600 hover:text-orange-700 hover:underline"
+                    className="text-xs font-semibold text-blue-600 hover:text-blue-700 hover:underline"
                   >
                     Forgot password?
                   </Link>
                 </div>
                 <div className="relative group">
                   <div className="absolute left-4 top-3.5 pointer-events-none">
-                    <Lock className="h-5 w-5 text-slate-400 group-focus-within:text-orange-600 transition-colors" />
+                    <Lock className="h-5 w-5 text-slate-400 group-focus-within:text-blue-600 transition-colors" />
                   </div>
                   <input
                     id="password"
@@ -158,7 +158,7 @@ const Login: React.FC = () => {
                     required
                     className={cn(
                       "flex h-12 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pl-12 pr-12 text-sm transition-all duration-200",
-                      "placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500",
+                      "placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500",
                       "hover:bg-slate-50 hover:border-slate-300"
                     )}
                   />
@@ -214,7 +214,7 @@ const Login: React.FC = () => {
               <p>Protected by <span className="font-semibold text-slate-700">Enterprise Shield</span>. <br /> Access restricted to authorized personnel.</p>
               <p className="mt-4 text-sm text-slate-600">
                 Interested in joining the network?{' '}
-                <Link to="/register" className="font-bold text-orange-600 hover:text-orange-700 transition-colors">
+                <Link to="/register" className="font-bold text-blue-600 hover:text-blue-700 transition-colors">
                   Create a Professional Account
                 </Link>
               </p>
@@ -235,18 +235,18 @@ const Login: React.FC = () => {
             className="h-full w-full object-cover opacity-50 scale-105 saturate-50"
           />
           {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-br from-orange-950/95 via-slate-900/90 to-slate-950/90 mix-blend-multiply" />
-          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-orange-500/10 to-transparent opacity-30" />
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-950/95 via-slate-900/90 to-slate-950/90 mix-blend-multiply" />
+          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-blue-500/10 to-transparent opacity-30" />
         </div>
 
         {/* Branding */}
         <div className="relative z-20 flex items-center gap-3">
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-xl">
-            <Stethoscope className="h-6 w-6 text-orange-300" />
+            <Stethoscope className="h-6 w-6 text-blue-300" />
           </div>
           <div className="flex flex-col">
-            <span className="text-2xl font-bold tracking-tight text-white">DentAI<span className="text-orange-400">Diagnostics</span></span>
-            <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-orange-200/60">Intelligent Care Systems</span>
+            <span className="text-2xl font-bold tracking-tight text-white">DentAI<span className="text-blue-400">Diagnostics</span></span>
+            <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-blue-200/60">Intelligent Care Systems</span>
           </div>
         </div>
 
@@ -258,7 +258,7 @@ const Login: React.FC = () => {
             transition={{ delay: 0.4, duration: 0.6 }}
             className="rounded-3xl bg-white/5 backdrop-blur-md border border-white/10 p-8 shadow-2xl"
           >
-            <div className="mb-6 text-orange-300">
+            <div className="mb-6 text-blue-300">
               <Activity className="h-8 w-8" />
             </div>
             <p className="text-xl font-light leading-relaxed text-slate-100 mb-6">
@@ -266,10 +266,10 @@ const Login: React.FC = () => {
             </p>
             <footer className="flex items-center justify-between border-t border-white/10 pt-6">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-orange-400 to-amber-500 flex items-center justify-center text-xs font-bold text-white shadow-lg">JS</div>
+                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-xs font-bold text-white shadow-lg">JS</div>
                 <div>
                   <div className="text-sm font-semibold text-white">Dr. James Smith</div>
-                  <div className="text-xs text-orange-200">Chief of Dental Surgery</div>
+                  <div className="text-xs text-blue-200">Chief of Dental Surgery</div>
                 </div>
               </div>
               <div className="text-xs font-medium text-slate-400 bg-black/20 px-3 py-1 rounded-full">v2.4.0 Stable</div>

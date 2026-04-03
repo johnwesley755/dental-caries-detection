@@ -78,7 +78,7 @@ export const Statistics: React.FC<StatisticsProps> = ({ patients, detections }) 
     { name: 'Remaining', value: 100 - visualRate },
   ];
 
-  const PIE_COLORS = ['#f97316', '#F1F5F9'];
+  const PIE_COLORS = ['#003d9b', '#F1F5F9'];
 
   // --- Components ---
 
@@ -86,7 +86,7 @@ export const Statistics: React.FC<StatisticsProps> = ({ patients, detections }) 
     <Card className="border-none shadow-sm hover:shadow-md transition-shadow duration-200 bg-white rounded-[20px]">
       <CardContent className="p-6">
         <div className="flex justify-between items-start mb-4">
-          <div className="p-3 bg-orange-50 rounded-xl text-orange-600">
+          <div className="p-3 bg-blue-50 rounded-xl text-primary">
             <Icon className="h-6 w-6" />
           </div>
           {trend && (
@@ -100,7 +100,7 @@ export const Statistics: React.FC<StatisticsProps> = ({ patients, detections }) 
         <p className="text-sm text-slate-400 font-medium mt-1">{title}</p>
         <div className="mt-4 pt-4 border-t border-gray-50 flex items-center gap-2">
           <div className="h-1.5 flex-1 bg-gray-100 rounded-full overflow-hidden">
-            <div className="h-full bg-orange-500 rounded-full" style={{ width: '65%' }}></div>
+            <div className="h-full bg-primary rounded-full" style={{ width: '65%' }}></div>
           </div>
           <span className="text-xs text-gray-400">65% Target</span>
         </div>
@@ -127,12 +127,12 @@ export const Statistics: React.FC<StatisticsProps> = ({ patients, detections }) 
         />
 
         {/* Simplified Summary Card */}
-        <Card className="border-none shadow-sm bg-orange-600 text-white rounded-[20px] relative overflow-hidden mt-auto">
+        <Card className="border-none shadow-sm bg-primary text-white rounded-[20px] relative overflow-hidden mt-auto">
           <CardContent className="p-6 relative z-10">
             <h3 className="text-lg font-semibold mb-1">Weekly Report</h3>
-            <p className="text-orange-100 text-sm mb-4">Detection accuracy increased.</p>
+            <p className="text-blue-100 text-sm mb-4">Detection accuracy increased.</p>
             <h2 className="text-3xl font-bold mb-2">98.5%</h2>
-            <div className="text-xs text-orange-200">Confidence Score</div>
+            <div className="text-xs text-blue-200/60">Confidence Score</div>
           </CardContent>
           <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-10 -mt-10 blur-2xl"></div>
           <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/10 rounded-full -ml-10 -mb-10 blur-xl"></div>
@@ -159,8 +159,8 @@ export const Statistics: React.FC<StatisticsProps> = ({ patients, detections }) 
                 <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                   <defs>
                     <linearGradient id="colorDetections" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#f97316" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="#f97316" stopOpacity={0} />
+                      <stop offset="5%" stopColor="#003d9b" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="#003d9b" stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
@@ -184,7 +184,7 @@ export const Statistics: React.FC<StatisticsProps> = ({ patients, detections }) 
                   <Area
                     type="monotone"
                     dataKey="detections"
-                    stroke="#f97316"
+                    stroke="#003d9b"
                     strokeWidth={3}
                     fillOpacity={1}
                     fill="url(#colorDetections)"
@@ -242,7 +242,7 @@ export const Statistics: React.FC<StatisticsProps> = ({ patients, detections }) 
                   recentDetections.map((d) => (
                     <div
                       key={d.id}
-                      className="flex items-center justify-between px-6 py-3 hover:bg-gray-50 cursor-pointer transition-colors border-l-2 border-transparent hover:border-orange-500"
+                      className="flex items-center justify-between px-6 py-3 hover:bg-gray-50 cursor-pointer transition-colors border-l-2 border-transparent hover:border-primary"
                       onClick={() => navigate(`/detection/${d.id}`)}
                     >
                       <div className="flex items-center gap-3">
@@ -269,7 +269,7 @@ export const Statistics: React.FC<StatisticsProps> = ({ patients, detections }) 
               <div className="h-[140px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={chartData}>
-                    <Bar dataKey="caries" fill="#f97316" radius={[4, 4, 4, 4]} barSize={8} />
+                    <Bar dataKey="caries" fill="#003d9b" radius={[4, 4, 4, 4]} barSize={8} />
                     <Bar dataKey="detections" fill="#E2E8F0" radius={[4, 4, 4, 4]} barSize={8} />
                     <Tooltip cursor={{ fill: 'transparent' }} contentStyle={{ borderRadius: '8px', border: 'none' }} />
                   </BarChart>
