@@ -33,7 +33,7 @@ class ApiService {
         if (error.response?.status === 401) {
           localStorage.removeItem('token');
           localStorage.removeItem('user');
-          window.location.href = '/login';
+          // Removed hard redirect to /login to allow public pages to handle auth state gracefully
         }
         return Promise.reject(error);
       }
