@@ -1,30 +1,33 @@
 // frontend/src/types/detection.types.ts
 export const ImageType = {
-  INTRAORAL: 'intraoral',
-  BITEWING: 'bitewing',
-  PERIAPICAL: 'periapical',
-  PANORAMIC: 'panoramic'
+  INTRAORAL: 'INTRAORAL',
+  BITEWING: 'BITEWING',
+  PERIAPICAL: 'PERIAPICAL',
+  PANORAMIC: 'PANORAMIC'
 } as const;
 export type ImageType = (typeof ImageType)[keyof typeof ImageType];
 
 export const DetectionStatus = {
-  PENDING: 'pending',
-  COMPLETED: 'completed',
-  REVIEWED: 'reviewed'
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  REVIEWED: 'REVIEWED'
 } as const;
 export type DetectionStatus = (typeof DetectionStatus)[keyof typeof DetectionStatus];
 
 export const CariesType = {
-  ENAMEL: 'enamel',
-  DENTIN: 'dentin',
-  PULP: 'pulp'
+  ENAMEL: 'ENAMEL',
+  DENTIN: 'DENTIN',
+  PULP: 'PULP',
+  CARIES: 'caries',
+  CAVITY: 'cavity',
+  CRACK: 'crack'
 } as const;
 export type CariesType = (typeof CariesType)[keyof typeof CariesType];
 
 export const Severity = {
-  MILD: 'mild',
-  MODERATE: 'moderate',
-  SEVERE: 'severe'
+  MILD: 'MILD',
+  MODERATE: 'MODERATE',
+  SEVERE: 'SEVERE'
 } as const;
 export type Severity = (typeof Severity)[keyof typeof Severity];
 

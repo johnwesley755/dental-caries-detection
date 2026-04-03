@@ -7,17 +7,17 @@ import enum
 from ..core.database import Base
 
 class CariesType(str, enum.Enum):
-    enamel = "enamel"
-    dentin = "dentin"
-    pulp = "pulp"
+    ENAMEL = "ENAMEL"
+    DENTIN = "DENTIN"
+    PULP = "PULP"
     caries = "caries"
     cavity = "cavity"
     crack = "crack"
 
 class Severity(str, enum.Enum):
-    mild = "mild"
-    moderate = "moderate"
-    severe = "severe"
+    MILD = "MILD"
+    MODERATE = "MODERATE"
+    SEVERE = "SEVERE"
 
 class CariesFinding(Base):
     __tablename__ = "caries_findings"

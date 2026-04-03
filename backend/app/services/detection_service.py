@@ -105,18 +105,16 @@ class DetectionService:
             detection_id=self.generate_detection_id(),
             patient_id=patient_id,
             dentist_id=dentist_id,
-            original_image_path=image_path,
-            annotated_image_path=annotated_path if (annotated_path and os.path.exists(annotated_path)) else None,
             original_image_url=original_image_cloudinary.get("cloudinary_url") if original_image_cloudinary else None,
             annotated_image_url=annotated_cloudinary.get("url") if annotated_cloudinary else None,
             original_image_public_id=original_image_cloudinary.get("public_id") if original_image_cloudinary else None,
             annotated_image_public_id=annotated_cloudinary.get("public_id") if annotated_cloudinary else None,
-            image_type=detection_data.image_type,
+            image_type=detection_data.image_type.upper() if detection_data.image_type else "INTRAORAL",
             total_teeth_detected=teeth_count,
             total_caries_detected=len(findings),
             processing_time_ms=detection_results["processing_time_ms"],
             confidence_threshold=settings.CONFIDENCE_THRESHOLD,
-            status=DetectionStatus.completed,
+            status=DetectionStatus.COMPLETED,
             notes=detection_data.notes
         )
         
@@ -125,14 +123,24 @@ class DetectionService:
         
         # Create caries findings
         for det in findings:
+            # Map casing to match specific database enum requirements
+            raw_caries_type = det["caries_type"].upper() if "caries_type" in det and det["caries_type"] else None
+            # If it's enamel/dentin/pulp it must be UPPER, else lower for 'caries', 'cavity', 'crack'
+            if raw_caries_type in ["ENAMEL", "DENTIN", "PULP"]:
+                final_caries_type = raw_caries_type
+            elif raw_caries_type:
+                final_caries_type = raw_caries_type.lower()
+            else:
+                final_caries_type = None
+
             caries = CariesFinding(
                 detection_id=db_detection.id,
-                caries_type=det["caries_type"],
-                severity=det["severity"],
+                caries_type=final_caries_type,
+                severity=det["severity"].upper() if "severity" in det and det["severity"] else None,
                 confidence_score=det["confidence"],
                 bounding_box=det["bbox"],
                 area_mm2=det["area_mm2"],
-                location=det["location"],
+                location=det["location"].upper() if "location" in det and det["location"] else None,
                 treatment_recommendation=det["treatment_recommendation"]
             )
             db.add(caries)
@@ -143,7 +151,7 @@ class DetectionService:
             detection_id=db_detection.id,
             action="created",
             performed_by=dentist_id,
-            changes={"status": DetectionStatus.completed.value}
+            changes={"status": DetectionStatus.COMPLETED.value}
         )
         db.add(history)
         
@@ -155,11 +163,6 @@ class DetectionService:
             try:
                 import shutil
                 shutil.rmtree(results_dir)
-                # Ensure the path in the DB reflects that it's no longer local if needed, 
-                # but many systems keep the path for audit trails. 
-                # Here we'll clear it to be consistent with storage expectations.
-                db_detection.annotated_image_path = None
-                db.commit()
             except Exception as e:
                 print(f"Warning: Failed to cleanup results directory: {str(e)}")
 

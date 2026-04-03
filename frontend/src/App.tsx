@@ -15,6 +15,7 @@ import { Dashboard } from './pages/Dashboard';
 import { Detection } from './pages/Detection';
 import { DetectionDetails } from './pages/DetectionDetails';
 import { History } from './pages/History';
+import { Schedules } from './pages/Schedules';
 import { PatientDetails } from './pages/PatientDetails';
 import { Profile } from './pages/Profile';
 import { Patients } from './pages/Patients';
@@ -52,6 +53,7 @@ function App() {
               <Route path="/detection" element={<Detection />} />
               <Route path="/detection/:id" element={<DetectionDetails />} />
               <Route path="/history" element={<History />} />
+              <Route path="/schedules" element={<Schedules />} />
               <Route path="/patients" element={<Patients />} />
               <Route path="/patients/:id" element={<PatientDetails />} />
               <Route path="/users" element={<UserManagement />} />

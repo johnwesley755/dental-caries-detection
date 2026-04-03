@@ -5,6 +5,8 @@ import type { Conversation, Message } from '../services/messagingService';
 import { MessageCircle, Send, Paperclip, X, FileText, Image as ImageIcon, Download, Loader2, Plus, Check, CheckCheck } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
+import { TopNavBar } from '../components/layout/TopNavBar';
+
 export const Messages: React.FC = () => {
   const location = useLocation();
   const [conversations, setConversations] = useState<Conversation[]>([]);
@@ -20,18 +22,16 @@ export const Messages: React.FC = () => {
   const [patients, setPatients] = useState<any[]>([]);
   const [loadingPatients, setLoadingPatients] = useState(false);
   const [showMobileChat, setShowMobileChat] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  // Get current user from localStorage
   const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
 
-  // Load conversations on mount
   useEffect(() => {
     const init = async () => {
       try {
         const data = await messagingService.getConversations();
         setConversations(data);
 
-        // Handle patientId from URL
         const searchParams = new URLSearchParams(location.search);
         const patientIdParam = searchParams.get('patientId');
         if (patientIdParam) {
@@ -39,7 +39,6 @@ export const Messages: React.FC = () => {
           if (existingConv) {
             setSelectedConversation(existingConv);
           } else {
-            // Fetch patient details to start a new chat if ID is provided
             const { patientService } = await import('../services/patientService');
             const patient = await patientService.getPatient(patientIdParam);
             if (patient && patient.user_id) {
@@ -56,7 +55,6 @@ export const Messages: React.FC = () => {
     init();
   }, []);
 
-  // Load messages when conversation is selected
   useEffect(() => {
     if (selectedConversation) {
       loadMessages(selectedConversation.id);
@@ -66,7 +64,6 @@ export const Messages: React.FC = () => {
     }
   }, [selectedConversation]);
 
-  // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
@@ -108,11 +105,9 @@ export const Messages: React.FC = () => {
       setNewMessage('');
       setSelectedFile(null);
 
-      // Refresh conversations
       const data = await messagingService.getConversations();
       setConversations(data);
 
-      // If it was a new conversation, select the real one
       if (selectedConversation.id === 'new') {
         const newConv = data.find(c => c.other_user_id === selectedConversation.other_user_id);
         if (newConv) {
@@ -127,12 +122,10 @@ export const Messages: React.FC = () => {
   };
 
   const handleStartNewChat = async (patient: any) => {
-    // Check if conversation already exists
     const existingConv = conversations.find(c => c.other_user_id === patient.user_id);
     if (existingConv) {
       setSelectedConversation(existingConv);
     } else {
-      // Create a temporary conversation object
       const tempConv: Conversation = {
         id: 'new',
         patient_id: patient.id,
@@ -153,7 +146,6 @@ export const Messages: React.FC = () => {
       setLoadingPatients(true);
       const { patientService } = await import('../services/patientService');
       const data = await patientService.getPatients();
-      // Only show patients that have a linked user account
       setPatients(data.filter(p => p.user_id));
     } catch (error) {
       console.error('Failed to load patients:', error);
@@ -165,7 +157,6 @@ export const Messages: React.FC = () => {
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      // Validate file size (10MB)
       if (file.size > 10 * 1024 * 1024) {
         alert('File size must be less than 10MB');
         return;
@@ -209,279 +200,322 @@ export const Messages: React.FC = () => {
       const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
       finalUrl = `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
     }
-    console.log('File Access:', { original: url, resolved: finalUrl });
     return finalUrl;
   };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex items-center justify-center h-screen bg-surface">
         <LoadingSpinner size="sm" />
       </div>
     );
   }
 
-  return (
-    <div className="h-full flex bg-gray-50 overflow-hidden">
-      {/* Conversations List */}
-      <div className={`
-        ${showMobileChat ? 'hidden' : 'flex'} 
-        lg:flex w-full lg:w-80 bg-white border-r border-gray-200 flex-col
-      `}>
-        <div className="p-4 border-b border-gray-200 flex items-center justify-between">
-          <div>
-            <h2 className="text-xl font-bold text-gray-900">Patient Messages</h2>
-            <p className="text-sm text-gray-500 mt-1">Chat with your patients</p>
-          </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => {
-              if (!showPatientSelector) loadPatients();
-              setShowPatientSelector(!showPatientSelector);
-            }}
-            className={showPatientSelector ? 'text-orange-600 bg-orange-50' : 'text-gray-400'}
-          >
-            {showPatientSelector ? <X className="h-5 w-5" /> : <Plus className="h-5 w-5" />}
-          </Button>
-        </div>
+  // Filter conversations
+  const filteredConversations = conversations.filter(c => 
+    c.other_user_name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
-        <div className="flex-1 overflow-y-auto">
-          {showPatientSelector ? (
-            <div className="animate-in fade-in slide-in-from-left-2 duration-200">
-              <div className="p-4 bg-gray-50 border-b border-gray-100">
-                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Select a patient</p>
-              </div>
-              {loadingPatients ? (
-                <div className="p-8 text-center">
-                  <LoadingSpinner size="sm" />
-                </div>
-              ) : patients.length === 0 ? (
-                <div className="p-8 text-center">
-                  <p className="text-sm text-gray-500">No patients found</p>
-                </div>
-              ) : (
-                patients.map(patient => (
-                  <div
-                    key={patient.id}
-                    onClick={() => handleStartNewChat(patient)}
-                    className="p-4 border-b border-gray-100 cursor-pointer hover:bg-orange-50 transition-colors group"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 font-bold group-hover:bg-orange-600 group-hover:text-white transition-colors">
-                        {patient.full_name.charAt(0)}
-                      </div>
-                      <div>
-                        <h4 className="font-semibold text-gray-900">{patient.full_name}</h4>
-                        <p className="text-xs text-gray-500">{patient.patient_id}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-          ) : conversations.length === 0 ? (
-            <div className="p-8 text-center">
-              <MessageCircle className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-              <p className="text-gray-500">No conversations yet</p>
-            </div>
-          ) : (
-            conversations.map((conv) => (
-              <div
-                key={conv.id}
-                onClick={() => setSelectedConversation(conv)}
-                className={`p-4 border-b border-gray-100 cursor-pointer transition-colors ${selectedConversation?.id === conv.id
-                  ? 'bg-orange-50 border-l-4 border-l-orange-600'
-                  : 'hover:bg-gray-50'
-                  }`}
+  return (
+    <div className="flex flex-col h-[calc(100vh-4rem)] overflow-hidden bg-background">
+      <TopNavBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      
+      <div className="flex-1 flex overflow-hidden">
+        
+        {/* Conversation List (Left Column) */}
+        <section className={`
+          ${showMobileChat ? 'hidden' : 'flex'} 
+          w-full lg:w-80 bg-surface-container-lowest border-r border-slate-100 flex flex-col overflow-hidden shrink-0
+        `}>
+          <div className="p-4 border-b border-slate-50 flex items-center justify-between">
+            <h2 className="text-base font-bold text-slate-900 font-headline">Conversations</h2>
+            <div className="flex gap-2">
+              <span 
+                className={`material-symbols-outlined cursor-pointer transition-colors ${showPatientSelector ? 'text-primary' : 'text-slate-400 hover:text-slate-600'}`} 
+                onClick={() => {
+                  if (!showPatientSelector) loadPatients();
+                  setShowPatientSelector(!showPatientSelector);
+                }}
               >
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="font-semibold text-gray-900">{conv.other_user_name}</h3>
-                      {conv.unread_count > 0 && (
-                        <span className="bg-orange-600 text-white text-xs px-2 py-0.5 rounded-full">
-                          {conv.unread_count}
-                        </span>
-                      )}
+                {showPatientSelector ? 'close' : 'add_chat'}
+              </span>
+            </div>
+          </div>
+          
+          <div className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+            {showPatientSelector ? (
+              <div className="animate-in fade-in slide-in-from-left-2 duration-200">
+                <div className="p-4 bg-slate-50 border-b border-slate-100">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Select a patient</p>
+                </div>
+                {loadingPatients ? (
+                  <div className="p-8 text-center">
+                    <LoadingSpinner size="sm" />
+                  </div>
+                ) : patients.length === 0 ? (
+                  <div className="p-8 text-center">
+                    <p className="text-sm text-slate-500">No patients found</p>
+                  </div>
+                ) : (
+                  patients.map(patient => (
+                    <div
+                      key={patient.id}
+                      onClick={() => handleStartNewChat(patient)}
+                      className="p-4 border-b border-slate-50 cursor-pointer hover:bg-slate-50 transition-colors group"
+                    >
+                      <div className="flex items-center gap-3">
+                        <img 
+                            className="w-10 h-10 rounded-full object-cover shadow-sm bg-slate-100" 
+                            src={`https://ui-avatars.com/api/?name=${patient.full_name}&background=dae2ff&color=003d9b&size=100`} 
+                            alt={patient.full_name} 
+                        />
+                        <div>
+                          <h4 className="font-semibold text-slate-900 text-sm">{patient.full_name}</h4>
+                          <p className="text-[10px] text-slate-500">{patient.patient_id}</p>
+                        </div>
+                      </div>
                     </div>
-                    <p className="text-sm text-gray-500 mt-1 truncate">
-                      {conv.last_message || 'No messages yet'}
+                  ))
+                )}
+              </div>
+            ) : filteredConversations.length === 0 ? (
+              <div className="p-12 text-center">
+                <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span className="material-symbols-outlined text-3xl text-slate-300">chat_bubble_outline</span>
+                </div>
+                <h3 className="text-sm font-bold text-slate-800">No active chats</h3>
+                <p className="text-xs text-slate-400 mt-1">Click the + icon to start a conversation.</p>
+              </div>
+            ) : (
+              filteredConversations.map((conv) => (
+                <div
+                  key={conv.id}
+                  onClick={() => setSelectedConversation(conv)}
+                  className={`p-4 cursor-pointer transition-all border-l-4 ${
+                    selectedConversation?.id === conv.id
+                    ? 'bg-blue-50/50 border-blue-700'
+                    : 'hover:bg-slate-50 border-transparent'
+                  }`}
+                >
+                  <div className="flex justify-between items-start mb-1">
+                    <div className="flex items-center gap-2">
+                        <h3 className="text-sm font-bold text-slate-900">{conv.other_user_name}</h3>
+                        {conv.unread_count > 0 && (
+                          <span className="bg-blue-700 text-white text-[10px] px-1.5 rounded-full font-bold">
+                            {conv.unread_count}
+                          </span>
+                        )}
+                    </div>
+                    {conv.last_message_at && (
+                        <span className="text-[10px] text-slate-500 whitespace-nowrap">
+                        {formatDate(conv.last_message_at)}
+                        </span>
+                    )}
+                  </div>
+                  <p className={`text-xs truncate ${conv.unread_count > 0 ? 'text-blue-700 font-bold' : 'text-slate-500 font-medium'}`}>
+                    {conv.last_message || 'New conversation'}
+                  </p>
+                </div>
+              ))
+            )}
+          </div>
+        </section>
+
+        {/* Active Chat Window (Right Column) */}
+        <section className={`
+          ${showMobileChat ? 'flex' : 'hidden'} 
+          lg:flex flex-1 bg-surface flex-col overflow-hidden
+        `}>
+          {selectedConversation ? (
+            <>
+              {/* Chat Header */}
+              <div className="px-6 py-4 bg-white shadow-sm flex items-center justify-between z-10 shrink-0">
+                <div className="flex items-center">
+                  <button
+                    onClick={() => setShowMobileChat(false)}
+                    className="lg:hidden p-2 mr-2 text-slate-400 hover:text-primary transition-colors"
+                  >
+                    <span className="material-symbols-outlined">arrow_back</span>
+                  </button>
+                  <div className="relative">
+                    <img 
+                        className="w-10 h-10 rounded-full object-cover border border-slate-100" 
+                        src={`https://ui-avatars.com/api/?name=${selectedConversation.other_user_name}&background=003d9b&color=fff&size=100`} 
+                        alt={selectedConversation.other_user_name}
+                    />
+                    <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full"></span>
+                  </div>
+                  <div className="ml-4">
+                    <h2 className="text-base font-bold text-slate-900 leading-none">{selectedConversation.other_user_name}</h2>
+                    <p className="text-[11px] text-emerald-600 font-semibold mt-1 flex items-center">
+                      <span className="w-1.5 h-1.5 bg-emerald-600 rounded-full mr-1.5" /> Active Patient
                     </p>
                   </div>
-                  {conv.last_message_at && (
-                    <span className="text-xs text-gray-400">
-                      {formatDate(conv.last_message_at)}
-                    </span>
-                  )}
                 </div>
-              </div>
-            ))
-          )}
-        </div>
-      </div>
-
-      {/* Chat Window */}
-      <div className={`
-        ${showMobileChat ? 'flex' : 'hidden'} 
-        lg:flex flex-1 flex-col bg-white h-full relative
-      `}>
-        {selectedConversation ? (
-          <>
-            {/* Chat Header */}
-            <div className="bg-white border-b border-gray-200 p-4 flex items-center gap-4">
-              <button
-                onClick={() => setShowMobileChat(false)}
-                className="lg:hidden p-2 -ml-2 text-gray-500 hover:text-orange-600 transition-colors"
-              >
-                <X className="h-6 w-6" />
-              </button>
-              <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-gray-900 truncate">{selectedConversation.other_user_name}</h3>
-                <p className="text-sm text-gray-500 truncate">Patient • {selectedConversation.id === 'new' ? 'Start a new conversation' : 'Active conversation'}</p>
-              </div>
-            </div>
-
-            {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50/50">
-              {messages.map((message, index) => {
-                const isOwn = message.sender_id === currentUser?.id;
-                const prevMessage = index > 0 ? messages[index - 1] : null;
-                const showDateHeader = !prevMessage || 
-                  new Date(message.created_at).toDateString() !== new Date(prevMessage.created_at).toDateString();
-
-                return (
-                  <React.Fragment key={message.id}>
-                    {showDateHeader && (
-                      <div className="flex justify-center my-6">
-                        <div className="bg-gray-200 text-gray-600 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                          {formatDate(message.created_at)}
-                        </div>
-                      </div>
-                    )}
-                    <div className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}>
-                      <div className={`max-w-md ${isOwn ? 'items-end' : 'items-start'} flex flex-col`}>
-                        <div
-                          className={`rounded-2xl px-4 py-2 shadow-sm ${isOwn
-                            ? 'bg-orange-600 text-white rounded-tr-none'
-                            : 'bg-white border border-gray-200 text-gray-900 rounded-tl-none'
-                            }`}
-                        >
-                          {message.content && <p className="text-sm">{message.content}</p>}
-
-                          {message.file_url && (
-                            <div className="mt-2 text-white">
-                              {message.file_type?.startsWith('image/') ? (
-                                <img
-                                  src={getFileUrl(message.file_url)}
-                                  alt={message.file_name}
-                                  className="rounded-lg max-w-xs"
-                                />
-                              ) : (
-                                <a
-                                  href={getFileUrl(message.file_url)}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className={`flex items-center gap-2 p-2 rounded-lg ${isOwn ? 'bg-orange-700' : 'bg-gray-50 text-gray-900 border border-gray-100'
-                                    }`}
-                                >
-                                  {getFileIcon(message.file_type)}
-                                  <span className="text-sm truncate max-w-[150px]">{message.file_name}</span>
-                                  <Download className="h-4 w-4 ml-auto" />
-                                </a>
-                              )}
-                            </div>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-1 mt-1">
-                          <span className="text-[10px] font-bold text-gray-400 uppercase">
-                            {formatTime(message.created_at)}
-                          </span>
-                          {isOwn && (
-                            <div className="flex items-center">
-                              {message.is_read ? (
-                                <CheckCheck className="h-3 w-3 text-blue-500" strokeWidth={3} />
-                              ) : (
-                                <Check className="h-3 w-3 text-gray-400" strokeWidth={3} />
-                              )}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </React.Fragment>
-                );
-              })}
-              <div ref={messagesEndRef} />
-            </div>
-
-            {/* Message Input */}
-            <div className="bg-white border-t border-gray-200 p-4">
-              {selectedFile && (
-                <div className="mb-2 flex items-center gap-2 p-2 bg-gray-50 rounded-lg">
-                  {getFileIcon(selectedFile.type)}
-                  <span className="text-sm text-gray-700 flex-1">{selectedFile.name}</span>
-                  <button
-                    onClick={() => setSelectedFile(null)}
-                    className="text-gray-400 hover:text-gray-600"
-                  >
-                    <X className="h-4 w-4" />
+                <div className="flex items-center space-x-3">
+                  <button className="p-2 text-slate-400 hover:text-primary transition-colors">
+                    <span className="material-symbols-outlined" data-icon="more_vert">more_vert</span>
                   </button>
                 </div>
-              )}
-
-              <div className="flex items-end gap-2">
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  onChange={handleFileSelect}
-                  accept="image/*,.pdf"
-                  className="hidden"
-                />
-                <button
-                  onClick={() => fileInputRef.current?.click()}
-                  className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
-                >
-                  <Paperclip className="h-5 w-5" />
-                </button>
-
-                <textarea
-                  value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value)}
-                  onKeyPress={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault();
-                      handleSendMessage();
-                    }
-                  }}
-                  placeholder="Type a message..."
-                  className="flex-1 resize-none border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  rows={1}
-                />
-
-                <button
-                  onClick={handleSendMessage}
-                  disabled={sending || (!newMessage.trim() && !selectedFile)}
-                  className="bg-orange-600 text-white p-2 rounded-lg hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  {sending ? (
-                    <LoadingSpinner size="sm" />
-                  ) : (
-                    <Send className="h-5 w-5" />
-                  )}
-                </button>
               </div>
+
+              {/* Chat Bubbles Area */}
+              <div className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] p-4 md:p-8 space-y-6 bg-surface">
+                {messages.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center h-full text-slate-400 opacity-60">
+                        <span className="material-symbols-outlined text-4xl mb-2">forum</span>
+                        <p className="text-sm font-medium">This is the start of your secure conversation.</p>
+                    </div>
+                ) : (
+                    messages.map((message, index) => {
+                    const isOwn = message.sender_id === currentUser?.id;
+                    const prevMessage = index > 0 ? messages[index - 1] : null;
+                    const showDateHeader = !prevMessage || 
+                        new Date(message.created_at).toDateString() !== new Date(prevMessage.created_at).toDateString();
+
+                    return (
+                        <React.Fragment key={message.id}>
+                        {showDateHeader && (
+                            <div className="flex justify-center mt-6 mb-4">
+                            <span className="text-[10px] font-bold text-slate-400 px-3 py-1 bg-slate-100 rounded-full uppercase tracking-wider">
+                                {formatDate(message.created_at)}
+                            </span>
+                            </div>
+                        )}
+                        
+                        <div className={`flex items-end space-x-3 ${isOwn ? 'justify-end' : 'justify-start'}`}>
+                            {!isOwn && (
+                                <img 
+                                    className="w-6 h-6 rounded-full shrink-0" 
+                                    src={`https://ui-avatars.com/api/?name=${selectedConversation.other_user_name}&background=003d9b&color=fff&size=50`} 
+                                    alt="avatar" 
+                                />
+                            )}
+                            <div className={`max-w-[80%] ${isOwn ? 'order-1' : 'order-2'}`}>
+                                <div className={`p-3 text-sm leading-relaxed ${
+                                    isOwn 
+                                    ? 'bg-primary text-white rounded-xl rounded-br-none shadow-md' 
+                                    : 'bg-white rounded-xl rounded-bl-none shadow-sm text-slate-700 border border-slate-50'
+                                }`}>
+                                    {message.content && <p>{message.content}</p>}
+                                    {message.file_url && (
+                                    <div className="mt-2 w-full">
+                                        {message.file_type?.startsWith('image/') ? (
+                                            <div className="relative rounded-lg overflow-hidden border border-white/10 group">
+                                                <img
+                                                    src={getFileUrl(message.file_url)}
+                                                    alt={message.file_name}
+                                                    className="rounded-lg max-w-full"
+                                                />
+                                                <a href={getFileUrl(message.file_url)} target="_blank" rel="noopener noreferrer" className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <Download className="text-white h-6 w-6" />
+                                                </a>
+                                            </div>
+                                        ) : (
+                                            <div className={`border p-3 rounded-xl flex items-center justify-between ${isOwn ? 'bg-white/10 border-white/20' : 'bg-primary/5 border-primary/10'}`}>
+                                                <div className="flex items-center overflow-hidden">
+                                                    <div className={`w-8 h-8 rounded flex items-center justify-center shrink-0 ${isOwn ? 'bg-white/20 text-white' : 'bg-primary/10 text-primary'}`}>
+                                                        <span className="material-symbols-outlined" data-icon="description">description</span>
+                                                    </div>
+                                                    <div className="ml-3 min-w-0">
+                                                        <p className={`text-sm font-bold truncate ${isOwn ? 'text-white' : 'text-primary'}`}>{message.file_name}</p>
+                                                        <p className={`text-[10px] font-medium ${isOwn ? 'text-white/70' : 'text-slate-500'}`}>Document</p>
+                                                    </div>
+                                                </div>
+                                                <a href={getFileUrl(message.file_url)} target="_blank" rel="noopener noreferrer" className={`w-8 h-8 rounded-full ml-3 shrink-0 flex items-center justify-center hover:scale-105 active:scale-95 transition-all ${isOwn ? 'bg-white text-primary' : 'bg-primary text-white'}`}>
+                                                    <span className="material-symbols-outlined text-sm" data-icon="download">download</span>
+                                                </a>
+                                            </div>
+                                        )}
+                                    </div>
+                                    )}
+                                </div>
+                                <div className={`flex items-center mt-1 ${isOwn ? 'justify-end mr-1' : 'ml-1'}`}>
+                                    <span className="text-[10px] text-slate-400 mr-1">{formatTime(message.created_at)}</span>
+                                    {isOwn && (
+                                        <span className="material-symbols-outlined text-xs text-blue-500" data-icon="done_all" style={{ fontVariationSettings: "'FILL' 0" }}>
+                                            {message.is_read ? 'done_all' : 'check'}
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                        </React.Fragment>
+                    );
+                    })
+                )}
+                <div ref={messagesEndRef} />
+              </div>
+
+              {/* Message Input Container */}
+              <div className="p-4 md:p-6 bg-white border-t border-slate-100 shrink-0">
+                {selectedFile && (
+                    <div className="mb-3 flex items-center gap-2 p-2 bg-slate-50 border border-slate-100 rounded-lg max-w-sm">
+                        <div className="w-8 h-8 bg-blue-100 text-blue-700 rounded flex items-center justify-center shrink-0">
+                            {getFileIcon(selectedFile.type)}
+                        </div>
+                        <span className="text-sm font-bold text-slate-700 flex-1 truncate">{selectedFile.name}</span>
+                        <button onClick={() => setSelectedFile(null)} className="w-6 h-6 flex items-center justify-center rounded-full text-slate-400 hover:bg-slate-200 transition-colors">
+                        <X className="h-3 w-3" />
+                        </button>
+                    </div>
+                )}
+
+                <div className="flex items-center bg-surface-container-low rounded-xl px-4 py-2 ring-1 ring-slate-200 focus-within:ring-secondary/50 focus-within:bg-white transition-all">
+                    <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleFileSelect}
+                        accept="image/*,.pdf"
+                        className="hidden"
+                    />
+                    <button onClick={() => fileInputRef.current?.click()} className="text-slate-400 hover:text-primary transition-colors p-1">
+                        <span className="material-symbols-outlined" data-icon="attach_file">attach_file</span>
+                    </button>
+                    <input 
+                        className="flex-1 bg-transparent border-none focus:ring-0 text-sm font-inter py-2 px-3 text-slate-700" 
+                        placeholder="Type your clinical update here..." 
+                        type="text"
+                        value={newMessage}
+                        onChange={(e) => setNewMessage(e.target.value)}
+                        onKeyPress={(e) => {
+                            if (e.key === 'Enter') {
+                            e.preventDefault();
+                            handleSendMessage();
+                            }
+                        }}
+                    />
+                    <div className="flex items-center space-x-2 shrink-0">
+                        <button 
+                            onClick={handleSendMessage}
+                            disabled={sending || (!newMessage.trim() && !selectedFile)}
+                            className="bg-primary text-white p-2 w-10 h-10 rounded-lg hover:bg-primary-container disabled:opacity-50 transition-all flex items-center justify-center shadow-md shadow-primary/20"
+                        >
+                            {sending ? <LoadingSpinner size="sm" /> : <span className="material-symbols-outlined text-xl" data-icon="send">send</span>}
+                        </button>
+                    </div>
+                </div>
+                
+                <div className="mt-2 flex justify-between items-center px-1 hidden md:flex">
+                    <p className="text-[10px] text-slate-400 font-medium">Press <span className="bg-slate-100 px-1 rounded font-mono">Enter</span> to send</p>
+                    <div className="flex space-x-3">
+                        <span onClick={() => fileInputRef.current?.click()} className="flex items-center text-[10px] text-slate-500 font-bold uppercase tracking-tighter cursor-pointer hover:text-primary transition-colors">
+                            <span className="material-symbols-outlined text-[14px] mr-1" data-icon="biotech">biotech</span> Attach Scan
+                        </span>
+                    </div>
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="flex-1 flex flex-col items-center justify-center p-8 bg-surface">
+              <div className="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <span className="material-symbols-outlined text-5xl text-slate-300">chat_bubble</span>
+              </div>
+              <h3 className="text-xl font-headline font-bold text-slate-800 mb-2">Select a conversation</h3>
+              <p className="text-slate-500 font-medium text-center max-w-sm">Choose a patient from the list on the left or click the add icon to start securely messaging someone new.</p>
             </div>
-          </>
-        ) : (
-          <div className="flex-1 flex items-center justify-center">
-            <div className="text-center">
-              <MessageCircle className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Select a conversation</h3>
-              <p className="text-gray-500">Choose a patient to start messaging</p>
-            </div>
-          </div>
-        )}
+          )}
+        </section>
       </div>
     </div>
   );

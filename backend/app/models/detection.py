@@ -7,15 +7,15 @@ import enum
 from ..core.database import Base
 
 class ImageType(str, enum.Enum):
-    intraoral = "intraoral"
-    bitewing = "bitewing"
-    periapical = "periapical"
-    panoramic = "panoramic"
+    INTRAORAL = "INTRAORAL"
+    BITEWING = "BITEWING"
+    PERIAPICAL = "PERIAPICAL"
+    PANORAMIC = "PANORAMIC"
 
 class DetectionStatus(str, enum.Enum):
-    pending = "pending"
-    completed = "completed"
-    reviewed = "reviewed"
+    PENDING = "PENDING"
+    COMPLETED = "COMPLETED"
+    REVIEWED = "REVIEWED"
 
 class Detection(Base):
     __tablename__ = "detections"
@@ -34,7 +34,7 @@ class Detection(Base):
     total_caries_detected = Column(Integer, default=0)
     processing_time_ms = Column(Float)
     confidence_threshold = Column(Float)
-    status = Column(Enum(DetectionStatus), default=DetectionStatus.pending)
+    status = Column(Enum(DetectionStatus), default=DetectionStatus.PENDING)
     notes = Column(Text)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     
