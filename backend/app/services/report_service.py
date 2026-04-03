@@ -8,6 +8,7 @@ from io import BytesIO
 from datetime import datetime
 import requests
 import matplotlib
+import xml.sax.saxutils as saxutils
 matplotlib.use('Agg')  # Use non-interactive backend
 import matplotlib.pyplot as plt
 from typing import Optional
@@ -94,13 +95,17 @@ class ReportService:
         
         # Chart Analysis Section
         if detection.caries_findings and len(detection.caries_findings) > 0:
+            print("Building chart section...")
             story.extend(self._build_chart_section(detection))
             story.append(Spacer(1, 0.3*inch))
+            print("Chart section built successfully")
         
         # Detailed Findings
         if detection.caries_findings:
+            print("Building findings section...")
             story.extend(self._build_findings_section(detection))
             story.append(Spacer(1, 0.3*inch))
+            print("Findings section built successfully")
         
         # Notes Section
         if detection.notes:
@@ -108,10 +113,19 @@ class ReportService:
             story.append(Spacer(1, 0.3*inch))
         
         # Footer
+        print("Building footer...")
         story.extend(self._build_footer())
         
         # Build PDF
-        doc.build(story)
+        print("Starting PDF build...")
+        try:
+            doc.build(story)
+            print("PDF build successful")
+        except Exception as e:
+            print(f"ERROR: doc.build failed: {str(e)}")
+            import traceback
+            traceback.print_exc()
+            raise
         
         # Get the PDF bytes
         pdf_bytes = buffer.getvalue()
@@ -130,9 +144,9 @@ class ReportService:
         
         # Patient and Detection Info
         info_data = [
-            ['Detection ID:', detection.detection_id, 'Patient:', patient.full_name],
+            ['Detection ID:', saxutils.escape(str(detection.detection_id)), 'Patient:', saxutils.escape(patient.full_name)],
             ['Date:', datetime.fromisoformat(str(detection.detection_date)).strftime('%B %d, %Y'), 
-             'Status:', detection.status.value.upper()],
+             'Status:', saxutils.escape(detection.status.value.upper())],
         ]
         
         info_table = Table(info_data, colWidths=[1.5*inch, 2*inch, 1*inch, 2*inch])
@@ -273,11 +287,11 @@ class ReportService:
         for idx, finding in enumerate(detection.caries_findings, 1):
             findings_data.append([
                 str(idx),
-                f"#{finding.tooth_number}" if finding.tooth_number else "N/A",
-                finding.severity.value.capitalize() if finding.severity else "N/A",
-                finding.location or "N/A",
+                f"Finding {idx}",
+                saxutils.escape(finding.severity.value.capitalize()) if finding.severity else "N/A",
+                saxutils.escape(finding.location) or "N/A",
                 f"{(finding.confidence_score * 100):.1f}%",
-                finding.treatment_recommendation or "N/A"
+                saxutils.escape(finding.treatment_recommendation) or "N/A"
             ])
         
         findings_table = Table(findings_data, colWidths=[0.4*inch, 0.7*inch, 1*inch, 1.2*inch, 1*inch, 2.2*inch])
@@ -308,7 +322,8 @@ class ReportService:
         elements.append(header)
         
         # Notes content
-        notes = Paragraph(detection.notes, self.styles['Normal'])
+        safe_notes = saxutils.escape(detection.notes) if detection.notes else ""
+        notes = Paragraph(safe_notes, self.styles['Normal'])
         elements.append(notes)
         
         return elements
@@ -445,10 +460,10 @@ class ReportService:
         # Hospital Information
         clinic_info = f"""
         <para alignment="center">
-        <b>{settings.HOSPITAL_NAME}</b><br/>
-        {settings.HOSPITAL_ADDRESS if settings.HOSPITAL_ADDRESS else ''}<br/>
-        {f'Phone: {settings.HOSPITAL_PHONE}' if settings.HOSPITAL_PHONE else ''}<br/>
-        {f'Email: {settings.HOSPITAL_EMAIL}' if settings.HOSPITAL_EMAIL else ''}
+        <b>{saxutils.escape(settings.HOSPITAL_NAME)}</b><br/>
+        {saxutils.escape(settings.HOSPITAL_ADDRESS) if settings.HOSPITAL_ADDRESS else ''}<br/>
+        {f'Phone: {saxutils.escape(settings.HOSPITAL_PHONE)}' if settings.HOSPITAL_PHONE else ''}<br/>
+        {f'Email: {saxutils.escape(settings.HOSPITAL_EMAIL)}' if settings.HOSPITAL_EMAIL else ''}
         </para>
         """
         

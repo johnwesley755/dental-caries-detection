@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { api } from '../services/api'; // Assuming there is a central api service
+import { api } from '../services/api'; 
 import type { User } from '../types/auth.types';
 import { toast } from 'sonner';
-import { Loader2 } from 'lucide-react';
+import { ShieldCheck, Mail, Building2, MapPin, Award } from 'lucide-react';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
+import { TopNavBar } from '../components/layout/TopNavBar';
+import { Badge } from '../components/ui/badge';
+import { Button } from '../components/ui/button';
 
 const VerificationDashboard: React.FC = () => {
     const [pendingDentists, setPendingDentists] = useState<User[]>([]);
@@ -18,8 +21,8 @@ const VerificationDashboard: React.FC = () => {
         try {
             const response = await api.get('/admin/pending-dentists');
             setPendingDentists(response.data);
-        } catch (error) {
-            console.error('Failed to load pending dentists', error);
+        } catch (err: unknown) {
+            console.error('Failed to load pending dentists', err);
             toast.error('Failed to load verification requests');
         } finally {
             setIsLoading(false);
@@ -31,76 +34,86 @@ const VerificationDashboard: React.FC = () => {
             await api.post(`/admin/verify-dentist/${userId}`);
             toast.success('Dentist verified successfully');
             setPendingDentists(prev => prev.filter(d => d.id !== userId));
-        } catch (error) {
+        } catch (err: unknown) {
+            console.error('Verification failed', err);
             toast.error('Verification failed');
         }
     };
 
-    if (isLoading) return <div className="p-8 flex items-center justify-center"><LoadingSpinner size="sm" /></div>;
+    if (isLoading) return <div className="min-h-screen bg-surface flex items-center justify-center"><LoadingSpinner size="lg" /></div>;
 
     return (
-        <div className="p-8">
-            <div className="mb-8">
-                <h1 className="text-3xl font-bold text-gray-900">Dentist Verifications</h1>
-                <p className="text-gray-500 mt-2">Manage and approve professional credentials</p>
-            </div>
-
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full text-left">
-                        <thead className="bg-gray-50 border-b border-gray-100">
-                            <tr>
-                                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Dentist</th>
-                                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">License info</th>
-                                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Clinic</th>
-                                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-100">
-                            {pendingDentists.length === 0 ? (
-                                <tr>
-                                    <td colSpan={4} className="px-6 py-12 text-center text-gray-500 font-medium">
-                                        No pending verifications found
-                                    </td>
-                                </tr>
-                            ) : (
-                                pendingDentists.map((dentist) => (
-                                    <tr key={dentist.id} className="hover:bg-gray-50/50 transition-colors">
-                                        <td className="px-6 py-4">
-                                            <div className="flex items-center gap-3">
-                                                <div className="h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 font-bold">
-                                                    {dentist.full_name[0]}
-                                                </div>
-                                                <div>
-                                                    <div className="font-bold text-gray-900">{dentist.full_name}</div>
-                                                    <div className="text-xs text-gray-500">{dentist.email}</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <div className="inline-flex items-center px-2.5 py-1 rounded-md bg-orange-50 text-orange-700 text-xs font-bold">
-                                                {dentist.profile?.license_number || 'N/A'}
-                                            </div>
-                                            <div className="text-xs text-gray-500 mt-1">{dentist.profile?.specialization || 'General Dentistry'}</div>
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <div className="text-sm font-medium text-gray-900">{dentist.profile?.clinic_name || 'N/A'}</div>
-                                            <div className="text-xs text-gray-500">{dentist.profile?.clinic_address || 'N/A'}</div>
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <button
-                                                onClick={() => handleVerify(dentist.id)}
-                                                className="px-4 py-2 bg-primary-600 text-white text-xs font-bold rounded-lg hover:bg-primary-700 shadow-sm hover:shadow-md transition-all"
-                                            >
-                                                Verify Professional
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))
-                            )}
-                        </tbody>
-                    </table>
+        <div className="min-h-screen bg-surface">
+            <TopNavBar title="Credential Verification" />
+            
+            <div className="p-4 sm:p-8 max-w-7xl mx-auto">
+                <div className="mb-8 space-y-2 text-left">
+                    <h1 className="text-2xl sm:text-3xl font-headline font-black text-blue-900 uppercase tracking-tight">Access Control</h1>
+                    <p className="text-slate-500 font-bold text-[10px] sm:text-xs uppercase tracking-[0.2em] opacity-60">Authorize licensed clinical practitioners for neural diagnostics</p>
                 </div>
+
+                {pendingDentists.length === 0 ? (
+                    <div className="bg-white rounded-[2.5rem] p-16 shadow-2xl shadow-slate-200/50 border border-slate-50 text-center flex flex-col items-center gap-6">
+                        <div className="w-20 h-20 bg-emerald-50 rounded-3xl flex items-center justify-center">
+                            <ShieldCheck className="h-10 w-10 text-emerald-500" />
+                        </div>
+                        <div className="space-y-4">
+                            <h3 className="text-xl font-headline font-black text-blue-900 uppercase tracking-widest">Protocol Verified</h3>
+                            <p className="text-slate-400 font-bold text-sm uppercase tracking-tight">No pending clinical credentials in the secure queue.</p>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                        {pendingDentists.map((dentist) => (
+                            <div key={dentist.id} className="bg-white rounded-[2.5rem] p-8 shadow-2xl shadow-slate-200/50 border border-slate-50 hover:border-primary/20 transition-all group flex flex-col gap-6">
+                                <div className="flex items-center gap-5">
+                                    <div className="h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary text-2xl font-headline font-black shadow-inner border border-primary/5">
+                                        {dentist.full_name[0]}
+                                    </div>
+                                    <div className="flex-1 text-left min-w-0">
+                                        <h3 className="font-headline font-black text-blue-900 uppercase text-sm truncate">{dentist.full_name}</h3>
+                                        <div className="flex items-center gap-1.5 text-[10px] text-slate-400 font-black uppercase tracking-widest mt-1 opacity-60">
+                                            <Mail className="h-3 w-3" />
+                                            <span className="truncate">{dentist.email}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-4">
+                                    <div className="p-5 rounded-3xl bg-slate-50 border border-slate-100 flex items-start gap-4 transition-colors group-hover:bg-white group-hover:shadow-lg group-hover:shadow-slate-100">
+                                        <Award className="h-5 w-5 text-primary mt-1" />
+                                        <div className="text-left font-bold text-slate-500 flex-1">
+                                            <p className="text-[10px] uppercase tracking-widest opacity-40 mb-1">State License</p>
+                                            <p className="text-sm text-blue-900 mb-2">{dentist.profile?.license_number || 'N/A'}</p>
+                                            <Badge className="bg-primary text-white border-none text-[9px] uppercase font-black px-2.5 py-1 rounded-lg tracking-widest">
+                                                {dentist.profile?.specialization || 'Clinical'}
+                                            </Badge>
+                                        </div>
+                                    </div>
+
+                                    <div className="p-5 rounded-3xl bg-slate-50 border border-slate-100 flex items-start gap-4 transition-colors group-hover:bg-white group-hover:shadow-lg group-hover:shadow-slate-100">
+                                        <Building2 className="h-5 w-5 text-primary mt-1" />
+                                        <div className="text-left font-bold text-slate-500 flex-1">
+                                            <p className="text-[10px] uppercase tracking-widest opacity-40 mb-1">Clinical Entity</p>
+                                            <p className="text-sm text-blue-900 mb-2">{dentist.profile?.clinic_name || 'Personal Practice'}</p>
+                                            <div className="flex items-center gap-1.5 text-[10px] opacity-60">
+                                                <MapPin className="h-3.5 w-3.5 text-primary" />
+                                                <span className="truncate">{dentist.profile?.clinic_address || 'Address Restricted'}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <Button
+                                    onClick={() => handleVerify(dentist.id)}
+                                    className="w-full h-16 bg-primary hover:bg-blue-700 text-white text-[11px] font-black uppercase tracking-[0.2em] rounded-2xl shadow-xl shadow-primary/20 mt-auto transition-all active:scale-95 hover:-translate-y-1"
+                                >
+                                    Authorize Access
+                                </Button>
+                            </div>
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
     );

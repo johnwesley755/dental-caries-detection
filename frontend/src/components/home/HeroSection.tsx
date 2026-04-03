@@ -7,7 +7,6 @@ import {
   Activity, 
   CheckCircle2, 
   FileText,
-  Menu,
   X,
   Stethoscope,
   Zap,
@@ -18,15 +17,14 @@ import {
   Database,
   Cloud,
   Lock,
-  Feather,
   UploadCloud
 } from 'lucide-react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 
 // --- Background Icon Component ---
-const BackgroundIcon = ({ icon: Icon, className, delay }: { icon: any, className: string, delay: number }) => (
+const BackgroundIcon = ({ icon: Icon, className, delay }: { icon: React.ElementType, className: string, delay: number }) => (
   <motion.div 
-    className={`absolute text-slate-200/60 ${className}`}
+    className={`absolute text-blue-200/40 ${className}`}
     initial={{ opacity: 0 }}
     animate={{ 
       opacity: 1, 
@@ -52,7 +50,7 @@ export const HeroSection: React.FC = () => {
   // --- Scroll & Parallax Hooks ---
   const { scrollY } = useScroll();
   const yBackground = useTransform(scrollY, [0, 1000], [0, 300]); 
-  const yMockup = useTransform(scrollY, [0, 500], [0, -80]); 
+  const yMockup = useTransform(scrollY, [0, 500], [0, -50]); 
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -61,80 +59,74 @@ export const HeroSection: React.FC = () => {
   }, []);
 
   return (
-    <div className="relative w-full min-h-screen overflow-hidden bg-slate-50/50 selection:bg-amber-100 selection:text-amber-900 font-sans">
+    <div className="relative w-full min-h-screen overflow-hidden bg-surface selection:bg-primary/20 selection:text-primary font-inter">
       
-      {/* =========================================
-          1. AMBIENT BACKGROUND LAYER
-      ========================================= */}
+      {/* 1. AMBIENT BACKGROUND LAYER */}
       <div className="absolute inset-0 pointer-events-none z-0">
-        {/* Soft Colorful Blobs */}
-        <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-orange-100/40 rounded-full blur-[100px] mix-blend-multiply" />
-        <div className="absolute top-[10%] right-[-10%] w-[40vw] h-[40vw] bg-yellow-100/40 rounded-full blur-[100px] mix-blend-multiply" />
-        <div className="absolute bottom-[-10%] left-[20%] w-[40vw] h-[40vw] bg-amber-50/50 rounded-full blur-[100px] mix-blend-multiply" />
+        <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-blue-100/40 rounded-full blur-[100px] mix-blend-multiply" />
+        <div className="absolute top-[10%] right-[-10%] w-[40vw] h-[40vw] bg-indigo-50/40 rounded-full blur-[100px] mix-blend-multiply" />
+        <div className="absolute bottom-[-10%] left-[20%] w-[40vw] h-[40vw] bg-primary/5 rounded-full blur-[100px] mix-blend-multiply" />
 
         {/* Floating Icons */}
         <motion.div style={{ y: yBackground }} className="absolute inset-0 w-full h-full">
-            <BackgroundIcon icon={Brain} className="w-24 h-24 top-32 left-[5%]" delay={0} />
-            <BackgroundIcon icon={Cloud} className="w-20 h-20 top-20 right-[10%]" delay={1} />
-            <BackgroundIcon icon={Database} className="w-16 h-16 top-[40%] left-[15%]" delay={2} />
-            <BackgroundIcon icon={Activity} className="w-16 h-16 top-[35%] right-[20%]" delay={3} />
-            <BackgroundIcon icon={Lock} className="w-14 h-14 bottom-[20%] left-[8%]" delay={4} />
-            <BackgroundIcon icon={ShieldCheck} className="w-20 h-20 bottom-[10%] right-[5%]" delay={5} />
+            <BackgroundIcon icon={Brain} className="w-16 h-16 sm:w-24 sm:h-24 top-32 left-[5%]" delay={0} />
+            <BackgroundIcon icon={Cloud} className="w-12 h-12 sm:w-20 sm:h-20 top-20 right-[10%]" delay={1} />
+            <BackgroundIcon icon={Database} className="w-10 h-10 sm:w-16 sm:h-16 top-[40%] left-[15%]" delay={2} />
+            <BackgroundIcon icon={Activity} className="w-10 h-10 sm:w-16 sm:h-16 top-[35%] right-[20%]" delay={3} />
+            <BackgroundIcon icon={Lock} className="w-8 h-8 sm:w-14 sm:h-14 bottom-[20%] left-[8%]" delay={4} />
+            <BackgroundIcon icon={ShieldCheck} className="w-12 h-12 sm:w-20 sm:h-20 bottom-[10%] right-[5%]" delay={5} />
         </motion.div>
       </div>
 
-      {/* =========================================
-          2. STICKY NAVIGATION HEADER
-      ========================================= */}
+      {/* 2. STICKY NAVIGATION HEADER */}
       <header 
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled 
-            ? 'bg-white/80 backdrop-blur-xl border-b border-slate-200/80 py-3 shadow-sm' 
+            ? 'bg-white/90 backdrop-blur-xl border-b border-slate-100 py-3 shadow-sm' 
             : 'bg-transparent py-6'
         }`}
       >
         <div className="max-w-[90rem] mx-auto px-6 lg:px-12 flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center gap-2.5 cursor-pointer group" onClick={() => navigate('/')}>
-            <div className="relative w-9 h-9 flex items-center justify-center bg-amber-600 rounded-xl shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform duration-300">
+            <div className="relative w-10 h-10 flex items-center justify-center bg-primary rounded-xl shadow-lg shadow-primary/20 transition-all duration-300 group-hover:scale-105 active:scale-95">
               <Stethoscope className="w-5 h-5 text-white relative z-10" />
-              <div className="absolute inset-0 bg-white/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
-            <span className="text-xl font-bold tracking-tight text-slate-900">
-              DentalAI<span className="text-amber-600">.Dx</span>
+            <span className="text-xl font-headline font-black text-blue-900 tracking-tight">
+              DentalAI<span className="text-primary-container">.Dx</span>
             </span>
           </div>
 
           {/* Desktop Links */}
-          <nav className="hidden lg:flex items-center gap-8">
-            {['Features', 'Technology', 'Pricing', 'Resources'].map((item) => (
+          <nav className="hidden lg:flex items-center gap-10">
+            {['Detection', 'How it Works', 'Case Studies', 'Pricing'].map((item) => (
               <a 
                 key={item} 
-                href={`#${item.toLowerCase()}`} 
-                className="text-sm font-medium text-slate-600 hover:text-amber-600 transition-colors relative group"
+                href={`#${item.toLowerCase().replace(/\s+/g, '-')}`} 
+                className="text-xs font-black uppercase tracking-widest text-slate-500 hover:text-primary transition-all relative group"
               >
                 {item}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-amber-600 transition-all group-hover:w-full" />
+                <span className="absolute -bottom-2 left-0 w-0 h-[2px] bg-primary transition-all group-hover:w-full" />
               </a>
             ))}
           </nav>
 
           {/* Buttons */}
           <div className="hidden lg:flex items-center gap-4">
-            <button onClick={() => navigate('/login')} className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">
-              Log in
+            <button onClick={() => navigate('/login')} className="text-xs font-black uppercase tracking-widest text-slate-400 hover:text-blue-900 transition-colors">
+              Vault Access
             </button>
             <button 
               onClick={() => navigate('/register')} 
-              className="px-5 py-2.5 bg-slate-900 text-white text-sm font-semibold rounded-xl hover:bg-slate-800 hover:shadow-lg hover:-translate-y-0.5 transition-all shadow-md"
+              className="px-6 py-3 bg-primary text-white text-xs font-black uppercase tracking-widest rounded-xl hover:shadow-xl hover:shadow-primary/20 hover:-translate-y-1 transition-all active:scale-95"
             >
-              Get Started
+              Start Practice
             </button>
           </div>
 
           {/* Mobile Toggle */}
-          <button className="lg:hidden p-2 text-slate-600" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-            {mobileMenuOpen ? <X /> : <Menu />}
+          <button className="lg:hidden p-2 text-blue-900" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+            {mobileMenuOpen ? <X /> : <span className="material-symbols-outlined text-3xl">menu</span>}
           </button>
         </div>
 
@@ -145,253 +137,208 @@ export const HeroSection: React.FC = () => {
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className="lg:hidden bg-white border-b border-slate-100 overflow-hidden"
+              className="lg:hidden bg-white border-b border-slate-100 overflow-hidden shadow-2xl"
             >
-              <div className="px-6 py-4 flex flex-col gap-4">
-                {['Features', 'Technology', 'Pricing'].map((item) => (
-                  <a key={item} href="#" className="text-base font-medium text-slate-600 py-2">{item}</a>
+              <div className="px-8 py-8 flex flex-col gap-6">
+                {['Detection', 'Workflow', 'Pricing'].map((item) => (
+                  <a key={item} href="#" className="text-sm font-black uppercase tracking-widest text-slate-500">{item}</a>
                 ))}
-                <hr className="border-slate-100" />
-                <button onClick={() => navigate('/login')} className="text-left font-semibold text-slate-900 py-2">Log in</button>
-                <button onClick={() => navigate('/register')} className="w-full py-3 bg-amber-600 text-white rounded-lg font-semibold">Get Started</button>
+                <hr className="border-slate-50" />
+                <button onClick={() => navigate('/login')} className="text-left text-sm font-black uppercase tracking-widest text-blue-900">Vault Access</button>
+                <button onClick={() => navigate('/register')} className="w-full py-4 bg-primary text-white text-sm font-black uppercase tracking-widest rounded-xl shadow-lg shadow-primary/20">Secure Instance</button>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
       </header>
 
-      {/* =========================================
-          3. MAIN HERO CONTENT AREA
-      ========================================= */}
-      <section className="relative pt-36 pb-20 lg:pt-48 flex flex-col items-center z-10">
+      {/* 3. MAIN HERO CONTENT AREA */}
+      <section className="relative pt-32 pb-20 sm:pt-40 lg:pt-56 flex flex-col items-center z-10">
         
-        {/* Animated Props (Feather/Sparkles) */}
-        <motion.div 
-          animate={{ y: [0, -15, 0], rotate: [0, 10, 0] }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-32 left-[10%] hidden 2xl:block"
-        >
-          <Sparkles className="w-16 h-16 text-yellow-400 drop-shadow-sm" fill="rgba(250, 204, 21, 0.2)" />
-        </motion.div>
-
-        <motion.div 
-          animate={{ y: [0, 15, 0], rotate: [0, -10, 0] }}
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-          className="absolute top-40 right-[10%] hidden 2xl:block"
-        >
-          <Feather className="w-16 h-16 text-yellow-400 drop-shadow-sm" strokeWidth={1.5} />
-        </motion.div>
-
-
-        <div className="w-full max-w-[85rem] mx-auto px-4 text-center relative z-20">
+        <div className="w-full max-w-[85rem] mx-auto px-6 text-center relative z-20">
           
-          {/* Version Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-amber-100 text-amber-700 text-sm font-medium mb-8 shadow-sm hover:shadow-md transition-shadow cursor-default">
+          {/* Status Badge */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-white border border-slate-100 text-blue-900 text-[10px] font-black uppercase tracking-widest mb-10 shadow-sm hover:shadow-xl transition-all cursor-default"
+          >
             <span className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-600"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary"></span>
             </span>
-            <span>New: Auto-Report Generation v2.0</span>
-          </div>
+            <span>Neural Engine v4.0 Active</span>
+          </motion.div>
 
           {/* Heading */}
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight text-slate-900 leading-[1.1] mb-8">
-            Make your diagnostics look <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-yellow-600 to-amber-600">
-              as good as they sound
+          <h1 className="text-3xl sm:text-6xl md:text-7xl lg:text-8xl font-headline font-black tracking-tight text-blue-900 leading-[1.05] mb-8 lg:px-4">
+             AI PRECISION FOR <br className="hidden md:block" />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-blue-600 to-indigo-600">
+              CLINICAL EXCELLENCE
             </span>
           </h1>
 
           {/* Subtitle */}
-          <p className="text-xl md:text-2xl text-slate-500 mb-10 max-w-3xl mx-auto leading-relaxed font-normal">
-            DentalAI helps professionals quickly convey clinical findings to patients and colleagues, 
-            with precision and ease.
+          <p className="text-sm sm:text-lg md:text-xl text-slate-500 mb-12 max-w-3xl mx-auto leading-relaxed font-bold uppercase tracking-tight opacity-70">
+            Automated detection of dental caries with peer-reviewed precision. <br className="hidden sm:block" />
+            Empowering dentists with real-time neural diagnostics.
           </p>
 
           {/* Primary Actions */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-24">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20">
             <button
               onClick={() => navigate('/register')}
-              className="group relative h-14 px-8 bg-amber-600 text-white rounded-2xl text-lg font-semibold hover:bg-amber-700 transition-all shadow-xl shadow-amber-500/20 hover:shadow-amber-500/30 hover:-translate-y-0.5 flex items-center gap-2 overflow-hidden"
+              className="w-full sm:w-auto h-16 px-10 bg-primary text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-2xl shadow-primary/30 hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-3"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-amber-500 to-amber-600 opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="relative flex items-center gap-2">
-                <Sparkles className="w-5 h-5 fill-amber-200/50" />
-                <span>Start Analyzing Free</span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </div>
+                <Sparkles className="w-5 h-5" />
+                <span>Initialize Practice</span>
+                <ArrowRight className="w-5 h-5" />
             </button>
             
             <button 
               onClick={() => document.getElementById('demo')?.scrollIntoView()}
-              className="h-14 px-8 bg-white text-slate-600 border border-slate-200 rounded-2xl text-lg font-semibold hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm hover:shadow-md flex items-center gap-2"
+              className="w-full sm:w-auto h-16 px-10 bg-white text-slate-500 border border-slate-100 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-slate-50 transition-all shadow-sm active:scale-95 flex items-center justify-center gap-3"
             >
-              <ScanLine className="w-5 h-5 text-slate-400" />
-              View Sample Report
+              <ScanLine className="w-5 h-5 opacity-50" />
+              View Neural Scan
             </button>
           </div>
         </div>
 
-
-        {/* =========================================
-            4. ENHANCED MOCKUP INTERFACE
-        ========================================= */}
+        {/* 4. ENHANCED MOCKUP INTERFACE */}
         <motion.div 
-          style={{ y: yMockup }}
-          className="w-full max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 relative z-20 perspective-[2000px]"
+          style={{ y: typeof window !== 'undefined' && window.innerWidth > 1024 ? yMockup : 0 }}
+          className="w-full max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8 relative z-20"
         >
-          {/* Main Glass Container */}
-          <div className="relative bg-white rounded-[3rem] p-4 md:p-8 shadow-[0_50px_100px_-20px_rgba(50,50,93,0.12)] ring-1 ring-slate-900/5 backdrop-blur-sm">
+          <div className="relative bg-white rounded-[2rem] sm:rounded-[3rem] p-3 sm:p-6 shadow-2xl ring-1 ring-slate-100">
             
-            {/* Inner Content Area */}
-            <div className="rounded-[2.5rem] bg-gradient-to-b from-slate-50/80 to-white border border-slate-100 p-6 md:p-10 min-h-[600px] flex flex-col xl:flex-row gap-8">
+            <div className="rounded-[1.5rem] sm:rounded-[2.5rem] bg-slate-50/50 border border-slate-100 p-4 sm:p-8 min-h-[400px] flex flex-col xl:flex-row gap-6 sm:gap-8">
               
-              {/* --- LEFT CARD: Upload Source --- */}
+              {/* --- LEFT CARD: Input --- */}
               <div className="flex-1 flex flex-col gap-6">
-                <div className="bg-white rounded-[2rem] p-8 border border-slate-100 shadow-lg shadow-slate-200/50 group hover:border-amber-100 transition-colors duration-300">
-                  
-                  {/* Icon Header */}
-                  <div className="w-14 h-14 bg-amber-50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                    <FileText className="w-7 h-7 text-amber-600" />
+                <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-xl shadow-slate-100/50 group hover:border-primary/20 transition-all duration-500">
+                  <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <FileText className="w-6 h-6 text-primary" />
                   </div>
                   
-                  <h3 className="text-2xl font-bold text-slate-900 mb-3">Start from any source</h3>
-                  <p className="text-slate-500 text-lg mb-8 leading-relaxed">
-                    Upload OPG X-rays, Bitewings, or intraoral camera images directly.
+                  <h3 className="text-xl font-headline font-black text-blue-900 mb-3 uppercase tracking-tight text-left">SOURCE UPLOAD</h3>
+                  <p className="text-slate-400 text-sm mb-8 leading-relaxed font-bold text-left">
+                    Accepts panoramic, periapical, and bitewing radiographic imagery.
                   </p>
 
-                  {/* Upload List */}
                   <div className="flex flex-col gap-3">
-                    {/* Active Item */}
-                    <div className="flex items-center gap-4 p-4 rounded-2xl bg-white border border-green-100 shadow-[0_4px_20px_-10px_rgba(22,163,74,0.15)] relative overflow-hidden cursor-pointer hover:-translate-y-0.5 transition-transform">
-                      <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-green-500" />
-                      <div className="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center text-xs font-bold text-green-700">JPG</div>
+                    <div className="flex items-center gap-4 p-4 rounded-2xl bg-white border border-emerald-100 shadow-sm relative overflow-hidden cursor-pointer group/item">
+                      <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-emerald-500" />
+                      <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-[10px] font-black text-emerald-600">DICOM</div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-slate-700 truncate">patient_scan_001.jpg</p>
-                        <p className="text-xs text-green-600 font-bold">Ready for analysis</p>
+                        <p className="text-xs font-black text-slate-700 truncate uppercase tracking-widest">patient_042_rx.dcm</p>
+                        <p className="text-[10px] text-emerald-600 font-black uppercase tracking-widest">Ready for compute</p>
                       </div>
-                      <CheckCircle2 className="w-6 h-6 text-green-500 fill-green-50" />
+                      <CheckCircle2 className="w-5 h-5 text-emerald-500" />
                     </div>
 
-                    {/* Pending Item */}
-                    <div className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100 opacity-60 hover:opacity-100 transition-opacity cursor-pointer">
-                      <div className="w-10 h-10 rounded-lg bg-white flex items-center justify-center text-xs font-bold text-slate-400 border border-slate-200">DCM</div>
+                    <div className="flex items-center gap-4 p-4 rounded-2xl bg-slate-100 opacity-60 transition-opacity cursor-not-allowed">
+                      <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-[10px] font-black text-slate-300">BITW</div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-slate-500 truncate">dicom_batch_22.zip</p>
+                        <p className="text-xs font-black text-slate-400 truncate uppercase tracking-widest">processing_active...</p>
                       </div>
-                      <UploadCloud className="w-5 h-5 text-slate-400" />
+                      <UploadCloud className="w-5 h-5 text-slate-300" />
                     </div>
                   </div>
                 </div>
 
-                {/* Instant Analysis Card (Purple Gradient) */}
-                <div className="flex-1 bg-gradient-to-br from-amber-600 to-yellow-700 rounded-[2rem] p-8 text-white relative overflow-hidden shadow-xl shadow-amber-500/20 group hover:shadow-amber-500/30 transition-shadow">
-                  {/* Subtle Noise Texture Overlay */}
-                  <div className="absolute inset-0 opacity-[0.03] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay"></div>
-                  
-                  <div className="relative z-10 h-full flex flex-col justify-center">
-                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4 backdrop-blur-sm border border-white/10">
-                       <Zap className="w-6 h-6 text-yellow-300 fill-yellow-300" />
+                <div className="flex-1 bg-primary rounded-3xl p-8 text-white relative overflow-hidden shadow-2xl shadow-primary/20 group">
+                  <div className="relative z-10 h-full flex flex-col justify-center text-left">
+                    <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center mb-4 backdrop-blur-sm">
+                       <Zap className="w-6 h-6 text-white" />
                     </div>
-                    <h3 className="text-2xl font-bold mb-2">Instant Analysis</h3>
-                    <p className="text-amber-100 text-lg">AI processing in &lt; 2 seconds.</p>
+                    <h3 className="text-xl font-headline font-black mb-2 uppercase tracking-tight">LATENCY &lt; 2S</h3>
+                    <p className="text-primary-container text-xs font-bold uppercase tracking-widest">Real-time inference on edge.</p>
                   </div>
-                  {/* Decorative Glow */}
-                  <div className="absolute -right-12 -bottom-12 w-64 h-64 bg-white/10 rounded-full blur-3xl group-hover:scale-125 transition-transform duration-700 ease-in-out" />
+                  <div className="absolute -right-12 -bottom-12 w-64 h-64 bg-white/10 rounded-full blur-3xl transition-transform duration-700 group-hover:scale-125" />
                 </div>
               </div>
 
-              {/* --- RIGHT CARD: Dashboard Analysis --- */}
-              <div className="flex-[1.6] bg-white rounded-[2rem] border border-slate-200 shadow-2xl shadow-slate-200/50 flex flex-col overflow-hidden group">
-                {/* Dashboard Toolbar */}
-                <div className="h-16 border-b border-slate-100 px-8 flex items-center justify-between bg-white relative z-10">
+              {/* --- RIGHT CARD: Preview --- */}
+              <div className="flex-[1.6] bg-white rounded-3xl border border-slate-100 shadow-2xl flex flex-col overflow-hidden">
+                <div className="h-16 border-b border-slate-50 px-6 sm:px-8 flex items-center justify-between bg-white">
                   <div className="flex items-center gap-4">
-                    <h3 className="text-lg font-bold text-slate-800">Analysis Results</h3>
-                    <div className="h-4 w-px bg-slate-200" />
-                    <span className="flex items-center gap-1.5 px-3 py-1 bg-green-50 text-green-700 text-xs font-bold rounded-full border border-green-100">
-                      <ShieldCheck className="w-3 h-3" /> HIPAA Compliant
+                    <h3 className="text-xs font-black text-blue-900 uppercase tracking-widest">Neural Projection</h3>
+                    <div className="h-4 w-px bg-slate-100" />
+                    <span className="flex items-center gap-1.5 px-3 py-1 bg-blue-50 text-primary text-[10px] font-black rounded-full uppercase tracking-widest border border-primary/10">
+                      <ShieldCheck className="w-3 h-3" /> SECURE BASE
                     </span>
                   </div>
-                  <button className="text-sm font-semibold text-amber-600 hover:text-amber-700 flex items-center gap-1 hover:underline decoration-2 underline-offset-4">
-                    Export Report <ChevronRight className="w-4 h-4" />
+                  <button className="text-[10px] font-black text-primary uppercase tracking-widest hover:underline hidden sm:flex items-center gap-2">
+                    GENERATE REPORT <ChevronRight className="w-4 h-4" />
                   </button>
                 </div>
 
-                <div className="flex-1 p-8 flex flex-col lg:flex-row gap-8 bg-slate-50/30">
-                  
-                  {/* X-Ray Viewer */}
-                  <div className="flex-[1.5] relative rounded-2xl overflow-hidden bg-slate-900 group-hover:shadow-md transition-shadow border border-slate-200">
+                <div className="flex-1 p-4 sm:p-8 flex flex-col lg:flex-row gap-6 sm:gap-8 bg-slate-50/50">
+                  <div className="flex-[1.5] relative rounded-3xl overflow-hidden bg-slate-900 aspect-video lg:aspect-auto border border-slate-200">
                     <img 
                       src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?q=80&w=2070&auto=format&fit=crop"
-                      className="w-full h-full object-cover opacity-90"
-                      alt="Dental Analysis"
+                      className="w-full h-full object-cover opacity-60 grayscale"
+                      alt="Neural Scan"
                     />
                     
-                    {/* Scanning Animation Line */}
                     <motion.div 
-                      className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-orange-400 to-transparent shadow-[0_0_20px_rgba(34,211,238,0.8)] z-20"
+                      className="absolute top-0 left-0 right-0 h-[2px] bg-primary shadow-[0_0_20px_rgba(37,99,235,0.8)] z-20"
                       animate={{ top: ['0%', '100%', '0%'] }}
                       transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
                     />
 
-                    {/* AI Layer Active Badge */}
-                    <div className="absolute top-4 left-4 bg-black/70 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/10 flex items-center gap-2 shadow-lg z-30">
+                    <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 flex items-center gap-2 z-30">
                        <span className="relative flex h-2 w-2">
                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                          <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
                        </span>
-                       <span className="text-xs font-bold text-white tracking-wide">AI Layer Active</span>
+                       <span className="text-[10px] font-black text-white uppercase tracking-widest">LIVE DETECTION</span>
                     </div>
 
-                    {/* Detected Box */}
                     <motion.div 
                       initial={{ opacity: 0, scale: 0.9 }}
                       whileInView={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 0.5 }}
-                      className="absolute top-[30%] left-[40%] w-24 h-24 border-2 border-red-500 rounded-lg shadow-[0_0_20px_rgba(239,68,68,0.4)] bg-red-500/10 z-10"
+                      className="absolute top-[35%] left-[45%] w-20 h-20 border-2 border-red-500 rounded-xl shadow-[0_0_30px_rgba(239,68,68,0.4)] bg-red-500/10 z-10"
                     >
-                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm whitespace-nowrap">
-                        Caries (98%)
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded shadow-xl tracking-tighter">
+                        CARIES: 99.2%
                       </div>
                     </motion.div>
                   </div>
 
-                  {/* Right Sidebar Stats */}
                   <div className="flex-1 flex flex-col gap-4">
-                    {/* Confidence Widget */}
-                    <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:border-amber-100 transition-colors">
+                    <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm text-left">
                       <div className="flex justify-between items-center mb-4">
-                        <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Confidence</span>
-                        <Activity className="w-4 h-4 text-amber-500" />
+                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Neural Confidence</span>
+                        <Activity className="w-4 h-4 text-primary" />
                       </div>
                       <div className="flex items-baseline gap-2 mb-3">
-                        <span className="text-4xl font-bold text-slate-800">98.5%</span>
-                        <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-md border border-green-100">High Accuracy</span>
+                        <span className="text-3xl font-black text-blue-900">99.8%</span>
+                        <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Optimal</span>
                       </div>
-                      <div className="w-full bg-slate-100 rounded-full h-2">
+                      <div className="w-full bg-slate-50 rounded-full h-2 overflow-hidden ring-1 ring-slate-100">
                         <motion.div 
                           initial={{ width: 0 }}
-                          whileInView={{ width: '98.5%' }}
-                          transition={{ duration: 1.5, ease: "easeOut" }}
-                          className="bg-amber-600 h-full rounded-full shadow-[0_0_10px_rgba(79,70,229,0.4)]" 
+                          whileInView={{ width: '99.8%' }}
+                          transition={{ duration: 1.5 }}
+                          className="bg-primary h-full rounded-full" 
                         />
                       </div>
                     </div>
 
-                    {/* Findings List */}
-                    <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex-1 flex flex-col justify-center">
-                      <h4 className="text-xs font-bold text-slate-400 uppercase mb-4 tracking-wider">Detected Issues</h4>
+                    <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex-1 flex flex-col justify-center text-left">
+                      <h4 className="text-[10px] font-black text-slate-400 uppercase mb-4 tracking-widest">Critical Findings</h4>
                       <ul className="space-y-4">
                         {[
-                          { color: 'bg-red-500', label: 'Approximal Caries', loc: 'Tooth 46', severe: true },
-                          { color: 'bg-yellow-400', label: 'Enamel Lesion', loc: 'Tooth 45', severe: false },
-                          { color: 'bg-green-500', label: 'Bone Density', loc: 'Normal', severe: false },
+                          { color: 'bg-red-500', label: 'Dentin Caries', loc: 'Tooth 37' },
+                          { color: 'bg-primary', label: 'Neural Marker', loc: 'Tooth 36' },
                         ].map((item, i) => (
-                          <li key={i} className="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg transition-colors cursor-default">
-                            <span className={`w-3 h-3 rounded-full ${item.color} shadow-sm ring-2 ring-white`} />
+                          <li key={i} className="flex items-center gap-3">
+                            <span className={`w-2.5 h-2.5 rounded-full ${item.color} ring-4 ring-slate-50`} />
                             <div>
-                              <p className="text-sm font-bold text-slate-700 leading-none mb-1">{item.label}</p>
-                              <p className="text-xs text-slate-400 font-medium">{item.loc}</p>
+                              <p className="text-xs font-black text-slate-700 leading-none mb-1 uppercase tracking-tight">{item.label}</p>
+                              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{item.loc}</p>
                             </div>
                           </li>
                         ))}

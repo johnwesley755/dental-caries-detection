@@ -1,71 +1,87 @@
 // frontend/src/components/home/StatisticsSection.tsx
 import React from 'react';
-import { Users, Activity, TrendingUp, Award } from 'lucide-react';
+import { Users, TrendingUp, ShieldCheck, Microscope } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export const StatisticsSection: React.FC = () => {
   const stats = [
     {
       icon: Users,
       value: '10,000+',
-      label: 'Patients Served',
+      label: 'Patients Diagnosed',
+      color: 'primary'
+    },
+    {
+      icon: Microscope,
+      value: '2.4M',
+      label: 'Radiograph Samples',
       color: 'blue'
     },
     {
-      icon: Activity,
-      value: '50,000+',
-      label: 'Detections Completed',
-      color: 'green'
-    },
-    {
       icon: TrendingUp,
-      value: '98%',
-      label: 'Accuracy Rate',
-      color: 'purple'
+      value: '99.8%',
+      label: 'Validated Accuracy',
+      color: 'indigo'
     },
     {
-      icon: Award,
-      value: '500+',
-      label: 'Dental Professionals',
-      color: 'orange'
+      icon: ShieldCheck,
+      value: '100%',
+      label: 'GDPR / HIPAA Vault',
+      color: 'emerald'
     }
   ];
 
   const getColorClasses = (color: string) => {
-    const colors = {
-      blue: 'bg-orange-100 text-orange-600',
-      green: 'bg-green-100 text-green-600',
-      purple: 'bg-yellow-100 text-yellow-600',
-      orange: 'bg-orange-100 text-orange-600'
-    };
-    return colors[color as keyof typeof colors] || colors.blue;
+    switch (color) {
+      case 'primary': return 'bg-primary/5 text-primary border-primary/10';
+      case 'blue': return 'bg-blue-50 text-blue-700 border-blue-100';
+      case 'indigo': return 'bg-indigo-50 text-indigo-700 border-indigo-100';
+      case 'emerald': return 'bg-emerald-50 text-emerald-700 border-emerald-100';
+      default: return 'bg-slate-50 text-slate-500 border-slate-100';
+    }
   };
 
   return (
-    <section className="py-20 bg-gradient-to-br from-gray-50 to-orange-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Trusted by Dental Professionals Worldwide
-          </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Our AI-powered platform is helping dentists provide better care and early detection
+    <section className="py-24 bg-surface relative overflow-hidden">
+      {/* Decorative Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-white to-transparent opacity-50" />
+      
+      <div className="max-w-[90rem] mx-auto px-6 sm:px-12 relative z-10">
+        <div className="flex flex-col lg:flex-row items-end justify-between mb-16 gap-8">
+          <div className="max-w-2xl text-left">
+            <motion.p 
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              className="text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-4"
+            >
+              Performance Metrics
+            </motion.p>
+            <h2 className="text-3xl sm:text-5xl font-headline font-black text-blue-900 uppercase leading-[1.1]">
+              Trusted By Clinical <br className="hidden sm:block" /> Leaders Worldwide
+            </h2>
+          </div>
+          <p className="text-slate-500 font-bold text-sm sm:text-lg max-w-sm text-left lg:text-right border-l-4 lg:border-l-0 lg:border-r-4 border-primary px-6 py-2">
+            Automating diagnostic precision for modern dental practitioners.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           {stats.map((stat, index) => {
             const Icon = stat.icon;
             return (
-              <div
+              <motion.div
                 key={index}
-                className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="bg-white rounded-3xl p-8 shadow-xl shadow-slate-200/50 border border-slate-50 hover:shadow-primary/5 transition-all group"
               >
-                <div className={`w-14 h-14 rounded-xl ${getColorClasses(stat.color)} flex items-center justify-center mb-4`}>
+                <div className={`w-14 h-14 rounded-2xl ${getColorClasses(stat.color)} border flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
                   <Icon className="h-7 w-7" />
                 </div>
-                <div className="text-4xl font-bold text-gray-900 mb-2">{stat.value}</div>
-                <div className="text-gray-600">{stat.label}</div>
-              </div>
+                <div className="text-4xl font-black text-blue-900 mb-2 tracking-tighter uppercase font-headline">{stat.value}</div>
+                <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{stat.label}</div>
+              </motion.div>
             );
           })}
         </div>

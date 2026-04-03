@@ -1,20 +1,24 @@
+import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { SideNavBar } from '../components/layout/SideNavBar';
 
+export interface MainLayoutProps {
+  onMenuClick: () => void;
+}
+
 const MainLayout = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const onMenuClick = () => setIsSidebarOpen(true);
+
   return (
-    <div className="flex bg-background min-h-screen">
-      <SideNavBar />
-      {/* 
-        Note: The TopNavBar requires search props, typically we can lift search state or keep it 
-        in the dashboard. Since the initial mock had it in the layout header, we will handle search 
-        inside Dashboard if it needs to drive local component state, or we pass context.
-        Let's let Dashboard handle TopNavBar or move TopNavBar outside if global search is needed.
-        For now, we'll let Dashboard render TopNavBar to match the specific search behavior, or wrap it here contextually.
-        Actually, the TopNavBar is fixed so we can let the pages render their own header or give it a global search context.
-      */}
-      <div className="ml-64 mt-16 min-h-screen relative w-[calc(100%-16rem)]">
-         <Outlet />
+    <div className="flex bg-surface min-h-screen font-inter overflow-x-hidden">
+      {/* Sidebar - z-index 70 */}
+      <SideNavBar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+      
+      {/* Content Area - shifted on desktop */}
+      <div className="flex-1 lg:ml-72 min-h-screen relative w-full lg:w-[calc(100%-18rem)] transition-all duration-300">
+         <Outlet context={{ onMenuClick } as MainLayoutProps} />
       </div>
     </div>
   );

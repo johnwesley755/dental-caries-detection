@@ -9,33 +9,43 @@ interface Step {
 }
 
 const steps: Step[] = [
-  { number: '01', title: 'Upload Scans', desc: 'Securely upload X-ray or intraoral images.' },
-  { number: '02', title: 'AI Processing', desc: 'Our neural network analyzes density patterns.' },
-  { number: '03', title: 'Diagnosis', desc: 'Receive annotated reports with treatment suggestions.' },
+  { number: '01', title: 'Neural Input', desc: 'Securely upload DICOM or radiographic imagery to the practice vault.' },
+  { number: '02', title: 'Deep Analysis', desc: 'Our clinical-grade neural networks identify density anomalies in real-time.' },
+  { number: '03', title: 'Clinical Report', desc: 'Generate annotated diagnostic reports for immediate clinical validation.' },
 ];
 
 export const WorkflowSection: React.FC = () => {
   return (
-    <div className="py-24 container mx-auto px-4">
-      <h2 className="text-3xl font-bold text-center mb-16">Workflow Simplified</h2>
-      <div className="relative grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+    <div id="workflow" className="py-24 container mx-auto px-6 overflow-hidden">
+      <div className="text-center mb-20 space-y-3">
+        <motion.p 
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          className="text-[10px] font-black text-primary uppercase tracking-[0.3em]"
+        >
+          Protocol
+        </motion.p>
+        <h2 className="text-3xl md:text-5xl font-headline font-black text-blue-900 uppercase">Seamless Diagnostics</h2>
+      </div>
+
+      <div className="relative flex flex-col md:flex-row gap-12 sm:gap-8 max-w-6xl mx-auto">
         {/* Connector Line (Desktop) */}
-        <div className="hidden md:block absolute top-12 left-[16%] right-[16%] h-0.5 bg-gradient-to-r from-orange-100 via-orange-200 to-orange-100 -z-10" />
+        <div className="hidden md:block absolute top-[68px] left-[15%] right-[15%] h-[2px] bg-slate-100 -z-10" />
         
         {steps.map((step, index) => (
           <motion.div 
             key={index}
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: index * 0.2 }}
-            className="relative bg-white p-6 rounded-2xl border border-gray-100 text-center hover:border-orange-200 transition-colors group"
+            className="flex-1 relative bg-white p-10 rounded-[2.5rem] border border-slate-50 shadow-2xl shadow-slate-200/50 text-center hover:border-primary/20 transition-all group hover:-translate-y-2 duration-500"
           >
-            <div className="w-24 h-24 bg-white border-4 border-orange-50 text-orange-600 rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-6 group-hover:scale-110 group-hover:border-orange-100 transition-all shadow-lg shadow-orange-50">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white border-[6px] border-slate-50 text-primary rounded-3xl flex items-center justify-center text-2xl sm:text-3xl font-black mx-auto mb-8 group-hover:scale-110 group-hover:border-primary/10 group-hover:rotate-6 transition-all shadow-xl shadow-primary/5">
               {step.number}
             </div>
-            <h3 className="text-xl font-bold mb-3">{step.title}</h3>
-            <p className="text-gray-600">{step.desc}</p>
+            <h3 className="text-lg font-headline font-black mb-4 text-blue-900 uppercase tracking-tight">{step.title}</h3>
+            <p className="text-slate-500 text-sm font-medium leading-relaxed">{step.desc}</p>
           </motion.div>
         ))}
       </div>

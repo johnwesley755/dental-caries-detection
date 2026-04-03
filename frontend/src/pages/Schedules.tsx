@@ -81,7 +81,7 @@ export const Schedules: React.FC = () => {
         try {
             const aptDate = new Date(apt.appointment_date);
             return isSameDay(aptDate, day);
-        } catch (e) {
+        } catch {
             return false;
         }
     }).sort((a, b) => new Date(a.appointment_date).getTime() - new Date(b.appointment_date).getTime());
@@ -99,62 +99,64 @@ export const Schedules: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-4rem)] bg-background overflow-hidden relative">
+    <div className="flex flex-col min-h-screen bg-surface relative">
       <TopNavBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       
-      <section className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] p-8 flex flex-col gap-6">
-        <div className="flex flex-col gap-2">
-            <h2 className="font-headline text-3xl font-extrabold text-primary tracking-tight">Appointment Calendar</h2>
-            <p className="text-slate-500 text-sm font-medium">Manage clinical availability and patient flow with precision.</p>
+      <main className="flex-1 p-4 sm:p-6 lg:p-10 flex flex-col gap-6 lg:gap-8 overflow-x-hidden">
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+            <div className="space-y-1">
+                <h2 className="font-headline text-2xl lg:text-3xl font-extrabold text-primary tracking-tight">Appointment Calendar</h2>
+                <p className="text-slate-500 text-sm font-medium">Manage clinical availability and patient flow.</p>
+            </div>
+            <button 
+                onClick={handleNewAppointmentClick}
+                className="flex items-center justify-center gap-2 bg-gradient-to-r from-primary to-primary-container text-on-primary px-5 py-3 rounded-xl font-bold text-sm shadow-lg shadow-primary/20 hover:opacity-90 active:scale-95 transition-all"
+            >
+                <span className="material-symbols-outlined text-[20px]" data-icon="add">add</span>
+                New Appointment
+            </button>
         </div>
 
         {isLoading ? (
-            <div className="flex-1 flex items-center justify-center">
-                <LoadingSpinner size="lg" />
+            <div className="flex-1 flex items-center justify-center min-h-[400px]">
+                <LoadingSpinner size="lg" text="Loading schedule..." />
             </div>
         ) : (
-            <div className="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col flex-1 border border-surface-container">
+            <div className="bg-white rounded-2xl shadow-sm overflow-hidden flex flex-col border border-slate-100">
                 {/* Calendar Header Controls */}
-                <div className="p-4 bg-white border-b border-surface-container flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                        <h3 className="font-headline textxl font-bold text-on-surface min-w-[160px]">
+                <div className="p-4 lg:p-6 bg-white border-b border-slate-50 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-start">
+                        <h3 className="font-headline text-lg lg:text-xl font-bold text-on-surface">
                             {format(currentDate, 'MMMM yyyy')}
                         </h3>
-                        <div className="flex bg-surface-container-low p-1 rounded-lg">
-                            <button onClick={goToToday} className="px-3 py-1.5 text-sm font-medium text-primary bg-white shadow-sm rounded-md transition-all">Today</button>
+                        <div className="flex bg-slate-50 p-1 rounded-xl">
+                            <button onClick={goToToday} className="px-3 py-1.5 text-xs font-bold text-primary bg-white shadow-sm rounded-lg transition-all">Today</button>
                             <div className="flex ml-1">
-                                <button onClick={prevMonth} className="p-1.5 hover:bg-white rounded-md transition-all">
-                                    <span className="material-symbols-outlined text-sm" data-icon="chevron_left">chevron_left</span>
+                                <button onClick={prevMonth} className="p-1.5 hover:bg-white rounded-lg transition-all text-slate-400 hover:text-primary">
+                                    <span className="material-symbols-outlined text-lg" data-icon="chevron_left">chevron_left</span>
                                 </button>
-                                <button onClick={nextMonth} className="p-1.5 hover:bg-white rounded-md transition-all">
-                                    <span className="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
+                                <button onClick={nextMonth} className="p-1.5 hover:bg-white rounded-lg transition-all text-slate-400 hover:text-primary">
+                                    <span className="material-symbols-outlined text-lg" data-icon="chevron_right">chevron_right</span>
                                 </button>
                             </div>
                         </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                        <div className="hidden lg:flex bg-surface-container-low p-1 rounded-lg">
-                            <button className="px-4 py-1.5 text-sm font-semibold text-primary bg-white shadow-sm rounded-md">Month</button>
+                    <div className="hidden sm:flex items-center gap-2">
+                        <div className="bg-slate-50 p-1 rounded-xl">
+                            <button className="px-4 py-1.5 text-xs font-bold text-primary bg-white shadow-sm rounded-lg">Month View</button>
                         </div>
-                        <button 
-                            onClick={handleNewAppointmentClick}
-                            className="flex items-center gap-2 bg-gradient-to-r from-primary to-primary-container text-on-primary px-4 py-2 rounded-lg font-semibold text-sm shadow-sm hover:opacity-90 active:scale-95 transition-all"
-                        >
-                            <span className="material-symbols-outlined text-[20px]" data-icon="add">add</span>
-                            New Appointment
-                        </button>
                     </div>
                 </div>
 
                 {/* Days of Week */}
-                <div className="grid grid-cols-7 border-b border-surface-container bg-surface-container-low/30 shrink-0">
+                <div className="grid grid-cols-7 border-b border-slate-50 bg-slate-50/50">
                     {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                        <div key={day} className="py-3 text-center text-xs font-bold text-slate-400 uppercase tracking-widest">{day}</div>
+                        <div key={day} className="py-3 text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest">{day}</div>
                     ))}
                 </div>
 
-                {/* Calendar Grid Flow */}
-                <div className="grid grid-cols-7 auto-rows-fr bg-surface-container-low/20 flex-1 overflow-y-auto">
+                {/* Calendar Grid */}
+                <div className="grid grid-cols-7 auto-rows-fr bg-slate-50/20">
                     {days.map((day, idx) => {
                         const isCurrentMonth = isSameMonth(day, currentDate);
                         const isToday = isSameDay(day, new Date());
@@ -165,42 +167,61 @@ export const Schedules: React.FC = () => {
                                 key={day.toString()} 
                                 onClick={() => handleDayClick(day)}
                                 className={`
-                                    min-h-[120px] p-2 group transition-colors hover:bg-slate-50/50 cursor-pointer flex flex-col gap-1
-                                    ${!isCurrentMonth ? 'bg-surface-container-low/40' : 'bg-white'}
-                                    ${(idx + 1) % 7 !== 0 ? 'border-r' : ''} border-b border-surface-container/30
+                                    min-h-[80px] sm:min-h-[120px] p-1 sm:p-2 group transition-colors hover:bg-slate-50/50 cursor-pointer flex flex-col gap-1
+                                    ${!isCurrentMonth ? 'bg-slate-50/40 opacity-40' : 'bg-white'}
+                                    ${(idx + 1) % 7 !== 0 ? 'border-r' : ''} border-b border-slate-100/50
                                     ${isToday ? 'ring-2 ring-primary ring-inset z-10' : ''}
                                 `}
                             >
                                 <span className={`
-                                    block text-right text-sm font-semibold 
-                                    ${isToday ? 'text-primary font-bold' : (!isCurrentMonth ? 'text-slate-300' : 'text-on-surface-variant group-hover:text-primary')}
+                                    block text-right text-xs sm:text-sm font-bold 
+                                    ${isToday ? 'text-primary' : (!isCurrentMonth ? 'text-slate-300' : 'text-slate-500 group-hover:text-primary')}
                                 `}>
                                     {format(day, 'd')}
                                 </span>
                                 
-                                <div className="mt-1 space-y-1 flex-1 overflow-hidden" title={dayAppointments.length > 3 ? `${dayAppointments.length} appointments` : ''}>
-                                    {dayAppointments.slice(0, 3).map((apt) => {
-                                        const colorCfg = getStatusColorConfig(apt.status);
-                                        return (
-                                            <div 
-                                                key={apt.id} 
-                                                className={`${colorCfg.bg} border-l-2 ${colorCfg.border} p-1.5 rounded flex flex-col gap-0.5`}
-                                                onClick={(e) => e.stopPropagation()} // Stop propagation if clicking an event explicitly
-                                            >
-                                                <span className={`text-[10px] font-bold ${colorCfg.text} truncate uppercase`}>
-                                                    {format(new Date(apt.appointment_date), 'hh:mm a')}
-                                                </span>
-                                                <span className={`text-[11px] font-bold ${colorCfg.text} truncate leading-tight`}>
-                                                    {apt.patient_name} - {apt.appointment_type}
-                                                </span>
+                                <div className="space-y-1 flex-1 overflow-hidden">
+                                    {/* Desktop View: Full badges */}
+                                    <div className="hidden sm:block space-y-1">
+                                        {dayAppointments.slice(0, 3).map((apt) => {
+                                            const colorCfg = getStatusColorConfig(apt.status);
+                                            return (
+                                                <div 
+                                                    key={apt.id} 
+                                                    className={`${colorCfg.bg} border-l-2 ${colorCfg.border} p-1 rounded flex flex-col overflow-hidden`}
+                                                    onClick={(e) => e.stopPropagation()}
+                                                >
+                                                    <span className={`text-[8px] font-bold ${colorCfg.text} truncate uppercase`}>
+                                                        {format(new Date(apt.appointment_date), 'h:mm a')}
+                                                    </span>
+                                                    <span className={`text-[10px] font-bold ${colorCfg.text} truncate leading-tight`}>
+                                                        {apt.patient_name}
+                                                    </span>
+                                                </div>
+                                            );
+                                        })}
+                                        {dayAppointments.length > 3 && (
+                                            <div className="text-[9px] font-bold text-slate-400 text-center py-0.5 bg-slate-50 rounded">
+                                                +{dayAppointments.length - 3} more
                                             </div>
-                                        );
-                                    })}
-                                    {dayAppointments.length > 3 && (
-                                        <div className="text-[10px] font-bold text-slate-400 text-center uppercase tracking-wider py-1 border border-dashed border-slate-200 rounded">
-                                            + {dayAppointments.length - 3} more
-                                        </div>
-                                    )}
+                                        )}
+                                    </div>
+
+                                    {/* Mobile View: High-level indicators (dots) */}
+                                    <div className="sm:hidden flex flex-wrap justify-center gap-0.5 mt-auto pb-1">
+                                        {dayAppointments.slice(0, 4).map((apt) => {
+                                            const colorCfg = getStatusColorConfig(apt.status);
+                                            return (
+                                                <div 
+                                                    key={apt.id} 
+                                                    className={`w-1.5 h-1.5 rounded-full ${colorCfg.border.replace('border', 'bg')}`}
+                                                />
+                                            );
+                                        })}
+                                        {dayAppointments.length > 4 && (
+                                            <div className="w-1.5 h-1.5 rounded-full bg-slate-300" />
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         );
@@ -210,31 +231,32 @@ export const Schedules: React.FC = () => {
         )}
 
         {/* Legend */}
-        <div className="flex items-center justify-between mt-auto pt-6 border-t border-surface-container shrink-0">
-            <div className="flex flex-wrap items-center gap-6">
+        <div className="flex flex-col gap-4 mt-auto pt-6 border-t border-slate-100">
+            <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Status Legend</h4>
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
                 <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-primary/80"></span>
-                    <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">Scheduled</span>
+                    <span className="w-2.5 h-2.5 rounded-full bg-primary"></span>
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Scheduled</span>
                 </div>
                 <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-tertiary/80"></span>
-                    <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">Confirmed</span>
+                    <span className="w-2.5 h-2.5 rounded-full bg-tertiary"></span>
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Confirmed</span>
                 </div>
                 <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-outline/80"></span>
-                    <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">Completed</span>
+                    <span className="w-2.5 h-2.5 rounded-full bg-outline"></span>
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Completed</span>
                 </div>
                 <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-error/80"></span>
-                    <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">Cancelled</span>
+                    <span className="w-2.5 h-2.5 rounded-full bg-error"></span>
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Cancelled</span>
                 </div>
                 <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-secondary-container"></span>
-                    <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">No Show</span>
+                    <span className="w-2.5 h-2.5 rounded-full bg-secondary-container"></span>
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">No Show</span>
                 </div>
             </div>
         </div>
-      </section>
+      </main>
 
       {/* Appointment Creation Modal Overlay */}
       {showForm && (

@@ -40,7 +40,6 @@ export interface BoundingBox {
 
 export interface CariesFinding {
   id: string;
-  tooth_number?: number;
   caries_type?: CariesType;
   severity?: Severity;
   confidence_score: number;

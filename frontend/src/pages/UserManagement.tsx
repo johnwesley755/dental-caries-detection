@@ -6,13 +6,11 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Badge } from '../components/ui/badge';
 import {
-  UserPlus,
   Trash2,
   Mail,
   Shield,
   CheckCircle2,
   Copy,
-  Search
 } from 'lucide-react';
 import { adminService, type CreateUserRequest } from '../services/adminService';
 import { useAuth } from '../contexts/AuthContext';
@@ -23,9 +21,18 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
 
+interface User {
+  id: string;
+  email: string;
+  full_name: string;
+  role: UserRole;
+  is_active: boolean;
+  created_at: string;
+}
+
 export const UserManagement: React.FC = () => {
   const { user } = useAuth();
-  const [users, setUsers] = useState<any[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -47,7 +54,7 @@ export const UserManagement: React.FC = () => {
     try {
       const data = await adminService.listUsers();
       setUsers(data);
-    } catch (error: any) {
+    } catch {
       toast.error('Failed to load users');
     } finally {
       setIsLoading(false);
@@ -67,7 +74,8 @@ export const UserManagement: React.FC = () => {
         resetForm();
         loadUsers();
       }
-    } catch (error: any) {
+    } catch (err) {
+      const error = err as { response?: { data?: { detail?: string } } };
       const detail = error.response?.data?.detail;
       toast.error(typeof detail === 'string' ? detail : 'Failed to create user');
     }
@@ -79,7 +87,8 @@ export const UserManagement: React.FC = () => {
       await adminService.deleteUser(userId);
       toast.success('User deleted successfully');
       loadUsers();
-    } catch (error: any) {
+    } catch (err) {
+      const error = err as { response?: { data?: { detail?: string } } };
       toast.error(error.response?.data?.detail || 'Failed to delete user');
     }
   };
@@ -123,31 +132,57 @@ export const UserManagement: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-orange-50 p-8">
+    <div className="min-h-screen bg-surface p-4 sm:p-6 lg:p-8">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-2">
-            <Shield className="h-8 w-8 text-orange-600" />
-            User Management
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8 lg:mb-10">
+        <div className="space-y-1">
+          <h1 className="text-2xl lg:text-3xl font-headline font-black text-blue-900 flex items-center gap-3">
+            <span className="material-symbols-outlined text-3xl lg:text-4xl text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>admin_panel_settings</span>
+            User Base
           </h1>
-          <p className="text-slate-500 mt-1">Manage system access and team roles.</p>
+          <p className="text-slate-500 text-sm font-medium">Manage clinical staff access and administrative roles.</p>
         </div>
-        <Button onClick={() => setShowCreateModal(true)} className="bg-orange-600 hover:bg-orange-700 text-white shadow-lg shadow-orange-200 rounded-xl h-11 px-6">
-          <UserPlus className="h-4 w-4 mr-2" />
+        <Button 
+          onClick={() => setShowCreateModal(true)} 
+          className="bg-primary hover:bg-blue-800 text-white shadow-lg shadow-primary/20 rounded-xl h-12 px-6 font-bold transition-all active:scale-95 flex items-center justify-center gap-2"
+        >
+          <span className="material-symbols-outlined text-xl">person_add</span>
           Add Team Member
         </Button>
       </div>
 
+      {/* Stats Quick View (Mobile Optimized) */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Staff</p>
+            <p className="text-2xl font-black text-blue-900 mt-1">{users.length}</p>
+        </div>
+        <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Active Now</p>
+            <p className="text-2xl font-black text-emerald-600 mt-1">{users.filter(u => u.is_active).length}</p>
+        </div>
+        <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Admins</p>
+            <p className="text-2xl font-black text-orange-500 mt-1">{users.filter(u => u.role === 'ADMIN').length}</p>
+        </div>
+        <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Pending</p>
+            <p className="text-2xl font-black text-slate-400 mt-1">{users.filter(u => !u.is_active).length}</p>
+        </div>
+      </div>
+
       {/* Main Content Card */}
-      <Card className="border-none shadow-sm bg-white rounded-[20px] overflow-hidden">
-        <CardHeader className="px-6 py-5 border-b border-gray-50 bg-white flex flex-row items-center justify-between">
-          <CardTitle className="text-lg font-bold text-slate-800">Registered Users</CardTitle>
-          <div className="relative w-64">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+      <Card className="border-none shadow-sm bg-white rounded-2xl overflow-hidden border border-slate-100/50">
+        <CardHeader className="px-6 py-6 bg-white flex flex-col sm:flex-row items-center justify-between gap-4">
+          <CardTitle className="text-sm font-black text-blue-900 uppercase tracking-wider flex items-center gap-2 w-full sm:w-auto">
+            <span className="material-symbols-outlined text-primary text-xl">format_list_bulleted</span>
+            Clinical Directory
+          </CardTitle>
+          <div className="relative w-full sm:w-72">
+            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl">search</span>
             <Input
-              placeholder="Search users..."
-              className="pl-9 h-9 bg-slate-50 border-none rounded-lg focus:ring-1 focus:ring-orange-200"
+              placeholder="Filter by name or email..."
+              className="pl-11 h-11 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-primary/10 text-sm font-medium"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -156,55 +191,106 @@ export const UserManagement: React.FC = () => {
 
         <CardContent className="p-0">
           {isLoading ? (
-            <LoadingSpinner size="lg" />
-          ) : (
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader className="bg-slate-50/50">
-                  <TableRow className="border-none hover:bg-transparent">
-                    <TableHead className="pl-6 font-semibold text-xs uppercase text-slate-400">Name</TableHead>
-                    <TableHead className="font-semibold text-xs uppercase text-slate-400">Email</TableHead>
-                    <TableHead className="font-semibold text-xs uppercase text-slate-400">Role</TableHead>
-                    <TableHead className="font-semibold text-xs uppercase text-slate-400">Status</TableHead>
-                    <TableHead className="pr-6 text-right font-semibold text-xs uppercase text-slate-400">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredUsers.map((u) => (
-                    <TableRow key={u.id} className="border-gray-50 hover:bg-orange-50/30 transition-colors group">
-                      <TableCell className="pl-6 font-medium text-slate-700">
-                        <div className="flex items-center gap-3">
-                          <div className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 font-bold text-xs">
-                            {u.full_name.charAt(0)}
-                          </div>
-                          {u.full_name}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-slate-500">{u.email}</TableCell>
-                      <TableCell>{getRoleBadge(u.role)}</TableCell>
-                      <TableCell>
-                        <Badge variant="outline" className={`border-none ${u.is_active ? 'bg-green-50 text-green-600' : 'bg-gray-100 text-gray-500'}`}>
-                          <div className={`w-1.5 h-1.5 rounded-full mr-2 ${u.is_active ? 'bg-green-500' : 'bg-gray-400'}`}></div>
-                          {u.is_active ? 'Active' : 'Inactive'}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="pr-6 text-right">
-                        {u.id !== user?.id && (
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleDeleteUser(u.id, u.email)}
-                            className="h-8 w-8 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+            <div className="p-20 flex justify-center">
+                <LoadingSpinner size="lg" text="Syncing user directory..." />
             </div>
+          ) : (
+            <>
+              {/* Desktop View Table */}
+              <div className="hidden lg:block">
+                <Table>
+                  <TableHeader className="bg-slate-50 border-y border-slate-100">
+                    <TableRow className="border-none hover:bg-transparent">
+                      <TableHead className="pl-6 font-black text-[10px] uppercase tracking-widest text-slate-400 py-4">Clinical Staff</TableHead>
+                      <TableHead className="font-black text-[10px] uppercase tracking-widest text-slate-400 py-4">Auth Channel</TableHead>
+                      <TableHead className="font-black text-[10px] uppercase tracking-widest text-slate-400 py-4">Assign Role</TableHead>
+                      <TableHead className="font-black text-[10px] uppercase tracking-widest text-slate-400 py-4">Vault Status</TableHead>
+                      <TableHead className="pr-6 text-right font-black text-[10px] uppercase tracking-widest text-slate-400 py-4">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredUsers.map((u) => (
+                      <TableRow key={u.id} className="border-b border-slate-50 hover:bg-primary/5 transition-colors group">
+                        <TableCell className="pl-6 py-4">
+                          <div className="flex items-center gap-3">
+                            <img 
+                                src={`https://ui-avatars.com/api/?name=${u.full_name}&background=003d9b&color=fff&size=80`} 
+                                className="h-9 w-9 rounded-xl shadow-sm border border-slate-100" 
+                                alt={u.full_name}
+                            />
+                            <div className="flex flex-col">
+                                <span className="font-bold text-slate-700">{u.full_name}</span>
+                                <span className="text-[10px] font-black text-primary uppercase tracking-widest">ID: {u.id.slice(0, 8)}</span>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-slate-500 font-medium">{u.email}</TableCell>
+                        <TableCell>{getRoleBadge(u.role)}</TableCell>
+                        <TableCell>
+                          <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${u.is_active ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-slate-100 text-slate-400 border border-slate-200'}`}>
+                            <span className={`w-1.5 h-1.5 rounded-full ${u.is_active ? 'bg-emerald-500 animate-pulse' : 'bg-slate-300'}`}></span>
+                            {u.is_active ? 'Active' : 'Halted'}
+                          </div>
+                        </TableCell>
+                        <TableCell className="pr-6 text-right">
+                          {u.id !== user?.id && (
+                            <button
+                              onClick={() => handleDeleteUser(u.id, u.email)}
+                              className="h-9 w-9 inline-flex items-center justify-center text-slate-400 hover:text-error hover:bg-error/10 rounded-xl transition-all active:scale-90 shadow-sm bg-white border border-slate-100"
+                              title="Revoke Access"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+
+              {/* Mobile View Cards */}
+              <div className="lg:hidden divide-y divide-slate-100">
+                {filteredUsers.map((u) => (
+                  <div key={u.id} className="p-5 space-y-4 hover:bg-slate-50 transition-colors">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <img 
+                                src={`https://ui-avatars.com/api/?name=${u.full_name}&background=003d9b&color=fff&size=80`} 
+                                className="h-10 w-10 rounded-xl border border-slate-100" 
+                                alt={u.full_name}
+                            />
+                            <div>
+                                <h4 className="font-bold text-slate-800">{u.full_name}</h4>
+                                <p className="text-[10px] font-black text-primary uppercase tracking-widest">{u.role}</p>
+                            </div>
+                        </div>
+                        {u.id !== user?.id && (
+                            <button
+                                onClick={() => handleDeleteUser(u.id, u.email)}
+                                className="h-9 w-9 inline-flex items-center justify-center text-error bg-error/10 rounded-xl active:scale-95"
+                            >
+                                <Trash2 className="h-4 w-4" />
+                            </button>
+                        )}
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <div className="flex items-center gap-2 text-xs font-medium text-slate-500">
+                            <span className="material-symbols-outlined text-sm">mail</span>
+                            {u.email}
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${u.is_active ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-slate-100 text-slate-400 border border-slate-200'}`}>
+                                <span className={`w-1.5 h-1.5 rounded-full ${u.is_active ? 'bg-emerald-500' : 'bg-slate-300'}`}></span>
+                                {u.is_active ? 'Active' : 'Inactive'}
+                            </div>
+                            {getRoleBadge(u.role)}
+                        </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
           )}
         </CardContent>
       </Card>
@@ -289,7 +375,7 @@ export const UserManagement: React.FC = () => {
                     <Label className="text-slate-500 font-medium ml-1">Role</Label>
                     <Select
                       value={formData.role}
-                      onValueChange={(value: any) => setFormData({ ...formData, role: value })}
+                      onValueChange={(value: UserRole) => setFormData({ ...formData, role: value })}
                     >
                       <SelectTrigger className="mt-1.5 bg-slate-50 border-none h-11 rounded-xl focus:ring-2 focus:ring-orange-100">
                         <SelectValue />

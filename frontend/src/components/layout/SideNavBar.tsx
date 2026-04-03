@@ -1,77 +1,140 @@
+// frontend/src/components/layout/SideNavBar.tsx
 import React from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
+import { X, LayoutDashboard, Users, Calendar, MessageSquare, Microscope, ShieldCheck, UserCog, LogOut } from 'lucide-react';
+import { useAuth } from '../../contexts/AuthContext';
 
-export const SideNavBar: React.FC = () => {
+interface SidebarProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export const SideNavBar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { logout } = useAuth();
   
   const navItems = [
-    { name: 'Dashboard', path: '/dashboard', icon: 'dashboard', badge: null },
-    { name: 'Patients', path: '/patients', icon: 'group', badge: { count: 5, colorClass: 'bg-primary-container text-on-primary-container' } },
-    { name: 'Schedules', path: '/schedules', icon: 'calendar_today', badge: null },
-    { name: 'Messages', path: '/messages', icon: 'chat', badge: { count: 3, colorClass: 'bg-secondary-container text-on-secondary-container' } },
-    { name: 'New Scan', path: '/detection', icon: 'biotech', badge: null },
+    { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
+    { name: 'Patients', path: '/patients', icon: Users, badge: 5 },
+    { name: 'Schedules', path: '/schedules', icon: Calendar },
+    { name: 'Messages', path: '/messages', icon: MessageSquare, badge: 3 },
+    { name: 'Neural Scan', path: '/detection', icon: Microscope },
   ];
 
   const adminItems = [
-    { name: 'User Management', path: '/users', icon: 'manage_accounts' },
-    { name: 'Verifications', path: '/verifications', icon: 'verified_user' },
+    { name: 'User Access', path: '/users', icon: UserCog },
+    { name: 'Credentials', path: '/verifications', icon: ShieldCheck },
   ];
 
-  const linkClass = ({ isActive }: { isActive: boolean }) =>
-    isActive
-      ? "flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-150 ease-in-out text-blue-700 dark:text-blue-400 font-bold border-r-4 border-blue-700 dark:border-blue-400 bg-blue-50/50 dark:bg-blue-900/20"
-      : "flex items-center justify-between px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors";
+  const handleLinkClick = () => {
+    if (window.innerWidth < 1024) {
+      onClose();
+    }
+  };
 
-  const adminLinkClass = ({ isActive }: { isActive: boolean }) =>
-    isActive
-      ? "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-150 ease-in-out text-blue-700 dark:text-blue-400 font-bold border-r-4 border-blue-700 dark:border-blue-400 bg-blue-50/50 dark:bg-blue-900/20"
-      : "flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors";
+  const isActive = (path: string) => location.pathname === path;
 
   return (
-    <aside className="h-screen w-64 fixed left-0 top-0 border-r-0 bg-slate-50 dark:bg-slate-900 z-50 flex flex-col py-6">
-      <div className="px-6 mb-10">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-on-primary">
-            <span className="material-symbols-outlined" data-icon="biotech">biotech</span>
-          </div>
-          <div>
-            <h1 className="text-xl font-bold tracking-tight text-blue-900 dark:text-blue-100 font-manrope">Dental AI</h1>
-            <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Dental AI Intelligence</p>
-          </div>
-        </div>
-      </div>
-      <nav className="flex-1 px-4 space-y-1 overflow-y-auto no-scrollbar">
-        {navItems.map((item) => (
-          <NavLink key={item.name} to={item.path} className={linkClass}>
-            <div className="flex items-center gap-3">
-              <span className="material-symbols-outlined" data-icon={item.icon}>{item.icon}</span>
-              <span className="font-manrope text-sm font-medium">{item.name}</span>
-            </div>
-            {item.badge && (
-              <span className={`${item.badge.colorClass} text-[10px] px-2 py-0.5 rounded-full font-bold`}>
-                {item.badge.count}
-              </span>
-            )}
-          </NavLink>
-        ))}
+    <>
+      {/* Backdrop for Mobile */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-blue-900/40 backdrop-blur-md z-[60] lg:hidden transition-opacity duration-500"
+          onClick={onClose}
+        />
+      )}
 
-        <div className="pt-6 pb-2 px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Administration</div>
-        {adminItems.map((item) => (
-          <NavLink key={item.name} to={item.path} className={adminLinkClass}>
-            <span className="material-symbols-outlined" data-icon={item.icon}>{item.icon}</span>
-            <span className="font-manrope text-sm font-medium">{item.name}</span>
-          </NavLink>
-        ))}
-      </nav>
-      <div className="px-4 mt-auto">
-        <button 
-          onClick={() => navigate('/detection')}
-          className="w-full py-4 rounded-xl bg-gradient-to-r from-primary to-primary-container text-on-primary flex items-center justify-center gap-2 font-bold shadow-lg shadow-primary/20 transition-all active:scale-95"
-        >
-          <span className="material-symbols-outlined" data-icon="add_circle">add_circle</span>
-          <span className="font-manrope text-sm">New Scan</span>
-        </button>
-      </div>
-    </aside>
+      <aside 
+        className={`
+          h-screen w-72 fixed left-0 top-0 bg-white border-r border-slate-100 z-[70] flex flex-col py-8
+          transition-all duration-500 ease-in-out shadow-2xl lg:shadow-none
+          ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+        `}
+      >
+        {/* Brand Header */}
+        <div className="px-8 mb-12 flex items-center justify-between">
+          <div className="flex items-center gap-3 group cursor-pointer" onClick={() => navigate('/')}>
+            <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white shadow-lg shadow-primary/20 transition-transform group-hover:scale-105 active:scale-95">
+               <Microscope className="w-5 h-5" />
+            </div>
+            <div>
+              <h1 className="text-lg font-headline font-black text-blue-900 tracking-tight leading-none">DENTALAI</h1>
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary opacity-60 mt-1">Intelligence</p>
+            </div>
+          </div>
+          
+          <button 
+            onClick={onClose}
+            className="lg:hidden p-2 text-slate-400 hover:text-primary transition-colors bg-slate-50 rounded-xl"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+
+        {/* Main Navigation */}
+        <nav className="flex-1 px-4 space-y-2 overflow-y-auto no-scrollbar">
+          <div className="px-4 mb-4 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] opacity-60">Clinical Nexus</div>
+          
+          {navItems.map((item) => (
+            <NavLink 
+                key={item.name} 
+                to={item.path} 
+                onClick={handleLinkClick}
+                className={({ isActive }) => `
+                    flex items-center justify-between px-5 py-3.5 rounded-2xl transition-all duration-300 group
+                    ${isActive 
+                        ? 'bg-primary text-white shadow-xl shadow-primary/20' 
+                        : 'text-slate-500 hover:bg-slate-50 hover:text-blue-900'
+                    }
+                `}
+            >
+              <div className="flex items-center gap-4">
+                <item.icon className={`w-5 h-5 transition-transform group-hover:scale-110 ${isActive(item.path) ? 'text-white' : 'text-slate-400 group-hover:text-primary'}`} />
+                <span className="text-[11px] font-black uppercase tracking-widest leading-none">{item.name}</span>
+              </div>
+              {item.badge && !isActive(item.path) && (
+                <span className="bg-primary/10 text-primary text-[9px] font-black px-2 py-1 rounded-lg uppercase">
+                  {item.badge}
+                </span>
+              )}
+            </NavLink>
+          ))}
+
+          <div className="pt-10 pb-4 px-4 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] opacity-60">System Admin</div>
+          {adminItems.map((item) => (
+            <NavLink 
+                key={item.name} 
+                to={item.path} 
+                onClick={handleLinkClick}
+                className={({ isActive }) => `
+                    flex items-center gap-4 px-5 py-3.5 rounded-2xl transition-all duration-300 group
+                    ${isActive 
+                        ? 'bg-blue-900 text-white shadow-xl shadow-blue-900/20' 
+                        : 'text-slate-500 hover:bg-slate-50 hover:text-blue-900'
+                    }
+                `}
+            >
+              <item.icon className={`w-5 h-5 transition-transform group-hover:scale-110 ${isActive(item.path) ? 'text-white' : 'text-slate-400 group-hover:text-blue-900'}`} />
+              <span className="text-[11px] font-black uppercase tracking-widest leading-none">{item.name}</span>
+            </NavLink>
+          ))}
+        </nav>
+
+        {/* Footer Actions */}
+        <div className="px-6 mt-auto space-y-4">
+          <button 
+            onClick={() => {
+              logout();
+              handleLinkClick();
+            }}
+            className="w-full h-14 rounded-2xl bg-slate-50 text-slate-400 flex items-center justify-center gap-3 transition-all hover:bg-red-50 hover:text-red-500 group border border-transparent hover:border-red-100"
+          >
+            <LogOut className="w-5 h-5 transition-transform group-hover:-translate-x-1" />
+            <span className="text-[10px] font-black uppercase tracking-[0.2em]">Terminate Session</span>
+          </button>
+        </div>
+      </aside>
+    </>
   );
 };

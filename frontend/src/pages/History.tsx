@@ -1,5 +1,5 @@
 // frontend/src/pages/History.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { toast } from 'sonner';
 import { Search, Filter, Calendar } from 'lucide-react';
 import { HistoryCard } from '../components/dashboard/HistoryCard';
@@ -28,15 +28,7 @@ export const History: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [patientFilter, setPatientFilter] = useState<string>('all');
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  useEffect(() => {
-    applyFilters();
-  }, [searchTerm, statusFilter, patientFilter, detections]);
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     setIsLoading(true);
     try {
       const patientsData = await patientService.getPatients();
@@ -52,15 +44,15 @@ export const History: React.FC = () => {
       const flatDetections = allDetections.flat();
       setDetections(flatDetections);
       setFilteredDetections(flatDetections);
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error('Failed to load history');
       console.error(error);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
-  const applyFilters = () => {
+  const applyFilters = useCallback(() => {
     let filtered = [...detections];
 
     // Search filter
@@ -93,7 +85,15 @@ export const History: React.FC = () => {
     );
 
     setFilteredDetections(filtered);
-  };
+  }, [detections, searchTerm, statusFilter, patientFilter, patients]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  useEffect(() => {
+    applyFilters();
+  }, [applyFilters]);
 
   const getPatientName = (patientId: string) => {
     const patient = patients.find((p) => p.id === patientId);
@@ -108,41 +108,46 @@ export const History: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <LoadingSpinner size="lg" />
+      <div className="flex h-screen items-center justify-center bg-surface">
+        <LoadingSpinner size="lg" text="Loading history..." />
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="space-y-6">
+    <main className="p-4 sm:p-6 lg:p-10 min-h-screen bg-surface">
+      <div className="space-y-6 lg:space-y-8">
         {/* Header */}
-        <div>
-          <h1 className="text-3xl font-bold">Detection History</h1>
-          <p className="text-gray-600 mt-1">
-            Browse and filter all detection records ({detections.length} total)
-          </p>
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4">
+          <div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold font-manrope tracking-tight text-on-surface mb-1">Detection History</h2>
+            <p className="text-slate-500 text-sm font-medium">Browse and filter all clinical records ({detections.length} total)</p>
+          </div>
+          {(searchTerm || statusFilter !== 'all' || patientFilter !== 'all') && (
+            <Button variant="ghost" size="sm" onClick={clearFilters} className="text-primary hover:text-primary-container font-bold self-start sm:self-auto">
+              Clear All Filters
+            </Button>
+          )}
         </div>
 
         {/* Filters */}
-        <div className="bg-white p-4 rounded-lg border space-y-4">
-          <div className="flex items-center gap-2 text-sm font-medium">
-            <Filter className="h-4 w-4" />
-            Filters
+        <div className="bg-white p-5 lg:p-6 rounded-2xl border border-slate-100 shadow-sm space-y-5">
+          <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+            <Filter className="h-3 w-3" />
+            Advanced Filtering
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Search */}
-            <div className="md:col-span-2">
+            <div className="sm:col-span-2">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
                 <Input
                   type="text"
-                  placeholder="Search by detection ID or patient..."
+                  placeholder="ID or patient name..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 bg-slate-50 border-slate-200 rounded-xl focus:ring-primary/10 transition-all text-sm h-11"
                 />
               </div>
             </div>
@@ -150,10 +155,10 @@ export const History: React.FC = () => {
             {/* Status Filter */}
             <div>
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger>
+                <SelectTrigger className="h-11 bg-slate-50 border-slate-200 rounded-xl text-sm">
                   <SelectValue placeholder="All Statuses" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white">
                   <SelectItem value="all">All Statuses</SelectItem>
                   <SelectItem value={DetectionStatus.PENDING}>Pending</SelectItem>
                   <SelectItem value={DetectionStatus.COMPLETED}>Completed</SelectItem>
@@ -165,10 +170,10 @@ export const History: React.FC = () => {
             {/* Patient Filter */}
             <div>
               <Select value={patientFilter} onValueChange={setPatientFilter}>
-                <SelectTrigger>
+                <SelectTrigger className="h-11 bg-slate-50 border-slate-200 rounded-xl text-sm">
                   <SelectValue placeholder="All Patients" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white">
                   <SelectItem value="all">All Patients</SelectItem>
                   {patients.map((patient) => (
                     <SelectItem key={patient.id} value={patient.id}>
@@ -179,35 +184,25 @@ export const History: React.FC = () => {
               </Select>
             </div>
           </div>
-
-          {/* Active Filters */}
-          {(searchTerm || statusFilter !== 'all' || patientFilter !== 'all') && (
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600">
-                Showing {filteredDetections.length} of {detections.length} results
-              </span>
-              <Button variant="ghost" size="sm" onClick={clearFilters}>
-                Clear Filters
-              </Button>
-            </div>
-          )}
         </div>
 
         {/* Detection Cards */}
         {filteredDetections.length === 0 ? (
-          <div className="text-center py-12 bg-gray-50 rounded-lg">
-            <Calendar className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+          <div className="text-center py-20 bg-white rounded-2xl border border-slate-100 shadow-sm">
+            <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Calendar className="h-10 w-10 text-slate-200" />
+            </div>
+            <h3 className="text-xl font-bold font-manrope text-slate-800 mb-2">
               No detections found
             </h3>
-            <p className="text-gray-600">
+            <p className="text-sm text-slate-400 max-w-xs mx-auto">
               {searchTerm || statusFilter !== 'all' || patientFilter !== 'all'
-                ? 'Try adjusting your filters'
-                : 'No detection history available yet'}
+                ? 'Try adjusting your filters to find what you are looking for.'
+                : 'No detection history available yet in the clinical data set.'}
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
             {filteredDetections.map((detection) => (
               <HistoryCard
                 key={detection.id}
@@ -219,6 +214,6 @@ export const History: React.FC = () => {
           </div>
         )}
       </div>
-    </div>
+    </main>
   );
 };

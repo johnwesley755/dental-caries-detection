@@ -1,58 +1,65 @@
 // frontend/src/components/detection/DetectionResult.tsx
 import React from 'react';
-import { Target, AlertTriangle, Clock, Layers } from 'lucide-react';
+import { Target, AlertTriangle, Clock, Layers, type LucideIcon } from 'lucide-react';
 import { Card, CardContent } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
-import { Severity, CariesType } from '../../types/detection.types';
+import { Severity } from '../../types/detection.types';
 import type { Detection } from '../../types/detection.types';
 
 interface DetectionResultProps {
   detection: Detection;
 }
 
+interface MetricCardProps {
+  label: string;
+  value: string | number;
+  icon: LucideIcon;
+  colorClass: string;
+  bgClass: string;
+}
+
+// KPI Card Component defined outside to prevent re-creation during render
+const MetricCard: React.FC<MetricCardProps> = ({ label, value, icon: Icon, colorClass, bgClass }) => (
+  <Card className="border-none shadow-xl shadow-slate-100/50 bg-white rounded-3xl overflow-hidden group hover:shadow-primary/5 transition-all">
+    <CardContent className="p-5 flex items-center justify-between">
+      <div className="text-left">
+        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{label}</p>
+        <p className={`text-2xl font-headline font-black ${colorClass}`}>{value}</p>
+      </div>
+      <div className={`p-3 rounded-2xl ${bgClass} group-hover:scale-110 transition-transform`}>
+        <Icon className={`h-6 w-6 ${colorClass}`} />
+      </div>
+    </CardContent>
+  </Card>
+);
+
 export const DetectionResult: React.FC<DetectionResultProps> = ({ detection }) => {
   
   const getSeverityBadge = (severity?: Severity) => {
     switch (severity) {
-      case Severity.MILD: return <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200 border-none">Mild</Badge>;
-      case Severity.MODERATE: return <Badge className="bg-orange-100 text-orange-800 hover:bg-orange-200 border-none">Moderate</Badge>;
-      case Severity.SEVERE: return <Badge className="bg-red-100 text-red-800 hover:bg-red-200 border-none">Severe</Badge>;
-      default: return <Badge variant="outline">Unknown</Badge>;
+      case Severity.MILD: return <Badge className="bg-yellow-50 text-yellow-700 hover:bg-yellow-100 border-none px-2 py-0.5 rounded-lg font-black text-[10px] uppercase">Mild</Badge>;
+      case Severity.MODERATE: return <Badge className="bg-primary/10 text-primary hover:bg-primary/20 border-none px-2 py-0.5 rounded-lg font-black text-[10px] uppercase">Moderate</Badge>;
+      case Severity.SEVERE: return <Badge className="bg-red-50 text-red-700 hover:bg-red-100 border-none px-2 py-0.5 rounded-lg font-black text-[10px] uppercase">Severe</Badge>;
+      default: return <Badge variant="outline" className="text-[10px] font-black uppercase">Unknown</Badge>;
     }
   };
 
-  // KPI Card Component
-  const MetricCard = ({ label, value, icon: Icon, colorClass, bgClass }: any) => (
-    <Card className="border-none shadow-sm bg-white rounded-[20px] overflow-hidden">
-      <CardContent className="p-5 flex items-center justify-between">
-        <div>
-          <p className="text-sm font-medium text-slate-500 mb-1">{label}</p>
-          <p className={`text-2xl font-bold ${colorClass}`}>{value}</p>
-        </div>
-        <div className={`p-3 rounded-xl ${bgClass}`}>
-          <Icon className={`h-6 w-6 ${colorClass}`} />
-        </div>
-      </CardContent>
-    </Card>
-  );
-
   return (
     <div className="space-y-6">
-      {/* Metrics Grid */}
       <div className="grid grid-cols-2 gap-4">
         <MetricCard 
-          label="Teeth Detected" 
+          label="Neural Markers" 
           value={detection.total_teeth_detected} 
           icon={Layers} 
-          colorClass="text-orange-600" 
-          bgClass="bg-orange-50" 
+          colorClass="text-primary" 
+          bgClass="bg-primary/5" 
         />
         <MetricCard 
-          label="Caries Found" 
+          label="Caries Index" 
           value={detection.total_caries_detected} 
           icon={AlertTriangle} 
-          colorClass="text-red-600" 
+          colorClass="text-red-500" 
           bgClass="bg-red-50" 
         />
         <MetricCard 
@@ -63,46 +70,48 @@ export const DetectionResult: React.FC<DetectionResultProps> = ({ detection }) =
           bgClass="bg-emerald-50" 
         />
         <MetricCard 
-          label="Process Time" 
+          label="Inference" 
           value={`${(detection.processing_time_ms / 1000).toFixed(2)}s`} 
           icon={Clock} 
-          colorClass="text-yellow-600" 
-          bgClass="bg-yellow-50" 
+          colorClass="text-blue-700" 
+          bgClass="bg-blue-50" 
         />
       </div>
 
-      {/* Findings Table */}
-      <Card className="border-none shadow-sm bg-white rounded-[20px] overflow-hidden">
-        <div className="p-6 border-b border-gray-50">
-          <h3 className="font-bold text-slate-800">Detailed Findings</h3>
+      <Card className="border-none shadow-xl shadow-slate-200/50 bg-white rounded-3xl overflow-hidden">
+        <div className="p-6 sm:p-8 border-b border-slate-50 flex items-center justify-between bg-white">
+          <h3 className="text-[10px] font-headline font-black text-blue-900 uppercase tracking-widest">Neural Localization</h3>
+          <Badge className="bg-slate-50 text-slate-400 border-none font-black text-[10px] uppercase">
+            {detection.caries_findings?.length || 0} Entities
+          </Badge>
         </div>
         <div className="overflow-x-auto">
           {(!detection.caries_findings || detection.caries_findings.length === 0) ? (
-            <div className="p-8 text-center text-slate-500">No caries detected.</div>
+            <div className="p-12 text-center text-slate-400 text-xs font-bold uppercase tracking-widest">No anomalies identified in this batch.</div>
           ) : (
             <Table>
               <TableHeader className="bg-slate-50/50">
                 <TableRow className="border-none hover:bg-transparent">
-                  <TableHead className="font-semibold text-xs uppercase text-slate-400 pl-6">Tooth</TableHead>
-                  <TableHead className="font-semibold text-xs uppercase text-slate-400">Severity</TableHead>
-                  <TableHead className="font-semibold text-xs uppercase text-slate-400">Certainty</TableHead>
-                  <TableHead className="font-semibold text-xs uppercase text-slate-400 pr-6">Location</TableHead>
+                  <TableHead className="font-black text-[10px] uppercase text-slate-400 pl-8 tracking-widest">Target</TableHead>
+                  <TableHead className="font-black text-[10px] uppercase text-slate-400 tracking-widest">Severity</TableHead>
+                  <TableHead className="font-black text-[10px] uppercase text-slate-400 tracking-widest">Neural Prob</TableHead>
+                  <TableHead className="font-black text-[10px] uppercase text-slate-400 pr-8 tracking-widest text-right">Location</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {detection.caries_findings.map((finding) => (
-                  <TableRow key={finding.id} className="border-gray-50 hover:bg-orange-50/30">
-                    <TableCell className="font-bold text-slate-700 pl-6">#{finding.tooth_number || '?'}</TableCell>
+                {detection.caries_findings.map((finding, index) => (
+                  <TableRow key={finding.id} className="border-slate-50 hover:bg-slate-50/50 transition-colors">
+                    <TableCell className="font-headline font-black text-blue-900 pl-8 uppercase text-sm">Finding {index + 1}</TableCell>
                     <TableCell>{getSeverityBadge(finding.severity)}</TableCell>
                     <TableCell>
-                      <div className="flex items-center gap-2">
-                        <div className="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                          <div className="h-full bg-orange-500 rounded-full" style={{ width: `${finding.confidence_score * 100}%` }}></div>
+                      <div className="flex items-center gap-3">
+                        <div className="w-16 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                          <div className="h-full bg-primary rounded-full transition-all duration-1000" style={{ width: `${finding.confidence_score * 100}%` }}></div>
                         </div>
-                        <span className="text-xs text-slate-500 font-medium">{(finding.confidence_score * 100).toFixed(0)}%</span>
+                        <span className="text-[10px] text-slate-500 font-black">{(finding.confidence_score * 100).toFixed(0)}%</span>
                       </div>
                     </TableCell>
-                    <TableCell className="text-slate-600 text-sm pr-6">{finding.location || 'General'}</TableCell>
+                    <TableCell className="text-slate-500 text-[10px] font-black uppercase tracking-tight pr-8 text-right underline decoration-primary/20 underline-offset-4">{finding.location || 'General'}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

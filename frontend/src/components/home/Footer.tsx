@@ -1,100 +1,91 @@
 // frontend/src/components/home/Footer.tsx
 import React from 'react';
-import { Activity, Mail, MapPin, Phone } from 'lucide-react';
+import { Mail, MapPin, Phone, Stethoscope, Twitter, Linkedin, Github } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="bg-gray-900 text-gray-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+    <footer className="bg-blue-950 text-slate-400 border-t border-white/5">
+      <div className="max-w-7xl mx-auto px-6 sm:px-12 py-20">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
           {/* Brand */}
-          <div className="col-span-1">
-            <div className="flex items-center gap-2 mb-4">
-              <Activity className="h-8 w-8 text-orange-500" />
-              <span className="text-xl font-bold text-white">DentalAI</span>
+          <div className="space-y-6">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
+                <Stethoscope className="h-6 w-6 text-white" />
+              </div>
+              <span className="text-xl font-headline font-black text-white tracking-tight uppercase">
+                DentalAI<span className="text-primary-container">.Dx</span>
+              </span>
             </div>
-            <p className="text-sm text-gray-400">
-              Advanced AI-powered dental caries detection for better patient care
+            <p className="text-sm font-bold leading-relaxed uppercase tracking-tight opacity-60">
+              Advanced neural diagnostics for the modern clinical ecosystem. <br />
+              Precision-first. Patient-centric.
             </p>
+            <div className="flex items-center gap-4">
+              <a href="#" className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center hover:bg-primary transition-colors hover:text-white">
+                <Twitter className="h-4 w-4" />
+              </a>
+              <a href="#" className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center hover:bg-primary transition-colors hover:text-white">
+                <Linkedin className="h-4 w-4" />
+              </a>
+              <a href="#" className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center hover:bg-primary transition-colors hover:text-white">
+                <Github className="h-4 w-4" />
+              </a>
+            </div>
           </div>
 
-          {/* Quick Links */}
-          <div>
-            <h3 className="text-white font-semibold mb-4">Quick Links</h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link to="/" className="hover:text-orange-400 transition-colors">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link to="/login" className="hover:text-orange-400 transition-colors">
-                  Login
-                </Link>
-              </li>
-              <li>
-                <a href="#features" className="hover:text-orange-400 transition-colors">
-                  Features
-                </a>
-              </li>
-              <li>
-                <a href="#workflow" className="hover:text-orange-400 transition-colors">
-                  How It Works
-                </a>
-              </li>
+          {/* Practice */}
+          <div className="text-left">
+            <h3 className="text-[10px] font-black text-white uppercase tracking-[0.2em] mb-8">Practice</h3>
+            <ul className="space-y-4 text-xs font-black uppercase tracking-widest">
+              <li><Link to="/" className="hover:text-primary transition-colors">Neural Hub</Link></li>
+              <li><Link to="/login" className="hover:text-primary transition-colors">Vault Access</Link></li>
+              <li><a href="#features" className="hover:text-primary transition-colors">Core Engine</a></li>
+              <li><a href="#workflow" className="hover:text-primary transition-colors">Protocol</a></li>
             </ul>
           </div>
 
-          {/* Resources */}
-          <div>
-            <h3 className="text-white font-semibold mb-4">Resources</h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <a href="#" className="hover:text-orange-400 transition-colors">
-                  Documentation
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-orange-400 transition-colors">
-                  API Reference
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-orange-400 transition-colors">
-                  Support
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-orange-400 transition-colors">
-                  Privacy Policy
-                </a>
-              </li>
+          {/* Intelligence */}
+          <div className="text-left">
+            <h3 className="text-[10px] font-black text-white uppercase tracking-[0.2em] mb-8">Intelligence</h3>
+            <ul className="space-y-4 text-xs font-black uppercase tracking-widest">
+              <li><a href="#" className="hover:text-primary transition-colors">Documentation</a></li>
+              <li><a href="#" className="hover:text-primary transition-colors">Neural Research</a></li>
+              <li><a href="#" className="hover:text-primary transition-colors">Clinical Support</a></li>
+              <li><a href="#" className="hover:text-primary transition-colors">Privacy Cloud</a></li>
             </ul>
           </div>
 
-          {/* Contact */}
-          <div>
-            <h3 className="text-white font-semibold mb-4">Contact</h3>
-            <ul className="space-y-3 text-sm">
-              <li className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-orange-500" />
-                <span>support@dentalai.com</span>
+          {/* Nexus */}
+          <div className="text-left">
+            <h3 className="text-[10px] font-black text-white uppercase tracking-[0.2em] mb-8">Nexus</h3>
+            <ul className="space-y-4 text-xs font-black uppercase tracking-widest">
+              <li className="flex items-center gap-3">
+                <Mail className="h-4 w-4 text-primary" />
+                <span className="truncate">ops@dentalai.dx</span>
               </li>
-              <li className="flex items-center gap-2">
-                <Phone className="h-4 w-4 text-orange-500" />
-                <span>+1 (555) 123-4567</span>
+              <li className="flex items-center gap-3">
+                <Phone className="h-4 w-4 text-primary" />
+                <span>+1 800 NEURAL</span>
               </li>
-              <li className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-orange-500" />
-                <span>San Francisco, CA</span>
+              <li className="flex items-center gap-3">
+                <MapPin className="h-4 w-4 text-primary" />
+                <span>DX-CORE HQ</span>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
-          <p>&copy; {new Date().getFullYear()} DentalAI. All rights reserved.</p>
+        <div className="border-t border-white/5 mt-16 pt-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+          <p className="text-[10px] font-black uppercase tracking-widest opacity-40">
+            &copy; {new Date().getFullYear()} DENTALAI SYSTEMS. OPERATING UNDER DX-V4 COMPLIANCE.
+          </p>
+          <div className="flex gap-8 text-[10px] font-black uppercase tracking-widest opacity-60">
+            <a href="#" className="hover:text-primary transition-colors">Terms</a>
+            <a href="#" className="hover:text-primary transition-colors">Privacy</a>
+            <a href="#" className="hover:text-primary transition-colors">Security</a>
+          </div>
         </div>
       </div>
     </footer>

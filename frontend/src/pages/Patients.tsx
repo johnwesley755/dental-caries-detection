@@ -59,13 +59,13 @@ export const Patients: React.FC = () => {
             } else {
               statuses[p.id] = { status: 'Scheduled', isCaries: false };
             }
-          } catch (e) {
+          } catch {
             statuses[p.id] = { status: 'Registered', isCaries: false };
           }
         })
       );
       setPatientStatuses(statuses);
-    } catch (error: any) {
+    } catch {
       toast.error('Failed to load patients');
     } finally {
       setIsLoading(false);
@@ -78,7 +78,7 @@ export const Patients: React.FC = () => {
       await patientService.deletePatient(patientId);
       toast.success('Patient deleted successfully');
       loadPatients();
-    } catch (error: any) {
+    } catch {
       toast.error('Failed to delete patient');
     }
   };
@@ -123,8 +123,9 @@ export const Patients: React.FC = () => {
         resetForm();
         loadPatients();
       }
-    } catch (error: any) {
-      toast.error(error.response?.data?.detail || 'Failed to create patient');
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { detail?: string } } };
+      toast.error(err.response?.data?.detail || 'Failed to create patient');
     } finally {
       setIsSubmitting(false);
     }
@@ -166,21 +167,21 @@ export const Patients: React.FC = () => {
       <TopNavBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
       {/* Main Content Canvas */}
-      <main className="flex-1 p-8 space-y-8 bg-surface">
+      <main className="flex-1 p-4 lg:p-8 space-y-6 lg:space-y-8 bg-surface">
         {/* Header Section */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
           <div className="space-y-1">
-            <h2 className="font-headline text-4xl font-extrabold tracking-tight text-primary">Patient Directory</h2>
-            <p className="text-slate-500 font-medium">Manage and review patient clinical records and dental AI analysis.</p>
+            <h2 className="font-headline text-3xl lg:text-4xl font-extrabold tracking-tight text-primary">Patient Directory</h2>
+            <p className="text-slate-500 text-sm font-medium">Manage records and dental AI analysis.</p>
           </div>
-          <div className="flex items-center gap-3">
-            <button className="bg-surface-container-high text-primary px-4 py-2.5 rounded-lg font-bold flex items-center gap-2 hover:bg-surface-container-highest transition-all active:scale-95">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            <button className="flex-1 sm:flex-none bg-surface-container-high text-primary px-4 py-2.5 rounded-lg font-bold flex items-center justify-center gap-2 hover:bg-surface-container-highest transition-all active:scale-95">
               <span className="material-symbols-outlined" data-icon="filter_list">filter_list</span>
               Filter
             </button>
             <button
               onClick={isAdmin ? () => setShowAddModal(true) : undefined}
-              className={`bg-gradient-to-r from-primary to-primary-container text-white px-6 py-2.5 rounded-lg font-bold flex items-center gap-2 shadow-sm transition-all active:scale-95 ${!isAdmin ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90'}`}
+              className={`flex-1 sm:flex-none bg-gradient-to-r from-primary to-primary-container text-white px-6 py-2.5 rounded-lg font-bold flex items-center justify-center gap-2 shadow-sm transition-all active:scale-95 ${!isAdmin ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90'}`}
             >
               <span className="material-symbols-outlined" data-icon="person_add">person_add</span>
               + Add Patient
@@ -190,141 +191,143 @@ export const Patients: React.FC = () => {
 
         {/* Table Container */}
         <div className="bg-white rounded-xl shadow-sm border border-slate-100/50 overflow-hidden">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-slate-50/50 text-slate-500 text-xs font-bold uppercase tracking-widest border-b border-slate-100">
-                <th className="px-6 py-4">Patient ID</th>
-                <th className="px-6 py-4">Name</th>
-                <th className="px-6 py-4 hidden md:table-cell">Gender</th>
-                <th className="px-6 py-4 hidden sm:table-cell">Contact</th>
-                <th className="px-6 py-4">Clinical Status</th>
-                <th className="px-6 py-4 text-center">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-50">
-              {filteredPatients.map((patient) => {
-                const statusInfo = patientStatuses[patient.id] || { status: 'Registered', isCaries: false };
+          <div className="overflow-x-auto custom-scrollbar">
+            <table className="w-full text-left border-collapse min-w-[800px] lg:min-w-full">
+              <thead>
+                <tr className="bg-slate-50/50 text-slate-500 text-[10px] lg:text-xs font-bold uppercase tracking-widest border-b border-slate-100">
+                  <th className="px-4 lg:px-6 py-4">Patient ID</th>
+                  <th className="px-4 lg:px-6 py-4">Name</th>
+                  <th className="px-4 lg:px-6 py-4 hidden md:table-cell">Gender</th>
+                  <th className="px-4 lg:px-6 py-4 hidden sm:table-cell">Contact</th>
+                  <th className="px-4 lg:px-6 py-4">Clinical Status</th>
+                  <th className="px-4 lg:px-6 py-4 text-center">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-50">
+                {filteredPatients.map((patient) => {
+                  const statusInfo = patientStatuses[patient.id] || { status: 'Registered', isCaries: false };
 
-                return (
-                  <tr key={patient.id} className="hover:bg-slate-50/50 transition-colors group">
-                    <td className="px-6 py-5 font-mono text-xs text-slate-400">#{patient.patient_id}</td>
-                    <td className="px-6 py-5">
-                      <div className="flex items-center gap-3">
-                        <img
-                          alt="Patient Avatar"
-                          className="w-9 h-9 rounded-full object-cover ring-2 ring-white shadow-sm"
-                          src={`https://ui-avatars.com/api/?name=${patient.full_name}&background=random&color=fff`}
-                        />
-                        <span className="font-bold text-on-surface">{patient.full_name}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-5 text-slate-600 hidden md:table-cell capitalize">
-                      {patient.gender || '-'}
-                    </td>
-                    <td className="px-6 py-5 hidden sm:table-cell">
-                      <div className="space-y-0.5">
-                        <p className="text-sm font-medium">{patient.contact_number || '-'}</p>
-                        <p className="text-xs text-slate-400">{patient.email || '-'}</p>
-                      </div>
-                    </td>
-                    <td className="px-6 py-5">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${statusInfo.status === 'Healthy' ? 'bg-secondary-container/20 text-on-secondary-container'
-                          : statusInfo.status === 'Caries Detected' ? 'bg-error-container/40 text-error'
-                            : 'bg-primary-fixed text-primary'
-                        }`}>
-                        <span className={`w-1.5 h-1.5 rounded-full mr-2 ${statusInfo.status === 'Healthy' ? 'bg-secondary'
-                            : statusInfo.status === 'Caries Detected' ? 'bg-error'
-                              : 'bg-primary'
-                          }`}></span>
-                        {statusInfo.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-5">
-                      <div className="flex items-center justify-center gap-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button
-                          onClick={() => navigate(`/patients/${patient.id}`)}
-                          className="p-2 text-slate-400 hover:text-primary hover:bg-primary-fixed rounded-lg transition-all"
-                          title="View Patient"
-                        >
-                          <span className="material-symbols-outlined" data-icon="visibility">visibility</span>
-                        </button>
-                        {patient.user_id && (
+                  return (
+                    <tr key={patient.id} className="hover:bg-slate-50/50 transition-colors group">
+                      <td className="px-4 lg:px-6 py-4 lg:py-5 font-mono text-[10px] lg:text-xs text-slate-400">#{patient.patient_id}</td>
+                      <td className="px-4 lg:px-6 py-4 lg:py-5">
+                        <div className="flex items-center gap-3">
+                          <img
+                            alt="Patient Avatar"
+                            className="w-8 h-8 lg:w-9 lg:h-9 rounded-full object-cover ring-2 ring-white shadow-sm"
+                            src={`https://ui-avatars.com/api/?name=${patient.full_name}&background=random&color=fff`}
+                          />
+                          <span className="font-bold text-sm lg:text-base text-on-surface truncate max-w-[120px] lg:max-w-none">{patient.full_name}</span>
+                        </div>
+                      </td>
+                      <td className="px-4 lg:px-6 py-4 lg:py-5 text-slate-600 hidden md:table-cell capitalize text-sm">
+                        {patient.gender || '-'}
+                      </td>
+                      <td className="px-4 lg:px-6 py-4 lg:py-5 hidden sm:table-cell">
+                        <div className="space-y-0.5">
+                          <p className="text-xs lg:text-sm font-medium">{patient.contact_number || '-'}</p>
+                          <p className="text-[10px] lg:text-xs text-slate-400">{patient.email || '-'}</p>
+                        </div>
+                      </td>
+                      <td className="px-4 lg:px-6 py-4 lg:py-5">
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] lg:text-xs font-bold whitespace-nowrap ${statusInfo.status === 'Healthy' ? 'bg-secondary-container/20 text-on-secondary-container'
+                            : statusInfo.status === 'Caries Detected' ? 'bg-error-container/40 text-error'
+                              : 'bg-primary-fixed text-primary'
+                          }`}>
+                          <span className={`w-1 h-1 lg:w-1.5 lg:h-1.5 rounded-full mr-1.5 lg:mr-2 ${statusInfo.status === 'Healthy' ? 'bg-secondary'
+                              : statusInfo.status === 'Caries Detected' ? 'bg-error'
+                                : 'bg-primary'
+                            }`}></span>
+                          {statusInfo.status}
+                        </span>
+                      </td>
+                      <td className="px-4 lg:px-6 py-4 lg:py-5">
+                        <div className="flex items-center justify-center gap-1 lg:gap-2">
                           <button
-                            onClick={() => navigate(`/messages?patientId=${patient.user_id}`)}
-                            className="p-2 text-slate-400 hover:text-secondary hover:bg-secondary-fixed rounded-lg transition-all"
-                            title="Message Patient"
+                            onClick={() => navigate(`/patients/${patient.id}`)}
+                            className="p-1.5 lg:p-2 text-slate-400 hover:text-primary hover:bg-primary-fixed rounded-lg transition-all"
+                            title="View Patient"
                           >
-                            <span className="material-symbols-outlined" data-icon="chat">chat</span>
+                            <span className="material-symbols-outlined text-xl" data-icon="visibility">visibility</span>
                           </button>
-                        )}
-                        {isAdmin && (
-                          <button
-                            onClick={() => handleDelete(patient.id)}
-                            className="p-2 text-slate-400 hover:text-error hover:bg-error-container/40 rounded-lg transition-all"
-                            title="Delete Patient"
-                          >
-                            <span className="material-symbols-outlined" data-icon="delete">delete</span>
-                          </button>
-                        )}
-                      </div>
+                          {patient.user_id && (
+                            <button
+                              onClick={() => navigate(`/messages?patientId=${patient.user_id}`)}
+                              className="p-1.5 lg:p-2 text-slate-400 hover:text-secondary hover:bg-secondary-fixed rounded-lg transition-all"
+                              title="Message Patient"
+                            >
+                              <span className="material-symbols-outlined text-xl" data-icon="chat">chat</span>
+                            </button>
+                          )}
+                          {isAdmin && (
+                            <button
+                              onClick={() => handleDelete(patient.id)}
+                              className="p-1.5 lg:p-2 text-slate-400 hover:text-error hover:bg-error-container/40 rounded-lg transition-all"
+                              title="Delete Patient"
+                            >
+                              <span className="material-symbols-outlined text-xl" data-icon="delete">delete</span>
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+                {filteredPatients.length === 0 && (
+                  <tr>
+                    <td colSpan={6} className="px-6 py-10 text-center text-slate-500 font-medium text-sm">
+                      No patients found.
                     </td>
                   </tr>
-                );
-              })}
-              {filteredPatients.length === 0 && (
-                <tr>
-                  <td colSpan={6} className="px-6 py-10 text-center text-slate-500 font-medium">
-                    No patients found.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                )}
+              </tbody>
+            </table>
+          </div>
 
           {/* Pagination / Table Footer */}
-          <div className="px-6 py-4 bg-slate-50/30 flex items-center justify-between border-t border-slate-100">
-            <p className="text-xs text-slate-500 font-medium">Showing {filteredPatients.length} of {patients.length} patients</p>
+          <div className="px-4 lg:px-6 py-4 bg-slate-50/30 flex items-center justify-between border-t border-slate-100">
+            <p className="text-[10px] lg:text-xs text-slate-500 font-medium">Showing {filteredPatients.length} of {patients.length}</p>
             <div className="flex items-center gap-2">
               <button disabled className="p-1 rounded-md text-slate-400 hover:bg-slate-100 disabled:opacity-30">
-                <span className="material-symbols-outlined">chevron_left</span>
+                <span className="material-symbols-outlined text-xl">chevron_left</span>
               </button>
-              <span className="text-xs font-bold px-2 py-1 bg-white shadow-sm border border-slate-100 rounded">1</span>
+              <span className="text-[10px] lg:text-xs font-bold px-2 py-1 bg-white shadow-sm border border-slate-100 rounded">1</span>
               <button disabled className="p-1 rounded-md text-slate-400 hover:bg-slate-100 disabled:opacity-30">
-                <span className="material-symbols-outlined">chevron_right</span>
+                <span className="material-symbols-outlined text-xl">chevron_right</span>
               </button>
             </div>
           </div>
         </div>
 
         {/* Contextual Insight Card */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white p-6 rounded-xl border border-slate-100/50 shadow-sm flex items-center gap-5">
-            <div className="w-12 h-12 rounded-lg bg-primary-fixed flex items-center justify-center">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+          <div className="bg-white p-5 lg:p-6 rounded-xl border border-slate-100/50 shadow-sm flex items-center gap-4 lg:gap-5">
+            <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-lg bg-primary-fixed flex items-center justify-center shrink-0">
               <span className="material-symbols-outlined text-primary" data-icon="biotech">biotech</span>
             </div>
             <div>
-              <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">AI Accuracy Rate</p>
-              <p className="text-2xl font-headline font-extrabold text-primary">{accuracyRate}%</p>
+              <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">AI Accuracy</p>
+              <p className="text-xl lg:text-2xl font-headline font-extrabold text-primary">{accuracyRate}%</p>
             </div>
           </div>
-          <div className="bg-white p-6 rounded-xl border border-slate-100/50 shadow-sm flex items-center gap-5">
-            <div className="w-12 h-12 rounded-lg bg-secondary-fixed flex items-center justify-center">
+          <div className="bg-white p-5 lg:p-6 rounded-xl border border-slate-100/50 shadow-sm flex items-center gap-4 lg:gap-5">
+            <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-lg bg-secondary-fixed flex items-center justify-center shrink-0">
               <span className="material-symbols-outlined text-secondary" data-icon="science">science</span>
             </div>
             <div>
-              <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">Caries Cases Found</p>
-              <p className="text-2xl font-headline font-extrabold text-secondary">{cariesCount}</p>
+              <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Caries Found</p>
+              <p className="text-xl lg:text-2xl font-headline font-extrabold text-secondary">{cariesCount}</p>
             </div>
           </div>
-          <div className="bg-primary p-6 rounded-xl shadow-lg flex items-center gap-5 relative overflow-hidden">
-            <div className="z-10 w-12 h-12 rounded-lg bg-white/20 backdrop-blur-md flex items-center justify-center">
+          <div className="bg-primary p-5 lg:p-6 rounded-xl shadow-lg flex items-center gap-4 lg:gap-5 relative overflow-hidden sm:col-span-2 lg:col-span-1">
+            <div className="z-10 w-10 h-10 lg:w-12 lg:h-12 rounded-lg bg-white/20 backdrop-blur-md flex items-center justify-center shrink-0">
               <span className="material-symbols-outlined text-white" data-icon="bolt">bolt</span>
             </div>
             <div className="z-10">
-              <p className="text-xs text-white/70 font-bold uppercase tracking-wider">Optimization Status</p>
-              <p className="text-xl font-headline font-extrabold text-white">Full Capacity</p>
+              <p className="text-[10px] text-white/70 font-bold uppercase tracking-wider">Status</p>
+              <p className="text-lg lg:text-xl font-headline font-extrabold text-white">Full Capacity</p>
             </div>
-            <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
+            <div className="absolute -right-4 -bottom-4 w-20 h-20 lg:w-24 lg:h-24 bg-white/10 rounded-full blur-2xl"></div>
           </div>
         </div>
       </main>
