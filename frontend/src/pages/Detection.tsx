@@ -57,7 +57,9 @@ export const Detection: React.FC = () => {
             setLoadingPatients(false);
         }
     };
-
+    const handleSubmit = () => {
+        navigate('/history');
+    }
     const handleRunAnalysis = async () => {
         if (!selectedFile) {
             toast.error('Please select an image file to analyze');
@@ -155,11 +157,14 @@ export const Detection: React.FC = () => {
                                     <p className="text-on-surface-variant text-sm max-w-xl font-body">Harness AI-driven precision detection. Our neural networks analyze DICOM imagery for clinical anomalies.</p>
                                 </div>
                                 <div className="flex flex-wrap gap-2 sm:gap-3">
-                                    <button className="flex-1 sm:flex-none px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-surface-container-high text-primary hover:bg-surface-container-highest transition-colors flex items-center justify-center gap-2">
+                                    <button 
+                                        className="flex-1 sm:flex-none px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-primary/10 text-primary hover:bg-primary/20 transition-colors flex items-center justify-center gap-2"
+                                        onClick={() => navigate('/guidelines')}
+                                    >
                                         <span className="material-symbols-outlined text-lg">description</span>
                                         Guidelines
                                     </button>
-                                    <button className="flex-1 sm:flex-none px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-surface-container-high text-primary hover:bg-surface-container-highest transition-colors flex items-center justify-center gap-2">
+                                    <button className="flex-1 sm:flex-none px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-surface-container-high text-primary hover:bg-surface-container-highest transition-colors flex items-center justify-center gap-2" onClick={handleSubmit}>
                                         <span className="material-symbols-outlined text-lg">history</span>
                                         History
                                     </button>

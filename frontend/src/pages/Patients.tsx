@@ -11,6 +11,10 @@ import { Dialog, DialogContent } from '../components/ui/dialog';
 import { Mail, CheckCircle2, Copy } from 'lucide-react';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
 import { TopNavBar } from '../components/layout/TopNavBar';
+import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover';
+import { Checkbox } from '../components/ui/checkbox';
+import { Badge } from '../components/ui/badge';
+import { Label } from '../components/ui/label';
 
 export const Patients: React.FC = () => {
   const { user } = useAuth();
@@ -22,6 +26,12 @@ export const Patients: React.FC = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Filter state
+  const [filters, setFilters] = useState({
+    gender: [] as string[],
+    status: [] as string[],
+  });
 
   const [formData, setFormData] = useState<CreatePatientWithAccountRequest>({
     full_name: '',
@@ -142,13 +152,29 @@ export const Patients: React.FC = () => {
 
   const filteredPatients = patients.filter((patient) => {
     const searchLower = searchQuery.toLowerCase();
-    return (
+    const statusInfo = patientStatuses[patient.id] || { status: 'Registered', isCaries: false };
+
+    // Search query matching
+    const matchesSearch = 
       patient.full_name.toLowerCase().includes(searchLower) ||
       patient.patient_id.toLowerCase().includes(searchLower) ||
       patient.email?.toLowerCase().includes(searchLower) ||
-      patient.contact_number?.toLowerCase().includes(searchLower)
-    );
+      patient.contact_number?.toLowerCase().includes(searchLower);
+
+    // Gender filter matching
+    const matchesGender = filters.gender.length === 0 || 
+      (patient.gender && filters.gender.includes(patient.gender.toLowerCase()));
+
+    // Status filter matching
+    const matchesStatus = filters.status.length === 0 || 
+      filters.status.includes(statusInfo.status);
+
+    return matchesSearch && matchesGender && matchesStatus;
   });
+
+  const activeFilterCount = filters.gender.length + filters.status.length;
+
+  const clearFilters = () => setFilters({ gender: [], status: [] });
 
   if (isLoading) {
     return (
@@ -175,10 +201,85 @@ export const Patients: React.FC = () => {
             <p className="text-slate-500 text-sm font-medium">Manage records and dental AI analysis.</p>
           </div>
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-            <button className="flex-1 sm:flex-none bg-surface-container-high text-primary px-4 py-2.5 rounded-lg font-bold flex items-center justify-center gap-2 hover:bg-surface-container-highest transition-all active:scale-95">
-              <span className="material-symbols-outlined" data-icon="filter_list">filter_list</span>
-              Filter
-            </button>
+            <Popover>
+              <PopoverTrigger asChild>
+                <button className={`flex-1 sm:flex-none border border-slate-200 text-primary px-4 py-2.5 rounded-lg font-bold flex items-center justify-center gap-2 hover:bg-slate-50 transition-all active:scale-95 ${activeFilterCount > 0 ? 'bg-primary/5 border-primary/20' : 'bg-white'}`}>
+                  <span className="material-symbols-outlined" data-icon="filter_list">filter_list</span>
+                  Filter
+                  {activeFilterCount > 0 && (
+                    <Badge variant="secondary" className="ml-1 h-5 w-5 p-0 flex items-center justify-center rounded-full bg-primary text-white border-none text-[10px]">
+                      {activeFilterCount}
+                    </Badge>
+                  )}
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 p-5 bg-white border border-slate-100 shadow-xl rounded-2xl" align="end">
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between border-b border-slate-50 pb-3">
+                    <h4 className="font-bold text-slate-900">Filters</h4>
+                    {activeFilterCount > 0 && (
+                      <button 
+                        onClick={clearFilters}
+                        className="text-xs font-bold text-primary hover:underline"
+                      >
+                        Clear All
+                      </button>
+                    )}
+                  </div>
+                  
+                  {/* Gender Filter */}
+                  <div className="space-y-3">
+                    <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Gender</Label>
+                    <div className="grid grid-cols-2 gap-3">
+                      {['Male', 'Female', 'Other'].map((g) => (
+                        <div key={g} className="flex items-center space-x-2">
+                          <Checkbox 
+                            id={`gender-${g}`} 
+                            checked={filters.gender.includes(g.toLowerCase())}
+                            onCheckedChange={(checked) => {
+                              const lowerG = g.toLowerCase();
+                              setFilters(prev => ({
+                                ...prev,
+                                gender: checked 
+                                  ? [...prev.gender, lowerG] 
+                                  : prev.gender.filter(v => v !== lowerG)
+                              }));
+                            }}
+                          />
+                          <label htmlFor={`gender-${g}`} className="text-sm font-medium text-slate-600 cursor-pointer">{g}</label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="h-px bg-slate-50" />
+
+                  {/* Clinical Status Filter */}
+                  <div className="space-y-3">
+                    <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Clinical Status</Label>
+                    <div className="space-y-2">
+                      {['Healthy', 'Caries Detected', 'Registered', 'Scheduled'].map((s) => (
+                        <div key={s} className="flex items-center space-x-2">
+                          <Checkbox 
+                            id={`status-${s}`} 
+                            checked={filters.status.includes(s)}
+                            onCheckedChange={(checked) => {
+                              setFilters(prev => ({
+                                ...prev,
+                                status: checked 
+                                  ? [...prev.status, s] 
+                                  : prev.status.filter(v => v !== s)
+                              }));
+                            }}
+                          />
+                          <label htmlFor={`status-${s}`} className="text-sm font-medium text-slate-600 cursor-pointer">{s}</label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
             <button
               onClick={isAdmin ? () => setShowAddModal(true) : undefined}
               className={`flex-1 sm:flex-none bg-gradient-to-r from-primary to-primary-container text-white px-6 py-2.5 rounded-lg font-bold flex items-center justify-center gap-2 shadow-sm transition-all active:scale-95 ${!isAdmin ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90'}`}

@@ -28,13 +28,13 @@ class Detection(Base):
     annotated_image_url = Column(String)  # Cloudinary URL
     original_image_public_id = Column(String)  # For Cloudinary deletion
     annotated_image_public_id = Column(String)  # For Cloudinary deletion
-    image_type = Column(Enum(ImageType))
+    image_type = Column(String)
     detection_date = Column(DateTime(timezone=True), server_default=func.now())
     total_teeth_detected = Column(Integer, default=0)
     total_caries_detected = Column(Integer, default=0)
     processing_time_ms = Column(Float)
     confidence_threshold = Column(Float)
-    status = Column(Enum(DetectionStatus), default=DetectionStatus.PENDING)
+    status = Column(String, default=DetectionStatus.PENDING)
     notes = Column(Text)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     

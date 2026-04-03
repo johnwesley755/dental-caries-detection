@@ -13,8 +13,10 @@ import {
   isSameDay, 
   startOfWeek, 
   endOfWeek, 
-  addMonths, 
-  subMonths 
+  subMonths,
+  addMonths,
+  addWeeks,
+  subWeeks
 } from 'date-fns';
 
 export const Schedules: React.FC = () => {
@@ -22,6 +24,7 @@ export const Schedules: React.FC = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [viewMode, setViewMode] = useState<'month' | 'week'>('month');
   
   // Appointment Form state
   const [showForm, setShowForm] = useState(false);
@@ -44,8 +47,22 @@ export const Schedules: React.FC = () => {
     }
   };
 
-  const nextMonth = () => setCurrentDate(addMonths(currentDate, 1));
-  const prevMonth = () => setCurrentDate(subMonths(currentDate, 1));
+  const next = () => {
+    if (viewMode === 'month') {
+      setCurrentDate(addMonths(currentDate, 1));
+    } else {
+      setCurrentDate(addWeeks(currentDate, 1));
+    }
+  };
+
+  const prev = () => {
+    if (viewMode === 'month') {
+      setCurrentDate(subMonths(currentDate, 1));
+    } else {
+      setCurrentDate(subWeeks(currentDate, 1));
+    }
+  };
+
   const goToToday = () => setCurrentDate(new Date());
 
   const handleNewAppointmentClick = () => {
@@ -66,8 +83,9 @@ export const Schedules: React.FC = () => {
   // Calendar calculations
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(monthStart);
-  const startDate = startOfWeek(monthStart);
-  const endDate = endOfWeek(monthEnd);
+  
+  const startDate = viewMode === 'month' ? startOfWeek(monthStart) : startOfWeek(currentDate);
+  const endDate = viewMode === 'month' ? endOfWeek(monthEnd) : endOfWeek(currentDate);
 
   const days = eachDayOfInterval({
     start: startDate,
@@ -126,24 +144,35 @@ export const Schedules: React.FC = () => {
                 {/* Calendar Header Controls */}
                 <div className="p-4 lg:p-6 bg-white border-b border-slate-50 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-start">
-                        <h3 className="font-headline text-lg lg:text-xl font-bold text-on-surface">
-                            {format(currentDate, 'MMMM yyyy')}
+                        <h3 className="font-headline text-lg lg:text-xl font-bold text-on-surface min-w-[140px]">
+                            {format(currentDate, viewMode === 'month' ? 'MMMM yyyy' : 'MMM d, yyyy')}
                         </h3>
                         <div className="flex bg-slate-50 p-1 rounded-xl">
-                            <button onClick={goToToday} className="px-3 py-1.5 text-xs font-bold text-primary bg-white shadow-sm rounded-lg transition-all">Today</button>
+                            <button onClick={goToToday} className="px-3 py-1.5 text-xs font-bold text-primary bg-white shadow-sm rounded-lg transition-all hover:bg-slate-50">Today</button>
                             <div className="flex ml-1">
-                                <button onClick={prevMonth} className="p-1.5 hover:bg-white rounded-lg transition-all text-slate-400 hover:text-primary">
+                                <button onClick={prev} className="p-1.5 hover:bg-white rounded-lg transition-all text-slate-400 hover:text-primary">
                                     <span className="material-symbols-outlined text-lg" data-icon="chevron_left">chevron_left</span>
                                 </button>
-                                <button onClick={nextMonth} className="p-1.5 hover:bg-white rounded-lg transition-all text-slate-400 hover:text-primary">
+                                <button onClick={next} className="p-1.5 hover:bg-white rounded-lg transition-all text-slate-400 hover:text-primary">
                                     <span className="material-symbols-outlined text-lg" data-icon="chevron_right">chevron_right</span>
                                 </button>
                             </div>
                         </div>
                     </div>
-                    <div className="hidden sm:flex items-center gap-2">
-                        <div className="bg-slate-50 p-1 rounded-xl">
-                            <button className="px-4 py-1.5 text-xs font-bold text-primary bg-white shadow-sm rounded-lg">Month View</button>
+                    <div className="flex items-center gap-2">
+                        <div className="bg-slate-50 p-1 rounded-xl flex gap-1">
+                            <button 
+                                onClick={() => setViewMode('month')}
+                                className={`px-4 py-1.5 text-xs font-bold rounded-lg transition-all ${viewMode === 'month' ? 'text-primary bg-white shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+                            >
+                                Month
+                            </button>
+                            <button 
+                                onClick={() => setViewMode('week')}
+                                className={`px-4 py-1.5 text-xs font-bold rounded-lg transition-all ${viewMode === 'week' ? 'text-primary bg-white shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+                            >
+                                Week
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -170,15 +199,19 @@ export const Schedules: React.FC = () => {
                                     min-h-[80px] sm:min-h-[120px] p-1 sm:p-2 group transition-colors hover:bg-slate-50/50 cursor-pointer flex flex-col gap-1
                                     ${!isCurrentMonth ? 'bg-slate-50/40 opacity-40' : 'bg-white'}
                                     ${(idx + 1) % 7 !== 0 ? 'border-r' : ''} border-b border-slate-100/50
-                                    ${isToday ? 'ring-2 ring-primary ring-inset z-10' : ''}
                                 `}
                             >
-                                <span className={`
-                                    block text-right text-xs sm:text-sm font-bold 
-                                    ${isToday ? 'text-primary' : (!isCurrentMonth ? 'text-slate-300' : 'text-slate-500 group-hover:text-primary')}
-                                `}>
-                                    {format(day, 'd')}
-                                </span>
+                                <div className="flex justify-end">
+                                    <span className={`
+                                        flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full text-xs sm:text-sm font-bold transition-all
+                                        ${isToday 
+                                            ? 'bg-primary text-on-primary shadow-md shadow-primary/20 scale-110' 
+                                            : (!isCurrentMonth ? 'text-slate-300' : 'text-slate-500 group-hover:text-primary')
+                                        }
+                                    `}>
+                                        {format(day, 'd')}
+                                    </span>
+                                </div>
                                 
                                 <div className="space-y-1 flex-1 overflow-hidden">
                                     {/* Desktop View: Full badges */}

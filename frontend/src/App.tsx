@@ -21,6 +21,7 @@ import { Profile } from './pages/Profile';
 import { Patients } from './pages/Patients';
 import { UserManagement } from './pages/UserManagement';
 import { Messages } from './pages/Messages';
+import { Guidelines } from './pages/Guidelines';
 import VerificationDashboard from './pages/VerificationDashboard';
 
 import MainLayout from './layouts/MainLayout';
@@ -59,6 +60,7 @@ function App() {
               <Route path="/users" element={<UserManagement />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/messages" element={<Messages />} />
+              <Route path="/guidelines" element={<Guidelines />} />
               <Route path="/verifications" element={<VerificationDashboard />} />
             </Route>
 

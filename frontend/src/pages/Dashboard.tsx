@@ -108,7 +108,10 @@ export const Dashboard: React.FC = () => {
 
         {/* Bento Grid Analytics */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 lg:gap-8 mb-8 lg:mb-10">
-          <div className="md:col-span-1 lg:col-span-4 bg-surface-container-lowest p-6 lg:p-8 rounded-2xl shadow-sm relative overflow-hidden group">
+          <div 
+            onClick={() => navigate('/patients')}
+            className="md:col-span-1 lg:col-span-4 bg-surface-container-lowest p-6 lg:p-8 rounded-2xl shadow-sm relative overflow-hidden group cursor-pointer hover:shadow-md transition-all active:scale-95"
+          >
             <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform duration-500">
               <span className="material-symbols-outlined text-6xl lg:text-8xl" data-icon="group">group</span>
             </div>
@@ -123,7 +126,10 @@ export const Dashboard: React.FC = () => {
             <p className="text-[10px] text-slate-400 font-medium italic">Based on active database</p>
           </div>
 
-          <div className="md:col-span-1 lg:col-span-4 bg-surface-container-lowest p-6 lg:p-8 rounded-2xl shadow-sm relative overflow-hidden group">
+          <div 
+            onClick={() => navigate('/history')}
+            className="md:col-span-1 lg:col-span-4 bg-surface-container-lowest p-6 lg:p-8 rounded-2xl shadow-sm relative overflow-hidden group cursor-pointer hover:shadow-md transition-all active:scale-95"
+          >
             <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform duration-500">
               <span className="material-symbols-outlined text-6xl lg:text-8xl" data-icon="biotech">biotech</span>
             </div>
@@ -188,7 +194,7 @@ export const Dashboard: React.FC = () => {
           <div className="lg:col-span-4 bg-surface-container-lowest p-6 lg:p-8 rounded-2xl shadow-sm flex flex-col h-full">
             <div className="flex justify-between items-center mb-6 lg:mb-8">
               <h3 className="text-lg lg:text-xl font-bold font-manrope">Recent Activity</h3>
-              <button className="text-xs font-bold text-primary hover:underline">View All</button>
+              <button onClick={() => navigate('/history')} className="text-xs font-bold text-primary hover:underline">View All</button>
             </div>
             <div className="space-y-5 flex-1 overflow-y-auto max-h-[300px] lg:max-h-64 pr-2 custom-scrollbar">
               {filteredDetections.map((detection) => {
@@ -199,14 +205,28 @@ export const Dashboard: React.FC = () => {
                   <div 
                     key={detection.id} 
                     className="flex items-center gap-3 lg:gap-4 group cursor-pointer hover:bg-slate-50 p-2 rounded-xl transition-colors"
-                    onClick={() => navigate(`/detections/${detection.id}`)}
+                    onClick={() => navigate(`/detection/${detection.id}`)}
                   >
-                    <img 
-                      alt="Patient Avatar" 
-                      className="w-8 h-8 lg:w-10 lg:h-10 rounded-full object-cover ring-2 ring-surface-container-high" 
-                      src={`https://ui-avatars.com/api/?name=${patient?.full_name || 'U'}&background=random&color=fff`} 
-                    />
-                    <div className="flex-1 min-w-0 text-left">
+                    <div 
+                        className="relative shrink-0 hover:scale-105 transition-transform"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            if (patient?.id) navigate(`/patients/${patient.id}`);
+                        }}
+                    >
+                        <img 
+                            alt="Patient Avatar" 
+                            className="w-8 h-8 lg:w-10 lg:h-10 rounded-full object-cover ring-2 ring-surface-container-high" 
+                            src={`https://ui-avatars.com/api/?name=${patient?.full_name || 'U'}&background=random&color=fff`} 
+                        />
+                    </div>
+                    <div 
+                        className="flex-1 min-w-0 text-left hover:opacity-80 transition-opacity"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            if (patient?.id) navigate(`/patients/${patient.id}`);
+                        }}
+                    >
                       <p className="text-sm font-bold text-on-surface truncate">{patient?.full_name || 'Unknown Patient'}</p>
                       <p className="text-[10px] text-slate-400 font-medium truncate">#{detection.detection_id?.split('-')[0] || detection.id.slice(0,4)}</p>
                     </div>
@@ -318,7 +338,7 @@ export const Dashboard: React.FC = () => {
                 )}
                 <div className="flex">
                   <button 
-                    onClick={() => navigate(`/detections/${latestDetection.id}`)}
+                    onClick={() => navigate(`/detection/${latestDetection.id}`)}
                     className="w-full sm:w-auto bg-primary text-on-primary px-6 py-3 rounded-xl font-bold text-sm shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all"
                   >
                     View Full Analysis

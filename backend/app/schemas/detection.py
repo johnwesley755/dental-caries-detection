@@ -12,8 +12,8 @@ class CariesFindingInResponse(BaseModel):
     id: UUID
     caries_type: Optional[str]
     severity: Optional[str]
-    confidence_score: float
-    bounding_box: dict
+    confidence_score: Optional[float] = None
+    bounding_box: Optional[dict] = None
     location: Optional[str]
     treatment_recommendation: Optional[str]
     
@@ -23,20 +23,20 @@ class CariesFindingInResponse(BaseModel):
 class DetectionResponse(BaseModel):
     id: UUID
     detection_id: str
-    patient_id: UUID
-    dentist_id: UUID
-    original_image_url: Optional[str]
-    annotated_image_url: Optional[str]
-    original_image_public_id: Optional[str]
-    annotated_image_public_id: Optional[str]
-    image_type: Optional[str]
-    detection_date: datetime
-    total_teeth_detected: int
-    total_caries_detected: int
-    processing_time_ms: float
-    confidence_threshold: float
-    status: str
-    notes: Optional[str]
+    patient_id: Optional[UUID] = None
+    dentist_id: Optional[UUID] = None
+    original_image_url: Optional[str] = None
+    annotated_image_url: Optional[str] = None
+    original_image_public_id: Optional[str] = None
+    annotated_image_public_id: Optional[str] = None
+    image_type: Optional[str] = None
+    detection_date: Optional[datetime] = None
+    total_teeth_detected: Optional[int] = 0
+    total_caries_detected: Optional[int] = 0
+    processing_time_ms: Optional[float] = 0.0
+    confidence_threshold: Optional[float] = 0.0
+    status: Optional[str] = "PENDING"
+    notes: Optional[str] = None
     caries_findings: List[CariesFindingInResponse] = []
     
     class Config:

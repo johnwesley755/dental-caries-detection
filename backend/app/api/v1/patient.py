@@ -51,9 +51,16 @@ async def get_my_detections(
         raise HTTPException(status_code=404, detail="Patient record not found")
     
     # Get all detections for this patient with findings eagerly loaded
-    detections = db.query(Detection).options(joinedload(Detection.caries_findings)).filter(Detection.patient_id == patient.id).all()
-    
-    return detections
+    try:
+        detections = db.query(Detection).options(joinedload(Detection.caries_findings)).filter(Detection.patient_id == patient.id).order_by(Detection.created_at.desc()).all()
+        return detections
+    except Exception as e:
+        print(f"Error fetching detections: {str(e)}")
+        # If it's a serialization or query error, let's try to find out which detection is failing
+        raise HTTPException(
+            status_code=500, 
+            detail=f"Database error or serialization failed: {str(e)}"
+        )
 
 @router.get("/detection/{detection_id}", response_model=DetectionResponse)
 async def get_my_detection(

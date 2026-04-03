@@ -24,8 +24,8 @@ class CariesFinding(Base):
     
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     detection_id = Column(UUID(as_uuid=True), ForeignKey("detections.id"), nullable=False)
-    caries_type = Column(Enum(CariesType))
-    severity = Column(Enum(Severity))
+    caries_type = Column(String)
+    severity = Column(String)
     confidence_score = Column(Float)
     bounding_box = Column(JSONB)
     segmentation_mask = Column(JSONB)
