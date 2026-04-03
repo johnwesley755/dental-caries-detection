@@ -40,7 +40,7 @@ async def public_detection(
         
         detection_data = DetectionCreate(
             patient_id=None, # Public/Anonymous
-            image_type=image_type,
+            image_type=image_type.upper() if image_type else "INTRAORAL",
             notes=notes or "Public AI Quick-Scan"
         )
         
@@ -57,7 +57,6 @@ async def public_detection(
         # Cleanup local file 
         if upload_result.get("cloudinary_url") and file_path and os.path.exists(file_path):
             image_service.delete_file(file_path)
-            detection.original_image_path = None
             db.commit()
 
         return detection

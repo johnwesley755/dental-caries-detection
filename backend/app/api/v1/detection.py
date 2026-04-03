@@ -1,4 +1,5 @@
 import os
+import traceback
 from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Form
 from sqlalchemy.orm import Session
 from typing import List, Optional
@@ -37,10 +38,9 @@ async def create_detection(
     file_path = upload_result.get("local_path")
     
     try:
-        # Create detection data
         detection_data = DetectionCreate(
             patient_id=UUID(patient_id),
-            image_type=image_type,
+            image_type=image_type.upper() if image_type else "INTRAORAL",
             notes=notes
         )
         
@@ -57,8 +57,6 @@ async def create_detection(
         # Cleanup local original image after successful processing if it was uploaded to Cloudinary
         if upload_result.get("cloudinary_url") and file_path and os.path.exists(file_path):
             image_service.delete_file(file_path)
-            # Update detection record to reflect it's no longer local
-            detection.original_image_path = None
             db.commit()
 
         return detection
@@ -66,6 +64,7 @@ async def create_detection(
     except Exception as e:
         # Clean up uploaded file on error
         image_service.delete_file(file_path)
+        traceback.print_exc()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Detection processing failed: {str(e)}"
