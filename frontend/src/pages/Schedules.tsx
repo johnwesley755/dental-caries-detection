@@ -180,7 +180,7 @@ export const Schedules: React.FC = () => {
                 {/* Days of Week */}
                 <div className="grid grid-cols-7 border-b border-slate-50 bg-slate-50/50">
                     {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                        <div key={day} className="py-3 text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest">{day}</div>
+                        <div key={day} className="py-3 text-center text-xs font-bold text-slate-400">{day}</div>
                     ))}
                 </div>
 
@@ -224,7 +224,7 @@ export const Schedules: React.FC = () => {
                                                     className={`${colorCfg.bg} border-l-2 ${colorCfg.border} p-1 rounded flex flex-col overflow-hidden`}
                                                     onClick={(e) => e.stopPropagation()}
                                                 >
-                                                    <span className={`text-[8px] font-bold ${colorCfg.text} truncate uppercase`}>
+                                                    <span className={`text-[9px] font-bold ${colorCfg.text} truncate`}>
                                                         {format(new Date(apt.appointment_date), 'h:mm a')}
                                                     </span>
                                                     <span className={`text-[10px] font-bold ${colorCfg.text} truncate leading-tight`}>
@@ -265,27 +265,27 @@ export const Schedules: React.FC = () => {
 
         {/* Legend */}
         <div className="flex flex-col gap-4 mt-auto pt-6 border-t border-slate-100">
-            <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Status Legend</h4>
+            <h4 className="text-xs font-bold text-slate-400">Status Legend</h4>
             <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
                 <div className="flex items-center gap-2">
                     <span className="w-2.5 h-2.5 rounded-full bg-primary"></span>
-                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Scheduled</span>
+                    <span className="text-xs font-bold text-slate-500">Scheduled</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <span className="w-2.5 h-2.5 rounded-full bg-tertiary"></span>
-                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Confirmed</span>
+                    <span className="text-xs font-bold text-slate-500">Confirmed</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <span className="w-2.5 h-2.5 rounded-full bg-outline"></span>
-                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Completed</span>
+                    <span className="text-xs font-bold text-slate-500">Completed</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <span className="w-2.5 h-2.5 rounded-full bg-error"></span>
-                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Cancelled</span>
+                    <span className="text-xs font-bold text-slate-500">Cancelled</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <span className="w-2.5 h-2.5 rounded-full bg-secondary-container"></span>
-                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">No Show</span>
+                    <span className="text-xs font-bold text-slate-500">No Show</span>
                 </div>
             </div>
         </div>

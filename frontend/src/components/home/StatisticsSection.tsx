@@ -1,91 +1,103 @@
 // frontend/src/components/home/StatisticsSection.tsx
 import React from 'react';
-import { Users, TrendingUp, ShieldCheck, Microscope } from 'lucide-react';
 import { motion } from 'framer-motion';
 
+interface MetricBarProps {
+  label: string;
+  value: number;
+  display: string;
+  delay?: number;
+}
+
+const MetricBar: React.FC<MetricBarProps> = ({ label, value, display, delay = 0 }) => (
+  <div className="space-y-2">
+    <div className="flex justify-between items-center gap-4">
+      <span className="font-bold text-xs text-[#b2c5ff] leading-snug flex-1">{label}</span>
+      <span className="font-black text-xl sm:text-2xl text-white shrink-0">{display}</span>
+    </div>
+    <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+      <motion.div
+        initial={{ width: 0 }}
+        whileInView={{ width: `${value}%` }}
+        viewport={{ once: true }}
+        transition={{ duration: 1.2, delay, ease: 'easeOut' }}
+        className="h-full bg-[#708cfd] rounded-full"
+      />
+    </div>
+  </div>
+);
+
 export const StatisticsSection: React.FC = () => {
-  const stats = [
-    {
-      icon: Users,
-      value: '10,000+',
-      label: 'Patients Diagnosed',
-      color: 'primary'
-    },
-    {
-      icon: Microscope,
-      value: '2.4M',
-      label: 'Radiograph Samples',
-      color: 'blue'
-    },
-    {
-      icon: TrendingUp,
-      value: '99.8%',
-      label: 'Validated Accuracy',
-      color: 'indigo'
-    },
-    {
-      icon: ShieldCheck,
-      value: '100%',
-      label: 'GDPR / HIPAA Vault',
-      color: 'emerald'
-    }
+  const metrics: MetricBarProps[] = [
+    { label: 'Mean Average Precision (mAP)', value: 94.2, display: '0.942', delay: 0 },
+    { label: 'Recall — UFBA-UESC Test Set', value: 91.8, display: '0.918', delay: 0.15 },
+    { label: 'F1-Score Performance', value: 93.0, display: '0.930', delay: 0.3 },
   ];
 
-  const getColorClasses = (color: string) => {
-    switch (color) {
-      case 'primary': return 'bg-primary/5 text-primary border-primary/10';
-      case 'blue': return 'bg-blue-50 text-blue-700 border-blue-100';
-      case 'indigo': return 'bg-indigo-50 text-indigo-700 border-indigo-100';
-      case 'emerald': return 'bg-emerald-50 text-emerald-700 border-emerald-100';
-      default: return 'bg-slate-50 text-slate-500 border-slate-100';
-    }
-  };
-
   return (
-    <section className="py-24 bg-surface relative overflow-hidden">
-      {/* Decorative Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-white to-transparent opacity-50" />
-      
-      <div className="max-w-[90rem] mx-auto px-6 sm:px-12 relative z-10">
-        <div className="flex flex-col lg:flex-row items-end justify-between mb-16 gap-8">
-          <div className="max-w-2xl text-left">
-            <motion.p 
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              className="text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-4"
-            >
-              Performance Metrics
-            </motion.p>
-            <h2 className="text-3xl sm:text-5xl font-headline font-black text-blue-900 uppercase leading-[1.1]">
-              Trusted By Clinical <br className="hidden sm:block" /> Leaders Worldwide
-            </h2>
-          </div>
-          <p className="text-slate-500 font-bold text-sm sm:text-lg max-w-sm text-left lg:text-right border-l-4 lg:border-l-0 lg:border-r-4 border-primary px-6 py-2">
-            Automating diagnostic precision for modern dental practitioners.
-          </p>
+    <section id="results" className="py-6 sm:py-12 px-4 sm:px-8 max-w-screen-xl mx-auto">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="bg-[#131b2e] rounded-2xl sm:rounded-[2.5rem] p-6 sm:p-12 lg:p-20 overflow-hidden relative"
+      >
+        {/* Decorative right glow */}
+        <div className="absolute top-0 right-0 w-1/2 h-full pointer-events-none opacity-20">
+          <div className="absolute inset-0 bg-gradient-to-l from-[#003d9b] to-transparent" />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-          {stats.map((stat, index) => {
-            const Icon = stat.icon;
-            return (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-white rounded-3xl p-8 shadow-xl shadow-slate-200/50 border border-slate-50 hover:shadow-primary/5 transition-all group"
-              >
-                <div className={`w-14 h-14 rounded-2xl ${getColorClasses(stat.color)} border flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
-                  <Icon className="h-7 w-7" />
+        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+
+          {/* Left — Metrics */}
+          <div className="space-y-8 sm:space-y-10">
+            <div className="space-y-3">
+              <p className="text-xs font-black text-[#b2c5ff] tracking-widest">Model Performance</p>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
+                Benchmarking Excellence.
+              </h2>
+              <p className="text-[#b2c5ff] text-sm sm:text-base font-medium leading-relaxed">
+                Rigorous empirical testing against the UFBA-UESC Dental Dataset demonstrates the clinical-grade performance of the detection model.
+              </p>
+            </div>
+            <div className="space-y-6 sm:space-y-8">
+              {metrics.map((m) => (
+                <MetricBar key={m.label} {...m} />
+              ))}
+            </div>
+          </div>
+
+          {/* Right — Mini stat cards */}
+          <div className="bg-white/5 backdrop-blur-xl p-5 sm:p-8 rounded-2xl sm:rounded-3xl border border-white/10">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
+              {/* Image card */}
+              <div className="col-span-2 aspect-video bg-[#001234]/60 rounded-xl sm:rounded-2xl overflow-hidden relative">
+                <img
+                  src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?q=80&w=2070&auto=format&fit=crop"
+                  alt="Clinical dental examination intraoral view"
+                  className="w-full h-full object-cover opacity-40"
+                />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="text-xl sm:text-3xl font-black text-white mb-1">UFBA-UESC</div>
+                    <div className="text-[10px] sm:text-xs font-bold text-[#b2c5ff] tracking-widest">Validated Dataset</div>
+                  </div>
                 </div>
-                <div className="text-4xl font-black text-blue-900 mb-2 tracking-tighter uppercase font-headline">{stat.value}</div>
-                <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{stat.label}</div>
-              </motion.div>
-            );
-          })}
+              </div>
+              {/* Precision */}
+              <div className="p-4 sm:p-5 bg-white/5 rounded-xl sm:rounded-2xl border border-white/10">
+                <p className="text-xs font-black text-[#b2c5ff] mb-1">Precision</p>
+                <p className="text-2xl sm:text-3xl font-black text-white">96.4%</p>
+              </div>
+              {/* Sensitivity */}
+              <div className="p-4 sm:p-5 bg-white/5 rounded-xl sm:rounded-2xl border border-white/10">
+                <p className="text-xs font-black text-[#b2c5ff] mb-1">Sensitivity</p>
+                <p className="text-2xl sm:text-3xl font-black text-white">89.1%</p>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };

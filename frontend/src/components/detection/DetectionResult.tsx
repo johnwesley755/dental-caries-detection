@@ -24,7 +24,7 @@ const MetricCard: React.FC<MetricCardProps> = ({ label, value, icon: Icon, color
   <Card className="border-none shadow-xl shadow-slate-100/50 bg-white rounded-3xl overflow-hidden group hover:shadow-primary/5 transition-all">
     <CardContent className="p-5 flex items-center justify-between">
       <div className="text-left">
-        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{label}</p>
+        <p className="text-xs font-black text-slate-400 mb-1">{label}</p>
         <p className={`text-2xl font-headline font-black ${colorClass}`}>{value}</p>
       </div>
       <div className={`p-3 rounded-2xl ${bgClass} group-hover:scale-110 transition-transform`}>
@@ -38,10 +38,10 @@ export const DetectionResult: React.FC<DetectionResultProps> = ({ detection }) =
   
   const getSeverityBadge = (severity?: Severity) => {
     switch (severity) {
-      case Severity.MILD: return <Badge className="bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border-none px-2 py-0.5 rounded-lg font-black text-[10px] uppercase">Mild</Badge>;
-      case Severity.MODERATE: return <Badge className="bg-primary/10 text-primary hover:bg-primary/20 border-none px-2 py-0.5 rounded-lg font-black text-[10px] uppercase">Moderate</Badge>;
-      case Severity.SEVERE: return <Badge className="bg-red-50 text-red-700 hover:bg-red-100 border-none px-2 py-0.5 rounded-lg font-black text-[10px] uppercase">Severe</Badge>;
-      default: return <Badge variant="outline" className="text-[10px] font-black uppercase">Unknown</Badge>;
+      case Severity.MILD: return <Badge className="bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border-none px-2 py-0.5 rounded-lg font-black text-[10px]">Mild</Badge>;
+      case Severity.MODERATE: return <Badge className="bg-primary/10 text-primary hover:bg-primary/20 border-none px-2 py-0.5 rounded-lg font-black text-[10px]">Moderate</Badge>;
+      case Severity.SEVERE: return <Badge className="bg-red-50 text-red-700 hover:bg-red-100 border-none px-2 py-0.5 rounded-lg font-black text-[10px]">Severe</Badge>;
+      default: return <Badge variant="outline" className="text-[10px] font-black">Unknown</Badge>;
     }
   };
 
@@ -80,28 +80,28 @@ export const DetectionResult: React.FC<DetectionResultProps> = ({ detection }) =
 
       <Card className="border-none shadow-xl shadow-slate-200/50 bg-white rounded-3xl overflow-hidden">
         <div className="p-6 sm:p-8 border-b border-slate-50 flex items-center justify-between bg-white">
-          <h3 className="text-[10px] font-headline font-black text-blue-900 uppercase tracking-widest">Neural Localization</h3>
-          <Badge className="bg-slate-50 text-slate-400 border-none font-black text-[10px] uppercase">
+          <h3 className="text-xs font-headline font-black text-blue-900">Neural Localization</h3>
+          <Badge className="bg-slate-50 text-slate-400 border-none font-black text-[11px]">
             {detection.caries_findings?.length || 0} Entities
           </Badge>
         </div>
         <div className="overflow-x-auto">
           {(!detection.caries_findings || detection.caries_findings.length === 0) ? (
-            <div className="p-12 text-center text-slate-400 text-xs font-bold uppercase tracking-widest">No anomalies identified in this batch.</div>
+            <div className="p-12 text-center text-slate-400 text-xs font-bold leading-relaxed">No anomalies identified in this batch.</div>
           ) : (
             <Table>
               <TableHeader className="bg-slate-50/50">
                 <TableRow className="border-none hover:bg-transparent">
-                  <TableHead className="font-black text-[10px] uppercase text-slate-400 pl-8 tracking-widest">Target</TableHead>
-                  <TableHead className="font-black text-[10px] uppercase text-slate-400 tracking-widest">Severity</TableHead>
-                  <TableHead className="font-black text-[10px] uppercase text-slate-400 tracking-widest">Neural Prob</TableHead>
-                  <TableHead className="font-black text-[10px] uppercase text-slate-400 pr-8 tracking-widest text-right">Location</TableHead>
+                  <TableHead className="font-black text-[11px] text-slate-400 pl-8">Target</TableHead>
+                  <TableHead className="font-black text-[11px] text-slate-400">Severity</TableHead>
+                  <TableHead className="font-black text-[11px] text-slate-400">Neural Prob</TableHead>
+                  <TableHead className="font-black text-[11px] text-slate-400 pr-8 text-right">Location</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {detection.caries_findings.map((finding, index) => (
                   <TableRow key={finding.id} className="border-slate-50 hover:bg-slate-50/50 transition-colors">
-                    <TableCell className="font-headline font-black text-blue-900 pl-8 uppercase text-sm">Finding {index + 1}</TableCell>
+                    <TableCell className="font-headline font-black text-blue-900 pl-8 text-sm">Finding {index + 1}</TableCell>
                     <TableCell>{getSeverityBadge(finding.severity)}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-3">
@@ -111,7 +111,7 @@ export const DetectionResult: React.FC<DetectionResultProps> = ({ detection }) =
                         <span className="text-[10px] text-slate-500 font-black">{(finding.confidence_score * 100).toFixed(0)}%</span>
                       </div>
                     </TableCell>
-                    <TableCell className="text-slate-500 text-[10px] font-black uppercase tracking-tight pr-8 text-right underline decoration-primary/20 underline-offset-4">{finding.location || 'General'}</TableCell>
+                    <TableCell className="text-slate-500 text-xs font-black tracking-tight pr-8 text-right underline decoration-primary/20 underline-offset-4">{finding.location || 'General'}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

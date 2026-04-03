@@ -122,13 +122,13 @@ export const Profile: React.FC = () => {
                         <p className="text-slate-500 font-body text-sm font-medium">Configure your secure medical workstation and authentication profile.</p>
                     </motion.div>
                     <div className="flex gap-3 w-full md:w-auto">
-                        <Button variant="outline" className="flex-1 md:flex-none bg-white border-slate-200 text-primary font-headline font-bold text-[11px] uppercase tracking-wider py-5 rounded-xl">
+                        <Button variant="outline" className="flex-1 md:flex-none bg-white border-slate-200 text-primary font-headline font-bold text-xs py-5 rounded-xl">
                             Export Logs
                         </Button>
                         <Button
                             onClick={isEditing ? handleProfileUpdate : undefined}
                             disabled={loading || (!isEditing && !isChangingPassword)}
-                            className="flex-1 md:flex-none bg-primary text-white font-headline font-bold text-[11px] uppercase tracking-wider py-5 px-8 rounded-xl shadow-lg shadow-primary/20 hover:bg-primary-container"
+                            className="flex-1 md:flex-none bg-primary text-white font-headline font-bold text-xs py-5 px-8 rounded-xl shadow-lg shadow-primary/20 hover:bg-primary-container"
                         >
                             {loading ? <LoadingSpinner size="sm" /> : 'Save Changes'}
                         </Button>
@@ -155,8 +155,8 @@ export const Profile: React.FC = () => {
                             <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 mb-3">
                                 <h3 className="text-3xl lg:text-4xl font-headline font-extrabold text-white tracking-tight">{user?.full_name}, D.D.S.</h3>
                                 <div className="flex gap-2">
-                                    <span className="bg-white/10 backdrop-blur-md text-white text-[10px] font-black px-4 py-1 rounded-full uppercase tracking-[0.15em] border border-white/10">{user?.role}</span>
-                                    <span className="bg-white/10 backdrop-blur-md text-white text-[10px] font-black px-4 py-1 rounded-full uppercase tracking-[0.15em] border border-white/10">L3 Access</span>
+                                    <span className="bg-white/10 backdrop-blur-md text-white text-[11px] font-black px-4 py-1 rounded-full border border-white/10">{user?.role}</span>
+                                    <span className="bg-white/10 backdrop-blur-md text-white text-[11px] font-black px-4 py-1 rounded-full border border-white/10">L3 Access</span>
                                 </div>
                             </div>
                             <div className="flex flex-wrap items-center justify-center md:justify-start gap-x-8 gap-y-2">
@@ -181,8 +181,8 @@ export const Profile: React.FC = () => {
                                         <Shield className="h-6 w-6" />
                                     </div>
                                     <div>
-                                        <h4 className="text-base font-headline font-black text-primary uppercase tracking-tight">Identity Profile</h4>
-                                        <p className="text-[11px] text-slate-400 font-bold uppercase tracking-wider">Verified practitioner data</p>
+                                        <h4 className="text-base font-headline font-black text-primary">Identity Profile</h4>
+                                        <p className="text-xs text-slate-400 font-bold">Verified practitioner data</p>
                                     </div>
                                 </div>
                                 {!isEditing ? (
@@ -206,7 +206,7 @@ export const Profile: React.FC = () => {
                                 <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100 transition-all group-hover:border-primary/10">
                                     <div className="flex justify-between items-start">
                                         <div className="flex-1">
-                                            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Full Legal Name</label>
+                                            <label className="block text-xs font-black text-slate-400 mb-1.5 ml-1">Full Legal Name</label>
                                             {isEditing ? (
                                                 <input
                                                     value={profileData.full_name}
@@ -222,7 +222,7 @@ export const Profile: React.FC = () => {
                                 </div>
 
                                 <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100 transition-all group-hover:border-primary/10">
-                                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Primary Communications</label>
+                                    <label className="block text-xs font-black text-slate-400 mb-1.5 ml-1">Primary Communications</label>
                                     <div className="flex items-center justify-between">
                                         <div className="flex-1">
                                             {isEditing ? (
@@ -235,7 +235,7 @@ export const Profile: React.FC = () => {
                                                 <span className="text-base text-[#0b1c30] font-body font-bold ml-1">{user?.email}</span>
                                             )}
                                         </div>
-                                        <span className="text-[10px] font-black px-3 py-1 rounded bg-blue-100 text-blue-700 uppercase tracking-widest shadow-sm">Primary</span>
+                                        <span className="text-[11px] font-black px-3 py-1 rounded bg-blue-100 text-blue-700 shadow-sm">Primary</span>
                                     </div>
                                 </div>
                             </div>
@@ -251,7 +251,7 @@ export const Profile: React.FC = () => {
                                         <Button
                                             onClick={handleProfileUpdate}
                                             disabled={loading}
-                                            className="w-full h-12 bg-primary text-white font-black text-xs uppercase tracking-widest rounded-xl hover:bg-primary-container transition-all shadow-lg shadow-primary/10"
+                                            className="w-full h-12 bg-primary text-white font-black text-sm rounded-xl hover:bg-primary-container transition-all shadow-lg shadow-primary/10"
                                         >
                                             {loading ? <LoadingSpinner size="sm" /> : <><Save className="h-4 w-4 mr-2" /> Sync Changes</>}
                                         </Button>
@@ -261,7 +261,7 @@ export const Profile: React.FC = () => {
 
                             <div className="mt-8 pt-6 border-t border-slate-50 flex items-start gap-3">
                                 <Shield className="h-4 w-4 text-slate-300 shrink-0 mt-0.5" />
-                                <p className="text-[11px] text-slate-400 font-bold leading-relaxed uppercase tracking-tight">Professional credentials are synced with the central medical board. Changes require administrative verification.</p>
+                                <p className="text-xs text-slate-400 font-bold leading-relaxed">Professional credentials are synced with the central medical board. Changes require administrative verification.</p>
                             </div>
                         </CardContent>
                     </Card>
@@ -274,8 +274,8 @@ export const Profile: React.FC = () => {
                                     <Lock className="h-6 w-6" />
                                 </div>
                                 <div>
-                                    <h4 className="text-base font-headline font-black text-primary uppercase tracking-tight">Clinical Security</h4>
-                                    <p className="text-[11px] text-slate-400 font-bold uppercase tracking-wider">Authentication & compliance</p>
+                                    <h4 className="text-base font-headline font-black text-primary">Clinical Security</h4>
+                                    <p className="text-xs text-slate-400 font-bold">Authentication & compliance</p>
                                 </div>
                             </div>
 
@@ -287,8 +287,8 @@ export const Profile: React.FC = () => {
                                         </div>
                                         <div className="flex-1">
                                             <div className="flex justify-between items-center mb-1">
-                                                <h5 className="text-sm font-headline font-black text-primary uppercase">Master Access Code</h5>
-                                                <span className="text-[10px] text-slate-400 font-bold tracking-widest">v4 Protocol active</span>
+                                                <h5 className="text-sm font-headline font-black text-primary">Master Access Code</h5>
+                                                <span className="text-xs text-slate-400 font-bold">v4 Protocol active</span>
                                             </div>
                                             <p className="text-[11px] text-slate-500 font-semibold tracking-tight leading-tight">Compliant with 12-character medical security policy. Updated 14d ago.</p>
                                         </div>
@@ -297,7 +297,7 @@ export const Profile: React.FC = () => {
                                     {!isChangingPassword ? (
                                         <Button
                                             onClick={() => setIsChangingPassword(true)}
-                                            className="w-full bg-primary text-white font-headline font-black text-[11px] py-6 rounded-xl shadow-lg shadow-primary/10 hover:bg-primary-container transition-all group/btn uppercase tracking-widest"
+                                            className="w-full bg-primary text-white font-headline font-black text-sm py-6 rounded-xl shadow-lg shadow-primary/10 hover:bg-primary-container transition-all group/btn"
                                         >
                                             Update Credentials
                                         </Button>
@@ -330,14 +330,14 @@ export const Profile: React.FC = () => {
                                                 <Button
                                                     onClick={handlePasswordChange}
                                                     disabled={loading}
-                                                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-[10px] uppercase h-12 rounded-xl"
+                                                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs h-12 rounded-xl"
                                                 >
                                                     {loading ? <LoadingSpinner size="sm" /> : 'Confirm Shift'}
                                                 </Button>
                                                 <Button
                                                     variant="outline"
                                                     onClick={() => setIsChangingPassword(false)}
-                                                    className="flex-1 border-slate-200 text-slate-400 font-black text-[10px] uppercase h-12 rounded-xl"
+                                                    className="flex-1 border-slate-200 text-slate-400 font-black text-xs h-12 rounded-xl"
                                                 >
                                                     Revert
                                                 </Button>
@@ -352,8 +352,8 @@ export const Profile: React.FC = () => {
                                             <Fingerprint className="h-5 w-5" />
                                         </div>
                                         <div>
-                                            <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Biometrics</p>
-                                            <p className="text-[11px] font-black text-emerald-600 uppercase tracking-[0.2em]">Active</p>
+                                            <p className="text-[10px] font-black text-slate-400 mb-0.5">Biometrics</p>
+                                            <p className="text-xs font-black text-emerald-600">Active</p>
                                         </div>
                                     </div>
                                     <div className="bg-slate-50 rounded-2xl p-4 flex items-center gap-4 border border-slate-100 shadow-sm transition-all hover:bg-white hover:shadow-md">
@@ -361,8 +361,8 @@ export const Profile: React.FC = () => {
                                             <AppWindow className="h-5 w-5" />
                                         </div>
                                         <div>
-                                            <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">MFA (TOTP)</p>
-                                            <p className="text-[11px] font-black text-emerald-600 uppercase tracking-[0.2em]">Enabled</p>
+                                            <p className="text-[10px] font-black text-slate-400 mb-0.5">MFA (TOTP)</p>
+                                            <p className="text-xs font-black text-emerald-600">Enabled</p>
                                         </div>
                                     </div>
                                 </div>

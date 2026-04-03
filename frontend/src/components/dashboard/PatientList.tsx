@@ -96,11 +96,11 @@ export const PatientList: React.FC<PatientListProps> = ({
           <Table>
             <TableHeader>
               <TableRow className="border-gray-50 hover:bg-transparent">
-                <TableHead onClick={() => handleSort('patient_id')} className="cursor-pointer text-xs uppercase tracking-wider font-semibold text-gray-400 pl-6">ID</TableHead>
-                <TableHead onClick={() => handleSort('full_name')} className="cursor-pointer text-xs uppercase tracking-wider font-semibold text-gray-400">Name</TableHead>
-                <TableHead className="text-xs uppercase tracking-wider font-semibold text-gray-400">Gender</TableHead>
-                <TableHead className="text-xs uppercase tracking-wider font-semibold text-gray-400">Contact</TableHead>
-                <TableHead className="text-right text-xs uppercase tracking-wider font-semibold text-gray-400 pr-6">Actions</TableHead>
+                <TableHead onClick={() => handleSort('patient_id')} className="cursor-pointer text-xs font-semibold text-gray-400 pl-6">ID</TableHead>
+                <TableHead onClick={() => handleSort('full_name')} className="cursor-pointer text-xs font-semibold text-gray-400">Name</TableHead>
+                <TableHead className="text-xs font-semibold text-gray-400">Gender</TableHead>
+                <TableHead className="text-xs font-semibold text-gray-400">Contact</TableHead>
+                <TableHead className="text-right text-xs font-semibold text-gray-400 pr-6">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

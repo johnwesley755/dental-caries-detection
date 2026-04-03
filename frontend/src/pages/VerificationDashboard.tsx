@@ -48,8 +48,8 @@ const VerificationDashboard: React.FC = () => {
             
             <div className="p-4 sm:p-8 max-w-7xl mx-auto">
                 <div className="mb-8 space-y-2 text-left">
-                    <h1 className="text-2xl sm:text-3xl font-headline font-black text-blue-900 uppercase tracking-tight">Access Control</h1>
-                    <p className="text-slate-500 font-bold text-[10px] sm:text-xs uppercase tracking-[0.2em] opacity-60">Authorize licensed clinical practitioners for neural diagnostics</p>
+                    <h1 className="text-2xl sm:text-3xl font-headline font-black text-blue-900">Access Control</h1>
+                    <p className="text-slate-500 font-bold text-[11px] sm:text-xs opacity-60">Authorize licensed clinical practitioners for neural diagnostics</p>
                 </div>
 
                 {pendingDentists.length === 0 ? (
@@ -58,8 +58,8 @@ const VerificationDashboard: React.FC = () => {
                             <ShieldCheck className="h-10 w-10 text-emerald-500" />
                         </div>
                         <div className="space-y-4">
-                            <h3 className="text-xl font-headline font-black text-blue-900 uppercase tracking-widest">Protocol Verified</h3>
-                            <p className="text-slate-400 font-bold text-sm uppercase tracking-tight">No pending clinical credentials in the secure queue.</p>
+                            <h3 className="text-xl font-headline font-black text-blue-900">Protocol Verified</h3>
+                            <p className="text-slate-400 font-bold text-sm">No pending clinical credentials in the secure queue.</p>
                         </div>
                     </div>
                 ) : (
@@ -71,8 +71,8 @@ const VerificationDashboard: React.FC = () => {
                                         {dentist.full_name[0]}
                                     </div>
                                     <div className="flex-1 text-left min-w-0">
-                                        <h3 className="font-headline font-black text-blue-900 uppercase text-sm truncate">{dentist.full_name}</h3>
-                                        <div className="flex items-center gap-1.5 text-[10px] text-slate-400 font-black uppercase tracking-widest mt-1 opacity-60">
+                                        <h3 className="font-headline font-black text-blue-900 text-sm truncate">{dentist.full_name}</h3>
+                                        <div className="flex items-center gap-1.5 text-[11px] text-slate-400 font-black mt-1 opacity-60">
                                             <Mail className="h-3 w-3" />
                                             <span className="truncate">{dentist.email}</span>
                                         </div>
@@ -83,9 +83,9 @@ const VerificationDashboard: React.FC = () => {
                                     <div className="p-5 rounded-3xl bg-slate-50 border border-slate-100 flex items-start gap-4 transition-colors group-hover:bg-white group-hover:shadow-lg group-hover:shadow-slate-100">
                                         <Award className="h-5 w-5 text-primary mt-1" />
                                         <div className="text-left font-bold text-slate-500 flex-1">
-                                            <p className="text-[10px] uppercase tracking-widest opacity-40 mb-1">State License</p>
+                                            <p className="text-[11px] opacity-40 mb-1">State License</p>
                                             <p className="text-sm text-blue-900 mb-2">{dentist.profile?.license_number || 'N/A'}</p>
-                                            <Badge className="bg-primary text-white border-none text-[9px] uppercase font-black px-2.5 py-1 rounded-lg tracking-widest">
+                                            <Badge className="bg-primary text-white border-none text-[10px] font-black px-2.5 py-1 rounded-lg">
                                                 {dentist.profile?.specialization || 'Clinical'}
                                             </Badge>
                                         </div>
@@ -94,7 +94,7 @@ const VerificationDashboard: React.FC = () => {
                                     <div className="p-5 rounded-3xl bg-slate-50 border border-slate-100 flex items-start gap-4 transition-colors group-hover:bg-white group-hover:shadow-lg group-hover:shadow-slate-100">
                                         <Building2 className="h-5 w-5 text-primary mt-1" />
                                         <div className="text-left font-bold text-slate-500 flex-1">
-                                            <p className="text-[10px] uppercase tracking-widest opacity-40 mb-1">Clinical Entity</p>
+                                            <p className="text-[11px] opacity-40 mb-1">Clinical Entity</p>
                                             <p className="text-sm text-blue-900 mb-2">{dentist.profile?.clinic_name || 'Personal Practice'}</p>
                                             <div className="flex items-center gap-1.5 text-[10px] opacity-60">
                                                 <MapPin className="h-3.5 w-3.5 text-primary" />
@@ -106,7 +106,7 @@ const VerificationDashboard: React.FC = () => {
 
                                 <Button
                                     onClick={() => handleVerify(dentist.id)}
-                                    className="w-full h-16 bg-primary hover:bg-blue-700 text-white text-[11px] font-black uppercase tracking-[0.2em] rounded-2xl shadow-xl shadow-primary/20 mt-auto transition-all active:scale-95 hover:-translate-y-1"
+                                    className="w-full h-16 bg-primary hover:bg-blue-700 text-white text-xs font-black rounded-2xl shadow-xl shadow-primary/20 mt-auto transition-all active:scale-95 hover:-translate-y-1"
                                 >
                                     Authorize Access
                                 </Button>

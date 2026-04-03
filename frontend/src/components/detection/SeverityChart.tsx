@@ -32,8 +32,8 @@ export const SeverityChart: React.FC<SeverityChartProps> = ({ detection }) => {
             <span className="text-3xl text-emerald-500">✓</span>
         </div>
         <div className="space-y-1">
-            <h3 className="text-sm font-headline font-black text-blue-900 uppercase tracking-widest">Normal View</h3>
-            <p className="text-slate-400 font-bold text-[10px] uppercase tracking-tighter">No neural markers detected</p>
+            <h3 className="text-base font-headline font-black text-blue-900">Normal View</h3>
+            <p className="text-slate-400 font-bold text-xs">No neural markers detected</p>
         </div>
       </Card>
     );
@@ -42,7 +42,7 @@ export const SeverityChart: React.FC<SeverityChartProps> = ({ detection }) => {
   return (
     <Card className="border-none shadow-xl shadow-slate-100/50 bg-white rounded-3xl overflow-hidden">
       <CardHeader className="border-b border-slate-50 p-6 sm:p-8">
-        <CardTitle className="text-[10px] font-headline font-black text-blue-900 uppercase tracking-widest">Severity Spectrum</CardTitle>
+        <CardTitle className="text-xs font-headline font-black text-blue-900">Severity Spectrum</CardTitle>
       </CardHeader>
       <CardContent className="p-6 sm:p-8">
         <div className="h-[220px] w-full relative">
@@ -70,7 +70,7 @@ export const SeverityChart: React.FC<SeverityChartProps> = ({ detection }) => {
           {/* Centered Total */}
           <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
             <span className="text-4xl font-headline font-black text-blue-900 leading-none">{totalFindings}</span>
-            <span className="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em] mt-1">Markers</span>
+            <span className="text-xs text-slate-400 font-black mt-1">Markers</span>
           </div>
         </div>
 
@@ -79,7 +79,7 @@ export const SeverityChart: React.FC<SeverityChartProps> = ({ detection }) => {
             {chartData.map((item) => (
                 <div key={item.name} className="flex flex-col items-center p-3 sm:p-4 rounded-2xl bg-slate-50 border border-slate-100 group transition-all hover:bg-white hover:shadow-lg hover:shadow-slate-100">
                     <div className="w-2 h-2 rounded-full mb-3" style={{ backgroundColor: item.color }}></div>
-                    <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">{item.name}</span>
+                    <span className="text-[10px] font-black text-slate-400 mb-1">{item.name}</span>
                     <Badge variant="outline" className="font-headline font-black text-blue-900 border-none bg-white shadow-sm text-xs">
                         {item.value}
                     </Badge>

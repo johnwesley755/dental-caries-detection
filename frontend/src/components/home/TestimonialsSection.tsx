@@ -1,82 +1,79 @@
 // frontend/src/components/home/TestimonialsSection.tsx
 import React from 'react';
-import { Star, Quote } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { GraduationCap, Code2, Database, Stethoscope } from 'lucide-react';
+
+interface FoundationCard {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}
+
+const cards: FoundationCard[] = [
+  {
+    icon: <GraduationCap className="w-5 h-5 sm:w-6 sm:h-6 text-[#003d9b]" />,
+    title: 'Institutional Review',
+    description: 'Fully compliant with institutional board protocols for patient data anonymization and ethical research standards.',
+  },
+  {
+    icon: <Code2 className="w-5 h-5 sm:w-6 sm:h-6 text-[#003d9b]" />,
+    title: 'Open Methodology',
+    description: 'Transparent model architectures and preprocessing pipelines available for peer review and academic replication.',
+  },
+  {
+    icon: <Database className="w-5 h-5 sm:w-6 sm:h-6 text-[#003d9b]" />,
+    title: 'Data Diversity',
+    description: 'Robust training incorporating diverse patient demographics and varying radiographic image qualities.',
+  },
+  {
+    icon: <Stethoscope className="w-5 h-5 sm:w-6 sm:h-6 text-[#003d9b]" />,
+    title: 'Clinical Validation',
+    description: 'Pilot program conducted with dental practitioners to refine the chairside user experience and clinical utility.',
+  },
+];
 
 export const TestimonialsSection: React.FC = () => {
-  const testimonials = [
-    {
-      name: 'Dr. Sarah Johnson',
-      role: 'Clinical Director',
-      image: 'https://ui-avatars.com/api/?name=Sarah+Johnson&background=003d9b&color=fff&size=128',
-      content: 'The neural detection accuracy is unprecedented. It has significantly reduced diagnostic oversight in our multi-specialty clinic.',
-      rating: 5
-    },
-    {
-      name: 'Dr. Michael Chen',
-      role: 'Maxillofacial Surgeon',
-      image: 'https://ui-avatars.com/api/?name=Michael+Chen&background=003d9b&color=fff&size=128',
-      content: 'DentalAI integration was seamless. The precision of localized caries identification helps us provide evidence-based treatment plans.',
-      rating: 5
-    },
-    {
-      name: 'Dr. Emily Rodriguez',
-      role: 'Principal Dentist',
-      image: 'https://ui-avatars.com/api/?name=Emily+Rodriguez&background=003d9b&color=fff&size=128',
-      content: 'Visual neural markers build immediate trust with patients. It’s an essential part of our modern clinical workstation.',
-      rating: 5
-    }
-  ];
-
   return (
-    <section id="testimonials" className="py-24 bg-surface/50 border-y border-slate-50">
-      <div className="max-w-7xl mx-auto px-6 sm:px-12">
-        <div className="text-center mb-20 space-y-3">
-          <motion.p 
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            className="text-[10px] font-black text-primary uppercase tracking-[0.3em]"
-          >
-            Clinical Feedback
-          </motion.p>
-          <h2 className="text-3xl md:text-5xl font-headline font-black text-blue-900 uppercase">Expert Endorsements</h2>
-        </div>
+    <section id="team" className="py-16 sm:py-24 bg-white">
+      <div className="max-w-screen-xl mx-auto px-4 sm:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 sm:gap-12 items-start">
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {testimonials.map((testimonial, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              whileHover={{ y: -5 }}
-              className="bg-white rounded-[2.5rem] p-10 shadow-xl shadow-slate-200/50 border border-slate-50 relative group"
-            >
-              <Quote className="absolute top-8 right-10 h-10 w-10 text-primary/5 group-hover:text-primary/10 transition-colors" />
-              
-              <div className="flex items-center mb-6 gap-0.5">
-                {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} className="h-4 w-4 text-primary fill-primary" />
-                ))}
-              </div>
-
-              <p className="text-slate-600 mb-8 font-bold italic text-base leading-relaxed">
-                "{testimonial.content}"
+          {/* Left — About the Project */}
+          <div className="lg:col-span-1 space-y-5 sm:space-y-6">
+            <div>
+              <p className="text-xs font-black text-[#003d9b] tracking-wide mb-3">About the Project</p>
+              <h2 className="text-2xl sm:text-3xl font-black text-[#131b2e] tracking-tight">Academic Foundations.</h2>
+            </div>
+            <p className="text-slate-500 font-medium text-sm leading-relaxed">
+              This project represents a final year deep dive into dental informatics, bridging the gap between clinical expertise and computational intelligence through AI-assisted diagnostics.
+            </p>
+            <div className="p-5 sm:p-6 bg-[#eaedff] rounded-xl sm:rounded-2xl border border-[#dae2ff]">
+              <p className="text-sm font-bold text-[#003d9b] italic leading-relaxed">
+                "The integration of AI in dental diagnostics is not just a tool for efficiency, but a necessity for diagnostic consistency across general practice."
               </p>
+              <p className="mt-3 sm:mt-4 text-xs font-black text-[#131b2e]">— Principal Researcher</p>
+            </div>
+          </div>
 
-              <div className="flex items-center gap-4 border-t border-slate-50 pt-8 mt-auto">
-                <img
-                  src={testimonial.image}
-                  alt={testimonial.name}
-                  className="w-12 h-12 rounded-2xl shadow-md border border-slate-100"
-                />
-                <div className="text-left">
-                  <div className="font-headline font-black text-blue-900 uppercase text-xs tracking-tight">{testimonial.name}</div>
-                  <div className="text-[10px] font-black text-primary uppercase tracking-widest mt-1">{testimonial.role}</div>
+          {/* Right — 4 Research Credibility Cards */}
+          <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+            {cards.map((card, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="flex flex-col p-5 sm:p-7 bg-white rounded-2xl sm:rounded-3xl shadow-sm ring-1 ring-slate-100 hover:ring-[#dae2ff] transition-all"
+              >
+                <div className="w-10 h-10 sm:w-11 sm:h-11 bg-[#eaedff] rounded-lg sm:rounded-xl flex items-center justify-center mb-4 sm:mb-5">
+                  {card.icon}
                 </div>
-              </div>
-            </motion.div>
-          ))}
+                <h3 className="text-sm sm:text-base font-black text-[#131b2e] mb-2">{card.title}</h3>
+                <p className="text-slate-500 text-xs sm:text-sm font-medium leading-relaxed flex-grow">{card.description}</p>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

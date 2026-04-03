@@ -1,91 +1,70 @@
 // frontend/src/components/home/Footer.tsx
 import React from 'react';
-import { Mail, MapPin, Phone, Stethoscope, Twitter, Linkedin, Github } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { Github } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="bg-blue-950 text-slate-400 border-t border-white/5">
-      <div className="max-w-7xl mx-auto px-6 sm:px-12 py-20">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
+    <footer className="bg-[#000d29] w-full py-10 sm:py-12 px-4 sm:px-8 border-t border-white/5">
+      <div className="max-w-screen-xl mx-auto">
+        {/* Main grid — 1 col mobile, 2 col tablet, 4 col desktop */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
+
           {/* Brand */}
-          <div className="space-y-6">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
-                <Stethoscope className="h-6 w-6 text-white" />
-              </div>
-              <span className="text-xl font-headline font-black text-white tracking-tight uppercase">
-                DentalAI<span className="text-primary-container">.Dx</span>
-              </span>
-            </div>
-            <p className="text-sm font-bold leading-relaxed uppercase tracking-tight opacity-60">
-              Advanced neural diagnostics for the modern clinical ecosystem. <br />
-              Precision-first. Patient-centric.
+          <div className="sm:col-span-2 lg:col-span-1 flex flex-col gap-3">
+            <div className="text-lg font-black text-[#b2c5ff]">DentAI Diagnostics</div>
+            <p className="text-sm font-medium text-slate-500 leading-relaxed max-w-xs">
+              Final Year Project — Computer Science 2025. AI-powered dental caries detection system for clinical dentists.
             </p>
-            <div className="flex items-center gap-4">
-              <a href="#" className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center hover:bg-primary transition-colors hover:text-white">
-                <Twitter className="h-4 w-4" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center hover:bg-primary transition-colors hover:text-white">
-                <Linkedin className="h-4 w-4" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center hover:bg-primary transition-colors hover:text-white">
-                <Github className="h-4 w-4" />
-              </a>
-            </div>
+            <a
+              href="https://github.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm font-bold text-[#b2c5ff] hover:text-white transition-colors mt-1"
+            >
+              <Github className="w-4 h-4" />
+              View on GitHub
+            </a>
           </div>
 
-          {/* Practice */}
-          <div className="text-left">
-            <h3 className="text-[10px] font-black text-white uppercase tracking-[0.2em] mb-8">Practice</h3>
-            <ul className="space-y-4 text-xs font-black uppercase tracking-widest">
-              <li><Link to="/" className="hover:text-primary transition-colors">Neural Hub</Link></li>
-              <li><Link to="/login" className="hover:text-primary transition-colors">Vault Access</Link></li>
-              <li><a href="#features" className="hover:text-primary transition-colors">Core Engine</a></li>
-              <li><a href="#workflow" className="hover:text-primary transition-colors">Protocol</a></li>
+          {/* System */}
+          <div>
+            <h3 className="text-xs font-black text-white mb-4 sm:mb-5">System</h3>
+            <ul className="space-y-3 text-xs font-bold">
+              <li><Link to="/detection" className="text-slate-500 hover:text-[#b2c5ff] transition-colors">Detection</Link></li>
+              <li><Link to="/patients" className="text-slate-500 hover:text-[#b2c5ff] transition-colors">Patients</Link></li>
+              <li><Link to="/history" className="text-slate-500 hover:text-[#b2c5ff] transition-colors">History</Link></li>
+              <li><Link to="/login" className="text-slate-500 hover:text-[#b2c5ff] transition-colors">Sign In</Link></li>
             </ul>
           </div>
 
-          {/* Intelligence */}
-          <div className="text-left">
-            <h3 className="text-[10px] font-black text-white uppercase tracking-[0.2em] mb-8">Intelligence</h3>
-            <ul className="space-y-4 text-xs font-black uppercase tracking-widest">
-              <li><a href="#" className="hover:text-primary transition-colors">Documentation</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Neural Research</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Clinical Support</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Privacy Cloud</a></li>
+          {/* Project */}
+          <div>
+            <h3 className="text-xs font-black text-white mb-4 sm:mb-5">Project</h3>
+            <ul className="space-y-3 text-xs font-bold">
+              <li><a href="#about" className="text-slate-500 hover:text-[#b2c5ff] transition-colors">About</a></li>
+              <li><a href="#features" className="text-slate-500 hover:text-[#b2c5ff] transition-colors">Methodology</a></li>
+              <li><a href="#results" className="text-slate-500 hover:text-[#b2c5ff] transition-colors">Results</a></li>
+              <li><a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-[#b2c5ff] transition-colors">GitHub</a></li>
             </ul>
           </div>
 
-          {/* Nexus */}
-          <div className="text-left">
-            <h3 className="text-[10px] font-black text-white uppercase tracking-[0.2em] mb-8">Nexus</h3>
-            <ul className="space-y-4 text-xs font-black uppercase tracking-widest">
-              <li className="flex items-center gap-3">
-                <Mail className="h-4 w-4 text-primary" />
-                <span className="truncate">ops@dentalai.dx</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <Phone className="h-4 w-4 text-primary" />
-                <span>+1 800 NEURAL</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <MapPin className="h-4 w-4 text-primary" />
-                <span>DX-CORE HQ</span>
-              </li>
+          {/* Legal */}
+          <div>
+            <h3 className="text-xs font-black text-white mb-4 sm:mb-5">Legal</h3>
+            <ul className="space-y-3 text-xs font-bold">
+              <li><a href="#" className="text-slate-500 hover:text-[#b2c5ff] transition-colors">Privacy Policy</a></li>
+              <li><a href="#" className="text-slate-500 hover:text-[#b2c5ff] transition-colors">Institutional Review</a></li>
+              <li><a href="#" className="text-slate-500 hover:text-[#b2c5ff] transition-colors">Data Ethics</a></li>
             </ul>
           </div>
         </div>
 
-        <div className="border-t border-white/5 mt-16 pt-8 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <p className="text-[10px] font-black uppercase tracking-widest opacity-40">
-            &copy; {new Date().getFullYear()} DENTALAI SYSTEMS. OPERATING UNDER DX-V4 COMPLIANCE.
+        {/* Bottom bar */}
+        <div className="mt-10 sm:mt-12 pt-6 border-t border-white/5">
+          <p className="text-xs font-medium text-slate-600 italic text-center sm:text-left">
+            © 2025 John Wesley. Academic Project — Final Year Dissertation, Computer Science. Not for commercial use.
           </p>
-          <div className="flex gap-8 text-[10px] font-black uppercase tracking-widest opacity-60">
-            <a href="#" className="hover:text-primary transition-colors">Terms</a>
-            <a href="#" className="hover:text-primary transition-colors">Privacy</a>
-            <a href="#" className="hover:text-primary transition-colors">Security</a>
-          </div>
         </div>
       </div>
     </footer>

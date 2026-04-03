@@ -156,7 +156,7 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose })
                     {/* Days of Week */}
                     <div className="grid grid-cols-7 border-b border-surface-container bg-surface-container-low/30 shrink-0">
                         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                            <div key={day} className="py-3 text-center text-xs font-bold text-slate-400 uppercase tracking-widest">{day}</div>
+                            <div key={day} className="py-3 text-center text-xs font-bold text-slate-400">{day}</div>
                         ))}
                     </div>
 
@@ -194,7 +194,7 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose })
                                                     className={`${colorCfg.bg} border-l-2 ${colorCfg.border} p-1.5 rounded flex flex-col gap-0.5`}
                                                     onClick={(e) => e.stopPropagation()}
                                                 >
-                                                    <span className={`text-[10px] font-bold ${colorCfg.text} truncate uppercase`}>
+                                                    <span className={`text-[10px] font-bold ${colorCfg.text} truncate`}>
                                                         {format(new Date(apt.appointment_date), 'hh:mm a')}
                                                     </span>
                                                     <span className={`text-[11px] font-bold ${colorCfg.text} truncate leading-tight`}>
@@ -204,7 +204,7 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose })
                                             );
                                         })}
                                         {dayAppointments.length > 3 && (
-                                            <div className="text-[10px] font-bold text-slate-400 text-center uppercase tracking-wider py-1 border border-dashed border-slate-200 rounded mt-1">
+                                            <div className="text-[10px] font-bold text-slate-400 text-center py-1 border border-dashed border-slate-200 rounded mt-1">
                                                 + {dayAppointments.length - 3} more
                                             </div>
                                         )}
@@ -221,23 +221,23 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose })
                 <div className="flex flex-wrap items-center gap-6">
                     <div className="flex items-center gap-2">
                         <span className="w-3 h-3 rounded-full bg-primary/80"></span>
-                        <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">Scheduled</span>
+                        <span className="text-xs font-bold text-slate-600">Scheduled</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <span className="w-3 h-3 rounded-full bg-tertiary/80"></span>
-                        <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">Confirmed</span>
+                        <span className="text-xs font-bold text-slate-600">Confirmed</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <span className="w-3 h-3 rounded-full bg-outline/80"></span>
-                        <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">Completed</span>
+                        <span className="text-xs font-bold text-slate-600">Completed</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <span className="w-3 h-3 rounded-full bg-error/80"></span>
-                        <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">Cancelled</span>
+                        <span className="text-xs font-bold text-slate-600">Cancelled</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <span className="w-3 h-3 rounded-full bg-secondary-container"></span>
-                        <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">No Show</span>
+                        <span className="text-xs font-bold text-slate-600">No Show</span>
                     </div>
                 </div>
             </div>

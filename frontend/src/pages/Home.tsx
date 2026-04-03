@@ -9,21 +9,13 @@ export const Home: React.FC = () => {
   const { isAuthenticated } = useAuth();
 
   useEffect(() => {
-    // Redirect to dashboard if already authenticated
     if (isAuthenticated) {
       navigate('/dashboard');
     }
   }, [isAuthenticated, navigate]);
 
   return (
-    <div className="min-h-screen bg-white overflow-hidden selection:bg-blue-100 selection:text-blue-900">
-      
-      {/* Decorative Background Elements */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
-        <div className="absolute -top-[20%] -right-[10%] w-[700px] h-[700px] rounded-full bg-blue-50/50 blur-3xl" />
-        <div className="absolute top-[20%] -left-[10%] w-[500px] h-[500px] rounded-full bg-sky-50/50 blur-3xl" />
-      </div>
-
+    <div className="min-h-screen bg-white overflow-x-hidden selection:bg-blue-100 selection:text-blue-900">
       <HeroSection />
       <FeaturesSection />
       <StatisticsSection />

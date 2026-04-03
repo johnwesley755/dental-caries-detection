@@ -74,7 +74,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     authService.removeToken();
     setUser(null);
     setToken(null);
+    window.location.href = '/';
   };
+
 
   const updateUser = (updatedUser: User) => {
     setUser(updatedUser);

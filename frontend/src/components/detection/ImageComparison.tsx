@@ -34,13 +34,13 @@ export const ImageComparison: React.FC<ImageComparisonProps> = ({ originalImageU
   return (
     <Card className="border-none shadow-xl shadow-slate-200/50 bg-white rounded-[2.5rem] overflow-hidden transition-all">
       <CardHeader className="flex flex-col sm:flex-row items-center justify-between border-b border-slate-50 p-6 sm:p-8 gap-4">
-        <CardTitle className="text-sm font-headline font-black text-blue-900 uppercase tracking-widest">Visual Comparison</CardTitle>
+        <CardTitle className="text-base font-headline font-black text-blue-900">Visual Comparison</CardTitle>
         <div className="flex bg-slate-50 p-1.5 rounded-2xl border border-slate-100 w-full sm:w-auto">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => setViewMode('split')}
-            className={`flex-1 sm:flex-none h-10 rounded-xl px-4 text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === 'split' ? 'bg-white shadow-md text-primary' : 'text-slate-400 hover:text-slate-600'}`}
+            className={`flex-1 sm:flex-none h-10 rounded-xl px-4 text-xs font-black transition-all ${viewMode === 'split' ? 'bg-white shadow-md text-primary' : 'text-slate-400 hover:text-slate-600'}`}
           >
             <Columns2 className="h-3.5 w-3.5 mr-2" /> Split
           </Button>
@@ -48,7 +48,7 @@ export const ImageComparison: React.FC<ImageComparisonProps> = ({ originalImageU
             variant="ghost"
             size="sm"
             onClick={() => setViewMode('slider')}
-            className={`flex-1 sm:flex-none h-10 rounded-xl px-4 text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === 'slider' ? 'bg-white shadow-md text-primary' : 'text-slate-400 hover:text-slate-600'}`}
+            className={`flex-1 sm:flex-none h-10 rounded-xl px-4 text-xs font-black transition-all ${viewMode === 'slider' ? 'bg-white shadow-md text-primary' : 'text-slate-400 hover:text-slate-600'}`}
           >
             <SlidersHorizontal className="h-3.5 w-3.5 mr-2" /> Slider
           </Button>
@@ -59,13 +59,13 @@ export const ImageComparison: React.FC<ImageComparisonProps> = ({ originalImageU
         {viewMode === 'split' ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
             <div className="space-y-3">
-                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Native Radio</span>
+                <span className="text-xs font-black text-slate-400 ml-1">Native Radio</span>
                 <div className="rounded-3xl overflow-hidden shadow-lg border border-slate-200 bg-black aspect-video flex items-center justify-center">
                    <img src={originalImageUrl} className="w-full h-full object-contain opacity-80" alt="Original" />
                 </div>
             </div>
             <div className="space-y-3">
-                <span className="text-[10px] font-black text-primary uppercase tracking-widest ml-1">Neural Overlay</span>
+                <span className="text-xs font-black text-primary ml-1">Neural Overlay</span>
                 <div className="rounded-3xl overflow-hidden shadow-lg border border-slate-200 bg-black aspect-video flex items-center justify-center">
                   <img src={annotatedImageUrl} className="w-full h-full object-contain" alt="Annotated" />
                 </div>
@@ -95,8 +95,8 @@ export const ImageComparison: React.FC<ImageComparisonProps> = ({ originalImageU
             </div>
 
             {/* Labels */}
-            <div className="absolute top-6 left-6 bg-black/60 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-xl backdrop-blur-md border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity">Native</div>
-            <div className="absolute top-6 right-6 bg-primary/80 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-xl backdrop-blur-md border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity">Neural</div>
+            <div className="absolute top-6 left-6 bg-black/60 text-white text-[11px] font-black px-3 py-1.5 rounded-xl backdrop-blur-md border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity">Native</div>
+            <div className="absolute top-6 right-6 bg-primary/80 text-white text-[11px] font-black px-3 py-1.5 rounded-xl backdrop-blur-md border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity">Neural</div>
           </div>
         )}
       </CardContent>

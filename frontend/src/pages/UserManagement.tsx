@@ -154,19 +154,19 @@ export const UserManagement: React.FC = () => {
       {/* Stats Quick View (Mobile Optimized) */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Staff</p>
+            <p className="text-sm font-black text-slate-400">Total Staff</p>
             <p className="text-2xl font-black text-blue-900 mt-1">{users.length}</p>
         </div>
         <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Active Now</p>
+            <p className="text-sm font-black text-slate-400">Active Now</p>
             <p className="text-2xl font-black text-emerald-600 mt-1">{users.filter(u => u.is_active).length}</p>
         </div>
         <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Admins</p>
+            <p className="text-sm font-black text-slate-400">Admins</p>
             <p className="text-2xl font-black text-blue-500 mt-1">{users.filter(u => u.role === 'ADMIN').length}</p>
         </div>
         <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Pending</p>
+            <p className="text-sm font-black text-slate-400">Pending</p>
             <p className="text-2xl font-black text-slate-400 mt-1">{users.filter(u => !u.is_active).length}</p>
         </div>
       </div>
@@ -174,7 +174,7 @@ export const UserManagement: React.FC = () => {
       {/* Main Content Card */}
       <Card className="border-none shadow-sm bg-white rounded-2xl overflow-hidden border border-slate-100/50">
         <CardHeader className="px-6 py-6 bg-white flex flex-col sm:flex-row items-center justify-between gap-4">
-          <CardTitle className="text-sm font-black text-blue-900 uppercase tracking-wider flex items-center gap-2 w-full sm:w-auto">
+          <CardTitle className="text-base font-black text-blue-900 flex items-center gap-2 w-full sm:w-auto">
             <span className="material-symbols-outlined text-primary text-xl">format_list_bulleted</span>
             Clinical Directory
           </CardTitle>
@@ -201,11 +201,11 @@ export const UserManagement: React.FC = () => {
                 <Table>
                   <TableHeader className="bg-slate-50 border-y border-slate-100">
                     <TableRow className="border-none hover:bg-transparent">
-                      <TableHead className="pl-6 font-black text-[10px] uppercase tracking-widest text-slate-400 py-4">Clinical Staff</TableHead>
-                      <TableHead className="font-black text-[10px] uppercase tracking-widest text-slate-400 py-4">Auth Channel</TableHead>
-                      <TableHead className="font-black text-[10px] uppercase tracking-widest text-slate-400 py-4">Assign Role</TableHead>
-                      <TableHead className="font-black text-[10px] uppercase tracking-widest text-slate-400 py-4">Vault Status</TableHead>
-                      <TableHead className="pr-6 text-right font-black text-[10px] uppercase tracking-widest text-slate-400 py-4">Actions</TableHead>
+                      <TableHead className="pl-6 font-black text-xs text-slate-400 py-4">Clinical Staff</TableHead>
+                      <TableHead className="font-black text-xs text-slate-400 py-4">Auth Channel</TableHead>
+                      <TableHead className="font-black text-xs text-slate-400 py-4">Assign Role</TableHead>
+                      <TableHead className="font-black text-xs text-slate-400 py-4">Vault Status</TableHead>
+                      <TableHead className="pr-6 text-right font-black text-xs text-slate-400 py-4">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -220,14 +220,14 @@ export const UserManagement: React.FC = () => {
                             />
                             <div className="flex flex-col">
                                 <span className="font-bold text-slate-700">{u.full_name}</span>
-                                <span className="text-[10px] font-black text-primary uppercase tracking-widest">ID: {u.id.slice(0, 8)}</span>
+                                <span className="text-[11px] font-black text-primary">ID: {u.id.slice(0, 8)}</span>
                             </div>
                           </div>
                         </TableCell>
                         <TableCell className="text-slate-500 font-medium">{u.email}</TableCell>
                         <TableCell>{getRoleBadge(u.role)}</TableCell>
                         <TableCell>
-                          <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${u.is_active ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-slate-100 text-slate-400 border border-slate-200'}`}>
+                          <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-black ${u.is_active ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-slate-100 text-slate-400 border border-slate-200'}`}>
                             <span className={`w-1.5 h-1.5 rounded-full ${u.is_active ? 'bg-emerald-500 animate-pulse' : 'bg-slate-300'}`}></span>
                             {u.is_active ? 'Active' : 'Halted'}
                           </div>
@@ -262,7 +262,7 @@ export const UserManagement: React.FC = () => {
                             />
                             <div>
                                 <h4 className="font-bold text-slate-800">{u.full_name}</h4>
-                                <p className="text-[10px] font-black text-primary uppercase tracking-widest">{u.role}</p>
+                                <p className="text-xs font-black text-primary">{u.role}</p>
                             </div>
                         </div>
                         {u.id !== user?.id && (
@@ -280,7 +280,7 @@ export const UserManagement: React.FC = () => {
                             {u.email}
                         </div>
                         <div className="flex items-center justify-between">
-                            <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${u.is_active ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-slate-100 text-slate-400 border border-slate-200'}`}>
+                            <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-black ${u.is_active ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-slate-100 text-slate-400 border border-slate-200'}`}>
                                 <span className={`w-1.5 h-1.5 rounded-full ${u.is_active ? 'bg-emerald-500' : 'bg-slate-300'}`}></span>
                                 {u.is_active ? 'Active' : 'Inactive'}
                             </div>
@@ -316,7 +316,7 @@ export const UserManagement: React.FC = () => {
                 </div>
 
                 <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100 space-y-4">
-                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Login Credentials</h4>
+                  <h4 className="text-xs font-bold text-slate-400">Login Credentials</h4>
                   <div>
                     <label className="text-xs text-slate-400">Email</label>
                     <div className="font-medium text-slate-700">{formData.email}</div>

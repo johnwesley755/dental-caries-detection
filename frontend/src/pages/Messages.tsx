@@ -226,7 +226,7 @@ export const Messages: React.FC = () => {
                     lg:flex w-full lg:w-80 lg:min-w-[320px] bg-white border-r border-slate-100 flex-col overflow-hidden shrink-0
                 `}>
                     <div className="p-4 lg:p-6 border-b border-slate-50 flex items-center justify-between">
-                        <h2 className="text-lg font-bold text-slate-900 font-headline uppercase tracking-wider text-[11px]">Messages</h2>
+                        <h2 className="text-sm font-bold text-slate-900 font-headline">Messages</h2>
                         <button
                             onClick={() => {
                                 if (!showPatientSelector) loadPatients();
@@ -244,7 +244,7 @@ export const Messages: React.FC = () => {
                         {showPatientSelector ? (
                             <div className="animate-in fade-in slide-in-from-top-2 duration-200">
                                 <div className="p-4 bg-slate-50 border-b border-slate-100">
-                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Select Patient to Message</p>
+                                    <p className="text-xs font-bold text-slate-400">Select Patient to Message</p>
                                 </div>
                                 {loadingPatients ? (
                                     <div className="p-12 text-center">
@@ -252,7 +252,7 @@ export const Messages: React.FC = () => {
                                     </div>
                                 ) : patients.length === 0 ? (
                                     <div className="p-12 text-center">
-                                        <p className="text-sm font-bold text-slate-400 uppercase tracking-wider">No patients found</p>
+                                        <p className="text-sm font-bold text-slate-400">No patients found</p>
                                     </div>
                                 ) : (
                                     patients.map(patient => (
@@ -268,7 +268,7 @@ export const Messages: React.FC = () => {
                                             />
                                             <div className="flex-1 min-w-0">
                                                 <h4 className="font-bold text-slate-800 text-sm truncate">{patient.full_name}</h4>
-                                                <p className="text-[10px] font-black text-primary uppercase tracking-widest">{patient.patient_id}</p>
+                                                <p className="text-[11px] font-black text-primary">{patient.patient_id}</p>
                                             </div>
                                             <span className="material-symbols-outlined text-slate-300 group-hover:text-primary transition-colors">chevron_right</span>
                                         </div>
@@ -281,8 +281,8 @@ export const Messages: React.FC = () => {
                                     <span className="material-symbols-outlined text-3xl text-slate-200" style={{ fontVariationSettings: "'FILL' 1" }}>chat_bubble</span>
                                 </div>
                                 <div>
-                                    <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Clear Inbox</h3>
-                                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Start a conversation to see it here.</p>
+                                    <h3 className="text-sm font-bold text-slate-800">Clear Inbox</h3>
+                                    <p className="text-xs text-slate-400 font-bold mt-1">Start a conversation to see it here.</p>
                                 </div>
                             </div>
                         ) : (
@@ -389,7 +389,7 @@ export const Messages: React.FC = () => {
                                             <React.Fragment key={message.id}>
                                                 {showDateHeader && (
                                                     <div className="flex justify-center mt-6 mb-4">
-                                                        <span className="text-[10px] font-bold text-slate-400 px-3 py-1 bg-slate-100 rounded-full uppercase tracking-wider">
+                                                        <span className="text-xs font-bold text-slate-400 px-3 py-1 bg-slate-100 rounded-full">
                                                             {formatDate(message.created_at)}
                                                         </span>
                                                     </div>

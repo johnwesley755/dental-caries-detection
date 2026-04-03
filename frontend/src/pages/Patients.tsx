@@ -207,7 +207,7 @@ export const Patients: React.FC = () => {
                   <span className="material-symbols-outlined" data-icon="filter_list">filter_list</span>
                   Filter
                   {activeFilterCount > 0 && (
-                    <Badge variant="secondary" className="ml-1 h-5 w-5 p-0 flex items-center justify-center rounded-full bg-primary text-white border-none text-[10px]">
+                    <Badge variant="secondary" className="ml-1 h-5 w-5 p-0 flex items-center justify-center rounded-full bg-primary text-white border-none text-[11px]">
                       {activeFilterCount}
                     </Badge>
                   )}
@@ -229,7 +229,7 @@ export const Patients: React.FC = () => {
                   
                   {/* Gender Filter */}
                   <div className="space-y-3">
-                    <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Gender</Label>
+                    <Label className="text-xs font-bold text-slate-400">Gender</Label>
                     <div className="grid grid-cols-2 gap-3">
                       {['Male', 'Female', 'Other'].map((g) => (
                         <div key={g} className="flex items-center space-x-2">
@@ -256,7 +256,7 @@ export const Patients: React.FC = () => {
 
                   {/* Clinical Status Filter */}
                   <div className="space-y-3">
-                    <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Clinical Status</Label>
+                    <Label className="text-xs font-bold text-slate-400">Clinical Status</Label>
                     <div className="space-y-2">
                       {['Healthy', 'Caries Detected', 'Registered', 'Scheduled'].map((s) => (
                         <div key={s} className="flex items-center space-x-2">
@@ -295,7 +295,7 @@ export const Patients: React.FC = () => {
           <div className="overflow-x-auto custom-scrollbar">
             <table className="w-full text-left border-collapse min-w-[800px] lg:min-w-full">
               <thead>
-                <tr className="bg-slate-50/50 text-slate-500 text-[10px] lg:text-xs font-bold uppercase tracking-widest border-b border-slate-100">
+                <tr className="bg-slate-50/50 text-slate-500 text-[11px] lg:text-xs font-bold border-b border-slate-100">
                   <th className="px-4 lg:px-6 py-4">Patient ID</th>
                   <th className="px-4 lg:px-6 py-4">Name</th>
                   <th className="px-4 lg:px-6 py-4 hidden md:table-cell">Gender</th>
@@ -407,7 +407,7 @@ export const Patients: React.FC = () => {
               <span className="material-symbols-outlined text-primary" data-icon="biotech">biotech</span>
             </div>
             <div>
-              <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">AI Accuracy</p>
+              <p className="text-xs text-slate-500 font-bold">AI Accuracy</p>
               <p className="text-xl lg:text-2xl font-headline font-extrabold text-primary">{accuracyRate}%</p>
             </div>
           </div>
@@ -416,7 +416,7 @@ export const Patients: React.FC = () => {
               <span className="material-symbols-outlined text-secondary" data-icon="science">science</span>
             </div>
             <div>
-              <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Caries Found</p>
+              <p className="text-xs text-slate-500 font-bold">Caries Found</p>
               <p className="text-xl lg:text-2xl font-headline font-extrabold text-secondary">{cariesCount}</p>
             </div>
           </div>
@@ -425,7 +425,7 @@ export const Patients: React.FC = () => {
               <span className="material-symbols-outlined text-white" data-icon="bolt">bolt</span>
             </div>
             <div className="z-10">
-              <p className="text-[10px] text-white/70 font-bold uppercase tracking-wider">Status</p>
+              <p className="text-xs text-white/70 font-bold">Status</p>
               <p className="text-lg lg:text-xl font-headline font-extrabold text-white">Full Capacity</p>
             </div>
             <div className="absolute -right-4 -bottom-4 w-20 h-20 lg:w-24 lg:h-24 bg-white/10 rounded-full blur-2xl"></div>
@@ -470,16 +470,16 @@ export const Patients: React.FC = () => {
 
                 {formData.create_account && (
                   <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
-                    <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1 mb-4">Account Credentials</h4>
+                    <h4 className="text-xs font-bold text-slate-400 pl-1 mb-4">Account Credentials</h4>
                     <div className="space-y-4">
                       <div>
-                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Login Email</label>
+                        <label className="text-xs font-bold text-slate-400 pl-1">Login Email</label>
                         <div className="flex items-center justify-between bg-white px-4 py-3 rounded-xl focus:ring-2 focus:ring-blue-700/10 transition-all font-medium border-none shadow-sm">
                           <code className="text-blue-900 font-medium">{formData.email}</code>
                         </div>
                       </div>
                       <div>
-                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Temporary Password</label>
+                        <label className="text-xs font-bold text-slate-400 pl-1">Temporary Password</label>
                         <div className="flex items-center justify-between bg-white px-4 py-3 rounded-xl focus:ring-2 focus:ring-blue-700/10 transition-all font-medium border-none shadow-sm">
                           <code className="text-primary font-bold text-lg">{generatedPassword}</code>
                           <button type="button" className="h-8 w-8 text-slate-400 hover:text-primary flex items-center justify-center rounded-lg" onClick={() => {
@@ -515,7 +515,7 @@ export const Patients: React.FC = () => {
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">
-                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Full Name</label>
+                        <label className="text-xs font-bold text-slate-400 pl-1">Full Name</label>
                         <input
                           className="w-full px-4 py-3 bg-slate-50 border border-slate-600 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-700/10 focus:bg-white transition-all text-blue-900 font-medium"
                           placeholder="e.g. Jonathan Doe"
@@ -526,7 +526,7 @@ export const Patients: React.FC = () => {
                         />
                       </div>
                       <div className="space-y-2">
-                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Email Address</label>
+                        <label className="text-xs font-bold text-slate-400 pl-1">Email Address</label>
                         <input
                           className="w-full px-4 py-3 bg-slate-50 border border-slate-600 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-700/10 focus:bg-white transition-all text-blue-900 font-medium"
                           type="email"
@@ -538,7 +538,7 @@ export const Patients: React.FC = () => {
                         />
                       </div>
                       <div className="space-y-2">
-                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Phone Number</label>
+                        <label className="text-xs font-bold text-slate-400 pl-1">Phone Number</label>
                         <input
                           className="w-full px-4 py-3 bg-slate-50 border border-slate-600 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-700/10 focus:bg-white transition-all text-blue-900 font-medium"
                           placeholder="+1 (555) 000-0000"
@@ -549,7 +549,7 @@ export const Patients: React.FC = () => {
                       </div>
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Age</label>
+                          <label className="text-xs font-bold text-slate-400 pl-1">Age</label>
                           <input
                             className="w-full px-4 py-3 bg-slate-50 border border-slate-600 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-700/10 focus:bg-white transition-all text-blue-900 font-medium"
                             type="number"
@@ -560,7 +560,7 @@ export const Patients: React.FC = () => {
                           />
                         </div>
                         <div className="space-y-2">
-                          <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Gender</label>
+                          <label className="text-xs font-bold text-slate-400 pl-1">Gender</label>
                           <select
                             className="w-full px-4 py-3 bg-slate-50 border border-slate-600 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-700/10 focus:bg-white transition-all text-blue-900 font-medium"
                             value={formData.gender || ''}
@@ -584,7 +584,7 @@ export const Patients: React.FC = () => {
                       <h4 className="font-manrope font-bold text-lg text-blue-900 tracking-tight">Contact Details</h4>
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Address</label>
+                      <label className="text-xs font-bold text-slate-400 pl-1">Address</label>
                       <textarea
                         className="w-full px-4 py-3 bg-slate-50 border border-slate-600 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-700/10 focus:bg-white transition-all text-blue-900 font-medium resize-none"
                         placeholder="Enter physical home or mailing address..."
@@ -603,7 +603,7 @@ export const Patients: React.FC = () => {
                       <h4 className="font-manrope font-bold text-lg text-blue-900 tracking-tight">Medical History</h4>
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Medical History Notes</label>
+                      <label className="text-xs font-bold text-slate-400 pl-1">Medical History Notes</label>
                       <textarea
                         className="w-full px-4 py-3 bg-slate-50 border border-slate-600 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-700/10 focus:bg-white transition-all text-blue-900 font-medium resize-none"
                         placeholder="Document any existing conditions, allergies, or previous surgical dental history..."

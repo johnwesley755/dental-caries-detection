@@ -82,10 +82,10 @@ export const DetectionDetails: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
           <div className="space-y-2">
             <div className="flex flex-wrap items-center gap-3">
-              <h1 className="text-2xl sm:text-3xl font-headline font-black text-blue-900 uppercase">Neural Report</h1>
+              <h1 className="text-2xl sm:text-3xl font-headline font-black text-blue-900">Neural Report</h1>
               {getStatusBadge(detection.status)}
             </div>
-            <div className="flex flex-wrap items-center gap-4 text-xs sm:text-sm text-slate-500 font-bold uppercase tracking-tight">
+            <div className="flex flex-wrap items-center gap-4 text-xs sm:text-sm text-slate-500 font-bold tracking-tight">
               <span className="flex items-center gap-1.5"><User className="h-4 w-4" /> {patient?.full_name || 'Patient Unknown'}</span>
               <span className="flex items-center gap-1.5"><Calendar className="h-4 w-4" /> {new Date(detection.detection_date).toLocaleDateString()}</span>
               <span className="bg-white px-2.5 py-1 rounded-lg border border-slate-100 font-mono tracking-tighter text-[10px]">{detection.detection_id}</span>
@@ -113,7 +113,7 @@ export const DetectionDetails: React.FC = () => {
 
             {/* Notes Card */}
             <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-xl shadow-slate-200/50 border border-slate-50">
-              <h3 className="text-sm font-headline font-black text-blue-900 mb-6 flex items-center gap-3 uppercase tracking-widest">
+              <h3 className="text-sm font-headline font-black text-blue-900 mb-6 flex items-center gap-3">
                 <FileText className="h-5 w-5 text-primary" /> Clinical Assessment
               </h3>
               <div className="bg-slate-50 p-6 rounded-2xl text-slate-600 text-sm font-medium leading-relaxed">

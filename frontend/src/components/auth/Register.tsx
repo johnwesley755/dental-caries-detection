@@ -159,7 +159,7 @@ const Register: React.FC = () => {
               )}
 
               <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Full Name</label>
+                <label className="text-sm font-bold text-slate-500 ml-1">Full Name</label>
                 <div className="relative group">
                   <User className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-primary transition-colors" />
                   <input
@@ -179,7 +179,7 @@ const Register: React.FC = () => {
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Email Address</label>
+                <label className="text-sm font-bold text-slate-500 ml-1">Email Address</label>
                 <div className="relative group">
                   <Mail className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-primary transition-colors" />
                   <input
@@ -199,7 +199,7 @@ const Register: React.FC = () => {
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Role</label>
+                <label className="text-sm font-bold text-slate-500 ml-1">Role</label>
                 <div className="relative group">
                   <Briefcase className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-primary transition-colors" />
                   <select
@@ -223,10 +223,10 @@ const Register: React.FC = () => {
               {/* Dentist fields */}
               {formData.role === UserRole.DENTIST && (
                 <div className="space-y-6 pt-4 border-t border-slate-100">
-                  <h3 className="text-sm font-bold text-slate-600 uppercase tracking-wider">Professional Credentials</h3>
+                  <h3 className="text-sm font-bold text-slate-600">Professional Credentials</h3>
 
                   <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">License Number *</label>
+                    <label className="text-sm font-bold text-slate-500 ml-1">License Number *</label>
                     <div className="relative group">
                       <FileText className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-primary transition-colors" />
                       <input
@@ -246,7 +246,7 @@ const Register: React.FC = () => {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Specialization</label>
+                    <label className="text-sm font-bold text-slate-500 ml-1">Specialization</label>
                     <div className="relative group">
                       <Stethoscope className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-primary transition-colors" />
                       <input
@@ -262,7 +262,7 @@ const Register: React.FC = () => {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Clinic Name</label>
+                      <label className="text-sm font-bold text-slate-500 ml-1">Clinic Name</label>
                       <div className="relative group">
                         <Building className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-primary transition-colors" />
                         <input
@@ -277,7 +277,7 @@ const Register: React.FC = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Clinic Address</label>
+                      <label className="text-sm font-bold text-slate-500 ml-1">Clinic Address</label>
                       <div className="relative group">
                         <MapPin className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-primary transition-colors" />
                         <input
@@ -295,7 +295,7 @@ const Register: React.FC = () => {
               )}
 
               <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Password</label>
+                <label className="text-sm font-bold text-slate-500 ml-1">Password</label>
                 <div className="relative group">
                   <Lock className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-primary transition-colors" />
                   <input
@@ -322,7 +322,7 @@ const Register: React.FC = () => {
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Confirm Password</label>
+                <label className="text-sm font-bold text-slate-500 ml-1">Confirm Password</label>
                 <div className="relative group">
                   <Lock className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-primary transition-colors" />
                   <input

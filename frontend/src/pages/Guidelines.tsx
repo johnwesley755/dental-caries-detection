@@ -57,7 +57,7 @@ export const Guidelines: React.FC = () => {
       <main className="flex-1 p-4 sm:p-6 lg:p-10 flex flex-col gap-8 lg:gap-12 overflow-x-hidden">
         {/* Header Hero */}
         <div className="max-w-4xl mx-auto w-full space-y-4 text-center lg:text-left">
-          <div className="inline-flex items-center gap-2 bg-primary/5 text-primary px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+          <div className="inline-flex items-center gap-2 bg-primary/5 text-primary px-3 py-1 rounded-full text-xs font-bold">
             <ShieldCheck className="w-3.5 h-3.5" />
             Clinical Protocol
           </div>
@@ -102,7 +102,7 @@ export const Guidelines: React.FC = () => {
             <div className="bg-error/5 border border-error/20 p-6 lg:p-8 rounded-3xl space-y-4">
               <div className="flex items-center gap-3 text-error">
                 <AlertCircle className="w-6 h-6" />
-                <h3 className="font-headline font-black text-lg uppercase tracking-tight">Clinical Disclaimer</h3>
+                <h3 className="font-headline font-black text-lg">Clinical Disclaimer</h3>
               </div>
               <p className="text-error/80 text-sm lg:text-base font-bold leading-relaxed">
                 The Artificial Intelligence system is designed to act as a supportive diagnostic tool (Clinical Decision Support). It is NOT intended to replace professional dental diagnosis. ALL findings and AI flags must be validated by a licensed dental professional before any treatment is initiated.
@@ -133,7 +133,7 @@ export const Guidelines: React.FC = () => {
               </div>
 
               <div className="mt-8 pt-6 border-t border-slate-50">
-                <button className="w-full flex items-center justify-between text-primary font-black text-xs uppercase tracking-widest hover:opacity-70 transition-opacity">
+                <button className="w-full flex items-center justify-between text-primary font-black text-xs hover:opacity-70 transition-opacity">
                   Download Full PDF
                   <ChevronRight className="w-4 h-4" />
                 </button>

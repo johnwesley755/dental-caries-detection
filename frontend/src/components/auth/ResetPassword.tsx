@@ -106,7 +106,7 @@ export const ResetPassword: React.FC = () => {
                         )}
 
                         <div className="space-y-2">
-                            <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">New Password</label>
+                            <label className="text-sm font-bold text-slate-500 ml-1">New Password</label>
                             <div className="relative group">
                                 <div className="absolute left-4 top-3.5 pointer-events-none">
                                     <Lock className="h-5 w-5 text-slate-400 group-focus-within:text-blue-600 transition-colors" />
@@ -131,7 +131,7 @@ export const ResetPassword: React.FC = () => {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Confirm Password</label>
+                            <label className="text-sm font-bold text-slate-500 ml-1">Confirm Password</label>
                             <div className="relative group">
                                 <div className="absolute left-4 top-3.5 pointer-events-none">
                                     <Lock className="h-5 w-5 text-slate-400 group-focus-within:text-blue-600 transition-colors" />

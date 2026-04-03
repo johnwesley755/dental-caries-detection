@@ -132,7 +132,7 @@ export const History: React.FC = () => {
 
         {/* Filters */}
         <div className="bg-white p-5 lg:p-6 rounded-2xl border border-slate-100 shadow-sm space-y-5">
-          <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+          <div className="flex items-center gap-2 text-xs font-bold text-slate-400">
             <Filter className="h-3 w-3" />
             Advanced Filtering
           </div>

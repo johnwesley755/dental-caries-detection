@@ -35,7 +35,7 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
         )}
         
         {title ? (
-          <h1 className="text-lg sm:text-xl font-headline font-black text-blue-900 uppercase truncate">
+          <h1 className="text-lg sm:text-xl font-headline font-black text-blue-900 truncate">
             {title}
           </h1>
         ) : setSearchQuery && (
@@ -71,8 +71,8 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
             onClick={() => navigate('/profile')}
         >
           <div className="text-right hidden sm:block">
-            <p className="text-xs font-bold text-blue-900 uppercase tracking-tight">{user?.full_name || 'User'}</p>
-            <p className="text-[10px] text-primary font-black uppercase tracking-widest opacity-60">{user?.role || 'Staff'}</p>
+            <p className="text-xs font-bold text-blue-900">{user?.full_name || 'User'}</p>
+            <p className="text-[10px] text-primary font-black opacity-60">{user?.role || 'Staff'}</p>
           </div>
           <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-primary/10 flex items-center justify-center overflow-hidden border border-primary/10 shadow-sm">
              <img 

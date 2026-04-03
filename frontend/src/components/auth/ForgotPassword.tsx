@@ -89,7 +89,7 @@ export const ForgotPassword: React.FC = () => {
                                 )}
 
                                 <div className="space-y-2">
-                                    <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">
+                                    <label className="text-sm font-bold text-slate-500 ml-1">
                                         Medical ID / Email
                                     </label>
                                     <div className="relative group">
@@ -164,7 +164,7 @@ export const ForgotPassword: React.FC = () => {
                     </div>
                     <div className="flex flex-col">
                         <span className="text-2xl font-bold tracking-tight text-white">DentAI<span className="text-blue-400">Diagnostics</span></span>
-                        <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-blue-200/60">Intelligent Care Systems</span>
+                        <span className="text-xs font-bold text-blue-200/60">Intelligent Care Systems</span>
                     </div>
                 </div>
 

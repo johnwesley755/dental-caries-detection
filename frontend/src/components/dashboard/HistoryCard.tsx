@@ -56,13 +56,13 @@ export const HistoryCard: React.FC<HistoryCardProps> = ({
           <div className="grid grid-cols-2 gap-2 mt-4">
              <div className="bg-gray-50 rounded-xl p-2 text-center">
                 <span className="block text-xl font-bold text-slate-800">{detection.total_teeth_detected}</span>
-                <span className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Teeth</span>
+                <span className="text-[10px] text-slate-400 font-semibold">Teeth</span>
              </div>
              <div className={`rounded-xl p-2 text-center ${detection.total_caries_detected > 0 ? 'bg-blue-50' : 'bg-slate-50'}`}>
                 <span className={`block text-xl font-bold ${detection.total_caries_detected > 0 ? 'text-primary' : 'text-slate-600'}`}>
                     {detection.total_caries_detected}
                 </span>
-                <span className={`text-[10px] uppercase tracking-wider font-semibold ${detection.total_caries_detected > 0 ? 'text-blue-400' : 'text-slate-400'}`}>
+                <span className={`text-[10px] font-semibold ${detection.total_caries_detected > 0 ? 'text-blue-400' : 'text-slate-400'}`}>
                     Caries
                 </span>
              </div>

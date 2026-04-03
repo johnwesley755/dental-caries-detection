@@ -109,7 +109,7 @@ const Login: React.FC = () => {
 
               {/* Email Input */}
               <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">
+                <label className="text-sm font-bold text-slate-500 ml-1">
                   Medical ID / Email
                 </label>
                 <div className="relative group">
@@ -135,7 +135,7 @@ const Login: React.FC = () => {
               {/* Password Input */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">
+                  <label className="text-sm font-bold text-slate-500 ml-1">
                     Password
                   </label>
                   <Link
@@ -203,7 +203,7 @@ const Login: React.FC = () => {
               <div className="absolute inset-0 flex items-center">
                 <span className="w-full border-t border-slate-100" />
               </div>
-              <div className="relative flex justify-center text-xs uppercase tracking-widest">
+              <div className="relative flex justify-center text-sm">
                 <span className="bg-white px-3 text-slate-400 font-medium">
                   Secure Staff Portal
                 </span>
@@ -246,7 +246,7 @@ const Login: React.FC = () => {
           </div>
           <div className="flex flex-col">
             <span className="text-2xl font-bold tracking-tight text-white">DentAI<span className="text-blue-400">Diagnostics</span></span>
-            <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-blue-200/60">Intelligent Care Systems</span>
+            <span className="text-xs font-bold text-blue-200/60">Intelligent Care Systems</span>
           </div>
         </div>
 

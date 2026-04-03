@@ -188,7 +188,7 @@ export const Detection: React.FC = () => {
 
                                         <div className="space-y-5">
                                             <div className="space-y-2">
-                                                <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 px-1 font-label">Select Patient</label>
+                                                <label className="text-xs font-bold text-slate-500 px-1 font-label">Select Patient</label>
                                                 <div className="relative group">
                                                     <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary z-10 pointer-events-none">person_search</span>
                                                     <select
@@ -204,7 +204,7 @@ export const Detection: React.FC = () => {
                                                 </div>
                                             </div>
                                             <div className="space-y-2">
-                                                <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 px-1 font-label">Scan Type</label>
+                                                <label className="text-xs font-bold text-slate-500 px-1 font-label">Scan Type</label>
                                                 <div className="relative group">
                                                     <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary z-10 pointer-events-none">radiology</span>
                                                     <select
@@ -221,7 +221,7 @@ export const Detection: React.FC = () => {
                                                 </div>
                                             </div>
                                             <div className="space-y-2">
-                                                <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 px-1 font-label">Capture Date</label>
+                                                <label className="text-xs font-bold text-slate-500 px-1 font-label">Capture Date</label>
                                                 <div className="relative group">
                                                     <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary z-10 pointer-events-none">calendar_today</span>
                                                     <input
@@ -317,7 +317,7 @@ export const Detection: React.FC = () => {
                                                         Cloud
                                                     </button>
                                                 </div>
-                                                <div className="hidden sm:flex items-center gap-6 lg:gap-8 text-[9px] lg:text-[10px] font-bold text-slate-400 tracking-widest uppercase font-label">
+                                                <div className="hidden sm:flex items-center gap-6 lg:gap-8 text-[10px] lg:text-[11px] font-bold text-slate-400 font-label">
                                                     <div className="flex items-center gap-1.5"><span className="material-symbols-outlined text-xs">settings_overscan</span> 256MB MAX</div>
                                                     <div className="flex items-center gap-1.5"><span className="material-symbols-outlined text-xs">extension</span> DICOM, JPG, PNG</div>
                                                     <div className="flex items-center gap-1.5"><span className="material-symbols-outlined text-xs">enhanced_encryption</span> ENCRYPTED</div>

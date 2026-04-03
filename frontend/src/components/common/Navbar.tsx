@@ -67,7 +67,7 @@ const Navbar: React.FC = () => {
                   <span className="text-sm font-semibold text-gray-900 leading-tight">
                     {user?.full_name}
                   </span>
-                  <span className="text-xs font-medium text-primary uppercase tracking-wider">
+                  <span className="text-xs font-medium text-primary">
                     {user?.role}
                   </span>
                 </div>

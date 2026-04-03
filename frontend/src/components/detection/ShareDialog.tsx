@@ -103,7 +103,7 @@ export const ShareDialog: React.FC<ShareDialogProps> = ({
         <div className="p-6 space-y-6">
           {/* Report Link Section */}
           <div className="space-y-2.5">
-            <Label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Report Link</Label>
+            <Label className="text-xs font-bold text-slate-400">Report Link</Label>
             <div className="flex gap-2">
               <div className="relative flex-1 group">
                 <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-hover:text-primary transition-colors">

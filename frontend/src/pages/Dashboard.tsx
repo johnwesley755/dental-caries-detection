@@ -115,7 +115,7 @@ export const Dashboard: React.FC = () => {
             <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform duration-500">
               <span className="material-symbols-outlined text-6xl lg:text-8xl" data-icon="group">group</span>
             </div>
-            <p className="text-[10px] lg:text-xs font-bold text-slate-500 uppercase tracking-widest mb-4 lg:mb-6">Total Patients</p>
+            <p className="text-[11px] lg:text-xs font-bold text-slate-500 mb-4 lg:mb-6">Total Patients</p>
             <div className="flex items-end gap-3 mb-2">
               <h3 className="text-4xl lg:text-5xl font-extrabold font-manrope text-primary tracking-tighter">{filteredPatients.length}</h3>
               <div className="flex items-center gap-1 text-tertiary font-bold text-xs lg:text-sm mb-1">
@@ -133,7 +133,7 @@ export const Dashboard: React.FC = () => {
             <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform duration-500">
               <span className="material-symbols-outlined text-6xl lg:text-8xl" data-icon="biotech">biotech</span>
             </div>
-            <p className="text-[10px] lg:text-xs font-bold text-slate-500 uppercase tracking-widest mb-4 lg:mb-6">Total Analyses</p>
+            <p className="text-[11px] lg:text-xs font-bold text-slate-500 mb-4 lg:mb-6">Total Analyses</p>
             <div className="flex items-end gap-3 mb-2">
               <h3 className="text-4xl lg:text-5xl font-extrabold font-manrope text-secondary tracking-tighter">{filteredDetections.length}</h3>
               <div className="flex items-center gap-1 text-tertiary font-bold text-xs lg:text-sm mb-1">
@@ -169,11 +169,11 @@ export const Dashboard: React.FC = () => {
               <div className="flex gap-4">
                 <div className="flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-secondary"></span>
-                  <span className="text-[10px] lg:text-xs font-bold text-slate-500 uppercase">Healthy</span>
+                  <span className="text-[11px] lg:text-xs font-bold text-slate-500">Healthy</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-error"></span>
-                  <span className="text-[10px] lg:text-xs font-bold text-slate-500 uppercase">Caries</span>
+                  <span className="text-[11px] lg:text-xs font-bold text-slate-500">Caries</span>
                 </div>
               </div>
             </div>
@@ -185,7 +185,7 @@ export const Dashboard: React.FC = () => {
                     <div className="flex-1 bg-secondary rounded-t-sm sm:rounded-t-lg transition-all hover:brightness-110" style={{ height: `${scaleHeight(col.healthy)}px` }} title={`Healthy: ${col.healthy}`}></div>
                     <div className="flex-1 bg-error/30 rounded-t-sm sm:rounded-t-lg transition-all hover:brightness-90" style={{ height: `${scaleHeight(col.caries)}px` }} title={`Caries: ${col.caries}`}></div>
                   </div>
-                  <span className="text-[9px] lg:text-[10px] font-bold text-slate-400 uppercase">{col.day}</span>
+                  <span className="text-[10px] font-bold text-slate-400">{col.day}</span>
                 </div>
               ))}
             </div>
@@ -231,7 +231,7 @@ export const Dashboard: React.FC = () => {
                       <p className="text-[10px] text-slate-400 font-medium truncate">#{detection.detection_id?.split('-')[0] || detection.id.slice(0,4)}</p>
                     </div>
                     <span 
-                      className={`px-2 py-1 rounded-lg text-[8px] lg:text-[9px] font-extrabold uppercase whitespace-nowrap ${
+                      className={`px-2 py-1 rounded-lg text-[9px] lg:text-[10px] font-extrabold whitespace-nowrap ${
                         isCaries ? 'bg-error-container text-on-error-container' : 'bg-secondary-container text-on-secondary-container'
                       }`}
                     >
@@ -266,7 +266,7 @@ export const Dashboard: React.FC = () => {
                   <div className="flex items-center gap-3">
                     <span className="material-symbols-outlined text-secondary hidden sm:block" data-icon="troubleshoot">troubleshoot</span>
                     <div className="w-full">
-                      <p className="text-[8px] lg:text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">
+                      <p className="text-[10px] lg:text-xs font-bold text-slate-500 mb-1">
                         Confidence Level
                       </p>
                       <div className="flex items-center gap-2">
@@ -286,7 +286,7 @@ export const Dashboard: React.FC = () => {
               </div>
               <div className="w-full lg:w-1/2 text-left">
                 <div className="flex flex-wrap items-center gap-2 mb-4">
-                  <span className="bg-secondary/10 text-secondary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider flex items-center gap-2">
+                  <span className="bg-secondary/10 text-secondary px-3 py-1 rounded-full text-xs font-bold flex items-center gap-2">
                     <span className="material-symbols-outlined text-sm" data-icon="auto_awesome">auto_awesome</span>
                     AI Insight
                   </span>
@@ -358,7 +358,7 @@ export const Dashboard: React.FC = () => {
         {/* Footer */}
         <footer className="mt-12 lg:mt-16 pt-8 border-t border-slate-200/50 flex flex-col sm:flex-row justify-between items-center gap-4 text-slate-400">
           <p className="text-[10px] lg:text-xs font-medium">© 2024 Dental AI Systems. HIPAA Compliant.</p>
-          <div className="flex gap-6 text-[10px] font-bold uppercase tracking-widest">
+          <div className="flex gap-6 text-xs font-bold">
             <a href="#" className="hover:text-primary transition-colors">Status</a>
             <a href="#" className="hover:text-primary transition-colors">Docs</a>
             <a href="#" className="hover:text-primary transition-colors">Support</a>

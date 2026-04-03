@@ -97,7 +97,7 @@ export const PatientDetails: React.FC = () => {
                                     className="w-24 h-24 lg:w-32 lg:h-32 rounded-2xl object-cover shadow-lg border-4 border-white" 
                                     src={`https://ui-avatars.com/api/?name=${patient.full_name}&background=003d9b&color=fff&size=200`} 
                                 />
-                                <div className="absolute -bottom-2 -right-2 bg-secondary text-white text-[10px] px-2 py-1 rounded-full font-bold uppercase tracking-tighter">
+                                <div className="absolute -bottom-2 -right-2 bg-secondary text-white text-[11px] px-2 py-1 rounded-full font-bold">
                                     Active
                                 </div>
                             </div>
@@ -107,7 +107,7 @@ export const PatientDetails: React.FC = () => {
                                     <div className="space-y-1">
                                         <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3">
                                             <h2 className="text-2xl lg:text-3xl font-headline font-extrabold tracking-tight text-blue-900">{patient.full_name}</h2>
-                                            <span className="px-2 py-0.5 bg-blue-100 text-blue-700 rounded text-[10px] font-black tracking-widest uppercase">
+                                            <span className="px-2 py-0.5 bg-blue-100 text-blue-700 rounded text-xs font-black">
                                                 {patient.patient_id}
                                             </span>
                                         </div>
@@ -148,21 +148,21 @@ export const PatientDetails: React.FC = () => {
                                 {/* Mini Metrics Row */}
                                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full">
                                     <div className="bg-slate-50 p-4 rounded-xl border border-slate-100/50 flex sm:flex-col justify-between items-center sm:items-start">
-                                        <p className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Total Scans</p>
+                                        <p className="text-xs text-slate-500 font-bold">Total Scans</p>
                                         <div className="flex items-center gap-2">
                                             <span className="text-xl font-black text-blue-900">{detections.length}</span>
                                             <span className="material-symbols-outlined text-sm text-slate-300">biotech</span>
                                         </div>
                                     </div>
                                     <div className="bg-slate-50 p-4 rounded-xl border border-slate-100/50 flex sm:flex-col justify-between items-center sm:items-start">
-                                        <p className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Total Issues</p>
+                                        <p className="text-xs text-slate-500 font-bold">Total Issues</p>
                                         <div className="flex items-center gap-2">
                                             <span className="text-xl font-black text-error">{totalCaries}</span>
                                             <span className="material-symbols-outlined text-sm text-slate-300">warning</span>
                                         </div>
                                     </div>
                                     <div className="bg-slate-50 p-4 rounded-xl border border-slate-100/50 flex sm:flex-col justify-between items-center sm:items-start">
-                                        <p className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Last Visit</p>
+                                        <p className="text-xs text-slate-500 font-bold">Last Visit</p>
                                         <div className="flex items-center gap-2">
                                             <span className="text-sm font-bold text-slate-600">{lastVisit}</span>
                                             <span className="material-symbols-outlined text-sm text-slate-300">event</span>
@@ -174,14 +174,14 @@ export const PatientDetails: React.FC = () => {
 
                         {/* Info Card */}
                         <div className="col-span-1 lg:col-span-4 bg-surface-container-lowest rounded-2xl p-6 lg:p-8 shadow-sm flex flex-col justify-between border border-slate-100/50">
-                            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-6">Contact Information</h3>
+                            <h3 className="text-sm font-black text-slate-400 mb-6">Contact Information</h3>
                             <div className="space-y-5 flex-1">
                                 <div className="flex items-start gap-4">
                                     <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center shrink-0">
                                         <span className="material-symbols-outlined text-slate-400 text-xl">call</span>
                                     </div>
                                     <div className="min-w-0">
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Phone</p>
+                                        <p className="text-xs font-bold text-slate-400">Phone</p>
                                         <p className="text-sm font-bold text-slate-800 truncate">{patient.contact_number || 'N/A'}</p>
                                     </div>
                                 </div>
@@ -190,7 +190,7 @@ export const PatientDetails: React.FC = () => {
                                         <span className="material-symbols-outlined text-slate-400 text-xl">mail</span>
                                     </div>
                                     <div className="min-w-0 flex-1">
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Email</p>
+                                        <p className="text-xs font-bold text-slate-400">Email</p>
                                         <p className="text-sm font-bold text-slate-800 truncate" title={patient.email}>{patient.email || 'N/A'}</p>
                                     </div>
                                 </div>
@@ -199,7 +199,7 @@ export const PatientDetails: React.FC = () => {
                                         <span className="material-symbols-outlined text-slate-400 text-xl">home</span>
                                     </div>
                                     <div className="min-w-0">
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Address</p>
+                                        <p className="text-xs font-bold text-slate-400">Address</p>
                                         <p className="text-sm font-bold text-slate-800 leading-snug">{patient.address || 'N/A'}</p>
                                     </div>
                                 </div>
@@ -213,17 +213,17 @@ export const PatientDetails: React.FC = () => {
                         {/* Medical History Section */}
                         <div className="col-span-1 lg:col-span-5 bg-surface-container-lowest rounded-2xl shadow-sm overflow-hidden flex flex-col border border-slate-100/50">
                             <div className="p-6 border-b border-slate-50 flex items-center justify-between">
-                                <h3 className="text-sm font-black text-blue-900 uppercase tracking-wider flex items-center gap-2">
+                                <h3 className="text-sm font-black text-blue-900 flex items-center gap-2">
                                     <span className="material-symbols-outlined text-primary text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>history_edu</span>
                                     Medical History
                                 </h3>
-                                <button className="text-[10px] font-black uppercase text-primary hover:text-blue-900 transition-all px-3 py-1 bg-primary/5 rounded-full">Update</button>
+                                <button className="text-xs font-black text-primary hover:text-blue-900 transition-all px-3 py-1 bg-primary/5 rounded-full">Update</button>
                             </div>
                             <div className="p-5 lg:p-6 bg-slate-50/30 flex-1 min-h-[300px]">
                                 <div className="bg-white p-5 rounded-xl border border-slate-100 font-body text-sm text-slate-600 leading-relaxed h-full shadow-inner">
                                     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-50">
                                         <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-                                        <span className="font-sans font-bold text-slate-400 text-[10px] uppercase tracking-widest">Clinical Journal</span>
+                                        <span className="font-sans font-bold text-slate-400 text-xs">Clinical Journal</span>
                                     </div>
                                     <div className="whitespace-pre-wrap">
                                         {getNotes()}
@@ -235,11 +235,11 @@ export const PatientDetails: React.FC = () => {
                         {/* Analysis History Section */}
                         <div className="col-span-1 lg:col-span-7 bg-surface-container-lowest rounded-2xl shadow-sm overflow-hidden flex flex-col border border-slate-100/50">
                             <div className="p-6 border-b border-slate-50 flex items-center justify-between">
-                                <h3 className="text-sm font-black text-blue-900 uppercase tracking-wider flex items-center gap-2">
+                                <h3 className="text-sm font-black text-blue-900 flex items-center gap-2">
                                     <span className="material-symbols-outlined text-primary text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>biotech</span>
                                     Analysis History
                                 </h3>
-                                <div className="flex items-center gap-1.5 px-2.5 py-1 bg-slate-100 text-slate-500 rounded-full font-bold text-[10px] uppercase">
+                                <div className="flex items-center gap-1.5 px-2.5 py-1 bg-slate-100 text-slate-500 rounded-full font-bold text-xs">
                                     {detections.length} Records
                                 </div>
                             </div>
