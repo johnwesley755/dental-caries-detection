@@ -409,6 +409,22 @@ export const Messages: React.FC = () => {
                                                                 : 'bg-white rounded-xl rounded-bl-none shadow-sm text-slate-700 border border-slate-50'
                                                             }`}>
                                                             {message.content && <p>{message.content}</p>}
+                                                            {message.detection_id && (
+                                                              <div className={`mt-3 p-3 flex items-center justify-between rounded-xl border ${isOwn ? 'bg-white/10 border-white/20' : 'bg-primary/5 border-primary/10'}`}>
+                                                                <div className="flex items-center gap-3">
+                                                                    <div className={`w-8 h-8 rounded flex items-center justify-center shrink-0 ${isOwn ? 'bg-white/20 text-white' : 'bg-primary/10 text-primary'}`}>
+                                                                        <span className="material-symbols-outlined text-sm">health_and_safety</span>
+                                                                    </div>
+                                                                    <div>
+                                                                        <p className={`text-sm font-bold leading-none ${isOwn ? 'text-white' : 'text-primary'}`}>AI Scan Linked</p>
+                                                                        <p className={`text-[10px] mt-1 font-medium ${isOwn ? 'text-white/70' : 'text-slate-500'}`}>View analysis results</p>
+                                                                    </div>
+                                                                </div>
+                                                                <a href={`/detection/${message.detection_id}`} className={`text-xs font-bold px-3 py-1.5 rounded-lg transition-colors ${isOwn ? 'bg-white text-primary hover:bg-slate-100' : 'bg-primary text-white hover:bg-primary/90'}`}>
+                                                                    Open
+                                                                </a>
+                                                              </div>
+                                                            )}
                                                             {message.file_url && (
                                                                 <div className="mt-2 w-full">
                                                                     {message.file_type?.startsWith('image/') ? (

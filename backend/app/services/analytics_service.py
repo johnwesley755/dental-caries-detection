@@ -117,27 +117,27 @@ class AnalyticsService:
         return result
     
     @staticmethod
-    def save_health_score(db: Session, patient_id: str, score: int) -> HealthScore:
+    def save_health_score(db: Session, clinical_patient_id: str, auth_user_id: str, score: int) -> HealthScore:
         """Save health score to history"""
         # Get total stats
         total_detections = db.query(func.count(Detection.id)).filter(
-            Detection.patient_id == patient_id
+            Detection.patient_id == clinical_patient_id
         ).scalar() or 0
         
         total_caries = db.query(func.sum(Detection.total_caries_detected)).filter(
-            Detection.patient_id == patient_id
+            Detection.patient_id == clinical_patient_id
         ).scalar() or 0
         
         # Get last checkup date
         last_detection = db.query(Detection).filter(
-            Detection.patient_id == patient_id
+            Detection.patient_id == clinical_patient_id
         ).order_by(Detection.detection_date.desc()).first()
         
         last_checkup = last_detection.detection_date if last_detection else None
         
         # Create health score record
         health_score = HealthScore(
-            patient_id=patient_id,
+            patient_id=auth_user_id,
             score=score,
             total_detections=total_detections,
             total_caries=total_caries,

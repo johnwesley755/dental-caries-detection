@@ -56,7 +56,9 @@ export const Dashboard: React.FC = () => {
 
   const totalCaries = detections.reduce((sum, d) => sum + d.total_caries_detected, 0);
   const recentDetections = detections.slice(0, 5);
-
+  const handleSubmit = () => {
+    navigate('/resources')
+  }
   // Helper for greeting based on time
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -311,7 +313,7 @@ export const Dashboard: React.FC = () => {
                         Regular AI screenings help detect cavities early, often before they become visible to the naked eye. Keep up the good work!
                      </p>
                      <Button 
-                        onClick={() => window.open('https://www.ada.org', '_blank')}
+                        onClick={handleSubmit}
                         className="w-full bg-white/10 hover:bg-white/20 text-white border-0 backdrop-blur-sm"
                      >
                         Learn More

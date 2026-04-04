@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { messagingService } from '../services/messagingService';
 import type { Conversation, Message } from '../services/messagingService';
-import { MessageCircle, Send, Paperclip, X, FileText, Image as ImageIcon, Download, Loader2, Search, UserCircle, Check, CheckCheck } from 'lucide-react';
+import { MessageCircle, Send, Paperclip, X, FileText, Image as ImageIcon, Download, Loader2, Search, UserCircle, Check, CheckCheck, Activity } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { useAuth } from '../contexts/AuthContext';
 import { patientService } from '../services/patientService';
@@ -28,10 +28,23 @@ export const Messages: React.FC = () => {
   const [showDentistSelector, setShowDentistSelector] = useState(false);
   const [linkedDetectionId, setLinkedDetectionId] = useState<string | null>(null);
 
+  const [detections, setDetections] = useState<any[]>([]);
+  const [showDetectionSelector, setShowDetectionSelector] = useState(false);
+
   useEffect(() => {
     loadInitialData();
     loadDentists();
+    loadDetections();
   }, []);
+
+  const loadDetections = async () => {
+    try {
+      const data = await patientService.getMyDetections();
+      setDetections(data);
+    } catch (error) {
+      console.error('Failed to load detections', error);
+    }
+  };
 
   // Handle navigation state
   useEffect(() => {
@@ -363,6 +376,26 @@ export const Messages: React.FC = () => {
                         >
                           {message.content && <p className="text-sm leading-relaxed">{message.content}</p>}
 
+                          {message.detection_id && (
+                            <div className={`mt-3 p-3 rounded-xl border flex items-center justify-between gap-3 ${isOwn ? 'bg-teal-700/50 border-teal-600' : 'bg-emerald-50 border-emerald-100'}`}>
+                              <div className="flex items-center gap-3">
+                                <div className={`p-2 rounded-lg ${isOwn ? 'bg-teal-800' : 'bg-emerald-100 shadow-sm'}`}>
+                                  <Search className={`h-5 w-5 ${isOwn ? 'text-white' : 'text-emerald-600'}`} />
+                                </div>
+                                <div>
+                                  <p className={`text-xs font-bold leading-none ${isOwn ? 'text-white' : 'text-emerald-900'}`}>AI Scan Linked</p>
+                                  <p className={`text-[10px] mt-1 ${isOwn ? 'text-teal-100' : 'text-emerald-700'}`}>View analysis</p>
+                                </div>
+                              </div>
+                              <a 
+                                 href={`/detection/${message.detection_id}`} 
+                                 className={`text-[10px] font-bold px-3 py-1.5 rounded-lg transition-colors ${isOwn ? 'bg-teal-600 hover:bg-teal-500 text-white' : 'bg-white hover:bg-emerald-200 text-emerald-800 shadow-sm'}`}
+                              >
+                                Open Scan
+                              </a>
+                            </div>
+                          )}
+
                           {message.file_url && (
                             <div className="mt-3">
                               {message.file_type?.startsWith('image/') ? (
@@ -483,6 +516,16 @@ export const Messages: React.FC = () => {
                   <Paperclip className="h-5 w-5" />
                 </Button>
 
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setShowDetectionSelector(true)}
+                  className="p-2 h-10 w-10 text-emerald-500 hover:text-emerald-700 hover:border-emerald-200 transition-all rounded-xl"
+                  title="Attach AI Scan"
+                >
+                  <Activity className="h-5 w-5" />
+                </Button>
+
                 <div className="flex-1 relative">
                   <textarea
                     value={newMessage}
@@ -585,6 +628,57 @@ export const Messages: React.FC = () => {
                       <div>
                         <h4 className="font-bold text-gray-900">{dentist.full_name}</h4>
                         <p className="text-xs text-gray-500">Dental Specialist</p>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Detection Selection Modal */}
+      {showDetectionSelector && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+            <div className="p-6 border-b border-gray-100 flex items-center justify-between bg-emerald-600 text-white">
+              <h3 className="text-xl font-bold">Attach AI Scan</h3>
+              <button
+                onClick={() => setShowDetectionSelector(false)}
+                className="p-2 hover:bg-white/20 rounded-full transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="max-h-[60vh] overflow-y-auto p-4 space-y-3">
+              {detections.length === 0 ? (
+                <div className="text-center py-12 px-6">
+                  <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-400">
+                    <Activity className="h-10 w-10" />
+                  </div>
+                  <h4 className="font-bold text-gray-900 mb-2">No Scans Found</h4>
+                  <p className="text-sm text-gray-500 leading-relaxed">
+                    You haven't uploaded any dental AI scans yet.
+                  </p>
+                </div>
+              ) : (
+                detections.map((det) => (
+                  <div
+                    key={det.id}
+                    onClick={() => {
+                        setLinkedDetectionId(det.id);
+                        setShowDetectionSelector(false);
+                    }}
+                    className="p-4 border border-gray-100 rounded-xl hover:bg-emerald-50 hover:border-emerald-200 cursor-pointer transition-all group"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 font-bold group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                        <Search className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-gray-900">Scan #{det.detection_id.substring(0, 8)}</h4>
+                        <p className="text-xs text-gray-500">{new Date(det.detection_date).toLocaleDateString()}</p>
                       </div>
                     </div>
                   </div>

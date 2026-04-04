@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from app.core.database import get_db
 from app.dependencies.auth import get_current_user
 from app.services.analytics_service import AnalyticsService
-from app.models import User
+from app.models import User, Patient
 
 router = APIRouter(prefix="/analytics", tags=["analytics"])
 
@@ -94,11 +94,17 @@ async def get_my_health_score(
     if current_user.role != 'PATIENT':
         raise HTTPException(status_code=403, detail="Patients only")
     
+    patient = db.query(Patient).filter(Patient.user_id == current_user.id).first()
+    if not patient:
+        return {"score": 100, "trend": "stable"}
+        
+    patient_id_str = str(patient.id)
+    
     # Calculate current score
-    score = AnalyticsService.calculate_health_score(db, str(current_user.id))
+    score = AnalyticsService.calculate_health_score(db, patient_id_str)
     
     # Save to history
-    AnalyticsService.save_health_score(db, str(current_user.id), score)
+    AnalyticsService.save_health_score(db, patient_id_str, str(current_user.id), score)
     
     # Get trend
     trend = AnalyticsService.get_health_score_trend(db, str(current_user.id))
@@ -118,6 +124,10 @@ async def get_my_health_history(
     if current_user.role != 'PATIENT':
         raise HTTPException(status_code=403, detail="Patients only")
     
+    patient = db.query(Patient).filter(Patient.user_id == current_user.id).first()
+    if not patient:
+        return []
+        
     history = AnalyticsService.get_health_history(db, str(current_user.id), days)
     return history
 
@@ -133,5 +143,9 @@ async def get_my_detection_history(
     if current_user.role != 'PATIENT':
         raise HTTPException(status_code=403, detail="Patients only")
     
-    history = AnalyticsService.get_detection_history(db, str(current_user.id))
+    patient = db.query(Patient).filter(Patient.user_id == current_user.id).first()
+    if not patient:
+        return []
+        
+    history = AnalyticsService.get_detection_history(db, str(patient.id))
     return history

@@ -4,11 +4,13 @@ import { Calendar, Clock, MapPin, User, Loader2 } from 'lucide-react';
 import { appointmentService, Appointment } from '../services/appointmentService';
 import { toast } from 'sonner';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
+import { AppointmentForm } from '../components/dashboard/AppointmentForm';
 
 export const Appointments: React.FC = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('');
+  const [showForm, setShowForm] = useState(false);
 
   useEffect(() => {
     loadAppointments();
@@ -59,6 +61,8 @@ export const Appointments: React.FC = () => {
         return 'bg-green-100 text-green-700';
       case 'cancelled':
         return 'bg-red-100 text-red-700';
+      case 'pending_approval':
+        return 'bg-yellow-100 text-yellow-700';
       default:
         return 'bg-gray-100 text-gray-700';
     }
@@ -74,10 +78,18 @@ export const Appointments: React.FC = () => {
 
   return (
     <div className="p-4 lg:p-8 max-w-7xl mx-auto">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">My Appointments</h1>
-        <p className="text-gray-600">View and manage your dental appointments</p>
+      <div className="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">My Appointments</h1>
+          <p className="text-gray-600">View and manage your dental appointments</p>
+        </div>
+        <button
+          onClick={() => setShowForm(true)}
+          className="bg-teal-600 text-white px-5 py-2.5 rounded-xl font-medium shadow-sm hover:bg-teal-700 transition-colors flex items-center gap-2"
+        >
+          <Calendar className="w-5 h-5" />
+          Request Appointment
+        </button>
       </div>
 
       {/* Filter */}
@@ -186,6 +198,17 @@ export const Appointments: React.FC = () => {
             {filter ? `No ${filter} appointments found` : "You don't have any appointments"}
           </p>
         </div>
+      )}
+
+      {showForm && (
+        <AppointmentForm 
+          isOpen={showForm} 
+          onClose={() => setShowForm(false)} 
+          onSuccess={() => {
+            setShowForm(false);
+            loadAppointments();
+          }} 
+        />
       )}
     </div>
   );

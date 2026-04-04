@@ -11,18 +11,21 @@ export interface Appointment {
   dentist_name: string;
   appointment_date: string;
   duration_minutes: string;
-  status: 'scheduled' | 'confirmed' | 'completed' | 'cancelled' | 'no_show';
+  status: 'pending_approval' | 'scheduled' | 'confirmed' | 'completed' | 'cancelled' | 'no_show';
   appointment_type: string;
   notes?: string;
+  detection_id?: string;
   created_at: string;
 }
 
 export interface CreateAppointmentData {
   patient_id: string;
+  dentist_id?: string;
   appointment_date: string;
   duration_minutes?: string;
   appointment_type?: string;
   notes?: string;
+  detection_id?: string;
 }
 
 export interface UpdateAppointmentData {

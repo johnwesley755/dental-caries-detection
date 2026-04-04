@@ -20,6 +20,14 @@ export const userService = {
   },
 
   /**
+   * Get all dentists
+   */
+  getDentists: async () => {
+    const response = await api.get('/auth/dentists');
+    return response.data;
+  },
+
+  /**
    * Update user profile
    */
   updateProfile: async (data: UpdateProfileData) => {

@@ -1,5 +1,5 @@
 # backend/app/models/appointment.py
-from sqlalchemy import Column, String, DateTime, Text, ForeignKey, Enum as SQLEnum
+from sqlalchemy import Column, String, DateTime, Text, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from ..core.database import Base
@@ -8,6 +8,7 @@ from datetime import datetime
 import enum
 
 class AppointmentStatus(str, enum.Enum):
+    PENDING_APPROVAL = "pending_approval"
     SCHEDULED = "scheduled"
     CONFIRMED = "confirmed"
     COMPLETED = "completed"
@@ -24,8 +25,10 @@ class Appointment(Base):
     appointment_date = Column(DateTime, nullable=False)
     duration_minutes = Column(String, default="30")  # Default 30 minutes
     
-    status = Column(SQLEnum(AppointmentStatus, values_callable=lambda x: [e.value for e in x]), default=AppointmentStatus.SCHEDULED)
+    status = Column(String, default=AppointmentStatus.SCHEDULED.value)
     appointment_type = Column(String, default="checkup")  # checkup, cleaning, treatment, etc.
+    
+    detection_id = Column(UUID(as_uuid=True), ForeignKey("detections.id"), nullable=True)
     
     notes = Column(Text, nullable=True)
     reminder_sent = Column(String, default="false")

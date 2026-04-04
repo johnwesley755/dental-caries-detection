@@ -146,7 +146,7 @@ class ReportService:
         info_data = [
             ['Detection ID:', saxutils.escape(str(detection.detection_id)), 'Patient:', saxutils.escape(patient.full_name)],
             ['Date:', datetime.fromisoformat(str(detection.detection_date)).strftime('%B %d, %Y'), 
-             'Status:', saxutils.escape(detection.status.value.upper())],
+             'Status:', saxutils.escape((detection.status.value if hasattr(detection.status, 'value') else str(detection.status)).upper())],
         ]
         
         info_table = Table(info_data, colWidths=[1.5*inch, 2*inch, 1*inch, 2*inch])
@@ -288,7 +288,7 @@ class ReportService:
             findings_data.append([
                 str(idx),
                 f"Finding {idx}",
-                saxutils.escape(finding.severity.value.capitalize()) if finding.severity else "N/A",
+                saxutils.escape((finding.severity.value if hasattr(finding.severity, 'value') else str(finding.severity)).capitalize()) if finding.severity else "N/A",
                 saxutils.escape(finding.location) or "N/A",
                 f"{(finding.confidence_score * 100):.1f}%",
                 saxutils.escape(finding.treatment_recommendation) or "N/A"
@@ -341,7 +341,7 @@ class ReportService:
         severity_counts = {'mild': 0, 'moderate': 0, 'severe': 0}
         for finding in detection.caries_findings:
             if finding.severity:
-                severity_level = finding.severity.value.lower()
+                severity_level = (finding.severity.value if hasattr(finding.severity, 'value') else str(finding.severity)).lower()
                 if severity_level in severity_counts:
                     severity_counts[severity_level] += 1
         

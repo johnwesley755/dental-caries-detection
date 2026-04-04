@@ -7,8 +7,10 @@ import { Input } from '../ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { appointmentService, type Appointment } from '../../services/appointmentService';
 import { patientService } from '../../services/patientService';
+import type { Detection } from '../../types/detection.types';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
+import { userService } from '../../services/userService';
 
 interface AppointmentFormProps {
   isOpen: boolean;
@@ -25,33 +27,36 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({
   selectedDate,
   appointment,
 }) => {
-  const [patients, setPatients] = useState<any[]>([]);
+  const [detections, setDetections] = useState<Detection[]>([]);
+  const [dentists, setDentists] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    patient_id: '',
     appointment_date: '',
     appointment_time: '',
     duration_minutes: '30',
     appointment_type: 'checkup',
-    status: 'scheduled',
     notes: '',
+    detection_id: 'none',
+    dentist_id: '',
   });
 
   useEffect(() => {
-    loadPatients();
+    loadDetections();
+    loadDentists();
     
     if (appointment) {
       // Edit mode
       const date = new Date(appointment.appointment_date);
-      setFormData({
-        patient_id: appointment.patient_id,
+      setFormData(prev => ({
+        ...prev,
         appointment_date: format(date, 'yyyy-MM-dd'),
         appointment_time: format(date, 'HH:mm'),
         duration_minutes: appointment.duration_minutes,
         appointment_type: appointment.appointment_type,
-        status: appointment.status,
         notes: appointment.notes || '',
-      });
+        detection_id: appointment.detection_id || 'none',
+        dentist_id: appointment.dentist_id || '',
+      }));
     } else if (selectedDate) {
       // New appointment with selected date
       setFormData(prev => ({
@@ -62,12 +67,21 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({
     }
   }, [appointment, selectedDate]);
 
-  const loadPatients = async () => {
+  const loadDetections = async () => {
     try {
-      const data = await patientService.getPatients();
-      setPatients(data);
+      const data = await patientService.getMyDetections();
+      setDetections(data);
     } catch (error) {
-      toast.error('Failed to load patients');
+      console.error('Failed to load detections', error);
+    }
+  };
+
+  const loadDentists = async () => {
+    try {
+      const data = await userService.getDentists();
+      setDentists(data);
+    } catch (error) {
+      console.error('Failed to load dentists', error);
     }
   };
 
@@ -84,20 +98,20 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({
           appointment_date: appointmentDateTime,
           duration_minutes: formData.duration_minutes,
           appointment_type: formData.appointment_type,
-          status: formData.status,
           notes: formData.notes,
         });
-        toast.success('Appointment updated successfully');
+        toast.success('Appointment request updated');
       } else {
-        // Create new appointment
+        // Create new appointment request
         await appointmentService.createAppointment({
-          patient_id: formData.patient_id,
           appointment_date: appointmentDateTime,
           duration_minutes: formData.duration_minutes,
           appointment_type: formData.appointment_type,
           notes: formData.notes,
+          detection_id: formData.detection_id === 'none' ? undefined : formData.detection_id,
+          dentist_id: formData.dentist_id ? formData.dentist_id : undefined,
         });
-        toast.success('Appointment created successfully');
+        toast.success('Appointment requested successfully');
       }
 
       onSuccess();
@@ -132,22 +146,44 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Patient Selection */}
+          {/* Optional Detection Link */}
+          <div>
+            <Label>Attach AI Report (Optional)</Label>
+            <Select
+              value={formData.detection_id}
+              onValueChange={(value) => setFormData({ ...formData, detection_id: value })}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a scan to attach" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">No specific report</SelectItem>
+                {detections.map((det) => (
+                  <SelectItem key={det.id} value={det.id}>
+                    Scan #{det.detection_id.substring(0, 8)} ({format(new Date(det.detection_date), 'MMM d, yyyy')})
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-slate-500 mt-1">Linking a scan helps your dentist prepare for your visit.</p>
+          </div>
+
+          {/* Dentist Selection */}
           {!appointment && (
             <div>
-              <Label>Patient *</Label>
+              <Label>Dentist / Clinic *</Label>
               <Select
-                value={formData.patient_id}
-                onValueChange={(value) => setFormData({ ...formData, patient_id: value })}
+                value={formData.dentist_id}
+                onValueChange={(value) => setFormData({ ...formData, dentist_id: value })}
                 required
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select patient" />
+                  <SelectValue placeholder="Select a dentist" />
                 </SelectTrigger>
                 <SelectContent>
-                  {patients.map((patient) => (
-                    <SelectItem key={patient.id} value={patient.id}>
-                      {patient.full_name} ({patient.patient_id})
+                  {dentists.map((dentist) => (
+                    <SelectItem key={dentist.id} value={dentist.id}>
+                      Dr. {dentist.full_name || dentist.email}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -219,27 +255,7 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({
             </div>
           </div>
 
-          {/* Status (only for editing) */}
-          {appointment && (
-            <div>
-              <Label>Status</Label>
-              <Select
-                value={formData.status}
-                onValueChange={(value) => setFormData({ ...formData, status: value })}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="scheduled">Scheduled</SelectItem>
-                  <SelectItem value="confirmed">Confirmed</SelectItem>
-                  <SelectItem value="completed">Completed</SelectItem>
-                  <SelectItem value="cancelled">Cancelled</SelectItem>
-                  <SelectItem value="no_show">No Show</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          )}
+          {/* Status (only for editing) - REMOVED since patients can only request */}
 
           {/* Notes */}
           <div>
@@ -267,8 +283,8 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({
             <Button type="button" variant="outline" onClick={onClose}>
               Close
             </Button>
-            <Button type="submit" disabled={loading}>
-              {loading ? 'Saving...' : appointment ? 'Update' : 'Create'} Appointment
+            <Button type="submit" disabled={loading} className="bg-teal-600 hover:bg-teal-700">
+              {loading ? 'Sending...' : appointment ? 'Update' : 'Request'} Appointment
             </Button>
           </div>
         </form>

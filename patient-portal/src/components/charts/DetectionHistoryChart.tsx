@@ -1,7 +1,7 @@
 // patient-portal/src/components/charts/DetectionHistoryChart.tsx
 
 import React, { useEffect, useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { analyticsService, type DetectionHistory } from '../../services/analyticsService';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
@@ -43,6 +43,24 @@ export const DetectionHistoryChart: React.FC = () => {
   const totalCaries = data.reduce((sum, item) => sum + item.caries_count, 0);
   const avgCaries = data.length > 0 ? (totalCaries / data.length).toFixed(1) : '0';
 
+  const CustomizedDot = (props: any) => {
+    const { cx, cy, payload } = props;
+    if (cx == null || cy == null) return null;
+    const color = getBarColor(payload.caries_count);
+    return (
+      <circle 
+        cx={cx} 
+        cy={cy} 
+        r={5} 
+        stroke="white" 
+        strokeWidth={1.5}
+        fill={color} 
+        onClick={() => navigate(`/detection/${payload.detection_id}`)}
+        style={{ cursor: 'pointer' }}
+      />
+    );
+  };
+
   return (
     <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
       <div className="mb-6">
@@ -63,7 +81,7 @@ export const DetectionHistoryChart: React.FC = () => {
       </div>
       
       <ResponsiveContainer width="100%" height={250}>
-        <BarChart data={data}>
+        <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
           <XAxis 
             dataKey="date" 
@@ -79,20 +97,17 @@ export const DetectionHistoryChart: React.FC = () => {
               border: '1px solid #e2e8f0',
               boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
             }}
-            cursor={{ fill: 'rgba(59, 130, 246, 0.1)' }}
           />
-          <Bar 
+          <Line 
+            type="monotone"
             dataKey="caries_count" 
             name="Caries Detected" 
-            radius={[8, 8, 0, 0]}
-            onClick={(data) => navigate(`/detection/${data.detection_id}`)}
-            style={{ cursor: 'pointer' }}
-          >
-            {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={getBarColor(entry.caries_count)} />
-            ))}
-          </Bar>
-        </BarChart>
+            stroke="#cbd5e1"
+            strokeWidth={2}
+            dot={<CustomizedDot />}
+            activeDot={{ r: 7 }}
+          />
+        </LineChart>
       </ResponsiveContainer>
       
       {/* Legend */}

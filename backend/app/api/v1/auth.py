@@ -38,6 +38,13 @@ async def get_current_user_info(
     """Get current user information"""
     return current_user
 
+@router.get("/dentists", response_model=list[UserResponse])
+async def get_dentists(db: Session = Depends(get_db)):
+    """Get all available dentists"""
+    from ...models.user import UserRole
+    dentists = db.query(User).filter(User.role == UserRole.DENTIST).all()
+    return dentists
+
 @router.get("/verify-email")
 async def verify_email(token: str, db: Session = Depends(get_db)):
     """Verify user's email"""

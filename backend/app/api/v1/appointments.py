@@ -16,11 +16,13 @@ router = APIRouter(tags=["appointments"])
 
 # Schemas
 class AppointmentCreate(BaseModel):
-    patient_id: str
+    patient_id: Optional[str] = None
+    dentist_id: Optional[str] = None # Important for patients choosing a dentist
     appointment_date: datetime
     duration_minutes: str = "30"
     appointment_type: str = "checkup"
     notes: Optional[str] = None
+    detection_id: Optional[str] = None
 
 class AppointmentUpdate(BaseModel):
     appointment_date: Optional[datetime] = None
@@ -40,6 +42,7 @@ class AppointmentResponse(BaseModel):
     status: str
     appointment_type: str
     notes: Optional[str]
+    detection_id: Optional[str]
     created_at: datetime
 
     class Config:
@@ -106,9 +109,10 @@ async def get_appointments(
             "dentist_name": dentist.full_name if dentist else "Unknown",
             "appointment_date": appt.appointment_date,
             "duration_minutes": appt.duration_minutes,
-            "status": appt.status.value,
+            "status": appt.status.value if hasattr(appt.status, 'value') else appt.status,
             "appointment_type": appt.appointment_type,
             "notes": appt.notes,
+            "detection_id": str(appt.detection_id) if appt.detection_id else None,
             "created_at": appt.created_at
         })
     
@@ -122,28 +126,77 @@ async def create_appointment(
 ):
     """Create a new appointment"""
     
+    # Auto-assign patient_id if not provided and user is a patient
+    if not appointment.patient_id and current_user.role == UserRole.PATIENT:
+        patient_record = db.query(Patient).filter(Patient.user_id == current_user.id).first()
+        
+        # Auto-create patient profile if missing
+        if not patient_record:
+            import uuid
+            new_patient = Patient(
+                patient_id=f"PT-{str(uuid.uuid4())[:8].upper()}",
+                full_name=current_user.full_name,
+                email=current_user.email,
+                user_id=current_user.id
+            )
+            db.add(new_patient)
+            db.flush()
+            patient_record = new_patient
+            
+        appointment.patient_id = str(patient_record.id)
+            
+    if not appointment.patient_id:
+        raise HTTPException(status_code=400, detail="patient_id is required")
+        
     # Verify patient exists
     patient = db.query(Patient).filter(Patient.id == appointment.patient_id).first()
     if not patient:
         raise HTTPException(status_code=404, detail="Patient not found")
     
+    # Determine appropriate dentist_id
+    assigned_dentist_id = None
+    initial_status = AppointmentStatus.SCHEDULED
+    
+    if current_user.role == UserRole.PATIENT:
+        initial_status = AppointmentStatus.PENDING_APPROVAL
+        
+        target_dentist_id = appointment.dentist_id
+        if not target_dentist_id and patient:
+            target_dentist_id = str(patient.created_by)
+            
+        if not target_dentist_id:
+            raise HTTPException(status_code=400, detail="dentist_id is required when a patient requests an appointment")
+        
+        # Verify that the chosen dentist actually is a dentist/admin
+        dentist_check = db.query(User).filter(User.id == target_dentist_id).first()
+        if not dentist_check or dentist_check.role == UserRole.PATIENT:
+            raise HTTPException(status_code=400, detail="Invalid dentist_id provided")
+        assigned_dentist_id = target_dentist_id
+    else:
+        # Dentist making an appointment for a patient
+        assigned_dentist_id = appointment.dentist_id if appointment.dentist_id else str(current_user.id)
+    
     # Create appointment
     new_appointment = Appointment(
         patient_id=appointment.patient_id,
-        dentist_id=str(current_user.id),
+        dentist_id=assigned_dentist_id,
         appointment_date=appointment.appointment_date,
         duration_minutes=appointment.duration_minutes,
         appointment_type=appointment.appointment_type,
         notes=appointment.notes,
-        status=AppointmentStatus.SCHEDULED
+        detection_id=appointment.detection_id,
+        status=initial_status
     )
     
     db.add(new_appointment)
     db.commit()
     db.refresh(new_appointment)
     
-    # Create notification
-    create_appointment_notification(db, appointment.patient_id, appointment.appointment_date, "scheduled")
+    # Create notification depending on flow
+    if current_user.role == UserRole.PATIENT:
+        create_appointment_notification(db, appointment.patient_id, appointment.appointment_date, "requested and is pending approval")
+    else:
+        create_appointment_notification(db, appointment.patient_id, appointment.appointment_date, "scheduled")
     
     return {
         "message": "Appointment created successfully",

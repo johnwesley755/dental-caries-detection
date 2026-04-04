@@ -132,6 +132,32 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Quick Action Links for Existing Appointments */}
+          {appointment && (
+            <div className="flex flex-wrap gap-3 p-3 bg-slate-50 rounded-lg border border-slate-200">
+              <span className="text-sm font-bold text-slate-700 self-center mr-2">Quick Links:</span>
+              <Button 
+                type="button" 
+                variant="outline" 
+                size="sm" 
+                onClick={() => window.location.href = `/patients/${appointment.patient_id}`}
+                className="bg-white"
+              >
+                View Patient Profile
+              </Button>
+              {appointment.detection_id && (
+                 <Button 
+                   type="button" 
+                   variant="outline" 
+                   size="sm" 
+                   onClick={() => window.location.href = `/detection/${appointment.detection_id}`}
+                   className="bg-white"
+                 >
+                   View AI Scan Details
+                 </Button>
+              )}
+            </div>
+          )}
           {/* Patient Selection */}
           {!appointment && (
             <div>
