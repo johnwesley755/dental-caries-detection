@@ -1,3 +1,4 @@
+# backend/app/core/config.py
 from pydantic_settings import BaseSettings
 from typing import Optional
 import os
@@ -5,13 +6,14 @@ import os
 class Settings(BaseSettings):
     # Database
     DATABASE_URL: str
+    DB_SSL_MODE: str = "prefer"  # 'require' for Neon, 'prefer' or 'disable' for local Postgres
     
     # Security
     SECRET_KEY: str
     ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 300  # 5 hours
     
-    # Model
+    # AI Model (Computer Vision)
     MODEL_PATH: str = "models/best.pt"
     CONFIDENCE_THRESHOLD: float = 0.25
     IOU_THRESHOLD: float = 0.45
@@ -20,13 +22,12 @@ class Settings(BaseSettings):
     BREVO_API_KEY: str = ""
     BREVO_SENDER_EMAIL: str = "noreply@dentoai.com"
     BREVO_SENDER_NAME: str = "DentoAI Diagnostics"
-    PORTAL_URL: str = "http://localhost"
     
-    # Paths
-    UPLOAD_DIR: str = os.path.abspath("uploads")
-    RESULTS_DIR: str = os.path.abspath("results")
+    # AI Configuration (Google Gemini)
+    GOOGLE_API_KEY: str = ""
+    GOOGLE_MODEL: str = "gemini-1.5-flash"
     
-    # Cloudinary
+    # Cloudinary (Media Storage)
     CLOUDINARY_CLOUD_NAME: str = ""
     CLOUDINARY_API_KEY: str = ""
     CLOUDINARY_API_SECRET: str = ""
@@ -38,30 +39,29 @@ class Settings(BaseSettings):
     HOSPITAL_EMAIL: str = ""
     HOSPITAL_LOGO_URL: str = ""
     
-    # Groq API (for chatbot) - Free tier with API key
-    GROQ_API_KEY: str = ""
-    GROQ_MODEL: str = "llama-3.1-8b-instant"  # LLaMA 3.1 8B Instant
-    GROQ_API_URL: str = "https://api.groq.com/openai/v1/chat/completions"
-    
-    # Frontend URLs (for email links, redirects, etc.)
+    # Frontend URLs
     FRONTEND_URL: str = "http://localhost:5173"
     PATIENT_PORTAL_URL: str = "http://localhost:5174"
+    PORTAL_URL: str = "http://localhost"  # Legacy support
+    
+    # Paths
+    UPLOAD_DIR: str = os.path.abspath("uploads")
+    RESULTS_DIR: str = os.path.abspath("results")
     
     # Server
     HOST: str = "0.0.0.0"
     PORT: int = 8000
-    DB_SSL_MODE: str = "prefer"  # 'require' for Neon, 'prefer' or 'disable' for local Postgres
     
-    # CORS - Support both local and production URLs (hardcoded)
-    ALLOWED_ORIGINS: str = "http://localhost:3000,http://localhost:5173,http://localhost:5174,https://dental-caries-detection.vercel.app,https://dental-caries-detection-patients.vercel.app"
-    
+    # CORS
+    ALLOWED_ORIGINS: str = "*"
+
     class Config:
         env_file = ".env"
-        case_sensitive = False # Case insensitive better for env vars
-        extra = "ignore"      # Ignore extra environment variables like the old RESEND_* keys
+        case_sensitive = False
+        extra = "ignore" # Ignore deprecated keys
 
 settings = Settings()
 
-# Create directories if they don't exist
+# Ensure directories exist
 os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
 os.makedirs(settings.RESULTS_DIR, exist_ok=True)

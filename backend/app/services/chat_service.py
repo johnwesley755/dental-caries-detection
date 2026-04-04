@@ -11,7 +11,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class ChatService:
-    """Service for handling patient chatbot interactions with Mistral-7B"""
+    """Service for handling patient chatbot interactions via Google Gemini 1.5 Flash"""
     
     # Medical safety keywords that should block the query
     BLOCKED_KEYWORDS = [
@@ -49,7 +49,7 @@ class ChatService:
     
     @staticmethod
     def build_prompt(user_message: str, detection: Optional[Detection] = None) -> str:
-        """Build a safe prompt for Mistral-7B with detection context"""
+        """Build a safe prompt for Gemini with detection context"""
         
         system_instruction = (
             "You are a helpful dental health assistant for patients. "
@@ -96,71 +96,79 @@ Provide a helpful, simple explanation. End with encouraging them to see their de
         return prompt
     
     @staticmethod
-    def call_groq_api(prompt: str) -> str:
-        """Call Groq API for LLaMA 3"""
+    def call_gemini_api(prompt: str) -> str:
+        """Call Google Gemini API via REST for maximum reliability"""
         
-        if not settings.GROQ_API_KEY:
-            logger.error("GROQ_API_KEY not configured")
-            return "The chatbot is currently unavailable. Please add your Groq API key."
+        if not settings.GOOGLE_API_KEY:
+            logger.error("GOOGLE_API_KEY not configured")
+            return "The diagnostic chatbot is currently resting. Please check your configuration."
+        
+        # Google AI Studio / Gemini REST API endpoint
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{settings.GOOGLE_MODEL}:generateContent?key={settings.GOOGLE_API_KEY}"
         
         headers = {
-            "Authorization": f"Bearer {settings.GROQ_API_KEY}",
             "Content-Type": "application/json"
         }
         
         payload = {
-            "model": settings.GROQ_MODEL,
-            "messages": [
+            "contents": [
                 {
-                    "role": "user",
-                    "content": prompt
+                    "parts": [
+                        {
+                            "text": prompt
+                        }
+                    ]
                 }
             ],
-            "temperature": 0.7,
-            "max_tokens": 200,
-            "top_p": 0.9
+            "generationConfig": {
+                "temperature": 0.75,
+                "topK": 40,
+                "topP": 0.95,
+                "maxOutputTokens": 300,
+                "stopSequences": []
+            }
         }
         
         try:
-            logger.info(f"Calling Groq API: {settings.GROQ_API_URL}")
-            logger.info(f"Using model: {settings.GROQ_MODEL}")
+            logger.info(f"Calling Google Gemini API: {settings.GOOGLE_MODEL}")
             
             response = requests.post(
-                settings.GROQ_API_URL,
+                url,
                 json=payload,
                 headers=headers,
                 timeout=30
             )
             
-            logger.info(f"Groq API Response Status: {response.status_code}")
-            
-            if response.status_code == 401:
-                logger.error("Groq API returned 401 - Invalid API key")
-                return "Authentication failed. Please check your Groq API key."
-            
             if response.status_code != 200:
-                logger.error(f"Groq API error: {response.text}")
-                return "I'm currently unable to respond. Please try again later."
+                logger.error(f"Gemini API error ({response.status_code}): {response.text}")
+                return "I'm currently unable to respond due to a service interruption. Please try again later."
             
             result = response.json()
-            logger.info("Groq API Response received")
             
-            generated_text = result.get("choices", [{}])[0].get("message", {}).get("content", "")
+            # Navigate Gemini response structure
+            try:
+                candidates = result.get("candidates", [])
+                if candidates:
+                    content = candidates[0].get("content", {})
+                    parts = content.get("parts", [])
+                    if parts:
+                        generated_text = parts[0].get("text", "")
+                        if generated_text:
+                            return generated_text.strip()
+            except Exception as e:
+                logger.error(f"Failed to parse Gemini response: {str(e)}")
             
-            if not generated_text:
-                logger.warning(f"Empty response from Groq API: {result}")
-                return "I'm having trouble generating a response. Please try again."
-            
-            return generated_text.strip()
+            logger.warning(f"Unexpected response format from Gemini: {result}")
+            return "I'm having trouble generating a response. Please try again."
             
         except requests.exceptions.Timeout:
-            logger.error("Groq API timeout")
+            logger.error("Gemini API timeout")
             return "The response is taking longer than expected. Please try again."
         except requests.exceptions.RequestException as e:
-            logger.error(f"Groq API request error: {str(e)}")
-            return "I'm currently unable to respond. Please try again later."
+            logger.error(f"Gemini API request error: {str(e)}")
+            return "I'm currently unable to connect to the AI service. Please try again later."
         except Exception as e:
-            logger.error(f"Unexpected error in Groq API call: {str(e)}")
+            logger.error(f"Unexpected error in Gemini API call: {str(e)}")
             return "An unexpected error occurred. Please try again."
     
     @staticmethod
@@ -170,7 +178,7 @@ Provide a helpful, simple explanation. End with encouraging them to see their de
         user_message: str,
         detection_id: Optional[str] = None
     ) -> Dict[str, Any]:
-        """Generate chatbot response with safety checks"""
+        """Generate chatbot response with safety checks using Gemini"""
         
         # Safety check
         if not ChatService.is_safe_query(user_message):
@@ -190,8 +198,8 @@ Provide a helpful, simple explanation. End with encouraging them to see their de
         # Build prompt
         prompt = ChatService.build_prompt(user_message, detection)
         
-        # Call Groq API
-        bot_response = ChatService.call_groq_api(prompt)
+        # Call Gemini API
+        bot_response = ChatService.call_gemini_api(prompt)
         
         # Add disclaimer
         bot_response_with_disclaimer = bot_response + ChatService.DISCLAIMER
