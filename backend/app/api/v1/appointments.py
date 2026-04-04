@@ -114,23 +114,29 @@ async def get_appointments(
     # Format response
     result = []
     for appt in appointments:
-        patient = db.query(Patient).filter(Patient.id == appt.patient_id).first()
-        dentist = db.query(User).filter(User.id == appt.dentist_id).first()
-        
-        result.append({
-            "id": str(appt.id),
-            "patient_id": str(appt.patient_id),
-            "patient_name": patient.full_name if patient else "Unknown",
-            "dentist_id": str(appt.dentist_id),
-            "dentist_name": dentist.full_name if dentist else "Unknown",
-            "appointment_date": appt.appointment_date,
-            "duration_minutes": appt.duration_minutes,
-            "status": appt.status.value if hasattr(appt.status, 'value') else appt.status,
-            "appointment_type": appt.appointment_type,
-            "notes": appt.notes,
-            "detection_id": str(appt.detection_id) if appt.detection_id else None,
-            "created_at": appt.created_at
-        })
+        try:
+            patient = db.query(Patient).filter(Patient.id == appt.patient_id).first()
+            dentist = db.query(User).filter(User.id == appt.dentist_id).first()
+            
+            detection_id = getattr(appt, 'detection_id', None)
+
+            result.append({
+                "id": str(appt.id),
+                "patient_id": str(appt.patient_id),
+                "patient_name": patient.full_name if patient else "Unknown",
+                "dentist_id": str(appt.dentist_id),
+                "dentist_name": dentist.full_name if dentist else "Unknown",
+                "appointment_date": appt.appointment_date,
+                "duration_minutes": appt.duration_minutes,
+                "status": appt.status.value if hasattr(appt.status, 'value') else str(appt.status),
+                "appointment_type": appt.appointment_type,
+                "notes": appt.notes,
+                "detection_id": str(detection_id) if detection_id else None,
+                "created_at": appt.created_at
+            })
+        except Exception as row_error:
+            print(f"Skipping appointment {appt.id} due to error: {row_error}")
+            continue
     
     return result
 

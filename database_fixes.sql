@@ -1,19 +1,40 @@
 -- SQL Fixes for Existing Databases
 -- ---------------------------------
--- If you are setting up the project on a NEW laptop, you do NOT need to run this script.
--- The recent Python fixes ensure the database will be created correctly from scratch. 
---
--- HOWEVER, if the other laptop already has an existing 'dental_caries' database running
--- and experiences the "CheckViolation" or Enum errors, run the following SQL statements 
--- to forcefully clean up the old restrictive database schema properties.
+-- Run this script if you have an EXISTING 'dental_caries' database and are
+-- getting 500 errors on /api/v1/appointments.
+-- This adds missing columns added after initial table creation.
 
--- 1. Remove the restrictive native enum constraint on the appointment status
-ALTER TABLE appointments 
+-- ============================================================
+-- STEP 1: Fix appointment status column (VARCHAR instead of native enum)
+-- ============================================================
+
+-- 1a. Convert status column from native enum to plain VARCHAR
+ALTER TABLE appointments
   ALTER COLUMN status TYPE VARCHAR(255);
 
--- 2. Drop the old enum constraint if it exists (SQLAlchemy Check Constraint name)
-ALTER TABLE appointments 
+-- 1b. Drop old check constraint if present
+ALTER TABLE appointments
   DROP CONSTRAINT IF EXISTS chk_appointment_status;
 
--- 3. Drop the old PostgreSQL native enum type entirely since the app now uses simple Strings
+-- 1c. Drop old PostgreSQL native enum type entirely
 DROP TYPE IF EXISTS appointmentstatus CASCADE;
+
+-- ============================================================
+-- STEP 2: Add missing columns to the appointments table
+-- ============================================================
+
+-- 2a. Add detection_id column (nullable FK to detections)
+ALTER TABLE appointments
+  ADD COLUMN IF NOT EXISTS detection_id UUID REFERENCES detections(id) ON DELETE SET NULL;
+
+-- 2b. Add updated_at column if missing
+ALTER TABLE appointments
+  ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP DEFAULT NOW();
+
+-- ============================================================
+-- STEP 3: Verify the final schema
+-- ============================================================
+-- Run this SELECT to confirm all columns exist:
+-- SELECT column_name, data_type FROM information_schema.columns
+-- WHERE table_name = 'appointments'
+-- ORDER BY ordinal_position;
