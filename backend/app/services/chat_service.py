@@ -103,8 +103,6 @@ Provide a helpful, simple explanation. End with encouraging them to see their de
             logger.error("GOOGLE_API_KEY not configured")
             return "The diagnostic chatbot is currently resting. Please check your configuration."
         
-        # Google AI Studio / Gemini REST API endpoint
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/{settings.GOOGLE_MODEL}:generateContent?key={settings.GOOGLE_API_KEY}"
         
         headers = {
             "Content-Type": "application/json"
