@@ -263,7 +263,7 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({
             <textarea
               value={formData.notes}
               onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-              className="w-full min-h-[100px] px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="w-full min-h-[100px] px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="Add any notes or special instructions..."
             />
           </div>
@@ -283,7 +283,7 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({
             <Button type="button" variant="outline" onClick={onClose}>
               Close
             </Button>
-            <Button type="submit" disabled={loading} className="bg-teal-600 hover:bg-teal-700">
+            <Button type="submit" disabled={loading} className="bg-blue-900 hover:bg-blue-950">
               {loading ? 'Sending...' : appointment ? 'Update' : 'Request'} Appointment
             </Button>
           </div>

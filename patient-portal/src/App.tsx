@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { AuthProvider } from './contexts/AuthContext';
 import Sidebar from './components/common/Sidebar';
-import MobileHeader from './components/common/MobileHeader';
+import { TopNavBar } from './components/common/TopNavBar';
 import { FloatingChatButton } from './components/chat/FloatingChatButton';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
 import { Home } from './pages/Home';
@@ -28,22 +28,28 @@ const AuthenticatedLayout: React.FC<{ children: React.ReactNode }> = ({ children
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <div className="flex h-screen bg-gray-50 overflow-hidden">
-      {/* Mobile Header */}
-      <MobileHeader onMenuClick={() => setIsMobileMenuOpen(true)} />
-
-      {/* Sidebar - Desktop always visible, Mobile controlled by state */}
+    <div className="flex h-screen bg-slate-50 overflow-hidden">
+      {/* Sidebar - Controlled by state for mobile/desktop */}
       <Sidebar
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
       />
 
-      {/* Main Content */}
-      <main className="flex-1 overflow-auto pt-16 lg:pt-0">
-        <div className="h-full">
-          {children}
-        </div>
-      </main>
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative">
+        {/* Top Navigation Bar - Clinical Standard with Notifications */}
+        <TopNavBar onMenuClick={() => setIsMobileMenuOpen(true)} />
+
+        {/* Global Pattern Overlay for Premium Feel */}
+        <div className="absolute inset-x-0 bottom-0 top-20 bg-white/40 pattern-grid-lg opacity-10 pointer-events-none" />
+
+        {/* Scrollable Content View */}
+        <main className="flex-1 overflow-auto relative z-10">
+          <div className="h-full">
+            {children}
+          </div>
+        </main>
+      </div>
 
       {/* Floating Chat Button */}
       <FloatingChatButton />

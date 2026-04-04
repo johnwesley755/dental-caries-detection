@@ -25,7 +25,7 @@ export const VerifyEmail: React.FC = () => {
                 setStatus('error');
                 setError('Missing verification token.');
                 return;
-            }
+              }
 
             try {
                 await authService.verifyEmail(token);
@@ -40,64 +40,71 @@ export const VerifyEmail: React.FC = () => {
     }, [token]);
 
     return (
-        <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 isolate">
+        <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 lg:p-8 isolate">
             <div className="absolute inset-0 -z-10 h-full w-full opacity-30"
                 style={{ backgroundImage: 'radial-gradient(#94a3b8 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
 
             <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="max-w-[500px] w-full bg-white/80 backdrop-blur-xl border border-white/60 shadow-xl rounded-3xl p-10 text-center space-y-8"
+                initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                className="max-w-[480px] w-full bg-white/90 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-blue-900/10 rounded-[2.5rem] p-10 lg:p-12 text-center space-y-10"
             >
                 {status === 'loading' && (
-                    <div className="space-y-6">
+                    <div className="space-y-8 animate-in fade-in duration-700">
                         <div className="flex justify-center">
-                            <div className="h-20 w-20 rounded-full bg-teal-50 flex items-center justify-center text-teal-600">
-                                <LoadingSpinner size="sm" />
+                            <div className="h-24 w-24 rounded-[2rem] bg-blue-50 flex items-center justify-center text-primary shadow-inner">
+                                <LoadingSpinner size="md" />
                             </div>
                         </div>
-                        <h1 className="text-3xl font-bold text-slate-900">Verifying Email</h1>
-                        <p className="text-slate-500">Please wait while we verify your email address.</p>
+                        <div className="space-y-3">
+                           <h1 className="text-3xl font-black text-slate-900 tracking-tight uppercase leading-none">Verifying</h1>
+                           <p className="text-slate-500 font-bold tracking-tight">Syncing with clinical servers...</p>
+                        </div>
                     </div>
                 )}
 
                 {status === 'success' && (
-                    <div className="space-y-6">
+                    <div className="space-y-8 animate-in zoom-in-95 fade-in duration-500">
                         <div className="flex justify-center">
-                            <div className="h-20 w-20 rounded-full bg-green-50 flex items-center justify-center text-green-500">
-                                <CheckCircle2 className="h-10 w-10" />
+                            <div className="h-24 w-24 rounded-[2rem] bg-emerald-50 flex items-center justify-center text-emerald-500 shadow-inner ring-1 ring-emerald-100">
+                                <CheckCircle2 className="h-12 w-12" />
                             </div>
                         </div>
-                        <h1 className="text-3xl font-bold text-slate-900">Email Verified!</h1>
-                        <p className="text-slate-500">Your email has been successfully verified. You can now access all features of the patient portal.</p>
+                        <div className="space-y-3">
+                          <h1 className="text-3xl font-black text-slate-900 tracking-tight uppercase leading-none">Email Verified</h1>
+                          <p className="text-slate-500 font-bold tracking-tight leading-relaxed">Your account is now fully activated. You can now access all clinical features.</p>
+                        </div>
                         <button
                             onClick={() => navigate('/login')}
-                            className="w-full h-14 rounded-xl bg-teal-600 text-white font-bold flex items-center justify-center gap-2 shadow-lg shadow-teal-500/20 hover:bg-teal-700 transition-all shadow-xl shadow-teal-500/30"
+                            className="w-full h-14 rounded-2xl bg-primary text-white font-black uppercase text-[10px] tracking-widest flex items-center justify-center gap-3 shadow-2xl shadow-primary/30 hover:bg-blue-900 transition-all hover:scale-[1.02] active:scale-[0.98]"
                         >
-                            Go to Login
-                            <ArrowRight className="h-5 w-5" />
+                            Continue to Login
+                            <ArrowRight className="h-4 w-4" />
                         </button>
                     </div>
                 )}
 
                 {status === 'error' && (
-                    <div className="space-y-6">
+                    <div className="space-y-8 animate-in zoom-in-95 fade-in duration-500">
                         <div className="flex justify-center">
-                            <div className="h-20 w-20 rounded-full bg-red-50 flex items-center justify-center text-red-500">
-                                <XCircle className="h-10 w-10" />
+                            <div className="h-24 w-24 rounded-[2rem] bg-red-50 flex items-center justify-center text-red-500 shadow-inner ring-1 ring-red-100">
+                                <XCircle className="h-12 w-12" />
                             </div>
                         </div>
-                        <h1 className="text-3xl font-bold text-slate-900">Verification Failed</h1>
-                        <div className="p-4 text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl flex items-center gap-3">
-                            <ShieldCheck className="h-5 w-5 shrink-0" />
-                            <span>{error}</span>
+                        <div className="space-y-4">
+                          <h1 className="text-3xl font-black text-slate-900 tracking-tight uppercase leading-none">Access Denied</h1>
+                          <div className="p-4 bg-red-50/50 border border-red-100/50 rounded-2xl flex items-start gap-3 text-left">
+                              <ShieldCheck className="h-5 w-5 text-red-500 shrink-0 mt-0.5" />
+                              <p className="text-xs font-bold text-red-700 leading-relaxed">{error}</p>
+                          </div>
+                          <p className="text-slate-400 font-bold text-sm leading-relaxed px-4">This link may be expired or tampered with. Please request a new verification token from your dashboard.</p>
                         </div>
-                        <p className="text-slate-500">The link may have expired or is invalid. Please try logging in to resend the verification email.</p>
                         <button
                             onClick={() => navigate('/login')}
-                            className="w-full h-14 rounded-xl border border-slate-200 text-slate-600 font-bold hover:bg-slate-50 transition-all"
+                            className="w-full h-14 rounded-2xl border-2 border-slate-100 text-slate-400 font-black uppercase text-[10px] tracking-widest hover:bg-slate-50 transition-all"
                         >
-                            Back to Login
+                            Return to Login
                         </button>
                     </div>
                 )}

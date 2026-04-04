@@ -8,7 +8,7 @@ import {
   ArrowRight,
   MousePointer2
 } from 'lucide-react';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 // --- Feature Data ---
 const features = [
@@ -21,8 +21,8 @@ const features = [
     icon: Smartphone,
     bg: "bg-white",
     text: "text-slate-900",
-    accent: "bg-teal-600",
-    badge: "bg-teal-50 text-teal-700 border-teal-100",
+    accent: "bg-blue-900",
+    badge: "bg-blue-50 text-blue-950 border-blue-100",
     layout: "right"
   },
   {
@@ -34,8 +34,8 @@ const features = [
     icon: Shield,
     bg: "bg-slate-950",
     text: "text-white",
-    accent: "bg-emerald-500",
-    badge: "bg-emerald-900/30 text-emerald-400 border-emerald-800",
+    accent: "bg-emerald-600",
+    badge: "bg-emerald-900/30 text-emerald-500 border-emerald-800",
     layout: "left"
   },
   {
@@ -53,7 +53,7 @@ const features = [
   }
 ];
 
-const FeatureCard = ({ feature, index, range }: { feature: typeof features[0], index: number, range: [number, number] }) => {
+const FeatureCard = ({ feature }: { feature: typeof features[0] }) => {
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -98,7 +98,7 @@ const FeatureCard = ({ feature, index, range }: { feature: typeof features[0], i
             <ul className="space-y-4">
               {['Instant access', 'Secure encryption', '24/7 Availability'].map((item, i) => (
                 <li key={i} className={`flex items-center gap-3 text-lg font-medium ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-                  <div className={`flex items-center justify-center w-6 h-6 rounded-full ${isDark ? 'bg-emerald-500/20 text-emerald-400' : 'bg-teal-100 text-teal-600'}`}>
+                  <div className={`flex items-center justify-center w-6 h-6 rounded-full ${isDark ? 'bg-emerald-600/20 text-emerald-500' : 'bg-blue-100 text-blue-900'}`}>
                     <Check className="w-4 h-4" />
                   </div>
                   {item}
@@ -122,13 +122,13 @@ const FeatureCard = ({ feature, index, range }: { feature: typeof features[0], i
               {/* Floating UI Elements (Visily Style) */}
               <div className="absolute top-6 left-6 z-20 flex gap-2">
                 <div className="w-3 h-3 rounded-full bg-red-500/80" />
-                <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
-                <div className="w-3 h-3 rounded-full bg-green-500/80" />
+                <div className="w-3 h-3 rounded-full bg-emerald-600/80" />
+                <div className="w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]" />
               </div>
 
               {/* Cursor Interaction Mockup */}
               <div className="absolute bottom-10 right-10 z-20 bg-white/90 backdrop-blur p-4 rounded-2xl shadow-xl flex items-center gap-3 animate-bounce duration-[3000ms]">
-                 <div className={`p-2 rounded-lg ${isDark ? 'bg-emerald-100 text-emerald-600' : 'bg-teal-100 text-teal-600'}`}>
+                 <div className={`p-2 rounded-lg ${isDark ? 'bg-emerald-100 text-emerald-600' : 'bg-blue-100 text-blue-900'}`}>
                     <MousePointer2 className="w-5 h-5" />
                  </div>
                  <div>
@@ -161,12 +161,10 @@ export const FeaturesSection: React.FC = () => {
       {/* This wrapper ensures the stacking context works. 
         Each FeatureCard is h-screen and sticky.
       */}
-      {features.map((feature, index) => (
+      {features.map((feature) => (
         <FeatureCard 
           key={feature.id} 
           feature={feature} 
-          index={index} 
-          range={[index * 0.33, 1]}
         />
       ))}
     </div>

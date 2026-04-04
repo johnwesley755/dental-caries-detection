@@ -32,8 +32,8 @@ export const BenefitsSection: React.FC = () => {
 
   const getColorClasses = (color: string) => {
     const colors = {
-      blue: 'bg-teal-100 text-teal-600',
-      green: 'bg-green-100 text-green-600',
+      blue: 'bg-blue-100 text-blue-900',
+      emerald: 'bg-emerald-50 text-emerald-600 border border-emerald-100/50',
       purple: 'bg-purple-100 text-purple-600',
       pink: 'bg-pink-100 text-pink-600'
     };

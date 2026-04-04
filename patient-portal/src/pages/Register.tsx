@@ -84,12 +84,12 @@ export const Register: React.FC = () => {
                     <motion.div
                         animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.4, 0.2] }}
                         transition={{ duration: 10, repeat: Infinity }}
-                        className="absolute top-[10%] left-[10%] h-[400px] w-[400px] rounded-full bg-teal-200/40 blur-[90px]"
+                        className="absolute top-[10%] left-[10%] h-[400px] w-[400px] rounded-full bg-blue-200/40 blur-[90px]"
                     />
                     <motion.div
                         animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.5, 0.2] }}
                         transition={{ duration: 15, repeat: Infinity }}
-                        className="absolute bottom-[10%] right-[10%] h-[400px] w-[400px] rounded-full bg-teal-200/40 blur-[90px]"
+                        className="absolute bottom-[10%] right-[10%] h-[400px] w-[400px] rounded-full bg-blue-200/40 blur-[90px]"
                     />
                 </div>
 
@@ -101,7 +101,7 @@ export const Register: React.FC = () => {
                     <div className="bg-white/80 backdrop-blur-xl border border-white/60 shadow-xl rounded-3xl p-10 lg:p-14 space-y-8">
                         <div className="space-y-3 text-center">
                             <h1 className="text-3xl font-bold tracking-tight">Create Account</h1>
-                            <p className="text-slate-500">Join DentAI to manage your dental health</p>
+                            <p className="text-slate-500">Join DENTALAI to manage your dental health</p>
                         </div>
 
                         <form onSubmit={handleSubmit} className="space-y-6">
@@ -115,14 +115,14 @@ export const Register: React.FC = () => {
                             <div className="space-y-2">
                                 <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Full Name</label>
                                 <div className="relative group">
-                                    <User className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-teal-600 transition-colors" />
+                                    <User className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-blue-900 transition-colors" />
                                     <input
                                         type="text"
                                         placeholder="John Doe"
                                         value={fullName}
                                         onChange={(e) => setFullName(e.target.value)}
                                         required
-                                        className="flex h-14 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pl-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
+                                        className="flex h-14 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pl-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                                     />
                                 </div>
                             </div>
@@ -130,14 +130,14 @@ export const Register: React.FC = () => {
                             <div className="space-y-2">
                                 <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Email Address</label>
                                 <div className="relative group">
-                                    <Mail className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-teal-600 transition-colors" />
+                                    <Mail className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-blue-900 transition-colors" />
                                     <input
                                         type="email"
                                         placeholder="you@example.com"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                         required
-                                        className="flex h-14 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pl-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
+                                        className="flex h-14 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pl-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                                     />
                                 </div>
                             </div>
@@ -145,14 +145,14 @@ export const Register: React.FC = () => {
                             <div className="space-y-2">
                                 <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Password</label>
                                 <div className="relative group">
-                                    <Lock className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-teal-600 transition-colors" />
+                                    <Lock className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-blue-900 transition-colors" />
                                     <input
                                         type={showPassword ? "text" : "password"}
                                         placeholder="••••••••"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                         required
-                                        className="flex h-14 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pl-12 pr-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
+                                        className="flex h-14 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pl-12 pr-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                                     />
                                     <button
                                         type="button"
@@ -170,7 +170,7 @@ export const Register: React.FC = () => {
                                 type="submit"
                                 disabled={isLoading}
                                 className={cn(
-                                    "w-full rounded-xl bg-gradient-to-r from-teal-600 to-emerald-600 px-4 py-4 text-sm font-bold text-white shadow-xl hover:shadow-teal-500/40 transition-all duration-200",
+                                    "w-full rounded-xl bg-gradient-to-r from-blue-900 to-emerald-600 px-4 py-4 text-sm font-bold text-white shadow-xl hover:shadow-primary/40 transition-all duration-200",
                                     isLoading && "opacity-70 cursor-not-allowed"
                                 )}
                             >
@@ -193,7 +193,7 @@ export const Register: React.FC = () => {
                         <div className="text-center pt-4">
                             <p className="text-sm text-slate-500">
                                 Already have an account?{' '}
-                                <Link to="/login" className="text-teal-600 font-bold hover:underline">
+                                <Link to="/login" className="text-blue-900 font-bold hover:underline">
                                     Login here
                                 </Link>
                             </p>
@@ -202,23 +202,25 @@ export const Register: React.FC = () => {
                 </motion.div>
             </div>
 
-            <div className="hidden lg:flex relative h-full w-full flex-col p-16 text-white overflow-hidden bg-slate-900">
+            <div className="hidden lg:flex relative h-full w-full flex-col p-16 text-white overflow-hidden bg-slate-900 uppercase">
                 <img
                     src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?q=80&w=2070&auto=format&fit=crop"
                     alt="Modern Dentistry"
                     className="absolute inset-0 h-full w-full object-cover opacity-60"
                 />
-                <div className="absolute inset-0 bg-gradient-to-br from-teal-950/90 via-emerald-950/80 to-slate-950/90 mix-blend-multiply" />
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-950/90 via-blue-900/80 to-slate-950/90 mix-blend-multiply" />
 
-                <div className="relative z-20 flex items-center gap-3">
-                    <Stethoscope className="h-8 w-8 text-teal-300" />
-                    <span className="text-2xl font-bold">DentAI<span className="text-teal-400">Diagnostics</span></span>
+                <div className="relative z-20 flex items-center gap-4">
+                    <div className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20">
+                        <Stethoscope className="h-5 w-5 text-white" />
+                    </div>
+                    <span className="text-2xl font-black tracking-tight">DENTALAI<span className="text-primary opacity-80 ml-2">Intelligence</span></span>
                 </div>
 
                 <div className="relative z-20 mt-auto max-w-lg">
-                    <div className="rounded-3xl bg-white/5 backdrop-blur-md border border-white/10 p-8">
-                        <Heart className="h-8 w-8 text-teal-300 mb-4" />
-                        <p className="text-xl font-light leading-relaxed mb-6">
+                    <div className="rounded-3xl bg-white/5 backdrop-blur-md border border-white/10 p-8 shadow-2xl">
+                        <Heart className="h-8 w-8 text-primary mb-4" />
+                        <p className="text-xl font-medium leading-relaxed mb-6 italic opacity-90">
                             "Your dental health is our priority. Get instant AI insights and connect with top-tier professionals."
                         </p>
                     </div>

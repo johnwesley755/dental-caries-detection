@@ -91,7 +91,7 @@ export const Login: React.FC = () => {
               rotate: [0, 45, 0]
             }}
             transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-[10%] left-[10%] h-[400px] w-[400px] rounded-full bg-teal-200/40 mix-blend-multiply blur-[90px]"
+            className="absolute top-[10%] left-[10%] h-[400px] w-[400px] rounded-full bg-blue-200/40 mix-blend-multiply blur-[90px]"
           />
           <motion.div
             animate={{
@@ -100,7 +100,7 @@ export const Login: React.FC = () => {
               x: [0, -30, 0]
             }}
             transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute bottom-[10%] right-[10%] h-[400px] w-[400px] rounded-full bg-teal-200/40 mix-blend-multiply blur-[90px]"
+            className="absolute bottom-[10%] right-[10%] h-[400px] w-[400px] rounded-full bg-blue-200/40 mix-blend-multiply blur-[90px]"
           />
         </div>
 
@@ -113,7 +113,7 @@ export const Login: React.FC = () => {
         >
           {/* DIFFERENTIATOR: Patient Access Badge */}
           <div className="flex justify-center mb-6">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-50 border border-teal-100 text-teal-700 text-xs font-semibold uppercase tracking-wider shadow-sm">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-blue-950 text-xs font-semibold uppercase tracking-wider shadow-sm">
               <UserCircle className="h-4 w-4" />
               Patient Access Portal
             </span>
@@ -150,7 +150,7 @@ export const Login: React.FC = () => {
                 </label>
                 <div className="relative group">
                   <div className="absolute left-4 top-4 pointer-events-none">
-                    <Mail className="h-5 w-5 text-slate-400 group-focus-within:text-teal-600 transition-colors" />
+                    <Mail className="h-5 w-5 text-slate-400 group-focus-within:text-blue-900 transition-colors" />
                   </div>
                   <input
                     id="email"
@@ -161,7 +161,7 @@ export const Login: React.FC = () => {
                     required
                     className={cn(
                       "flex h-14 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pl-12 text-sm transition-all duration-200",
-                      "placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500",
+                      "placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary",
                       "hover:bg-slate-50 hover:border-slate-300"
                     )}
                   />
@@ -175,7 +175,7 @@ export const Login: React.FC = () => {
                 </label>
                 <div className="relative group">
                   <div className="absolute left-4 top-4 pointer-events-none">
-                    <Lock className="h-5 w-5 text-slate-400 group-focus-within:text-teal-600 transition-colors" />
+                    <Lock className="h-5 w-5 text-slate-400 group-focus-within:text-blue-900 transition-colors" />
                   </div>
                   <input
                     id="password"
@@ -186,7 +186,7 @@ export const Login: React.FC = () => {
                     required
                     className={cn(
                       "flex h-14 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pl-12 pr-12 text-sm transition-all duration-200",
-                      "placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500",
+                      "placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary",
                       "hover:bg-slate-50 hover:border-slate-300"
                     )}
                   />
@@ -201,7 +201,7 @@ export const Login: React.FC = () => {
                 <div className="flex justify-end">
                   <Link
                     to="/forgot-password"
-                    className="text-xs font-bold text-teal-600 hover:underline"
+                    className="text-xs font-bold text-blue-900 hover:underline"
                   >
                     Forgot Password?
                   </Link>
@@ -215,7 +215,7 @@ export const Login: React.FC = () => {
                 type="submit"
                 disabled={isLoading}
                 className={cn(
-                  "relative overflow-hidden w-full rounded-xl bg-gradient-to-r from-teal-600 to-emerald-600 px-4 py-4 text-sm font-bold text-white shadow-xl shadow-teal-500/20 hover:shadow-teal-500/40 transition-all duration-200",
+                  "relative overflow-hidden w-full rounded-xl bg-gradient-to-r from-blue-900 to-emerald-600 px-4 py-4 text-sm font-bold text-white shadow-xl shadow-primary/20 hover:shadow-primary/40 transition-all duration-200",
                   isLoading && "opacity-70 cursor-not-allowed"
                 )}
               >
@@ -237,7 +237,7 @@ export const Login: React.FC = () => {
             <div className="text-center pt-4 border-t border-slate-100 mt-6">
               <p className="text-sm text-slate-500">
                 Don't have an account?{' '}
-                <Link to="/register" className="text-teal-600 font-bold hover:underline">
+                <Link to="/register" className="text-blue-900 font-bold hover:underline">
                   Sign up here
                 </Link>
               </p>
@@ -259,18 +259,18 @@ export const Login: React.FC = () => {
             className="h-full w-full object-cover opacity-60 scale-105"
           />
           {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-br from-teal-950/90 via-emerald-950/80 to-slate-950/90 mix-blend-multiply" />
-          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-teal-500/10 to-transparent opacity-40" />
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-950/90 via-blue-900/80 to-slate-950/90 mix-blend-multiply" />
+          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-primary/10 to-transparent opacity-40" />
         </div>
 
         {/* Branding */}
         <div className="relative z-20 flex items-center gap-3">
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-xl">
-            <Stethoscope className="h-6 w-6 text-teal-300" />
+            <Stethoscope className="h-6 w-6 text-blue-300" />
           </div>
           <div className="flex flex-col">
-            <span className="text-2xl font-bold tracking-tight text-white">DentAI<span className="text-teal-400">Diagnostics</span></span>
-            <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-teal-200/60">Patient Portal</span>
+            <span className="text-2xl font-bold tracking-tight text-white">DENTALAI<span className="text-blue-400">Diagnostics</span></span>
+            <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-blue-200/60">Patient Portal</span>
           </div>
         </div>
 
@@ -282,19 +282,19 @@ export const Login: React.FC = () => {
             transition={{ delay: 0.4, duration: 0.6 }}
             className="rounded-3xl bg-white/5 backdrop-blur-md border border-white/10 p-8 shadow-2xl"
           >
-            <div className="mb-6 text-teal-300">
+            <div className="mb-6 text-blue-300">
               <Smile className="h-8 w-8" />
             </div>
             <p className="text-xl font-light leading-relaxed text-slate-100 mb-6">
               "Seeing my dental scans explained by AI made me feel so much more involved in my healthcare decisions. Truly empowering technology."
             </p>
             <footer className="flex items-center gap-4 border-t border-white/10 pt-6">
-              <div className="h-10 w-10 rounded-full bg-gradient-to-br from-teal-400 to-teal-500 flex items-center justify-center text-xs font-bold text-white shadow-lg border border-white/20">
+              <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-400 to-primary flex items-center justify-center text-xs font-bold text-white shadow-lg border border-white/20">
                 JD
               </div>
               <div>
                 <div className="text-sm font-semibold text-white">Jane Doe</div>
-                <div className="text-xs text-teal-200">Patient since 2023</div>
+                <div className="text-xs text-blue-200">Patient since 2023</div>
               </div>
             </footer>
           </motion.div>

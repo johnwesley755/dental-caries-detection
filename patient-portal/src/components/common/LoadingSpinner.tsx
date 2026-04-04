@@ -25,8 +25,8 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
     const spinnerContent = (
         <div className={`flex ${text ? 'flex-col' : 'inline-flex'} items-center justify-center gap-3 ${className}`}>
             <div className={`relative ${spinnerStyle.split(' ')[0]} ${spinnerStyle.split(' ')[1]}`}>
-                <div className={`absolute inset-0 rounded-full border-teal-100 ${spinnerStyle.split(' ')[2]}`} />
-                <div className={`absolute inset-0 rounded-full border-transparent border-t-teal-600 animate-spin ${spinnerStyle.split(' ')[2]}`} />
+                <div className={`absolute inset-0 rounded-full border-blue-100 ${spinnerStyle.split(' ')[2]}`} />
+                <div className={`absolute inset-0 rounded-full border-transparent border-t-blue-900 animate-spin ${spinnerStyle.split(' ')[2]}`} />
             </div>
             {text && <p className="text-sm font-semibold text-slate-500 animate-pulse tracking-wide">{text}</p>}
         </div>

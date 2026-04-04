@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { messagingService } from '../services/messagingService';
 import type { Conversation, Message } from '../services/messagingService';
-import { MessageCircle, Send, Paperclip, X, FileText, Image as ImageIcon, Download, Loader2, Search, UserCircle, Check, CheckCheck, Activity } from 'lucide-react';
+import { MessageCircle, Send, Paperclip, X, FileText, Image as ImageIcon, Download, Search, UserCircle, Check, CheckCheck, Activity } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { useAuth } from '../contexts/AuthContext';
 import { patientService } from '../services/patientService';
@@ -178,7 +178,6 @@ export const Messages: React.FC = () => {
       setNewMessage('');
       setSelectedFile(null);
       setLinkedDetectionId(null); // Clear linked detection after sending
-      // ... (rest of function unchanged)
 
       // Refresh conversations
       const data = await messagingService.getConversations();
@@ -245,46 +244,50 @@ export const Messages: React.FC = () => {
       const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
       finalUrl = `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
     }
-    console.log('File Access:', { original: url, resolved: finalUrl });
     return finalUrl;
   };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen bg-gray-50">
+      <div className="flex items-center justify-center min-h-[80vh] bg-slate-50/50">
         <div className="flex flex-col items-center gap-4">
-          <LoadingSpinner size="sm" />
-          <p className="text-gray-500 font-medium">Loading conversations...</p>
+          <LoadingSpinner size="md" />
+          <p className="text-slate-500 font-bold tracking-tight">Syncing conversations...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="h-full flex bg-gray-50 overflow-hidden">
+    <div className="h-full flex bg-slate-50/50 overflow-hidden">
       {/* Conversations List */}
       <div className={`
         ${showMobileChat ? 'hidden' : 'flex'} 
-        lg:flex w-full lg:w-80 bg-white border-r border-gray-200 flex-col
+        lg:flex w-full lg:w-96 bg-white border-r border-slate-200/60 flex-col shadow-sm relative z-10
       `}>
-        <div className="p-6 border-b border-gray-200">
-          <h2 className="text-2xl font-bold text-gray-900">Messages</h2>
-          <p className="text-sm text-gray-500 mt-1">Chat with your dental team</p>
+        <div className="p-8 border-b border-slate-100 bg-white/50 backdrop-blur-md sticky top-0 z-20">
+          <div className="flex items-center justify-between">
+             <h2 className="text-2xl font-black text-slate-900 tracking-tight">Messages</h2>
+             <div className="h-8 w-8 rounded-xl bg-blue-50 flex items-center justify-center text-primary font-bold text-xs ring-1 ring-blue-100 shadow-inner">
+                {conversations.length}
+             </div>
+          </div>
+          <p className="text-sm text-slate-400 font-bold tracking-tight mt-1">Clinical Chat History</p>
         </div>
 
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto no-scrollbar bg-slate-50/30">
           {conversations.length === 0 ? (
-            <div className="p-8 text-center flex flex-col items-center justify-center h-full">
-              <div className="w-16 h-16 bg-teal-50 rounded-full flex items-center justify-center mb-4">
-                <MessageCircle className="h-8 w-8 text-teal-400" />
+            <div className="p-10 text-center flex flex-col items-center justify-center h-full">
+              <div className="w-20 h-20 bg-blue-50 rounded-3xl flex items-center justify-center mb-6 shadow-inner ring-1 ring-blue-100">
+                <MessageCircle className="h-10 w-10 text-primary opacity-40 shrink-0" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">No conversations yet</h3>
-              <p className="text-gray-500 mb-6">Your message history with your dentist will appear here.</p>
+              <h3 className="text-xl font-black text-slate-900 tracking-tight mb-2">No messages yet</h3>
+              <p className="text-sm text-slate-400 font-bold leading-relaxed mb-8 px-6">Your clinical message history with specialists will appear here.</p>
               <Button
                 onClick={() => handleStartNewChat()}
-                className="bg-teal-600 hover:bg-teal-700 text-white px-6"
+                className="bg-primary hover:bg-blue-900 text-white px-8 h-12 rounded-2xl shadow-xl shadow-primary/20 font-black uppercase text-[10px] tracking-widest transition-all hover:scale-105"
               >
-                Find Dentist
+                Find Specialist
               </Button>
             </div>
           ) : (
@@ -292,27 +295,30 @@ export const Messages: React.FC = () => {
               <div
                 key={conv.id}
                 onClick={() => setSelectedConversation(conv)}
-                className={`p-4 border-b border-gray-100 cursor-pointer transition-all duration-200 ${selectedConversation?.id === conv.id
-                  ? 'bg-teal-50 border-l-4 border-l-teal-600'
-                  : 'hover:bg-gray-50'
+                className={`p-5 mx-3 my-2 rounded-[1.5rem] cursor-pointer transition-all duration-300 group border ${selectedConversation?.id === conv.id
+                  ? 'bg-white shadow-xl shadow-blue-900/5 border-blue-100 ring-2 ring-primary/5'
+                  : 'bg-transparent border-transparent hover:bg-white hover:shadow-lg hover:shadow-slate-200/50'
                   }`}
               >
-                <div className="flex items-start justify-between gap-3">
+                <div className="flex items-start gap-4">
+                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 transition-all duration-300 ${selectedConversation?.id === conv.id ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-slate-100 text-slate-400 group-hover:bg-blue-50 group-hover:text-primary'}`}>
+                     <UserCircle className="h-6 w-6" />
+                  </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between mb-1">
-                      <h3 className="font-semibold text-gray-900 truncate">{conv.other_user_name}</h3>
+                      <h3 className="font-black text-slate-900 truncate tracking-tight text-sm uppercase">{conv.other_user_name}</h3>
                       {conv.last_message_at && (
-                        <span className="text-[10px] uppercase font-bold text-gray-400 whitespace-nowrap ml-2">
+                        <span className="text-[10px] font-black text-slate-400 whitespace-nowrap ml-2 opacity-60">
                           {formatDate(conv.last_message_at)}
                         </span>
                       )}
                     </div>
-                    <div className="flex items-center justify-between">
-                      <p className={`text-sm mt-1 truncate ${conv.unread_count > 0 ? 'text-teal-600 font-medium' : 'text-gray-500'}`}>
-                        {conv.last_message || 'No messages yet'}
+                    <div className="flex items-center justify-between gap-2">
+                      <p className={`text-xs truncate font-bold ${conv.unread_count > 0 ? 'text-primary' : 'text-slate-400'}`}>
+                        {conv.last_message || 'Start a new conversation'}
                       </p>
                       {conv.unread_count > 0 && (
-                        <span className="bg-teal-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full ml-2 flex-shrink-0 animate-pulse">
+                        <span className="bg-primary text-white text-[10px] font-black px-2 py-1 rounded-lg ml-2 flex-shrink-0 shadow-lg shadow-primary/20 animate-pulse transition-all">
                           {conv.unread_count}
                         </span>
                       )}
@@ -328,29 +334,32 @@ export const Messages: React.FC = () => {
       {/* Chat Window */}
       <div className={`
         ${showMobileChat ? 'flex' : 'hidden'} 
-        lg:flex flex-1 flex-col bg-white h-full relative
+        lg:flex flex-1 flex-col bg-white h-full relative shadow-2xl z-0
       `}>
         {selectedConversation ? (
           <>
             {/* Chat Header */}
-            <div className="bg-white border-b border-gray-200 p-4 flex items-center gap-4">
+            <div className="bg-white/80 backdrop-blur-xl border-b border-slate-100 p-6 flex items-center gap-5 sticky top-0 z-20">
               <button
                 onClick={() => setShowMobileChat(false)}
-                className="lg:hidden p-2 -ml-2 text-gray-500 hover:text-teal-600 transition-colors"
+                className="lg:hidden p-2 -ml-2 text-slate-400 hover:text-primary transition-all bg-slate-50 rounded-xl"
               >
                 <X className="h-6 w-6" />
               </button>
+              <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-primary shadow-inner">
+                 <UserCircle className="h-6 w-6" />
+              </div>
               <div className="flex-1 min-w-0">
-                <h3 className="font-bold text-gray-900 truncate">{selectedConversation.other_user_name}</h3>
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                  <p className="text-xs text-gray-500">Online now</p>
+                <h3 className="font-black text-slate-900 truncate tracking-tight text-lg uppercase">{selectedConversation.other_user_name}</h3>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <span className="w-2 h-2 bg-emerald-500 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
+                  <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest leading-none">Online & Verified</p>
                 </div>
               </div>
             </div>
 
             {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto p-4 lg:p-6 space-y-6 bg-[#f8fbff]">
+            <div className="flex-1 overflow-y-auto p-6 lg:p-10 space-y-8 bg-slate-50/50 no-scrollbar">
               {messages.map((message, index) => {
                 const isOwn = message.sender_id === user?.id;
                 const prevMessage = index > 0 ? messages[index - 1] : null;
@@ -360,36 +369,36 @@ export const Messages: React.FC = () => {
                 return (
                   <React.Fragment key={message.id}>
                     {showDateHeader && (
-                      <div className="flex justify-center my-8">
-                        <div className="bg-white/80 backdrop-blur shadow-sm border border-gray-100 text-gray-500 text-[10px] font-bold px-4 py-1.5 rounded-full uppercase tracking-widest leading-none">
+                      <div className="flex justify-center my-10">
+                        <div className="bg-white px-5 py-2 rounded-2xl border border-slate-100 shadow-sm text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] leading-none">
                           {formatDate(message.created_at)}
                         </div>
                       </div>
                     )}
-                    <div className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}>
+                    <div className={`flex ${isOwn ? 'justify-end' : 'justify-start'} animate-in slide-in-from-bottom-2 duration-300`}>
                       <div className={`max-w-[85%] lg:max-w-[70%] ${isOwn ? 'items-end' : 'items-start'} flex flex-col group`}>
                         <div
-                          className={`rounded-2xl px-4 py-3 shadow-sm transition-all duration-200 ${isOwn
-                            ? 'bg-teal-600 text-white rounded-tr-none'
-                            : 'bg-white border border-gray-100 text-gray-900 rounded-tl-none'
+                          className={`rounded-[1.75rem] px-5 py-3.5 shadow-sm transition-all duration-300 ${isOwn
+                            ? 'bg-primary text-white rounded-tr-none shadow-xl shadow-primary/10'
+                            : 'bg-white border border-slate-100 text-slate-800 rounded-tl-none font-bold'
                             }`}
                         >
-                          {message.content && <p className="text-sm leading-relaxed">{message.content}</p>}
+                          {message.content && <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>}
 
                           {message.detection_id && (
-                            <div className={`mt-3 p-3 rounded-xl border flex items-center justify-between gap-3 ${isOwn ? 'bg-teal-700/50 border-teal-600' : 'bg-emerald-50 border-emerald-100'}`}>
-                              <div className="flex items-center gap-3">
-                                <div className={`p-2 rounded-lg ${isOwn ? 'bg-teal-800' : 'bg-emerald-100 shadow-sm'}`}>
-                                  <Search className={`h-5 w-5 ${isOwn ? 'text-white' : 'text-emerald-600'}`} />
+                            <div className={`mt-4 p-4 rounded-2xl border flex items-center justify-between gap-4 glass transition-all hover:scale-[1.02] ${isOwn ? 'bg-white/10 border-white/20' : 'bg-emerald-50/80 border-emerald-100'}`}>
+                              <div className="flex items-center gap-4">
+                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-inner ${isOwn ? 'bg-white/20' : 'bg-white border border-emerald-100 shadow-sm'}`}>
+                                  <Activity className={`h-5 w-5 ${isOwn ? 'text-white' : 'text-emerald-500'}`} />
                                 </div>
                                 <div>
-                                  <p className={`text-xs font-bold leading-none ${isOwn ? 'text-white' : 'text-emerald-900'}`}>AI Scan Linked</p>
-                                  <p className={`text-[10px] mt-1 ${isOwn ? 'text-teal-100' : 'text-emerald-700'}`}>View analysis</p>
+                                  <p className={`text-[10px] font-black uppercase tracking-widest leading-none mb-1 ${isOwn ? 'text-white' : 'text-emerald-900'}`}>AI Analysis Linked</p>
+                                  <p className={`text-xs font-bold ${isOwn ? 'text-blue-100' : 'text-emerald-600'}`}>Clinical findings shared</p>
                                 </div>
                               </div>
                               <a 
                                  href={`/detection/${message.detection_id}`} 
-                                 className={`text-[10px] font-bold px-3 py-1.5 rounded-lg transition-colors ${isOwn ? 'bg-teal-600 hover:bg-teal-500 text-white' : 'bg-white hover:bg-emerald-200 text-emerald-800 shadow-sm'}`}
+                                 className={`text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-xl transition-all ${isOwn ? 'bg-white text-primary hover:bg-blue-50 shadow-lg' : 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-xl'}`}
                               >
                                 Open Scan
                               </a>
@@ -397,22 +406,22 @@ export const Messages: React.FC = () => {
                           )}
 
                           {message.file_url && (
-                            <div className="mt-3">
+                            <div className="mt-4">
                               {message.file_type?.startsWith('image/') ? (
-                                <div className="relative group/img overflow-hidden rounded-lg">
+                                <div className="relative group/img overflow-hidden rounded-2xl border-2 border-white/20 shadow-2xl">
                                   <img
                                     src={getFileUrl(message.file_url)}
                                     alt={message.file_name}
-                                    className="max-w-full rounded-lg transition-transform duration-300 group-hover/img:scale-105"
+                                    className="max-w-full rounded-2xl transition-transform duration-500 group-hover/img:scale-110"
                                   />
-                                  <div className="absolute inset-0 bg-black/0 group-hover/img:bg-black/10 transition-colors flex items-center justify-center">
+                                  <div className="absolute inset-0 bg-primary/0 group-hover/img:bg-primary/20 transition-all flex items-center justify-center">
                                     <a
                                       href={getFileUrl(message.file_url)}
                                       target="_blank"
                                       rel="noopener noreferrer"
-                                      className="p-2 bg-white/90 rounded-full opacity-0 group-hover/img:opacity-100 transition-opacity shadow-lg"
+                                      className="w-12 h-12 bg-white/90 backdrop-blur rounded-2xl opacity-0 scale-75 group-hover/img:opacity-100 group-hover/img:scale-100 transition-all flex items-center justify-center shadow-2xl"
                                     >
-                                      <Download className="h-4 w-4 text-teal-600" />
+                                      <Download className="h-6 w-6 text-primary" />
                                     </a>
                                   </div>
                                 </div>
@@ -421,32 +430,32 @@ export const Messages: React.FC = () => {
                                   href={getFileUrl(message.file_url)}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${isOwn ? 'bg-teal-700 text-white' : 'bg-teal-50 text-teal-900 border border-teal-100'
+                                  className={`flex items-center gap-4 p-4 rounded-2xl transition-all border shadow-sm group/file ${isOwn ? 'bg-white/10 border-white/20 text-white hover:bg-white/20 font-bold' : 'bg-white border-slate-100 text-slate-800 hover:border-primary/20 font-bold'
                                     }`}
                                 >
-                                  <div className={`p-2 rounded-lg ${isOwn ? 'bg-teal-800' : 'bg-white shadow-sm'}`}>
+                                  <div className={`p-2.5 rounded-xl shrink-0 transition-colors ${isOwn ? 'bg-white/20 text-white' : 'bg-blue-50 text-primary shadow-inner'}`}>
                                     {getFileIcon(message.file_type)}
                                   </div>
                                   <div className="flex-1 min-w-0">
-                                    <p className="text-xs font-bold truncate">{message.file_name}</p>
-                                    <p className="text-[10px] opacity-70">Download File</p>
+                                    <p className="text-xs font-black truncate uppercase tracking-tight">{message.file_name}</p>
+                                    <p className="text-[10px] opacity-60 uppercase tracking-widest mt-1">Download Material</p>
                                   </div>
-                                  <Download className="h-4 w-4 opacity-50" />
+                                  <Download className="h-4 w-4 opacity-40 group-hover/file:opacity-100 group-hover/file:translate-y-0.5 transition-all" />
                                 </a>
                               )}
                             </div>
                           )}
                         </div>
-                        <div className="flex items-center gap-1.5 mt-1.5 px-1">
-                          <span className="text-[10px] font-bold text-gray-400 uppercase transition-opacity">
+                        <div className="flex items-center gap-2 mt-2 px-1">
+                          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest transition-opacity">
                             {formatTime(message.created_at)}
                           </span>
                           {isOwn && (
                             <div className="flex items-center">
                               {message.is_read ? (
-                                <CheckCheck className="h-3.5 w-3.5 text-blue-500" strokeWidth={3} />
+                                <CheckCheck className="h-4 w-4 text-primary" strokeWidth={3} />
                               ) : (
-                                <Check className="h-3.5 w-3.5 text-gray-400" strokeWidth={3} />
+                                <Check className="h-4 w-4 text-slate-300" strokeWidth={3} />
                               )}
                             </div>
                           )}
@@ -459,22 +468,22 @@ export const Messages: React.FC = () => {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Message Input */}
-            <div className="bg-white border-t border-gray-200 p-4 lg:p-6 pb-8">
+            {/* Message Input Area */}
+            <div className="bg-white border-t border-slate-100 p-6 lg:p-10 bg-white/80 backdrop-blur-xl">
               {linkedDetectionId && (
-                <div className="mb-3 flex items-center justify-between p-3 bg-emerald-50 border border-emerald-100 rounded-xl">
-                  <div className="flex items-center gap-2">
-                    <div className="p-1.5 bg-emerald-600 rounded-lg shadow-md">
-                      <Search className="h-4 w-4 text-white" />
+                <div className="mb-4 flex items-center justify-between p-4 bg-emerald-50 border border-emerald-100 rounded-2xl shadow-sm animate-in slide-in-from-top-2 duration-300">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-emerald-200">
+                      <Activity className="h-5 w-5" />
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-emerald-900">AI Scan Linked</p>
-                      <p className="text-[10px] text-emerald-600 font-medium">This message will include your recent AI analysis.</p>
+                      <p className="text-xs font-black text-emerald-950 uppercase tracking-tight leading-none mb-1">AI Scan Linked</p>
+                      <p className="text-[10px] text-emerald-600 font-bold">Analysis results will be attached to your next message.</p>
                     </div>
                   </div>
                   <button
                     onClick={() => setLinkedDetectionId(null)}
-                    className="p-1 text-emerald-400 hover:text-red-500 hover:bg-white rounded-full transition-all"
+                    className="p-2 text-emerald-400 hover:text-red-500 hover:bg-white rounded-xl transition-all"
                   >
                     <X className="h-4 w-4" />
                   </button>
@@ -482,24 +491,24 @@ export const Messages: React.FC = () => {
               )}
 
               {selectedFile && (
-                <div className="mb-4 flex items-center gap-3 p-3 bg-teal-50 border border-teal-100 rounded-xl">
-                  <div className="p-2 bg-white rounded-lg shadow-sm">
+                <div className="mb-4 flex items-center gap-4 p-4 bg-blue-50 border border-blue-100 rounded-2xl shadow-sm animate-in slide-in-from-top-2 duration-300">
+                  <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-primary shadow-inner border border-blue-100">
                     {getFileIcon(selectedFile.type)}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-bold text-teal-900 truncate">{selectedFile.name}</p>
-                    <p className="text-[10px] text-teal-600">Attachment Ready</p>
+                    <p className="text-xs font-black text-primary truncate uppercase tracking-tight leading-none mb-1">{selectedFile.name}</p>
+                    <p className="text-[10px] text-blue-400 font-bold uppercase tracking-widest">Material Attachment Ready</p>
                   </div>
                   <button
                     onClick={() => setSelectedFile(null)}
-                    className="p-1.5 text-teal-400 hover:text-red-500 hover:bg-white rounded-full transition-all"
+                    className="p-2 text-blue-400 hover:text-red-500 hover:bg-white rounded-xl transition-all"
                   >
                     <X className="h-4 w-4" />
                   </button>
                 </div>
               )}
 
-              <div className="flex items-end gap-3 max-w-5xl mx-auto">
+              <div className="flex items-end gap-3 max-w-6xl mx-auto">
                 <input
                   type="file"
                   ref={fileInputRef}
@@ -511,7 +520,7 @@ export const Messages: React.FC = () => {
                   variant="outline"
                   size="icon"
                   onClick={() => fileInputRef.current?.click()}
-                  className="p-2 h-10 w-10 text-gray-400 hover:text-teal-600 hover:border-teal-200 transition-all rounded-xl"
+                  className="p-3 h-12 w-12 text-slate-400 hover:text-primary hover:border-primary/20 hover:bg-blue-50/50 transition-all rounded-xl border-slate-200"
                 >
                   <Paperclip className="h-5 w-5" />
                 </Button>
@@ -520,7 +529,7 @@ export const Messages: React.FC = () => {
                   variant="outline"
                   size="icon"
                   onClick={() => setShowDetectionSelector(true)}
-                  className="p-2 h-10 w-10 text-emerald-500 hover:text-emerald-700 hover:border-emerald-200 transition-all rounded-xl"
+                  className="p-3 h-12 w-12 text-emerald-600 hover:text-emerald-700 hover:border-emerald-200 hover:bg-emerald-50 transition-all rounded-xl border-slate-200"
                   title="Attach AI Scan"
                 >
                   <Activity className="h-5 w-5" />
@@ -541,8 +550,8 @@ export const Messages: React.FC = () => {
                         (e.target as HTMLTextAreaElement).style.height = 'auto';
                       }
                     }}
-                    placeholder="Type a message..."
-                    className="w-full resize-none border border-gray-300 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all min-h-[44px] max-h-[150px] bg-gray-50 focus:bg-white shadow-inner"
+                    placeholder="Type a clinical message..."
+                    className="w-full resize-none border border-slate-200 rounded-2xl px-5 py-3.5 focus:outline-none focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all min-h-[52px] max-h-[150px] bg-slate-50 focus:bg-white shadow-inner font-bold text-sm"
                     rows={1}
                   />
                 </div>
@@ -550,7 +559,7 @@ export const Messages: React.FC = () => {
                 <Button
                   onClick={handleSendMessage}
                   disabled={sending || (!newMessage.trim() && !selectedFile)}
-                  className="h-10 w-10 bg-teal-600 text-white rounded-xl hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-teal-200"
+                  className="h-12 w-12 bg-primary text-white rounded-2xl hover:bg-blue-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-xl shadow-primary/20 hover:scale-105 active:scale-95"
                 >
                   {sending ? (
                     <LoadingSpinner size="sm" />
@@ -559,59 +568,65 @@ export const Messages: React.FC = () => {
                   )}
                 </Button>
               </div>
+              <p className="text-[10px] text-center text-slate-400 font-black uppercase tracking-widest mt-6 opacity-60">
+                End-to-End Encrypted Health Messaging
+              </p>
             </div>
           </>
         ) : (
-          <div className="flex-1 flex items-center justify-center p-8 bg-gray-50">
-            <div className="text-center max-w-sm">
-              <div className="w-20 h-20 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl shadow-teal-50">
-                <MessageCircle className="h-10 w-10 text-teal-600" />
+          <div className="flex-1 flex items-center justify-center p-10 bg-slate-50/30">
+            <div className="text-center max-w-md">
+              <div className="w-24 h-24 bg-white rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-2xl shadow-blue-900/5 border border-slate-100 ring-1 ring-blue-50/50">
+                <MessageCircle className="h-12 w-12 text-primary/40 shrink-0" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Your Dental Chat</h3>
-              <p className="text-gray-500 leading-relaxed">
-                Connect directly with your specialist for consultations and support.
+              <h3 className="text-3xl font-black text-slate-900 tracking-tight mb-4 uppercase">Dental Workspace</h3>
+              <p className="text-slate-500 font-bold leading-relaxed mb-10 px-8">
+                Connect directly with our clinical board for AI scan reviews, consultations, and ongoing dental support.
               </p>
               <Button
                 onClick={() => handleStartNewChat()}
-                className="mt-6 bg-teal-600 hover:bg-teal-700 text-white px-8 py-6 rounded-xl text-lg font-bold shadow-lg shadow-teal-200"
+                className="bg-primary hover:bg-blue-900 text-white px-10 h-14 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-2xl shadow-primary/20 transition-all hover:scale-105 active:scale-95"
               >
-                Find a Specialist
+                Find Specialist
               </Button>
             </div>
           </div>
         )}
       </div>
 
-      {/* Dentist Selection Modal */}
+      {/* Specialist Selector Modal */}
       {showDentistSelector && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
-            <div className="p-6 border-b border-gray-100 flex items-center justify-between bg-teal-600 text-white">
-              <h3 className="text-xl font-bold">Select a Specialist</h3>
+        <div className="fixed inset-0 bg-slate-900/40 flex items-center justify-center z-50 p-6 backdrop-blur-md animate-in fade-in duration-300">
+          <div className="bg-white rounded-[2.5rem] w-full max-w-lg shadow-[0_40px_100px_-20px_rgba(30,58,138,0.25)] overflow-hidden animate-in zoom-in-95 duration-300">
+            <div className="p-8 border-b border-slate-100 flex items-center justify-between bg-primary text-white">
+              <div>
+                <h3 className="text-2xl font-black tracking-tight leading-none">Select Specialist</h3>
+                <p className="text-[10px] font-bold text-blue-100 uppercase tracking-widest mt-2">Verified Professional Board</p>
+              </div>
               <button
                 onClick={() => setShowDentistSelector(false)}
-                className="p-2 hover:bg-white/20 rounded-full transition-colors"
+                className="w-10 h-10 flex items-center justify-center hover:bg-white/10 rounded-xl transition-colors"
               >
-                <X className="h-5 w-5" />
+                <X className="h-6 w-6" />
               </button>
             </div>
-            <div className="max-h-[60vh] overflow-y-auto p-4 space-y-3">
+            <div className="max-h-[60vh] overflow-y-auto p-6 space-y-4 no-scrollbar bg-slate-50/30">
               {isLoadingDentists ? (
-                <div className="text-center py-12 text-gray-500">
-                  <div className="relative w-16 h-16 mx-auto mb-4">
-                    <div className="absolute inset-0 border-4 border-teal-100 rounded-full"></div>
-                    <LoadingSpinner size="md" />
+                <div className="text-center py-16 space-y-6">
+                  <div className="relative w-20 h-20 mx-auto">
+                    <div className="absolute inset-0 border-8 border-blue-50 rounded-full"></div>
+                    <LoadingSpinner size="lg" />
                   </div>
-                  <p className="font-medium animate-pulse">Searching for specialists...</p>
+                  <p className="text-slate-400 font-black uppercase tracking-widest text-[10px] animate-pulse">Scanning clinical directory...</p>
                 </div>
               ) : dentists.length === 0 ? (
-                <div className="text-center py-12 px-6">
-                  <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-400">
-                    <UserCircle className="h-10 w-10" />
+                <div className="text-center py-16 px-10">
+                  <div className="w-20 h-20 bg-slate-100 rounded-3xl flex items-center justify-center mx-auto mb-6 text-slate-300 shadow-inner">
+                    <UserCircle className="h-12 w-12" />
                   </div>
-                  <h4 className="font-bold text-gray-900 mb-2">No Specialists Available</h4>
-                  <p className="text-sm text-gray-500 leading-relaxed">
-                    There are currently no verified specialists available. Please check back later or contact support.
+                  <h4 className="text-xl font-black text-slate-900 mb-3 tracking-tight">No Specialists Found</h4>
+                  <p className="text-sm text-slate-400 font-bold leading-relaxed px-4">
+                    Clinical onboarding is in progress. Please check back later.
                   </p>
                 </div>
               ) : (
@@ -619,16 +634,22 @@ export const Messages: React.FC = () => {
                   <div
                     key={dentist.id}
                     onClick={() => handleStartNewChat(dentist.id)}
-                    className="p-4 border border-gray-100 rounded-xl hover:bg-teal-50 hover:border-teal-200 cursor-pointer transition-all group"
+                    className="p-6 bg-white border border-slate-100 rounded-2xl hover:bg-blue-50 hover:border-primary/20 hover:shadow-xl hover:shadow-blue-900/5 cursor-pointer transition-all group flex items-center justify-between"
                   >
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center text-teal-600 font-bold group-hover:bg-teal-600 group-hover:text-white transition-colors">
+                    <div className="flex items-center gap-5">
+                      <div className="w-14 h-14 bg-slate-50 rounded-2xl flex items-center justify-center text-primary font-black text-xl group-hover:bg-primary group-hover:text-white transition-all shadow-inner group-hover:shadow-lg group-hover:shadow-primary/20">
                         {dentist.full_name.charAt(0)}
                       </div>
                       <div>
-                        <h4 className="font-bold text-gray-900">{dentist.full_name}</h4>
-                        <p className="text-xs text-gray-500">Dental Specialist</p>
+                        <h4 className="font-black text-slate-900 tracking-tight text-lg leading-none">{dentist.full_name}</h4>
+                        <div className="flex items-center gap-2 mt-2">
+                           <ShieldCheck className="h-3 w-3 text-primary" />
+                           <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">Board Certified</p>
+                        </div>
                       </div>
+                    </div>
+                    <div className="h-10 w-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-300 group-hover:bg-primary/10 group-hover:text-primary transition-all">
+                       <Send className="h-4 w-4" />
                     </div>
                   </div>
                 ))
@@ -640,26 +661,29 @@ export const Messages: React.FC = () => {
 
       {/* Detection Selection Modal */}
       {showDetectionSelector && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
-            <div className="p-6 border-b border-gray-100 flex items-center justify-between bg-emerald-600 text-white">
-              <h3 className="text-xl font-bold">Attach AI Scan</h3>
+        <div className="fixed inset-0 bg-slate-900/40 flex items-center justify-center z-50 p-6 backdrop-blur-md animate-in fade-in duration-300">
+          <div className="bg-white rounded-[2.5rem] w-full max-w-lg shadow-[0_40px_100px_-20px_rgba(16,185,129,0.25)] overflow-hidden animate-in zoom-in-95 duration-300">
+            <div className="p-8 border-b border-emerald-100 flex items-center justify-between bg-emerald-600 text-white">
+              <div>
+                <h3 className="text-2xl font-black tracking-tight leading-none">Attach AI Scan</h3>
+                <p className="text-[10px] font-bold text-emerald-100 uppercase tracking-widest mt-2">Personal Diagnostic History</p>
+              </div>
               <button
                 onClick={() => setShowDetectionSelector(false)}
-                className="p-2 hover:bg-white/20 rounded-full transition-colors"
+                className="w-10 h-10 flex items-center justify-center hover:bg-white/10 rounded-xl transition-colors"
               >
-                <X className="h-5 w-5" />
+                <X className="h-6 w-6" />
               </button>
             </div>
-            <div className="max-h-[60vh] overflow-y-auto p-4 space-y-3">
+            <div className="max-h-[60vh] overflow-y-auto p-6 space-y-4 no-scrollbar bg-slate-50/30">
               {detections.length === 0 ? (
-                <div className="text-center py-12 px-6">
-                  <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-400">
-                    <Activity className="h-10 w-10" />
+                <div className="text-center py-16 px-10">
+                  <div className="w-20 h-20 bg-slate-100 rounded-3xl flex items-center justify-center mx-auto mb-6 text-slate-300 shadow-inner">
+                    <Activity className="h-12 w-12" />
                   </div>
-                  <h4 className="font-bold text-gray-900 mb-2">No Scans Found</h4>
-                  <p className="text-sm text-gray-500 leading-relaxed">
-                    You haven't uploaded any dental AI scans yet.
+                  <h4 className="text-xl font-black text-slate-900 mb-3 tracking-tight">No Scans Found</h4>
+                  <p className="text-sm text-slate-400 font-bold leading-relaxed px-4">
+                    You haven't uploaded any dental AI scans for analysis yet.
                   </p>
                 </div>
               ) : (
@@ -670,16 +694,22 @@ export const Messages: React.FC = () => {
                         setLinkedDetectionId(det.id);
                         setShowDetectionSelector(false);
                     }}
-                    className="p-4 border border-gray-100 rounded-xl hover:bg-emerald-50 hover:border-emerald-200 cursor-pointer transition-all group"
+                    className="p-6 bg-white border border-slate-100 rounded-2xl hover:bg-emerald-50 hover:border-emerald-200 hover:shadow-xl hover:shadow-emerald-900/5 cursor-pointer transition-all group flex items-center justify-between"
                   >
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 font-bold group-hover:bg-emerald-600 group-hover:text-white transition-colors">
-                        <Search className="h-5 w-5" />
+                    <div className="flex items-center gap-5">
+                      <div className="w-14 h-14 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600 font-black group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-inner group-hover:shadow-lg group-hover:shadow-emerald-600/20">
+                        <Search className="h-6 w-6" />
                       </div>
                       <div>
-                        <h4 className="font-bold text-gray-900">Scan #{det.detection_id.substring(0, 8)}</h4>
-                        <p className="text-xs text-gray-500">{new Date(det.detection_date).toLocaleDateString()}</p>
+                        <h4 className="font-black text-slate-900 tracking-tight text-lg leading-none">Scan #{det.detection_id.substring(0, 8)}</h4>
+                        <div className="flex items-center gap-2 mt-2">
+                           <Activity className="h-3 w-3 text-emerald-500" />
+                           <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">{new Date(det.detection_date).toLocaleDateString()}</p>
+                        </div>
                       </div>
+                    </div>
+                    <div className="h-10 w-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-300 group-hover:bg-emerald-50 group-hover:text-emerald-500 transition-all">
+                       <Paperclip className="h-4 w-4" />
                     </div>
                   </div>
                 ))

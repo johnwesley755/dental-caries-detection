@@ -100,7 +100,7 @@ export const Dashboard: React.FC = () => {
         >
           <div>
             <h1 className="text-3xl font-bold text-slate-900 tracking-tight">
-              {getGreeting()}, <span className="text-teal-600">{patient?.full_name?.split(' ')[0]}</span>
+              {getGreeting()}, <span className="text-blue-900">{patient?.full_name?.split(' ')[0]}</span>
             </h1>
             <p className="text-slate-500 mt-2 text-lg">
               Here is the latest summary of your dental diagnostics.
@@ -119,10 +119,10 @@ export const Dashboard: React.FC = () => {
           >
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md transition-shadow relative overflow-hidden group">
                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                  <ScanFace className="h-24 w-24 text-teal-600 transform rotate-12 translate-x-4 -translate-y-4" />
+                  <ScanFace className="h-24 w-24 text-blue-900 transform rotate-12 translate-x-4 -translate-y-4" />
                </div>
                <div className="flex items-center gap-4">
-                 <div className="h-12 w-12 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center">
+                 <div className="h-12 w-12 rounded-xl bg-blue-50 text-blue-900 flex items-center justify-center">
                    <Activity className="h-6 w-6" />
                  </div>
                  <div>
@@ -141,10 +141,10 @@ export const Dashboard: React.FC = () => {
           >
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md transition-shadow relative overflow-hidden group">
                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                  <Calendar className="h-24 w-24 text-emerald-600 transform rotate-12 translate-x-4 -translate-y-4" />
+                  <Calendar className="h-24 w-24 text-primary transform rotate-12 translate-x-4 -translate-y-4" />
                </div>
                <div className="flex items-center gap-4">
-                 <div className="h-12 w-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                 <div className="h-12 w-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
                    <Calendar className="h-6 w-6" />
                  </div>
                  <div>
@@ -167,10 +167,10 @@ export const Dashboard: React.FC = () => {
           >
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md transition-shadow relative overflow-hidden group">
                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                  <AlertCircle className="h-24 w-24 text-teal-600 transform rotate-12 translate-x-4 -translate-y-4" />
+                  <AlertCircle className="h-24 w-24 text-red-500 transform rotate-12 translate-x-4 -translate-y-4" />
                </div>
                <div className="flex items-center gap-4">
-                 <div className="h-12 w-12 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center">
+                 <div className="h-12 w-12 rounded-xl bg-red-50 text-red-600 flex items-center justify-center">
                    <AlertCircle className="h-6 w-6" />
                  </div>
                  <div>
@@ -239,7 +239,7 @@ export const Dashboard: React.FC = () => {
                     <h2 className="text-lg font-bold text-slate-900">Recent Diagnostics</h2>
                     <p className="text-sm text-slate-500">Your latest AI analysis results</p>
                   </div>
-                  <Button variant="ghost" onClick={() => navigate('/detections')} className="text-teal-600 hover:text-teal-700 hover:bg-teal-50">
+                  <Button variant="ghost" onClick={() => navigate('/detections')} className="text-primary hover:text-blue-900 hover:bg-blue-50">
                     View All <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </div>
@@ -258,7 +258,7 @@ export const Dashboard: React.FC = () => {
                         onClick={() => navigate(`/detection/${detection.detection_id}`)}
                       >
                         <div className="flex items-center gap-4">
-                          <div className="h-10 w-10 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600 font-bold text-xs">
+                          <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
                              AI
                           </div>
                           <div>
@@ -281,8 +281,8 @@ export const Dashboard: React.FC = () => {
                               <span className={cn(
                                  "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium",
                                  detection.total_caries_detected > 0 
-                                    ? "bg-teal-100 text-teal-800" 
-                                    : "bg-emerald-100 text-emerald-800"
+                                    ? "bg-red-50 text-red-700" 
+                                    : "bg-emerald-50 text-emerald-700"
                               )}>
                                  {detection.total_caries_detected > 0 
                                     ? `${detection.total_caries_detected} Issues Found`
@@ -290,7 +290,7 @@ export const Dashboard: React.FC = () => {
                                  }
                               </span>
                            </div>
-                           <ChevronRight className="h-5 w-5 text-slate-300 group-hover:text-teal-600 transition-colors" />
+                           <ChevronRight className="h-5 w-5 text-slate-300 group-hover:text-primary transition-colors" />
                         </div>
                       </div>
                     ))
@@ -306,15 +306,15 @@ export const Dashboard: React.FC = () => {
               transition={{ delay: 0.6 }}
               className="lg:col-span-1"
             >
-               <div className="bg-gradient-to-br from-teal-600 to-emerald-700 rounded-2xl p-6 text-white shadow-lg shadow-teal-200 relative overflow-hidden">
+               <div className="bg-gradient-to-br from-primary to-blue-900 rounded-2xl p-6 text-white shadow-lg shadow-blue-200 relative overflow-hidden">
                   <div className="relative z-10">
                      <h3 className="text-xl font-bold mb-2">Oral Health Tip</h3>
-                     <p className="text-teal-100 text-sm leading-relaxed mb-6">
+                     <p className="text-blue-100 text-sm font-medium leading-relaxed mb-6">
                         Regular AI screenings help detect cavities early, often before they become visible to the naked eye. Keep up the good work!
                      </p>
                      <Button 
                         onClick={handleSubmit}
-                        className="w-full bg-white/10 hover:bg-white/20 text-white border-0 backdrop-blur-sm"
+                        className="w-full bg-white text-primary hover:bg-slate-50 border-0 font-bold"
                      >
                         Learn More
                      </Button>
@@ -322,7 +322,7 @@ export const Dashboard: React.FC = () => {
                   
                   {/* Decorative Elements */}
                   <div className="absolute top-[-20%] right-[-10%] h-32 w-32 bg-white/10 rounded-full blur-2xl" />
-                  <div className="absolute bottom-[-10%] left-[-10%] h-32 w-32 bg-emerald-500/30 rounded-full blur-2xl" />
+                  <div className="absolute bottom-[-10%] left-[-10%] h-32 w-32 bg-blue-500/30 rounded-full blur-2xl" />
                </div>
             </motion.div>
         </div>

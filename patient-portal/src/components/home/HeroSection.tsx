@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { Button } from '../../components/ui/button';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform, type Variants } from 'framer-motion';
 import { 
   ArrowRight, 
   ShieldCheck, 
@@ -17,16 +17,16 @@ import {
 } from 'lucide-react';
 
 // --- Animations ---
-const fadeInUp = {
+const fadeInUp: Variants = {
   hidden: { opacity: 0, y: 40 },
   visible: { 
     opacity: 1, 
     y: 0,
-    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] }
+    transition: { duration: 0.8, ease: "easeOut" }
   }
 };
 
-const float = {
+const float: Variants = {
   animate: {
     y: [0, -20, 0],
     rotate: [0, 5, 0],
@@ -34,7 +34,7 @@ const float = {
   }
 };
 
-const floatReverse = {
+const floatReverse: Variants = {
   animate: {
     y: [0, 20, 0],
     rotate: [0, -5, 0],
@@ -71,7 +71,7 @@ export const HeroSection: React.FC = () => {
 
   return (
     // No specific font class, inheriting global font
-    <div className="relative min-h-screen w-full overflow-hidden bg-white selection:bg-teal-100 text-slate-900">
+    <div className="relative min-h-screen w-full overflow-hidden bg-white selection:bg-blue-100 text-slate-900">
       
       {/* ==============================================
           GLOBAL MESH GRADIENT BACKGROUND (With Parallax)
@@ -80,9 +80,9 @@ export const HeroSection: React.FC = () => {
         style={{ y: yBg }}
         className="absolute inset-0 z-0 pointer-events-none"
       >
-        <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[1200px] h-[1000px] bg-[radial-gradient(circle,rgba(59,130,246,0.15)_0%,rgba(99,102,241,0.1)_40%,transparent_70%)] blur-[120px]" />
-        <div className="absolute top-[10%] right-[-10%] w-[800px] h-[800px] bg-[radial-gradient(circle,rgba(20,184,166,0.12)_0%,transparent_60%)] blur-[100px]" />
-        <div className="absolute bottom-0 left-[-10%] w-[800px] h-[800px] bg-[radial-gradient(circle,rgba(59,130,246,0.1)_0%,transparent_60%)] blur-[100px]" />
+        <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[1200px] h-[1000px] bg-[radial-gradient(circle,rgba(30,58,138,0.15)_0%,rgba(59,130,246,0.1)_40%,transparent_70%)] blur-[120px]" />
+        <div className="absolute top-[10%] right-[-10%] w-[800px] h-[800px] bg-[radial-gradient(circle,rgba(59,130,246,0.12)_0%,transparent_60%)] blur-[100px]" />
+        <div className="absolute bottom-0 left-[-10%] w-[800px] h-[800px] bg-[radial-gradient(circle,rgba(30,58,138,0.1)_0%,transparent_60%)] blur-[100px]" />
       </motion.div>
 
       {/* ==============================================
@@ -100,12 +100,12 @@ export const HeroSection: React.FC = () => {
             
             {/* Logo */}
             <div className="flex items-center gap-3 cursor-pointer group" onClick={() => navigate('/')}>
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-600 to-emerald-600 text-white shadow-lg shadow-teal-500/20 transition-transform duration-300 group-hover:scale-105">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary text-white shadow-lg shadow-primary/20 transition-transform duration-300 group-hover:scale-105">
                 <Stethoscope className="h-6 w-6" />
               </div>
               <div className="flex flex-col">
-                 <span className="text-2xl font-bold text-slate-900 tracking-tight leading-none">DentAI</span>
-                 <span className="text-xs font-bold text-teal-600 uppercase tracking-[0.2em] mt-0.5">Patient Portal</span>
+                 <span className="text-2xl font-black text-slate-900 tracking-tight leading-none">DENTALAI</span>
+                 <span className="text-xs font-black text-primary opacity-60 mt-1">Patient Portal</span>
               </div>
             </div>
 
@@ -128,7 +128,7 @@ export const HeroSection: React.FC = () => {
                   </Link>
                   <Button 
                     onClick={() => navigate('/register')}
-                    className="h-12 rounded-full bg-teal-600 px-8 text-base font-semibold text-white hover:bg-teal-700 transition-all shadow-xl shadow-teal-500/20 hover:shadow-teal-500/30 hover:-translate-y-0.5"
+                    className="h-12 rounded-full bg-blue-900 px-8 text-base font-semibold text-white hover:bg-blue-950 transition-all shadow-xl shadow-primary/20 hover:shadow-primary/30 hover:-translate-y-0.5"
                   >
                     Get Started
                   </Button>
@@ -160,7 +160,7 @@ export const HeroSection: React.FC = () => {
               ) : (
                 <>
                   <Button variant="ghost" onClick={() => navigate('/login')} className="w-full justify-start h-12 text-lg font-semibold">Sign In</Button>
-                  <Button onClick={() => navigate('/register')} className="w-full bg-teal-600 text-white h-12 text-lg font-semibold">Get Started</Button>
+                  <Button onClick={() => navigate('/register')} className="w-full bg-blue-900 text-white h-12 text-lg font-semibold">Get Started</Button>
                 </>
               )}
             </motion.div>
@@ -181,10 +181,10 @@ export const HeroSection: React.FC = () => {
         >
           
           {/* Floating 3D Elements */}
-          <motion.div variants={float} animate="animate" className="absolute -top-8 -left-4 lg:left-0 text-teal-500 hidden lg:block">
-            <ShieldCheck className="h-20 w-20 drop-shadow-2xl fill-teal-50/50" />
+          <motion.div variants={float} animate="animate" className="absolute -top-8 -left-4 lg:left-0 text-primary hidden lg:block">
+            <ShieldCheck className="h-20 w-20 drop-shadow-2xl fill-blue-50/50" />
           </motion.div>
-          <motion.div variants={floatReverse} animate="animate" className="absolute -top-4 -right-4 lg:right-0 text-emerald-500 hidden lg:block">
+          <motion.div variants={floatReverse} animate="animate" className="absolute -top-4 -right-4 lg:right-0 text-emerald-600 hidden lg:block">
             <Sparkles className="h-16 w-16 drop-shadow-2xl fill-emerald-50/50" />
           </motion.div>
 
@@ -196,19 +196,19 @@ export const HeroSection: React.FC = () => {
           >
             {/* Badge */}
             <motion.div variants={fadeInUp} className="flex justify-center">
-              <span className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-white/60 border border-teal-200 text-teal-700 text-sm font-bold uppercase tracking-widest backdrop-blur-md shadow-sm ring-1 ring-white/50">
+              <span className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-white/60 border border-blue-200 text-blue-950 text-sm font-bold uppercase tracking-widest backdrop-blur-md shadow-sm ring-1 ring-white/50">
                 <span className="relative flex h-2.5 w-2.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-teal-600"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-900"></span>
                 </span>
                 New: AI Analysis v2.0
               </span>
             </motion.div>
 
             {/* Headline - Larger */}
-            <motion.h1 variants={fadeInUp} className="text-6xl lg:text-8xl font-extrabold text-slate-900 tracking-tight leading-[1.05]">
+            <motion.h1 variants={fadeInUp} className="text-6xl lg:text-8xl font-black text-slate-900 tracking-tight leading-[1.05]">
               Your dental health, <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-emerald-600 to-teal-500 pb-2">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-900 via-primary to-blue-800 pb-2">
                 clearly explained.
               </span>
             </motion.h1>
@@ -231,7 +231,7 @@ export const HeroSection: React.FC = () => {
               ) : (
                 <Button 
                   onClick={() => navigate('/login')}
-                  className="h-16 px-12 text-xl rounded-full bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white shadow-2xl shadow-teal-500/40 transition-all hover:scale-105 hover:-translate-y-1"
+                  className="h-16 px-12 text-xl rounded-full bg-gradient-to-r from-blue-900 to-emerald-600 hover:from-blue-950 hover:to-emerald-700 text-white shadow-2xl shadow-primary/40 transition-all hover:scale-105 hover:-translate-y-1"
                 >
                   Check My Records
                   <ArrowRight className="ml-3 h-6 w-6" />
@@ -247,17 +247,17 @@ export const HeroSection: React.FC = () => {
           style={{ y: yMockup }} 
           initial={{ opacity: 0, y: 80, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 1.2, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 1.2, delay: 0.4, ease: "easeOut" }}
           className="relative mt-16 w-full max-w-7xl px-4"
         >
-          <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl shadow-emerald-500/20 border-[6px] border-white bg-white ring-1 ring-slate-900/5">
+          <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl shadow-emerald-600/20 border-[6px] border-white bg-white ring-1 ring-slate-900/5">
             
             {/* Fake Browser Toolbar */}
             <div className="h-14 bg-slate-50/80 backdrop-blur border-b border-slate-100 flex items-center px-6 gap-3">
               <div className="flex gap-2">
                 <div className="w-3.5 h-3.5 rounded-full bg-red-400/80 shadow-sm" />
-                <div className="w-3.5 h-3.5 rounded-full bg-teal-400/80 shadow-sm" />
-                <div className="w-3.5 h-3.5 rounded-full bg-emerald-400/80 shadow-sm" />
+                <div className="w-3.5 h-3.5 rounded-full bg-blue-400/80 shadow-sm" />
+                <div className="w-3.5 h-3.5 rounded-full bg-emerald-500/80 shadow-sm" />
               </div>
               <div className="mx-auto bg-white border border-slate-200 rounded-xl px-6 py-1.5 text-xs text-slate-400 font-medium w-80 text-center shadow-sm flex items-center justify-center gap-2">
                 <Lock className="h-3 w-3 text-slate-300" />
@@ -276,7 +276,7 @@ export const HeroSection: React.FC = () => {
                 className="absolute top-12 left-12 z-20 bg-white/90 backdrop-blur-xl p-5 rounded-3xl shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] border border-white/60 hidden lg:block transform -rotate-3 hover:rotate-0 transition-transform duration-500"
               >
                 <div className="flex items-center gap-4">
-                  <div className="bg-teal-100 p-3 rounded-2xl text-teal-600">
+                  <div className="bg-blue-100 p-3 rounded-2xl text-blue-900">
                     <Calendar className="h-7 w-7" />
                   </div>
                   <div>
@@ -290,15 +290,15 @@ export const HeroSection: React.FC = () => {
                 initial={{ opacity: 0, x: 40, y: -20 }}
                 animate={{ opacity: 1, x: 0, y: 0 }}
                 transition={{ delay: 1.4, duration: 0.8 }}
-                className="absolute bottom-12 right-12 z-20 bg-white/90 backdrop-blur-xl p-5 rounded-3xl shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] border border-white/60 hidden lg:block transform rotate-3 hover:rotate-0 transition-transform duration-500"
+                className="absolute bottom-12 right-12 z-20 bg-white/90 backdrop-blur-xl p-5 rounded-3xl shadow-[0_20px_50px_-12px_rgba(30,58,138,0.1)] border border-white/60 hidden lg:block transform rotate-3 hover:rotate-0 transition-transform duration-500"
               >
                 <div className="flex items-center gap-4">
-                  <div className="bg-emerald-100 p-3 rounded-2xl text-emerald-600">
+                  <div className="bg-emerald-50 p-3 rounded-2xl text-emerald-600">
                     <Activity className="h-7 w-7" />
                   </div>
                   <div>
-                    <p className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-0.5">AI Analysis</p>
-                    <p className="text-lg font-bold text-emerald-700">Healthy • No Cavities</p>
+                    <p className="text-xs text-slate-500 font-black uppercase tracking-tight mb-0.5">AI Analysis</p>
+                    <p className="text-lg font-black text-emerald-700">Healthy • No Cavities</p>
                   </div>
                 </div>
               </motion.div>
@@ -316,7 +316,7 @@ export const HeroSection: React.FC = () => {
           </div>
 
           {/* Glow Behind Mockup */}
-          <div className="absolute -inset-10 bg-gradient-to-r from-teal-500/30 to-emerald-500/30 opacity-40 blur-3xl -z-10 rounded-[4rem]" />
+          <div className="absolute -inset-10 bg-gradient-to-r from-primary/30 to-emerald-600/30 opacity-40 blur-3xl -z-10 rounded-[4rem]" />
         </motion.div>
       </div>
     </div>

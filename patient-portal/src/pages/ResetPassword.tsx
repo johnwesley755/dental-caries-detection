@@ -5,7 +5,6 @@ import { authService } from '../services/authService';
 import { motion } from 'framer-motion';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
 import {
-    Loader2,
     Lock,
     ShieldCheck,
     Eye,
@@ -56,25 +55,30 @@ export const ResetPassword: React.FC = () => {
 
     if (isSuccess) {
         return (
-            <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+            <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 isolate">
+                <div className="absolute inset-0 -z-10 h-full w-full opacity-30"
+                    style={{ backgroundImage: 'radial-gradient(#94a3b8 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
+
                 <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
+                    initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="max-w-md w-full bg-white rounded-3xl p-10 shadow-xl text-center space-y-6"
+                    className="max-w-[480px] w-full bg-white/90 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-blue-900/10 rounded-[2.5rem] p-10 lg:p-12 text-center space-y-10"
                 >
                     <div className="flex justify-center">
-                        <div className="h-20 w-20 rounded-full bg-green-50 flex items-center justify-center text-green-500">
-                            <CheckCircle2 className="h-10 w-10" />
+                        <div className="h-24 w-24 rounded-[2rem] bg-emerald-50 flex items-center justify-center text-emerald-500 shadow-inner ring-1 ring-emerald-100">
+                            <CheckCircle2 className="h-12 w-12" />
                         </div>
                     </div>
-                    <h2 className="text-2xl font-bold text-slate-900">Password Reset Successful</h2>
-                    <p className="text-slate-500">Your password has been updated. You can now log in with your new password.</p>
+                    <div className="space-y-3">
+                      <h2 className="text-3xl font-black text-slate-900 uppercase tracking-tight leading-none">Reset Complete</h2>
+                      <p className="text-slate-500 font-bold tracking-tight">Your clinical credentials have been updated successfully.</p>
+                    </div>
                     <button
                         onClick={() => navigate('/login')}
-                        className="w-full h-14 rounded-xl bg-teal-600 text-white font-bold flex items-center justify-center gap-2 hover:bg-teal-700 transition-all"
+                        className="w-full h-14 rounded-2xl bg-primary text-white font-black uppercase text-[10px] tracking-widest flex items-center justify-center gap-3 shadow-2xl shadow-primary/30 hover:bg-blue-900 transition-all hover:scale-[1.02] active:scale-[0.98]"
                     >
-                        Go to Login
-                        <ArrowRight className="h-5 w-5" />
+                        Return to Login
+                        <ArrowRight className="h-4 w-4" />
                     </button>
                 </motion.div>
             </div>
@@ -82,34 +86,34 @@ export const ResetPassword: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 isolate">
+        <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 lg:p-8 isolate">
             <div className="absolute inset-0 -z-10 h-full w-full opacity-30"
                 style={{ backgroundImage: 'radial-gradient(#94a3b8 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
 
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="max-w-[500px] w-full"
+                className="max-w-[480px] w-full"
             >
-                <div className="bg-white/80 backdrop-blur-xl border border-white/60 shadow-xl rounded-3xl p-10 space-y-8">
+                <div className="bg-white/90 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-blue-900/10 rounded-[2.5rem] p-10 lg:p-12 space-y-10">
                     <div className="text-center space-y-3">
-                        <h1 className="text-3xl font-bold text-slate-900">Set New Password</h1>
-                        <p className="text-slate-500">Please enter and confirm your new password below.</p>
+                        <h1 className="text-3xl font-black text-slate-900 uppercase tracking-tight leading-none">Security Update</h1>
+                        <p className="text-slate-500 font-bold tracking-tight">Set a secure new password for your account.</p>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <form onSubmit={handleSubmit} className="space-y-8">
                         {error && (
-                            <div className="p-4 text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl flex items-center gap-3">
-                                <ShieldCheck className="h-5 w-5 shrink-0" />
-                                <span>{error}</span>
+                            <div className="p-4 bg-red-50/50 border border-red-100/50 rounded-2xl flex items-start gap-3 text-left">
+                                <ShieldCheck className="h-5 w-5 text-red-500 shrink-0 mt-0.5" />
+                                <span className="text-xs font-bold text-red-700 leading-relaxed">{error}</span>
                             </div>
                         )}
 
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">New Password</label>
+                        <div className="space-y-3">
+                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">New Password</label>
                             <div className="relative group">
-                                <div className="absolute left-4 top-4">
-                                    <Lock className="h-5 w-5 text-slate-400 group-focus-within:text-teal-600" />
+                                <div className="absolute left-5 top-5">
+                                    <Lock className="h-5 w-5 text-slate-300 group-focus-within:text-primary transition-colors" />
                                 </div>
                                 <input
                                     type={showPassword ? "text" : "password"}
@@ -118,23 +122,23 @@ export const ResetPassword: React.FC = () => {
                                     onChange={(e) => setPassword(e.target.value)}
                                     required
                                     minLength={8}
-                                    className="w-full h-14 pl-12 pr-12 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
+                                    className="w-full h-15 pl-14 pr-14 rounded-2xl border border-slate-100 bg-slate-50 focus:bg-white focus:outline-none focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all font-bold placeholder:text-slate-200"
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-4 top-4 text-slate-400 hover:text-slate-600"
+                                    className="absolute right-5 top-5 text-slate-400 hover:text-slate-600 transition-colors"
                                 >
                                     {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                                 </button>
                             </div>
                         </div>
 
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Confirm Password</label>
+                        <div className="space-y-3">
+                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Confirm Identity</label>
                             <div className="relative group">
-                                <div className="absolute left-4 top-4">
-                                    <Lock className="h-5 w-5 text-slate-400 group-focus-within:text-teal-600" />
+                                <div className="absolute left-5 top-5">
+                                    <Lock className="h-5 w-5 text-slate-300 group-focus-within:text-primary transition-colors" />
                                 </div>
                                 <input
                                     type={showPassword ? "text" : "password"}
@@ -142,25 +146,23 @@ export const ResetPassword: React.FC = () => {
                                     value={confirmPassword}
                                     onChange={(e) => setConfirmPassword(e.target.value)}
                                     required
-                                    className="w-full h-14 pl-12 pr-12 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
+                                    className="w-full h-15 pl-14 pr-14 rounded-2xl border border-slate-100 bg-slate-50 focus:bg-white focus:outline-none focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all font-bold placeholder:text-slate-200"
                                 />
                             </div>
                         </div>
 
-                        <motion.button
-                            whileHover={{ scale: 1.01 }}
-                            whileTap={{ scale: 0.99 }}
+                        <button
                             type="submit"
                             disabled={isLoading || !token}
-                            className="w-full h-14 rounded-xl bg-teal-600 text-white font-bold flex items-center justify-center gap-2 shadow-lg shadow-teal-500/20 disabled:opacity-50"
+                            className="w-full h-15 rounded-2xl bg-primary text-white font-black uppercase text-[10px] tracking-widest flex items-center justify-center gap-3 shadow-2xl shadow-primary/30 hover:bg-blue-900 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
                         >
-                            {isLoading ? <LoadingSpinner size="sm" /> : <span>Update Password</span>}
-                        </motion.button>
+                            {isLoading ? <LoadingSpinner size="sm" /> : <span>Activate Final Credentials</span>}
+                        </button>
                     </form>
 
-                    <div className="text-center pt-4 border-t border-slate-100">
-                        <Link to="/login" className="text-sm font-bold text-slate-400 hover:text-teal-600 transition-colors">
-                            Cancel and go back
+                    <div className="text-center pt-8 border-t border-slate-100">
+                        <Link to="/login" className="text-[10px] font-black text-slate-400 hover:text-primary transition-all uppercase tracking-widest">
+                            Cancel Process
                         </Link>
                     </div>
                 </div>

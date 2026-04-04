@@ -31,7 +31,7 @@ export const HowItWorksSection: React.FC = () => {
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-br from-teal-50 to-purple-50">
+    <section className="py-20 bg-gradient-to-br from-blue-50 to-purple-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -52,12 +52,12 @@ export const HowItWorksSection: React.FC = () => {
               >
                 {/* Connector Line */}
                 {index < steps.length - 1 && (
-                  <div className="hidden lg:block absolute top-12 left-[60%] w-[80%] h-0.5 bg-gradient-to-r from-teal-200 to-purple-200" />
+                  <div className="hidden lg:block absolute top-12 left-[60%] w-[80%] h-0.5 bg-gradient-to-r from-blue-200 to-purple-200" />
                 )}
 
                 <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow relative z-10">
-                  <div className="text-6xl font-bold text-teal-100 mb-4">{step.number}</div>
-                  <div className="w-14 h-14 rounded-xl bg-teal-600 text-white flex items-center justify-center mb-4">
+                  <div className="text-6xl font-bold text-blue-100 mb-4">{step.number}</div>
+                  <div className="w-14 h-14 rounded-xl bg-blue-900 text-white flex items-center justify-center mb-4">
                     <Icon className="h-7 w-7" />
                   </div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">{step.title}</h3>

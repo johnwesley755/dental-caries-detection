@@ -1,10 +1,13 @@
 // patient-portal/src/pages/Appointments.tsx
 import React, { useEffect, useState } from 'react';
-import { Calendar, Clock, MapPin, User, Loader2 } from 'lucide-react';
+import { Calendar, Clock, User, Plus, Search, ShieldCheck, AlertCircle } from 'lucide-react';
 import { appointmentService, Appointment } from '../services/appointmentService';
 import { toast } from 'sonner';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
 import { AppointmentForm } from '../components/dashboard/AppointmentForm';
+import { Badge } from '../components/ui/badge';
+import { Button } from '../components/ui/button';
+import { Card, CardContent } from '../components/ui/card';
 
 export const Appointments: React.FC = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
@@ -30,7 +33,7 @@ export const Appointments: React.FC = () => {
   };
 
   const handleCancel = async (appointmentId: string) => {
-    if (!confirm('Are you sure you want to cancel this appointment?')) return;
+    if (!confirm('Are you sure you want to cancel this clinical appointment?')) return;
 
     try {
       await appointmentService.cancelAppointment(appointmentId);
@@ -56,149 +59,187 @@ export const Appointments: React.FC = () => {
     switch (status.toLowerCase()) {
       case 'scheduled':
       case 'confirmed':
-        return 'bg-teal-100 text-teal-700';
+        return 'bg-blue-50 text-primary border-blue-100';
       case 'completed':
-        return 'bg-green-100 text-green-700';
+        return 'bg-emerald-50 text-emerald-600 border-emerald-100';
       case 'cancelled':
-        return 'bg-red-100 text-red-700';
+        return 'bg-red-50 text-red-600 border-red-100';
       case 'pending_approval':
-        return 'bg-yellow-100 text-yellow-700';
+        return 'bg-amber-50 text-amber-600 border-amber-100';
       default:
-        return 'bg-gray-100 text-gray-700';
+        return 'bg-slate-50 text-slate-500 border-slate-100';
     }
   };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <LoadingSpinner size="sm" />
+      <div className="min-h-[80vh] flex items-center justify-center bg-gray-50/50">
+        <LoadingSpinner size="md" text="Syncing schedule..." />
       </div>
     );
   }
 
   return (
-    <div className="p-4 lg:p-8 max-w-7xl mx-auto">
-      <div className="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">My Appointments</h1>
-          <p className="text-gray-600">View and manage your dental appointments</p>
+    <div className="min-h-screen bg-slate-50/30 p-4 lg:p-10">
+      <div className="max-w-7xl mx-auto space-y-10">
+        
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div className="space-y-2">
+             <div className="flex items-center gap-3 mb-2">
+                <div className="h-10 w-10 rounded-xl bg-blue-50 flex items-center justify-center text-primary shadow-inner">
+                   <Calendar className="h-5 w-5" />
+                </div>
+                <h1 className="text-3xl font-black text-slate-900 tracking-tight uppercase leading-none">Appointment Center</h1>
+             </div>
+             <p className="text-slate-500 font-bold tracking-tight">Schedule and manage your personal clinical consultations</p>
+          </div>
+          <Button
+            onClick={() => setShowForm(true)}
+            className="bg-primary hover:bg-blue-900 text-white px-8 h-12 rounded-2xl shadow-xl shadow-primary/20 font-black uppercase text-[10px] tracking-widest transition-all hover:scale-105"
+          >
+            <Plus className="h-4 w-4 mr-2" strokeWidth={3} />
+            Request Slot
+          </Button>
         </div>
-        <button
-          onClick={() => setShowForm(true)}
-          className="bg-teal-600 text-white px-5 py-2.5 rounded-xl font-medium shadow-sm hover:bg-teal-700 transition-colors flex items-center gap-2"
-        >
-          <Calendar className="w-5 h-5" />
-          Request Appointment
-        </button>
-      </div>
 
-      {/* Filter */}
-      <div className="mb-6 flex gap-2 flex-wrap">
-        <button
-          onClick={() => setFilter('')}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filter === '' ? 'bg-teal-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
-        >
-          All
-        </button>
-        <button
-          onClick={() => setFilter('scheduled')}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filter === 'scheduled' ? 'bg-teal-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
-        >
-          Scheduled
-        </button>
-        <button
-          onClick={() => setFilter('completed')}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filter === 'completed' ? 'bg-teal-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
-        >
-          Completed
-        </button>
-      </div>
+        {/* Filter Section */}
+        <div className="flex items-center gap-3 p-1 bg-white border border-slate-100 rounded-2xl w-fit shadow-sm">
+          {[
+            { label: 'All Events', value: '' },
+            { label: 'Upcoming', value: 'scheduled' },
+            { label: 'History', value: 'completed' }
+          ].map((btn) => (
+            <button
+              key={btn.value}
+              onClick={() => setFilter(btn.value)}
+              className={`px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${filter === btn.value
+                  ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                  : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50'
+                }`}
+            >
+              {btn.label}
+            </button>
+          ))}
+        </div>
 
-      {/* Appointments List */}
-      {appointments.length > 0 ? (
-        <div className="space-y-4">
-          {appointments.map((appointment) => {
-            const appointmentDate = new Date(appointment.appointment_date);
-            const isUpcoming = appointmentDate > new Date();
+        {/* Appointments List */}
+        {appointments.length > 0 ? (
+          <div className="grid grid-cols-1 gap-6">
+            {appointments.map((appointment) => {
+              const appointmentDate = new Date(appointment.appointment_date);
+              const isUpcoming = appointmentDate > new Date();
 
-            return (
-              <div
-                key={appointment.id}
-                className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow"
-              >
-                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                  {/* Left Side - Date & Time */}
-                  <div className="flex items-start gap-4">
-                    <div className="w-16 h-16 bg-teal-50 rounded-xl flex flex-col items-center justify-center flex-shrink-0">
-                      <span className="text-2xl font-bold text-teal-600">
-                        {appointmentDate.getDate()}
-                      </span>
-                      <span className="text-xs text-teal-600 font-medium">
-                        {appointmentDate.toLocaleDateString('en-US', { month: 'short' })}
-                      </span>
-                    </div>
-
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <h3 className="text-lg font-semibold text-gray-900">
-                          {appointment.appointment_type || 'Checkup'}
-                        </h3>
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(appointment.status)}`}>
-                          {appointment.status}
+              return (
+                <div
+                  key={appointment.id}
+                  className="bg-white rounded-[2rem] shadow-xl shadow-blue-900/5 border border-white p-8 hover:shadow-2xl hover:shadow-blue-900/10 transition-all duration-300 group"
+                >
+                  <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+                    {/* Left Side - Date & Time */}
+                    <div className="flex items-center gap-8 flex-1">
+                      <div className="w-20 h-20 bg-blue-50 rounded-[1.5rem] flex flex-col items-center justify-center flex-shrink-0 shadow-inner group-hover:bg-primary group-hover:text-white transition-all duration-300">
+                        <span className="text-3xl font-black tracking-tighter leading-none mb-1">
+                          {appointmentDate.getDate()}
+                        </span>
+                        <span className="text-[10px] font-black uppercase tracking-widest opacity-60">
+                          {appointmentDate.toLocaleDateString('en-US', { month: 'short' })}
                         </span>
                       </div>
-                      <div className="space-y-1 text-sm text-gray-600">
-                        <div className="flex items-center gap-2">
-                          <Clock className="h-4 w-4" />
-                          <span>{formatTime(appointment.appointment_date)}</span>
-                          <span className="text-gray-400">•</span>
-                          <span>{appointment.duration_minutes || 30} mins</span>
+
+                      <div className="flex-1 space-y-4">
+                        <div className="flex items-center gap-4 flex-wrap">
+                          <h3 className="text-xl font-black text-slate-900 tracking-tight uppercase">
+                            {appointment.appointment_type || 'General Consultation'}
+                          </h3>
+                          <Badge variant="outline" className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-widest border-2 ${getStatusColor(appointment.status)}`}>
+                            {appointment.status.replace('_', ' ')}
+                          </Badge>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <User className="h-4 w-4" />
-                          <span>{appointment.dentist_name}</span>
+                        
+                        <div className="flex items-center gap-6 flex-wrap">
+                          <div className="flex items-center gap-2 text-slate-400">
+                            <Clock className="h-4 w-4" />
+                            <span className="text-xs font-bold">{formatTime(appointment.appointment_date)}</span>
+                            <span className="opacity-30 mx-1">•</span>
+                            <span className="text-xs font-bold">{appointment.duration_minutes || 30} MINS</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-slate-400">
+                            <User className="h-4 w-4" />
+                            <span className="text-xs font-bold uppercase tracking-tight">{appointment.dentist_name}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-slate-400">
+                             <ShieldCheck className="h-4 w-4 text-emerald-500" />
+                             <span className="text-[10px] font-black uppercase tracking-widest">Verified Specialist</span>
+                          </div>
                         </div>
+
                         {appointment.notes && (
-                          <div className="flex items-start gap-2 mt-2">
-                            <MapPin className="h-4 w-4 mt-0.5" />
-                            <span className="text-xs">
-                              {typeof appointment.notes === 'string' ? appointment.notes : JSON.stringify(appointment.notes)}
-                            </span>
+                          <div className="flex items-start gap-2 bg-slate-50 p-3 rounded-xl border border-slate-100 max-w-2xl">
+                            <Search className="h-3.5 w-3.5 text-primary mt-0.5 shrink-0" />
+                            <p className="text-[10px] font-bold text-slate-500 leading-relaxed uppercase tracking-tight">
+                              Context: {typeof appointment.notes === 'string' ? appointment.notes : JSON.stringify(appointment.notes)}
+                            </p>
                           </div>
                         )}
                       </div>
                     </div>
-                  </div>
 
-                  {/* Right Side - Actions */}
-                  {isUpcoming && appointment.status !== 'cancelled' && (
-                    <div className="flex flex-col sm:flex-row gap-2">
-                      <button
-                        onClick={() => handleCancel(appointment.id)}
-                        className="px-4 py-2 border border-red-300 text-red-700 rounded-lg hover:bg-red-50 transition-colors text-sm font-medium"
-                      >
-                        Cancel
-                      </button>
+                    {/* Right Side - Actions */}
+                    <div className="flex items-center gap-3">
+                       <Button
+                          variant="outline"
+                          className="px-6 h-12 rounded-[1.25rem] border-2 border-slate-100 hover:bg-slate-50 text-slate-400 font-black uppercase text-[10px] tracking-widest"
+                          onClick={() => toast.info('Coming soon: Add to Calendar')}
+                       >
+                          Add to Calendar
+                       </Button>
+                       {isUpcoming && appointment.status !== 'cancelled' && (
+                         <Button
+                            variant="destructive"
+                            onClick={() => handleCancel(appointment.id)}
+                            className="bg-red-50 hover:bg-red-500 text-red-500 hover:text-white border-2 border-red-100 hover:border-red-500 rounded-[1.25rem] h-12 px-8 font-black uppercase text-[10px] tracking-widest shadow-xl shadow-red-900/5 transition-all"
+                         >
+                            Cancel Slot
+                         </Button>
+                       )}
                     </div>
-                  )}
+                  </div>
                 </div>
+              );
+            })}
+          </div>
+        ) : (
+          /* Empty State */
+          <Card className="border-none shadow-2xl shadow-blue-900/5 rounded-[2.5rem] overflow-hidden bg-white/80 backdrop-blur-xl">
+            <CardContent className="py-24 text-center space-y-6">
+              <div className="w-24 h-24 bg-blue-50 rounded-[2rem] flex items-center justify-center mx-auto shadow-inner">
+                <Calendar className="h-10 w-10 text-primary opacity-30" />
               </div>
-            );
-          })}
+              <div className="space-y-2">
+                <h3 className="text-2xl font-black text-slate-900 tracking-tight uppercase">No Scheduled Events</h3>
+                <p className="text-slate-400 font-bold max-w-sm mx-auto">
+                  {filter ? `No records found for the "${filter}" filter status.` : "You don't have any upcoming diagnostic appointments."}
+                </p>
+              </div>
+              <Button
+                onClick={() => setShowForm(true)}
+                className="mt-4 bg-primary hover:bg-blue-900 text-white rounded-[1.25rem] px-8 h-12 font-black uppercase text-[10px] tracking-widest shadow-xl shadow-primary/20 transition-all hover:scale-105"
+              >
+                Request Consultation
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Info Alert */}
+        <div className="bg-amber-50 border border-amber-100 rounded-2xl p-4 flex gap-4">
+           <AlertCircle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
+           <p className="text-xs font-bold text-amber-700 leading-relaxed uppercase tracking-tight">
+             Clinical Reminders: Please arrive 10 minutes prior to your scheduled slot for pre-diagnostic registration. Cancellation requires a minimum 24-hour notice to prioritize patient flow.
+           </p>
         </div>
-      ) : (
-        /* Empty State */
-        <div className="text-center py-16">
-          <Calendar className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">No Appointments</h3>
-          <p className="text-gray-600 mb-6">
-            {filter ? `No ${filter} appointments found` : "You don't have any appointments"}
-          </p>
-        </div>
-      )}
+      </div>
 
       {showForm && (
         <AppointmentForm 

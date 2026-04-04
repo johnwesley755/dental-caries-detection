@@ -5,20 +5,16 @@ import { UserRole } from '../../types/auth.types';
 import {
   LayoutDashboard,
   Users,
-  History,
   UserCog,
   LogOut,
-  ChevronRight,
   ScanFace,
   Calendar,
   MessageCircle,
   ShieldCheck,
   Search,
-  X,
-  Menu
+  X
 } from 'lucide-react';
 import { CalendarModal } from '../dashboard/CalendarModal';
-import { NotificationDropdown } from '../dashboard/NotificationDropdown';
 
 interface SidebarProps {
   isOpen?: boolean;
@@ -43,7 +39,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate('/');
   };
 
   const primaryMenuItems = [

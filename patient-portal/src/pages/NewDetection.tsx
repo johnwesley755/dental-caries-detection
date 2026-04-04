@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Upload, Loader2, Sparkles, CheckCircle2, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Upload, Sparkles, CheckCircle2, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { patientService } from '@/services/patientService';
@@ -44,37 +43,37 @@ export const NewDetection: React.FC = () => {
             {/* Header */}
             <div className="max-w-4xl mx-auto mb-8">
                 <div className="flex items-center gap-3 mb-4">
-                    <div className="h-12 w-12 rounded-2xl bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center text-teal-600">
+                    <div className="h-12 w-12 rounded-2xl bg-blue-50 flex items-center justify-center text-primary shadow-inner">
                         <Sparkles className="h-6 w-6" />
                     </div>
                     <div>
-                        <h1 className="text-3xl font-bold text-slate-900 dark:text-white">AI Dental Scan</h1>
-                        <p className="text-slate-500">Upload your dental photo for instant AI analysis.</p>
+                        <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">AI Dental Scan</h1>
+                        <p className="text-slate-500 font-medium">Upload your dental photo for instant AI analysis.</p>
                     </div>
                 </div>
             </div>
 
             <div className="max-w-4xl mx-auto">
-                <Card className="border-none shadow-xl shadow-slate-200/50 dark:shadow-none overflow-hidden rounded-3xl">
+                <Card className="border-none shadow-2xl shadow-slate-200/50 dark:shadow-none overflow-hidden rounded-[2.5rem]">
                     <CardContent className="p-8 lg:p-12">
                         <div className="grid lg:grid-cols-2 gap-12 items-start">
 
                             {/* Left Side: Upload Area */}
                             <div className="space-y-6">
                                 {!preview ? (
-                                    <label className="flex flex-col items-center justify-center aspect-square rounded-2xl bg-slate-50 border-2 border-dashed border-slate-200 hover:border-teal-500 hover:bg-teal-50 transition-all cursor-pointer group">
-                                        <div className="h-16 w-16 rounded-full bg-teal-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                                            <Upload className="h-8 w-8 text-teal-600" />
+                                    <label className="flex flex-col items-center justify-center aspect-square rounded-[2rem] bg-slate-50 border-2 border-dashed border-slate-200 hover:border-primary hover:bg-blue-50/50 transition-all cursor-pointer group">
+                                        <div className="h-16 w-16 rounded-3xl bg-blue-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-inner">
+                                            <Upload className="h-8 w-8 text-primary" />
                                         </div>
-                                        <span className="text-lg font-semibold text-slate-900">Choose Dental Image</span>
-                                        <span className="text-sm text-slate-500 mt-2 text-center px-6">
+                                        <span className="text-lg font-black text-slate-900 tracking-tight">Choose Dental Image</span>
+                                        <span className="text-sm text-slate-500 mt-2 text-center px-6 font-medium">
                                             Select a clear photo or X-ray (JPG/PNG)
                                         </span>
                                         <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
                                     </label>
                                 ) : (
-                                    <div className="space-y-4">
-                                        <div className="relative aspect-square rounded-2xl overflow-hidden bg-slate-200 shadow-inner group border-4 border-white shadow-lg">
+                                    <div className="space-y-6">
+                                        <div className="relative aspect-square rounded-[2rem] overflow-hidden bg-slate-200 group border-4 border-white shadow-2xl">
                                             <img src={preview} alt="Dental Scan Preview" className="h-full w-full object-cover" />
                                             <button
                                                 onClick={() => { setFile(null); setPreview(null); }}
@@ -85,12 +84,12 @@ export const NewDetection: React.FC = () => {
                                         </div>
 
                                         <div className="space-y-2">
-                                            <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Notes (Optional)</label>
+                                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Notes (Optional)</label>
                                             <textarea
                                                 value={notes}
                                                 onChange={(e) => setNotes(e.target.value)}
                                                 placeholder="Tell us about any specific concerns..."
-                                                className="w-full h-24 p-4 rounded-xl border border-slate-100 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none transition-all resize-none text-sm"
+                                                className="w-full h-24 p-4 rounded-2xl border border-slate-100 bg-slate-50 focus:bg-white focus:ring-4 focus:ring-primary/5 focus:border-primary outline-none transition-all resize-none text-sm font-medium"
                                             />
                                         </div>
                                     </div>
@@ -99,12 +98,12 @@ export const NewDetection: React.FC = () => {
                                 <Button
                                     onClick={handleUpload}
                                     disabled={!file || isAnalyzing}
-                                    className="w-full h-14 text-lg font-bold bg-teal-600 hover:bg-teal-700 rounded-xl shadow-lg shadow-teal-600/20"
+                                    className="w-full h-14 text-lg font-black bg-primary hover:bg-blue-900 rounded-2xl shadow-xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
                                 >
                                     {isAnalyzing ? (
                                         <>
                                             <LoadingSpinner size="sm" />
-                                            AI Analyzing...
+                                            <span className="ml-2 uppercase tracking-widest text-xs">AI Analyzing...</span>
                                         </>
                                     ) : (
                                         <>
@@ -119,32 +118,34 @@ export const NewDetection: React.FC = () => {
                             <div className="space-y-8 py-4">
                                 <div className="space-y-6">
                                     <div className="flex items-start gap-4">
-                                        <div className="h-10 w-10 rounded-xl bg-teal-100 flex items-center justify-center shrink-0">
-                                            <ShieldCheck className="h-5 w-5 text-teal-600" />
+                                        <div className="h-10 w-10 rounded-xl bg-blue-50 flex items-center justify-center shrink-0 shadow-inner">
+                                            <ShieldCheck className="h-5 w-5 text-primary" />
                                         </div>
                                         <div>
-                                            <h4 className="font-bold text-slate-900">Clinical-Grade AI</h4>
-                                            <p className="text-slate-500 text-sm">Advanced computer vision identifies caries, enamel issues, and more.</p>
+                                            <h4 className="font-black text-slate-900 tracking-tight">Clinical-Grade AI</h4>
+                                            <p className="text-slate-500 text-sm font-medium">Advanced computer vision identifies caries, enamel issues, and more.</p>
                                         </div>
                                     </div>
 
                                     <div className="flex items-start gap-4">
-                                        <div className="h-10 w-10 rounded-xl bg-teal-100 flex items-center justify-center shrink-0">
-                                            <CheckCircle2 className="h-5 w-5 text-teal-600" />
+                                        <div className="h-10 w-10 rounded-xl bg-blue-50 flex items-center justify-center shrink-0 shadow-inner">
+                                            <CheckCircle2 className="h-5 w-5 text-primary" />
                                         </div>
                                         <div>
-                                            <h4 className="font-bold text-slate-900">Instant Results</h4>
-                                            <p className="text-slate-500 text-sm">Get preliminary findings in seconds, followed by dentist verification.</p>
+                                            <h4 className="font-black text-slate-900 tracking-tight">Instant Results</h4>
+                                            <p className="text-slate-500 text-sm font-medium">Get preliminary findings in seconds, followed by dentist verification.</p>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="bg-teal-50 border border-teal-100 rounded-2xl p-6">
-                                    <div className="flex gap-3">
-                                        <AlertCircle className="h-5 w-5 text-teal-600 shrink-0 mt-0.5" />
+                                <div className="bg-blue-50 border border-blue-100 rounded-[1.5rem] p-6 shadow-sm ring-1 ring-blue-900/5">
+                                    <div className="flex gap-4">
+                                        <div className="h-10 w-10 rounded-xl bg-white border border-blue-100 flex items-center justify-center shrink-0 shadow-sm">
+                                            <AlertCircle className="h-5 w-5 text-primary" />
+                                        </div>
                                         <div className="space-y-1">
-                                            <p className="text-sm font-bold text-teal-900">Health Advice</p>
-                                            <p className="text-xs text-teal-800 leading-relaxed">
+                                            <p className="text-sm font-black text-blue-900 tracking-tight">Health Advice</p>
+                                            <p className="text-xs text-blue-900/70 font-bold leading-relaxed">
                                                 This screening tool is not a medical diagnosis. Always consult with your verified dentist for clinical decisions.
                                             </p>
                                         </div>
@@ -152,9 +153,9 @@ export const NewDetection: React.FC = () => {
                                 </div>
 
                                 <div className="pt-4">
-                                    <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 w-fit">
-                                        <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
-                                        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">AI Core Version 2.4.0</span>
+                                    <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 w-fit border border-slate-200/50">
+                                        <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                                        <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none">AI Core Version 2.4.0</span>
                                     </div>
                                 </div>
                             </div>

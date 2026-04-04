@@ -45,11 +45,11 @@ export const TestimonialsSection: React.FC = () => {
               key={index}
               className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-8 shadow-sm border border-gray-100 hover:shadow-md transition-all relative"
             >
-              <Quote className="absolute top-6 right-6 h-8 w-8 text-teal-100" />
+              <Quote className="absolute top-6 right-6 h-8 w-8 text-blue-100" />
               
               <div className="flex items-center mb-4">
                 {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 text-emerald-400 fill-emerald-400" />
+                  <Star key={i} className="h-5 w-5 text-emerald-500 fill-emerald-500" />
                 ))}
               </div>
 

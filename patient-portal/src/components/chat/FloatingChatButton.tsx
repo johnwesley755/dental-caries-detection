@@ -44,7 +44,7 @@ export const FloatingChatButton: React.FC = () => {
           <div className="relative flex-1 flex flex-col min-h-0">
             <button
               onClick={() => setIsOpen(false)}
-              className="absolute top-3 right-3 z-[70] p-1.5 rounded-full bg-teal-600/10 hover:bg-teal-600/20 text-teal-600 transition-all shadow-sm"
+              className="absolute top-3 right-3 z-[70] p-1.5 rounded-full bg-blue-900/10 hover:bg-blue-900/20 text-blue-900 transition-all shadow-sm"
             >
               <X className="h-5 w-5" />
             </button>
@@ -57,10 +57,10 @@ export const FloatingChatButton: React.FC = () => {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-br from-teal-600 to-teal-700 text-white rounded-full shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-200 flex items-center justify-center z-50 group"
+          className="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-br from-blue-900 to-blue-950 text-white rounded-full shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-200 flex items-center justify-center z-50 group"
         >
           <MessageCircle className="h-6 w-6" />
-          <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></span>
+          <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-white shadow-lg ring-1 ring-emerald-900/5 transition-all group-hover:scale-110"></span>
 
           {/* Tooltip */}
           <div className="absolute right-full mr-3 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">

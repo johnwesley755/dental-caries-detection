@@ -158,6 +158,7 @@ export const SideNavBar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             <button
               onClick={() => {
                 logout();
+                navigate("/");
                 handleLinkClick();
               }}
               className="w-full h-14 rounded-2xl bg-red-50 border-red-200 text-red-400 flex items-center justify-center gap-3 transition-all hover:bg-red-50 hover:text-red-500 group border border-transparent hover:border-red-100"
