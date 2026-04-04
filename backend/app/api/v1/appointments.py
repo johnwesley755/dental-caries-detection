@@ -11,6 +11,7 @@ from ...models.patient import Patient
 from ...models.notification import Notification, NotificationType
 from pydantic import BaseModel
 from typing import Optional
+from ...utils.notifications import notify_user
 
 router = APIRouter(tags=["appointments"])
 
@@ -49,20 +50,35 @@ class AppointmentResponse(BaseModel):
         from_attributes = True
 
 # Helper function to create notification
-def create_appointment_notification(db: Session, patient_id: str, appointment_date: datetime, action: str):
+def create_appointment_notification(db: Session, patient_id: str, appointment_date: datetime, action: str, dentist_id: Optional[str] = None, notify_dentist: bool = False, current_user_id: str = None):
     """Create notification for appointment"""
     try:
-        # Get patient's user_id if they have portal access
+        # Get patient details
         patient = db.query(Patient).filter(Patient.id == patient_id).first()
-        if patient and patient.user_id:
-            notification = Notification(
+        if not patient:
+            return
+
+        formatted_date = appointment_date.strftime('%B %d, %Y at %I:%M %p')
+        
+        # 1. Notify the PATIENT (unless they performed the action themselves, e.g. cancellation)
+        if patient.user_id and str(patient.user_id) != str(current_user_id):
+            notify_user(
+                db=db,
                 user_id=str(patient.user_id),
-                title=f"Appointment {action}",
-                message=f"Your appointment has been {action} for {appointment_date.strftime('%B %d, %Y at %I:%M %p')}",
-                type=NotificationType.APPOINTMENT
+                title=f"Appointment {action.capitalize()}",
+                message=f"Your appointment for {formatted_date} has been {action}.",
+                notification_type=NotificationType.APPOINTMENT
             )
-            db.add(notification)
-            db.commit()
+            
+        # 2. Notify the DENTIST (if we have their ID and they didn't perform the action)
+        if dentist_id and str(dentist_id) != str(current_user_id):
+             notify_user(
+                db=db,
+                user_id=str(dentist_id),
+                title="Appointment Update",
+                message=f"Appointment with {patient.full_name} for {formatted_date} has been {action}.",
+                notification_type=NotificationType.APPOINTMENT
+            )
     except Exception as e:
         print(f"Error creating notification: {e}")
 
@@ -194,9 +210,23 @@ async def create_appointment(
     
     # Create notification depending on flow
     if current_user.role == UserRole.PATIENT:
-        create_appointment_notification(db, appointment.patient_id, appointment.appointment_date, "requested and is pending approval")
+        create_appointment_notification(
+            db, 
+            new_appointment.patient_id, 
+            new_appointment.appointment_date, 
+            "requested and is pending approval",
+            new_appointment.dentist_id,
+            current_user_id=current_user.id
+        )
     else:
-        create_appointment_notification(db, appointment.patient_id, appointment.appointment_date, "scheduled")
+        create_appointment_notification(
+            db, 
+            new_appointment.patient_id, 
+            new_appointment.appointment_date, 
+            "scheduled",
+            new_appointment.dentist_id,
+            current_user_id=current_user.id
+        )
     
     return {
         "message": "Appointment created successfully",
@@ -238,7 +268,9 @@ async def update_appointment(
             db, 
             appointment.patient_id, 
             appointment.appointment_date, 
-            appointment_update.status.value
+            appointment_update.status.value,
+            appointment.dentist_id,
+            current_user_id=current_user.id
         )
     
     return {"message": "Appointment updated successfully"}
@@ -262,6 +294,13 @@ async def delete_appointment(
     db.commit()
     
     # Create notification
-    create_appointment_notification(db, appointment.patient_id, appointment.appointment_date, "cancelled")
+    create_appointment_notification(
+        db, 
+        appointment.patient_id, 
+        appointment.appointment_date, 
+        "cancelled",
+        appointment.dentist_id,
+        current_user_id=current_user.id
+    )
     
     return {"message": "Appointment cancelled successfully"}

@@ -14,6 +14,8 @@ from ...models.message import Message
 from ...dependencies.auth import get_current_user
 from ...services.image_service import ImageService
 from pydantic import BaseModel
+from ...utils.notifications import notify_user
+from ...models.notification import NotificationType
 
 router = APIRouter(prefix="/messaging", tags=["messaging"])
 image_service = ImageService()
@@ -273,6 +275,17 @@ async def send_message(
     db.commit()
     db.refresh(message)
     
+    # Notify receiver
+    notify_user(
+        db=db,
+        user_id=str(receiver_id),
+        title=f"New Message from {current_user.full_name}",
+        message=message_data.content[:100] + "..." if message_data.content and len(message_data.content) > 100 else (message_data.content or "Sent an attachment"),
+        notification_type=NotificationType.SYSTEM,
+        related_id=str(message.id),
+        related_type="message"
+    )
+    
     return MessageResponse(
         id=str(message.id),
         conversation_id=str(message.conversation_id),
@@ -376,6 +389,17 @@ async def send_message_with_file(
     
     db.commit()
     db.refresh(message)
+    
+    # Notify receiver
+    notify_user(
+        db=db,
+        user_id=str(receiver_uuid),
+        title=f"New Message from {current_user.full_name}",
+        message=content[:100] + "..." if content and len(content) > 100 else (content or "Sent an attachment"),
+        notification_type=NotificationType.SYSTEM,
+        related_id=str(message.id),
+        related_type="message"
+    )
     
     return MessageResponse(
         id=str(message.id),

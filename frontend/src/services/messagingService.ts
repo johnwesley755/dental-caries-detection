@@ -10,6 +10,7 @@ export interface Message {
   file_name?: string;
   file_type?: string;
   file_size?: number;
+  detection_id?: string;
   is_read: boolean;
   created_at: string;
   sender_name: string;
@@ -31,6 +32,7 @@ export interface Conversation {
 export interface SendMessageRequest {
   receiver_id: string;
   content?: string;
+  detection_id?: string;
 }
 
 export const messagingService = {

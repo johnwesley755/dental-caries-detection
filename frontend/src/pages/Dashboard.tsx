@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { patientService } from '../services/patientService';
 import { detectionService } from '../services/detectionService';
+import { api } from '../services/api';
 import type { Patient } from '../types/patient.types';
 import type { Detection } from '../types/detection.types';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
@@ -15,6 +16,7 @@ export const Dashboard: React.FC = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [detections, setDetections] = useState<Detection[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isExporting, setIsExporting] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -46,6 +48,29 @@ export const Dashboard: React.FC = () => {
       toast.error('Failed to load dashboard data');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleExportPDF = async () => {
+    try {
+      setIsExporting(true);
+      const response = await api.get('/reports/dashboard/pdf', {
+        responseType: 'blob'
+      });
+      
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `Clinic_Report_${new Date().toISOString().split('T')[0]}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      toast.success('Clinical report exported successfully');
+    } catch (error) {
+      console.error('Export failed:', error);
+      toast.error('Failed to export clinical report');
+    } finally {
+      setIsExporting(false);
     }
   };
 
@@ -99,9 +124,15 @@ export const Dashboard: React.FC = () => {
             <p className="text-slate-500 text-sm font-medium">Real-time clinical insights and analytics</p>
           </div>
           <div className="flex gap-3">
-            <button className="flex-1 sm:flex-none px-5 py-2.5 rounded-xl bg-surface-container-lowest border border-outline-variant/20 text-sm font-bold text-slate-700 shadow-sm hover:bg-surface-container-high transition-colors flex items-center justify-center gap-2">
-              <span className="material-symbols-outlined text-lg" data-icon="file_download">file_download</span>
-              Export PDF
+            <button 
+              onClick={handleExportPDF}
+              disabled={isExporting}
+              className="flex-1 sm:flex-none px-5 py-2.5 rounded-xl bg-surface-container-lowest border border-outline-variant/20 text-sm font-bold text-slate-700 shadow-sm hover:bg-surface-container-high transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+            >
+              <span className="material-symbols-outlined text-lg" data-icon="file_download">
+                {isExporting ? 'sync' : 'file_download'}
+              </span>
+              {isExporting ? 'Generating...' : 'Export PDF'}
             </button>
           </div>
         </div>

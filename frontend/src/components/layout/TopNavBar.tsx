@@ -1,7 +1,8 @@
 import React from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate, useOutletContext } from 'react-router-dom';
-import { Menu, Bell, Calendar as CalendarIcon, Search } from 'lucide-react';
+import { Menu, Calendar as CalendarIcon, Search } from 'lucide-react';
+import { NotificationDropdown } from '../dashboard/NotificationDropdown';
 
 interface TopNavBarProps {
   title?: string;
@@ -60,10 +61,7 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
           >
             <CalendarIcon className="w-5 h-5" />
           </button>
-          <button className="relative p-2 text-slate-400 hover:text-primary transition-colors hover:bg-slate-50 rounded-xl">
-            <Bell className="w-5 h-5" />
-            <span className="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full border-2 border-white"></span>
-          </button>
+          <NotificationDropdown />
         </div>
 
         <div 

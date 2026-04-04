@@ -10,8 +10,8 @@ import requests
 import matplotlib
 import xml.sax.saxutils as saxutils
 matplotlib.use('Agg')  # Use non-interactive backend
-import matplotlib.pyplot as plt
-from typing import Optional
+from matplotlib import pyplot as plt
+from typing import List, Optional
 from ..models.detection import Detection
 from ..models.patient import Patient
 from ..core.config import settings
@@ -131,6 +131,105 @@ class ReportService:
         pdf_bytes = buffer.getvalue()
         buffer.close()
         
+        return pdf_bytes
+    
+    def generate_dashboard_report(
+        self,
+        patients: List[Patient],
+        detections: List[Detection]
+    ) -> bytes:
+        """
+        Generate a summary PDF report for the entire clinic dashboard
+        """
+        buffer = BytesIO()
+        doc = SimpleDocTemplate(
+            buffer,
+            pagesize=letter,
+            rightMargin=0.5*inch,
+            leftMargin=0.5*inch,
+            topMargin=0.75*inch,
+            bottomMargin=0.75*inch
+        )
+        
+        story = []
+        
+        # 1. Header
+        story.append(Paragraph("CLINICAL INTELLIGENCE SUMMARY", self.styles['CustomTitle']))
+        story.append(Paragraph(f"Generated for: {saxutils.escape(settings.HOSPITAL_NAME)}", self.styles['Normal']))
+        story.append(Paragraph(f"Date: {datetime.now().strftime('%B %d, %Y')}", self.styles['Normal']))
+        story.append(Spacer(1, 0.4*inch))
+        
+        # 2. Key Metrics
+        total_patients = len(patients)
+        total_detections = len(detections)
+        caries_detected = sum(1 for d in detections if d.total_caries_detected > 0)
+        healthy_patients = total_detections - caries_detected
+        
+        metrics_data = [
+            ['Total Patients', 'Total Scans', 'Caries Detected', 'Healthy Scans'],
+            [str(total_patients), str(total_detections), str(caries_detected), str(healthy_patients)]
+        ]
+        
+        metrics_table = Table(metrics_data, colWidths=[1.7*inch]*4)
+        metrics_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#1e40af')),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, -1), 12),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 10),
+            ('TOPPADDING', (0, 1), (-1, -1), 10),
+            ('GRID', (0, 0), (-1, -1), 1, colors.HexColor('#e5e7eb')),
+        ]))
+        story.append(metrics_table)
+        story.append(Spacer(1, 0.4*inch))
+        
+        # 3. Patient Overview Table
+        story.append(Paragraph("PATIENT CLINICAL OVERVIEW", self.styles['SectionHeader']))
+        
+        table_data = [['ID', 'Patient Name', 'Last Scan', 'Result', 'Caries Found']]
+        
+        for p in patients:
+            # Find last detection for this patient
+            p_detections = [d for d in detections if str(d.patient_id) == str(p.id)]
+            last_det = sorted(p_detections, key=lambda x: x.detection_date, reverse=True)[0] if p_detections else None
+            
+            result = "No Scans"
+            caries = "0"
+            date_str = "N/A"
+            
+            if last_det:
+                result = "Caries Found" if last_det.total_caries_detected > 0 else "Healthy"
+                caries = str(last_det.total_caries_detected)
+                date_str = last_det.detection_date.strftime('%Y-%m-%d')
+            
+            table_data.append([
+                saxutils.escape(p.patient_id),
+                saxutils.escape(p.full_name),
+                date_str,
+                result,
+                caries
+            ])
+            
+        overview_table = Table(table_data, colWidths=[1.1*inch, 2.2*inch, 1.2*inch, 1.2*inch, 1.1*inch])
+        overview_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#f3f4f6')),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor('#374151')),
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, -1), 10),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 8),
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#e5e7eb')),
+            ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.HexColor('#f9fafb')]),
+        ]))
+        story.append(overview_table)
+        
+        # 4. Footer
+        story.extend(self._build_footer())
+        
+        doc.build(story)
+        pdf_bytes = buffer.getvalue()
+        buffer.close()
         return pdf_bytes
     
     def _build_header(self, detection: Detection, patient: Patient) -> list:

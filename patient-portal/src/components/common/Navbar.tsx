@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { Button } from '../ui/button';
 import { User, LogOut, Activity } from 'lucide-react';
+import { NotificationDropdown } from '../dashboard/NotificationDropdown';
 
 export const Navbar: React.FC = () => {
   const { user, logout, isAuthenticated } = useAuth();
@@ -44,6 +45,7 @@ export const Navbar: React.FC = () => {
           <div className="flex items-center gap-4">
             {isAuthenticated ? (
               <>
+                <NotificationDropdown />
                 <Link to="/profile" className="flex items-center gap-2 text-gray-700 hover:text-teal-600">
                   <User className="h-5 w-5" />
                   <span className="hidden sm:block text-sm font-medium">{user?.full_name}</span>

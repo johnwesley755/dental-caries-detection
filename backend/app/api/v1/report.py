@@ -169,3 +169,41 @@ async def email_detection_report(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to send report: {str(e)}"
         )
+
+@router.get("/dashboard/pdf")
+async def download_dashboard_report(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_dentist)
+):
+    """
+    Download a summary PDF report for the entire clinic
+    Only dentists and admins can access this report
+    """
+    try:
+        # Get all patients
+        patients = db.query(Patient).all()
+        
+        # Get all detections
+        detections = db.query(Detection).all()
+        
+        # Generate PDF
+        pdf_bytes = report_service.generate_dashboard_report(
+            patients=patients,
+            detections=detections
+        )
+        
+        # Return PDF as download
+        return Response(
+            content=pdf_bytes,
+            media_type="application/pdf",
+            headers={
+                "Content-Disposition": f"attachment; filename=Clinic_Intelligence_Summary_{datetime.now().strftime('%Y%m%d')}.pdf"
+            }
+        )
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to generate dashboard report: {str(e)}"
+        )
