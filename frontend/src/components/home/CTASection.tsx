@@ -33,11 +33,11 @@ export const CTASection: React.FC = () => {
               onClick={() => navigate('/register')}
               className="w-full sm:w-auto flex items-center justify-center gap-2 h-12 sm:h-14 px-8 sm:px-10 bg-white text-[#003d9b] rounded-xl font-black hover:bg-[#dae2ff] transition-all shadow-xl active:scale-95 text-sm sm:text-base"
             >
-              Launch Demo
+              Sign Up
               <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
             </button>
             <a
-              href="https://github.com"
+              href="https://github.com/johnwesley755/dental-caries-detection"
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto flex items-center justify-center gap-2 h-12 sm:h-14 px-8 sm:px-10 bg-transparent border border-white/20 text-white rounded-xl font-black hover:bg-white/5 transition-all active:scale-95 text-sm sm:text-base"
@@ -46,9 +46,9 @@ export const CTASection: React.FC = () => {
               View Source Code
             </a>
           </div>
-          <p className="text-xs font-black text-[#b2c5ff]/50 pt-1 sm:pt-2">
-            © 2025 Final Year Dissertation Project. Not for commercial use.
-          </p>
+          {/* <p className="text-xs font-black text-[#b2c5ff]/50 pt-1 sm:pt-2">
+            © 2026 Final Year  Project. Not for commercial use.
+          </p> */}
         </div>
       </motion.div>
     </div>
