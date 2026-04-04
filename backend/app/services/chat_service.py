@@ -1,6 +1,6 @@
 # backend/app/services/chat_service.py
 import requests
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 from sqlalchemy.orm import Session
 from ..core.config import settings
 from ..models.detection import Detection
@@ -11,7 +11,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class ChatService:
-    """Service for handling patient chatbot interactions via Google Gemini 1.5 Flash"""
+    """Service for handling patient chatbot interactions via Groq (Primary)"""
     
     # Medical safety keywords that should block the query
     BLOCKED_KEYWORDS = [
@@ -48,8 +48,8 @@ class ChatService:
         ).order_by(Detection.detection_date.desc()).first()
     
     @staticmethod
-    def build_prompt(user_message: str, detection: Optional[Detection] = None) -> str:
-        """Build a safe prompt for Gemini with detection context"""
+    def get_chat_messages(user_message: str, detection: Optional[Detection] = None) -> List[Dict[str, str]]:
+        """Prepare structured messages for the Chat Completion protocol"""
         
         system_instruction = (
             "You are a helpful dental health assistant for patients. "
@@ -85,52 +85,42 @@ Patient's Latest Dental Scan Results:
 - Scan date: {detection.detection_date.strftime('%B %d, %Y')}
 """
         
-        prompt = f"""{system_instruction}
-
-{context}
-
-Patient Question: {user_message}
-
-Provide a helpful, simple explanation. End with encouraging them to see their dentist."""
+        messages = [
+            {"role": "system", "content": system_instruction},
+        ]
         
-        return prompt
+        if context:
+            messages.append({"role": "system", "content": f"Context: {context}"})
+            
+        messages.append({"role": "user", "content": user_message})
+        
+        return messages
     
     @staticmethod
-    def call_gemini_api(prompt: str) -> str:
-        """Call Google Gemini API via REST for maximum reliability"""
+    def call_groq_api(messages: List[Dict[str, str]]) -> str:
+        """Call Groq API (OpenAI compatible) for Chat Completions"""
         
-        if not settings.GOOGLE_API_KEY:
-            logger.error("GOOGLE_API_KEY not configured")
+        if not settings.GROQ_API_KEY or settings.GROQ_API_KEY == "ENTER_YOUR_NEW_GROQ_KEY_HERE":
+            logger.error("GROQ_API_KEY not configured")
             return "The diagnostic chatbot is currently resting. Please check your configuration."
         
-        # Google AI Studio / Gemini REST API endpoint (Stable v1)
-        url = f"https://generativelanguage.googleapis.com/v1/models/{settings.GOOGLE_MODEL}:generateContent?key={settings.GOOGLE_API_KEY}"
+        url = "https://api.groq.com/openai/v1/chat/completions"
         
         headers = {
+            "Authorization": f"Bearer {settings.GROQ_API_KEY}",
             "Content-Type": "application/json"
         }
         
         payload = {
-            "contents": [
-                {
-                    "parts": [
-                        {
-                            "text": prompt
-                        }
-                    ]
-                }
-            ],
-            "generationConfig": {
-                "temperature": 0.75,
-                "topK": 40,
-                "topP": 0.95,
-                "maxOutputTokens": 300,
-                "stopSequences": []
-            }
+            "model": settings.GROQ_MODEL,
+            "messages": messages,
+            "max_tokens": 300,
+            "temperature": 0.5,
+            "stream": False
         }
         
         try:
-            logger.info(f"Calling Google Gemini API: {settings.GOOGLE_MODEL}")
+            logger.info(f"Calling Groq API: {settings.GROQ_MODEL}")
             
             response = requests.post(
                 url,
@@ -140,35 +130,37 @@ Provide a helpful, simple explanation. End with encouraging them to see their de
             )
             
             if response.status_code != 200:
-                logger.error(f"Gemini API error ({response.status_code}): {response.text}")
+                # Specialized error for Groq account restrictions
+                if response.status_code == 403:
+                    logger.error(f"Groq API Access Forbidden: {response.text}")
+                    return "I'm currently unable to access the diagnostic service. Please notify the administrator."
+                
+                logger.error(f"Groq API error ({response.status_code}): {response.text}")
                 return "I'm currently unable to respond due to a service interruption. Please try again later."
             
             result = response.json()
             
-            # Navigate Gemini response structure
+            # Navigate OpenAI-compatible response structure
             try:
-                candidates = result.get("candidates", [])
-                if candidates:
-                    content = candidates[0].get("content", {})
-                    parts = content.get("parts", [])
-                    if parts:
-                        generated_text = parts[0].get("text", "")
-                        if generated_text:
-                            return generated_text.strip()
+                choices = result.get("choices", [])
+                if choices:
+                    message_content = choices[0].get("message", {}).get("content", "")
+                    if message_content:
+                        return message_content.strip()
             except Exception as e:
-                logger.error(f"Failed to parse Gemini response: {str(e)}")
+                logger.error(f"Failed to parse Groq response: {str(e)}")
             
-            logger.warning(f"Unexpected response format from Gemini: {result}")
+            logger.warning(f"Unexpected response format from Groq: {result}")
             return "I'm having trouble generating a response. Please try again."
             
         except requests.exceptions.Timeout:
-            logger.error("Gemini API timeout")
+            logger.error("Groq API timeout")
             return "The response is taking longer than expected. Please try again."
         except requests.exceptions.RequestException as e:
-            logger.error(f"Gemini API request error: {str(e)}")
+            logger.error(f"Groq API request error: {str(e)}")
             return "I'm currently unable to connect to the AI service. Please try again later."
         except Exception as e:
-            logger.error(f"Unexpected error in Gemini API call: {str(e)}")
+            logger.error(f"Unexpected error in Groq API call: {str(e)}")
             return "An unexpected error occurred. Please try again."
     
     @staticmethod
@@ -178,7 +170,7 @@ Provide a helpful, simple explanation. End with encouraging them to see their de
         user_message: str,
         detection_id: Optional[str] = None
     ) -> Dict[str, Any]:
-        """Generate chatbot response with safety checks using Gemini"""
+        """Generate chatbot response with safety checks using Groq"""
         
         # Safety check
         if not ChatService.is_safe_query(user_message):
@@ -195,11 +187,11 @@ Provide a helpful, simple explanation. End with encouraging them to see their de
         else:
             detection = ChatService.get_latest_detection(db, user_id)
         
-        # Build prompt
-        prompt = ChatService.build_prompt(user_message, detection)
+        # Build messages for Chat Completion protocol
+        messages = ChatService.get_chat_messages(user_message, detection)
         
-        # Call Gemini API
-        bot_response = ChatService.call_gemini_api(prompt)
+        # Call Groq API
+        bot_response = ChatService.call_groq_api(messages)
         
         # Add disclaimer
         bot_response_with_disclaimer = bot_response + ChatService.DISCLAIMER

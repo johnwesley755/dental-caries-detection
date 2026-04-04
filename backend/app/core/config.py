@@ -23,9 +23,17 @@ class Settings(BaseSettings):
     BREVO_SENDER_EMAIL: str = "noreply@dentoai.com"
     BREVO_SENDER_NAME: str = "DentoAI Diagnostics"
     
-    # AI Configuration (Google Gemini)
+    # AI Configuration (Groq - Primary again)
+    GROQ_API_KEY: str = ""
+    GROQ_MODEL: str = "llama-3.3-70b-versatile"
+    
+    # AI Configuration (Google Gemini - Backup)
     GOOGLE_API_KEY: str = ""
-    GOOGLE_MODEL: str = "gemini-1.5-flash"
+    GOOGLE_MODEL: str = "gemini-1.5-flash-latest"
+    
+    # AI Configuration (Hugging Face - Backup)
+    HF_TOKEN: str = ""
+    HF_MODEL: str = "deepseek-ai/DeepSeek-R1"
     
     # Cloudinary (Media Storage)
     CLOUDINARY_CLOUD_NAME: str = ""
