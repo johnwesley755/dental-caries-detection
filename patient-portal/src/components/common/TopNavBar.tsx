@@ -66,12 +66,6 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({ title, onMenuClick }) => {
             className="flex items-center gap-4 cursor-pointer p-1.5 hover:bg-slate-50 rounded-[1.5rem] transition-all group ring-1 ring-transparent hover:ring-slate-100"
             onClick={() => navigate('/profile')}
         >
-          <div className="text-right hidden lg:block pr-1">
-            <p className="text-[11px] font-black text-slate-900 tracking-tight leading-none mb-1">
-              {user?.full_name?.split(' ')[0] || 'Patient'}
-            </p>
-            <p className="text-[9px] text-primary font-black opacity-60">Verified Portal</p>
-          </div>
           
           <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-2xl bg-blue-50 flex items-center justify-center overflow-hidden border-2 border-white shadow-xl shadow-blue-900/5 group-hover:shadow-blue-900/10 transition-all ring-1 ring-slate-100 group-hover:ring-primary/20">
              <img 
