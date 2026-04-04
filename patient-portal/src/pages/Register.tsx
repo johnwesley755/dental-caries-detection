@@ -49,7 +49,8 @@ export const Register: React.FC = () => {
                 full_name: fullName,
                 detection_id: detectionId
             });
-            navigate('/login', { state: { message: 'Registration successful! Please login.', detectionId } });
+            // Navigate to verification page instead of login
+            navigate('/verify-email', { state: { email, message: 'Account created! Please verify your email.', detectionId } });
         } catch (err: any) {
             console.error('Registration error:', err);
             let errorMessage = 'Registration failed. Please try again.';

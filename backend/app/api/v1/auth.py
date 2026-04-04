@@ -7,9 +7,17 @@ from ...schemas.user import UserCreate, UserLogin, UserResponse, Token, ForgotPa
 from ...services.auth_service import AuthService
 from ...dependencies.auth import get_current_user
 from ...models.user import User
+from pydantic import BaseModel
 import json
 
 router = APIRouter()
+
+class OTPVerifyRequest(BaseModel):
+    email: str
+    otp: str
+
+class OTPResendRequest(BaseModel):
+    email: str
 
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 async def register(
@@ -29,6 +37,18 @@ async def register(
         )
         
     return await AuthService.create_user(db, user_create, license_file, profile_image)
+
+@router.post("/verify-otp")
+async def verify_otp(request: OTPVerifyRequest, db: Session = Depends(get_db)):
+    """Verify user's email using 6-digit OTP"""
+    AuthService.verify_otp(db, request.email, request.otp)
+    return {"message": "Email verified successfully"}
+
+@router.post("/resend-otp")
+async def resend_otp(request: OTPResendRequest, db: Session = Depends(get_db)):
+    """Resend verification OTP to user"""
+    AuthService.resend_otp(db, request.email)
+    return {"message": "Verification code resent successfully"}
 
 @router.post("/login", response_model=Token)
 async def login(
@@ -63,7 +83,7 @@ async def get_dentists(db: Session = Depends(get_db)):
 
 @router.get("/verify-email")
 async def verify_email(token: str, db: Session = Depends(get_db)):
-    """Verify user's email"""
+    """Verify user's email using token-based link (LEGACY support)"""
     AuthService.verify_email(db, token)
     return {"message": "Email verified successfully"}
 

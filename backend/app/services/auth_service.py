@@ -3,7 +3,7 @@ from ..models.user import User
 from ..schemas.user import UserCreate
 from ..core.security import get_password_hash, verify_password, create_access_token
 from fastapi import HTTPException, status
-from datetime import timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional
 from ..core.config import settings
 from .email_service import EmailService
@@ -12,10 +12,17 @@ from fastapi import UploadFile
 from ..models.user import UserRole
 from ..utils.notifications import notify_user, NotificationType
 import logging
+import random
+import string
 
 logger = logging.getLogger(__name__)
 
 class AuthService:
+    @staticmethod
+    def generate_otp(length: int = 6) -> str:
+        """Generate a random 6-digit OTP"""
+        return ''.join(random.choices(string.digits, k=length))
+
     @staticmethod
     async def create_user(
         db: Session, 
@@ -32,6 +39,10 @@ class AuthService:
                 detail="Email already registered"
             )
         
+        # Generate OTP for email verification
+        otp = AuthService.generate_otp()
+        otp_expiry = datetime.now(timezone.utc) + timedelta(minutes=10)
+
         # Create user
         db_user = User(
             email=user.email,
@@ -39,7 +50,10 @@ class AuthService:
             full_name=user.full_name,
             role=user.role,
             is_active=True,
-            is_verified=False if user.role == UserRole.DENTIST else True
+            is_verified=False if user.role == UserRole.DENTIST else True,
+            is_email_verified=False,
+            verification_otp=otp,
+            otp_expiry=otp_expiry
         )
         db.add(db_user)
         db.flush() # Get ID
@@ -132,13 +146,11 @@ class AuthService:
 
         # Post-commit tasks: Wrap in try-except to ensure registration success even if email/notification fails
         try:
-            # Send verification email for the user's primary email
-            # Use user.email directly to avoid lazy loading issues after commit
-            verification_token = AuthService.create_access_token_for_user(db_user, expires_delta=timedelta(hours=24))
+            # Send verification email with OTP code instead of token link
             EmailService.send_verification_email(
                 email=db_user.email,
                 full_name=db_user.full_name,
-                token=verification_token,
+                otp=otp,
                 role=db_user.role
             )
         except Exception as e:
@@ -148,6 +160,71 @@ class AuthService:
 
         return db_user
     
+    @staticmethod
+    def verify_otp(db: Session, email: str, otp: str) -> bool:
+        """Verify user's email using OTP code"""
+        user = db.query(User).filter(User.email == email).first()
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="User not found"
+            )
+
+        if not user.verification_otp or user.verification_otp != otp:
+             raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid verification code"
+            )
+
+        # Check expiry
+        now = datetime.now(timezone.utc)
+        if user.otp_expiry and user.otp_expiry.replace(tzinfo=timezone.utc) < now:
+             raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Verification code has expired"
+            )
+
+        # Successful verification
+        user.is_email_verified = True
+        user.verification_otp = None # Clear OTP
+        user.otp_expiry = None
+        db.commit()
+        return True
+
+    @staticmethod
+    def resend_otp(db: Session, email: str) -> bool:
+        """Resend verification OTP to user"""
+        user = db.query(User).filter(User.email == email).first()
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="User not found"
+            )
+
+        # Generate new OTP
+        otp = AuthService.generate_otp()
+        otp_expiry = datetime.now(timezone.utc) + timedelta(minutes=10)
+
+        user.verification_otp = otp
+        user.otp_expiry = otp_expiry
+        db.commit()
+
+        # Send email
+        try:
+            EmailService.send_verification_email(
+                email=user.email,
+                full_name=user.full_name,
+                otp=otp,
+                role=user.role
+            )
+            return True
+        except Exception as e:
+            logger.error(f"Failed to resend OTP to {email}: {str(e)}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to send verification email. Please try again later."
+            )
+
     @staticmethod
     def authenticate_user(db: Session, email: str, password: str) -> User:
         """Authenticate user"""
@@ -171,30 +248,6 @@ class AuthService:
             expires_delta=expires_delta
         )
         return access_token
-
-    @staticmethod
-    def verify_email(db: Session, token: str) -> bool:
-        """Verify user's email"""
-        from ..core.security import decode_access_token
-        
-        payload = decode_access_token(token)
-        if not payload:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Invalid or expired verification token"
-            )
-            
-        email = payload.get("sub")
-        user = db.query(User).filter(User.email == email).first()
-        if not user:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="User not found"
-            )
-            
-        user.is_email_verified = True
-        db.commit()
-        return True
 
     @staticmethod
     def initiate_password_reset(db: Session, email: str, role: str) -> bool:

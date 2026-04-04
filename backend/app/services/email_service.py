@@ -1,12 +1,12 @@
-# Email Service for User Management
-from typing import Optional
+# Email Service for User Management (Brevo v3 API)
+from typing import Optional, List
 import requests
 from ..core.config import settings
 import secrets
 import string
 
 class EmailService:
-    """Service for sending emails to users"""
+    """Service for sending emails to users using Brevo v3 Transactional Email API"""
     
     @staticmethod
     def generate_password(length: int = 12) -> str:
@@ -16,47 +16,55 @@ class EmailService:
         return password
     
     @staticmethod
-    def send_email(to_email: str, subject: str, html_content: str) -> bool:
-        """Send an email via Resend API"""
+    def send_email(to_email: str, subject: str, html_content: str, attachments: Optional[List[dict]] = None) -> bool:
+        """Send an email via Brevo v3 Transactional API"""
         try:
-            # Validate Resend API key
-            if not settings.RESEND_API_KEY:
-                print("ERROR: RESEND_API_KEY not configured!")
+            # Validate Brevo API key
+            if not settings.BREVO_API_KEY:
+                print("ERROR: BREVO_API_KEY not configured!")
                 return False
             
-            print(f"Attempting to send email to: {to_email}")
-            print(f"Using Resend API")
+            print(f"Attempting to send email via Brevo to: {to_email}")
             
-            # Send email via Resend HTTP API
+            # Prepare Brevo API payload
+            payload = {
+                "sender": {
+                    "name": settings.BREVO_SENDER_NAME or settings.HOSPITAL_NAME,
+                    "email": settings.BREVO_SENDER_EMAIL or settings.HOSPITAL_EMAIL
+                },
+                "to": [{"email": to_email}],
+                "subject": subject,
+                "htmlContent": html_content
+            }
+            
+            if attachments:
+                payload["attachments"] = attachments
+            
+            # Send email via Brevo HTTP API
             response = requests.post(
-                "https://api.resend.com/emails",
+                "https://api.brevo.com/v3/smtp/email",
                 headers={
-                    "Authorization": f"Bearer {settings.RESEND_API_KEY}",
-                    "Content-Type": "application/json"
+                    "api-key": settings.BREVO_API_KEY,
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
                 },
-                json={
-                    "from": f"{settings.RESEND_FROM_NAME} <{settings.RESEND_FROM_EMAIL}>",
-                    "to": [to_email],
-                    "subject": subject,
-                    "html": html_content
-                },
+                json=payload,
                 timeout=30
             )
             
-            if response.status_code == 200:
+            if response.status_code in [200, 201, 202]:
                 print(f"✅ Email sent successfully to: {to_email}")
-                print(f"Response: {response.json()}")
                 return True
             else:
-                print(f"❌ Resend API Error: {response.status_code}")
+                print(f"❌ Brevo API Error: {response.status_code}")
                 print(f"Response: {response.text}")
                 return False
                 
         except requests.exceptions.RequestException as e:
-            print(f"❌ Network error sending email: {type(e).__name__}: {e}")
+            print(f"❌ Network error sending email via Brevo: {type(e).__name__}: {e}")
             return False
         except Exception as e:
-            print(f"❌ Failed to send email: {type(e).__name__}: {e}")
+            print(f"❌ Failed to send email via Brevo: {type(e).__name__}: {e}")
             import traceback
             traceback.print_exc()
             return False
@@ -72,19 +80,19 @@ class EmailService:
         """Send credentials to a new user"""
         
         # Determine portal URL based on role
-        # Remove any existing port from portal_url
         base_url = portal_url.rstrip('/')
-        if ':' in base_url.split('//')[-1]:  # Check if port already exists
+        if 'hf.space' in base_url:
+             pass
+        elif ':' in base_url.split('//')[-1]:
             base_url = '://'.join(base_url.split('://')[0:1]) + '://' + base_url.split('://')[1].split(':')[0]
         
-        # Handle role enum safely
         role_str = str(role.value) if hasattr(role, 'value') else str(role).upper()
         
         if role_str == "PATIENT":
-            login_url = f"{base_url}:5174"  # Patient portal
+            login_url = f"{base_url}:5174" if 'localhost' in base_url else base_url
             portal_name = "Patient Portal"
         else:
-            login_url = f"{base_url}:5173"  # Dentist portal
+            login_url = f"{base_url}:5173" if 'localhost' in base_url else base_url
             portal_name = "Dental Care Portal"
         
         subject = f"Welcome to {portal_name} - Your Account Credentials"
@@ -94,52 +102,35 @@ class EmailService:
         <html>
         <head>
             <style>
-                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
-                .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
-                .header {{ background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-                           color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }}
-                .content {{ background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }}
-                .credentials {{ background: white; padding: 20px; border-left: 4px solid #667eea; 
-                                margin: 20px 0; border-radius: 5px; }}
-                .button {{ display: inline-block; padding: 12px 30px; background: #667eea; 
-                          color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }}
-                .footer {{ text-align: center; margin-top: 20px; color: #666; font-size: 12px; }}
-                .warning {{ background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; 
-                           margin: 20px 0; border-radius: 5px; }}
+                body {{ font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; color: #1e293b; margin: 0; padding: 0; }}
+                .container {{ max-width: 600px; margin: 40px auto; padding: 0; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }}
+                .header {{ background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 40px 20px; text-align: center; }}
+                .content {{ background: white; padding: 40px; }}
+                .credential-box {{ background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 25px; margin: 25px 0; }}
+                .button {{ display: inline-block; padding: 16px 36px; background: #2563eb; color: white; text-decoration: none; border-radius: 10px; font-weight: 700; margin: 20px 0; }}
+                .footer {{ background: #f1f5f9; padding: 25px; text-align: center; color: #64748b; font-size: 13px; }}
             </style>
         </head>
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>Welcome to {portal_name}!</h1>
+                    <h1 style="margin:0; font-size: 28px;">Welcome to {portal_name}</h1>
                 </div>
                 <div class="content">
                     <p>Hello <strong>{full_name}</strong>,</p>
+                    <p>Your account has been created successfully. You can secure access to the system using the following credentials:</p>
                     
-                    <p>Your account has been created successfully. You can now access the {portal_name} 
-                    using the credentials below:</p>
-                    
-                    <div class="credentials">
-                        <p><strong>Email:</strong> {email}</p>
-                        <p><strong>Password:</strong> <code>{password}</code></p>
-                        <p><strong>Role:</strong> {role_str.title()}</p>
-                    </div>
-                    
-                    <div class="warning">
-                        <strong>⚠️ Important:</strong> Please change your password after your first login 
-                        for security purposes.
+                    <div class="credential-box">
+                        <p style="margin: 0 0 10px 0;"><strong>Email:</strong> <span style="color:#2563eb;">{email}</span></p>
+                        <p style="margin: 0;"><strong>Password:</strong> <code style="font-size: 1.1em;">{password}</code></p>
                     </div>
                     
                     <p style="text-align: center;">
-                        <a href="{login_url}" class="button">Login to Portal</a>
+                        <a href="{login_url}" class="button" style="color: white;">Login to Dashboard</a>
                     </p>
-                    
-                    <p>If you have any questions or need assistance, please contact your administrator.</p>
-                    
-                    <div class="footer">
-                        <p>This is an automated message. Please do not reply to this email.</p>
-                        <p>&copy; 2024 Dental Care System. All rights reserved.</p>
-                    </div>
+                </div>
+                <div class="footer">
+                    <p>&copy; 2024 DentoAI Diagnostics. All rights reserved.</p>
                 </div>
             </div>
         </body>
@@ -158,379 +149,138 @@ class EmailService:
         pdf_bytes: bytes,
         cc_email: Optional[str] = None
     ) -> bool:
-        """
-        Send detection report via email with PDF attachment using Resend API
-        """
+        """Send detection report via Brevo with PDF attachment"""
         try:
-            # Validate Resend API key
-            if not settings.RESEND_API_KEY:
-                print("ERROR: RESEND_API_KEY not configured!")
-                return False
-            
-            # Create HTML body
-            html_body = EmailService._create_report_email_html(
-                patient_name,
-                detection_id,
-                detection_date,
-                summary_stats
-            )
-            
-            # Convert PDF bytes to base64 for attachment
             import base64
+            html_body = EmailService._create_report_email_html(patient_name, detection_id, detection_date, summary_stats)
             pdf_base64 = base64.b64encode(pdf_bytes).decode('utf-8')
-            
-            # Prepare recipients
-            recipients = [to_email]
-            if cc_email:
-                recipients.append(cc_email)
-            
-            # Send email via Resend API
-            response = requests.post(
-                "https://api.resend.com/emails",
-                headers={
-                    "Authorization": f"Bearer {settings.RESEND_API_KEY}",
-                    "Content-Type": "application/json"
-                },
-                json={
-                    "from": f"{settings.RESEND_FROM_NAME} <{settings.RESEND_FROM_EMAIL}>",
-                    "to": recipients,
-                    "subject": f"Dental Detection Report - {detection_id}",
-                    "html": html_body,
-                    "attachments": [
-                        {
-                            "filename": f"Detection_Report_{detection_id}.pdf",
-                            "content": pdf_base64
-                        }
-                    ]
-                },
-                timeout=30
-            )
-            
-            if response.status_code == 200:
-                print(f"✅ Detection report sent successfully to: {to_email}")
-                return True
-            else:
-                print(f"❌ Resend API Error: {response.status_code}")
-                print(f"Response: {response.text}")
-                return False
-            
+            attachments = [{"content": pdf_base64, "name": f"Dental_Report_{detection_id}.pdf"}]
+            return EmailService.send_email(to_email, f"Diagnostic Report - {detection_id}", html_body, attachments)
         except Exception as e:
-            print(f"❌ Failed to send detection report email: {type(e).__name__}: {e}")
-            import traceback
-            traceback.print_exc()
+            print(f"❌ Failed to prepare detection report: {str(e)}")
             return False
     
     @staticmethod
-    def _create_report_email_html(
-        patient_name: str,
-        detection_id: str,
-        detection_date: str,
-        summary_stats: dict
-    ) -> str:
-        """Create professional HTML email body for detection report"""
-        
+    def _create_report_email_html(patient_name: str, detection_id: str, detection_date: str, summary_stats: dict) -> str:
         html = f"""
         <!DOCTYPE html>
         <html>
         <head>
             <style>
-                body {{
-                    font-family: Arial, sans-serif;
-                    line-height: 1.6;
-                    color: #333;
-                }}
-                .container {{
-                    max-width: 600px;
-                    margin: 0 auto;
-                    padding: 20px;
-                }}
-                .header {{
-                    background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
-                    color: white;
-                    padding: 30px;
-                    text-align: center;
-                    border-radius: 8px 8px 0 0;
-                }}
-                .header h1 {{
-                    margin: 0;
-                    font-size: 24px;
-                }}
-                .content {{
-                    background: #ffffff;
-                    padding: 30px;
-                    border: 1px solid #e5e7eb;
-                }}
-                .summary-box {{
-                    background: #f9fafb;
-                    border-left: 4px solid #3b82f6;
-                    padding: 20px;
-                    margin: 20px 0;
-                }}
-                .summary-box h3 {{
-                    margin-top: 0;
-                    color: #1e40af;
-                }}
-                .stat-row {{
-                    display: flex;
-                    justify-content: space-between;
-                    margin: 10px 0;
-                }}
-                .stat-label {{
-                    font-weight: bold;
-                    color: #6b7280;
-                }}
-                .footer {{
-                    background: #f9fafb;
-                    padding: 20px;
-                    text-align: center;
-                    border-radius: 0 0 8px 8px;
-                    border: 1px solid #e5e7eb;
-                    border-top: none;
-                }}
-                .footer p {{
-                    margin: 5px 0;
-                    color: #6b7280;
-                    font-size: 14px;
-                }}
+                body {{ font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; color: #1e293b; }}
+                .container {{ max-width: 600px; margin: 40px auto; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; }}
+                .header {{ background: #0f172a; color: white; padding: 30px; text-align: center; }}
+                .content {{ padding: 40px; }}
+                .summary {{ background: #f8fafc; border-left: 4px solid #3b82f6; padding: 20px; margin: 25px 0; border-radius: 4px; }}
             </style>
         </head>
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>🦷 Dental Detection Report</h1>
+                    <h2 style="margin:0;">Diagnostic Report</h2>
                 </div>
-                
                 <div class="content">
                     <p>Dear {patient_name},</p>
-                    
-                    <p>Please find attached your dental detection report from <strong>{detection_date}</strong>.</p>
-                    
-                    <div class="summary-box">
-                        <h3>Summary</h3>
-                        <div class="stat-row">
-                            <span class="stat-label">Detection ID:</span>
-                            <span>{detection_id}</span>
-                        </div>
-                        <div class="stat-row">
-                            <span class="stat-label">Teeth Detected:</span>
-                            <span>{summary_stats.get('teeth_detected', 'N/A')}</span>
-                        </div>
-                        <div class="stat-row">
-                            <span class="stat-label">Caries Found:</span>
-                            <span>{summary_stats.get('caries_found', 'N/A')}</span>
-                        </div>
-                        <div class="stat-row">
-                            <span class="stat-label">Status:</span>
-                            <span style="text-transform: uppercase;">{summary_stats.get('status', 'N/A')}</span>
-                        </div>
+                    <p>Your dental screening report from <strong>{detection_date}</strong> is now available.</p>
+                    <div class="summary">
+                        <p style="margin:5px 0;"><strong>Teeth Analyzed:</strong> {summary_stats.get('teeth_detected', 'N/A')}</p>
+                        <p style="margin:5px 0;"><strong>Findings:</strong> <span style="color:#ef4444;">{summary_stats.get('caries_found', 'N/A')}</span></p>
                     </div>
-                    
-                    <p>The attached PDF contains detailed information about your dental examination, including AI-detected findings and recommendations.</p>
-                    
-                    <p>If you have any questions or concerns about your report, please don't hesitate to contact us.</p>
-                    
-                    <p>Best regards,<br>
-                    <strong>{settings.HOSPITAL_NAME}</strong></p>
-                </div>
-                
-                <div class="footer">
-                    <p><strong>{settings.HOSPITAL_NAME}</strong></p>
-                    {f'<p>{settings.HOSPITAL_ADDRESS}</p>' if settings.HOSPITAL_ADDRESS else ''}
-                    {f'<p>Phone: {settings.HOSPITAL_PHONE}</p>' if settings.HOSPITAL_PHONE else ''}
-                    {f'<p>Email: {settings.HOSPITAL_EMAIL}</p>' if settings.HOSPITAL_EMAIL else ''}
+                    <p>A detailed PDF containing the full findings and AI analysis is attached.</p>
                 </div>
             </div>
         </body>
         </html>
         """
-        
         return html
 
     @staticmethod
     def send_verification_email(
         email: str,
         full_name: str,
-        token: str,
+        otp: str,
         role: str
     ) -> bool:
-        """Send email verification link to user"""
-        from ..core.config import settings
-        
-        # Handle role enum safely
-        role_str = str(role.value) if hasattr(role, 'value') else str(role).upper()
-        
-        # Determine portal URL based on role
-        if role_str == "PATIENT":
-            base_url = settings.PATIENT_PORTAL_URL
-        else:
-            base_url = settings.FRONTEND_URL
-            
-        verification_url = f"{base_url}/verify-email?token={token}"
-        subject = "Verify Your Email - Dental Care System"
+        """Send branded 6-digit OTP verification email via Brevo"""
+        subject = "Account Activation: Your Verification Code"
         
         html_content = f"""
         <!DOCTYPE html>
         <html>
         <head>
             <style>
-                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
-                .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
-                .header {{ background: #3b82f6; color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }}
-                .content {{ background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; border: 1px solid #e5e7eb; }}
-                .button {{ display: inline-block; padding: 12px 30px; background: #3b82f6; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; font-weight: bold; }}
-                .footer {{ text-align: center; margin-top: 20px; color: #666; font-size: 12px; }}
+                body {{ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #1e293b; margin: 0; padding: 0; }}
+                .container {{ max-width: 600px; margin: 40px auto; padding: 0; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 25px rgba(0,0,0,0.08); background: white; }}
+                .header {{ background: #2563eb; color: white; padding: 45px 20px; text-align: center; }}
+                .content {{ padding: 45px; text-align: center; }}
+                .otp-box {{ 
+                    display: inline-block; 
+                    background: #f1f5f9; 
+                    border: 1px solid #e2e8f0; 
+                    border-radius: 12px; 
+                    padding: 20px 40px; 
+                    margin: 30px 0; 
+                    font-size: 36px; 
+                    font-weight: 800; 
+                    color: #2563eb; 
+                    letter-spacing: 12px; 
+                    font-family: 'Courier New', Courier, monospace;
+                }}
+                .feature-text {{ color: #64748b; font-size: 14px; margin-top: 30px; border-top: 1px solid #f1f5f9; padding-top: 25px; }}
+                .footer {{ background: #f8fafc; padding: 30px; text-align: center; color: #94a3b8; font-size: 13px; }}
             </style>
         </head>
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>Verify Your Email</h1>
+                    <h1 style="margin:0; font-size: 26px;">Confirm Your Email</h1>
+                    <p style="margin-top:10px; opacity: 0.9;">DentoAI Diagnostics Security</p>
                 </div>
                 <div class="content">
-                    <p>Hello <strong>{full_name}</strong>,</p>
-                    <p>Thank you for registering! Please click the button below to verify your email address and activate your account.</p>
-                    <p style="text-align: center;">
-                        <a href="{verification_url}" class="button">Verify Email Address</a>
-                    </p>
-                    <p>If the button doesn't work, you can copy and paste this link into your browser:</p>
-                    <p style="word-break: break-all; color: #3b82f6;">{verification_url}</p>
-                    <p>This link will expire in 24 hours.</p>
-                </div>
-                <div class="footer">
-                    <p>&copy; 2024 Dental Care System. All rights reserved.</p>
-                </div>
-            </div>
-        </body>
-        </html>
-        """
-        
-        # Log the link for development if email fails or is not configured
-        print(f"DEBUG: Verification link for {email}: {verification_url}")
-        
-        return EmailService.send_email(email, subject, html_content)
-
-    @staticmethod
-    def send_password_reset_email(
-        email: str,
-        full_name: str,
-        token: str,
-        role: str
-    ) -> bool:
-        """Send password reset link to user"""
-        from ..core.config import settings
-        
-        # Handle role enum safely
-        role_str = str(role.value) if hasattr(role, 'value') else str(role).upper()
-        
-        # Determine portal URL based on role
-        if role_str == "PATIENT":
-            base_url = settings.PATIENT_PORTAL_URL
-        else:
-            base_url = settings.FRONTEND_URL
-            
-        reset_url = f"{base_url}/reset-password?token={token}"
-        subject = "Reset Your Password - Dental Care System"
-        
-        html_content = f"""
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <style>
-                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
-                .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
-                .header {{ background: #ef4444; color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }}
-                .content {{ background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; border: 1px solid #e5e7eb; }}
-                .button {{ display: inline-block; padding: 12px 30px; background: #ef4444; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; font-weight: bold; }}
-                .footer {{ text-align: center; margin-top: 20px; color: #666; font-size: 12px; }}
-            </style>
-        </head>
-        <body>
-            <div class="container">
-                <div class="header">
-                    <h1>Password Reset Request</h1>
-                </div>
-                <div class="content">
-                    <p>Hello <strong>{full_name}</strong>,</p>
-                    <p>We received a request to reset your password. If you didn't make this request, you can safely ignore this email.</p>
-                    <p>To reset your password, click the button below:</p>
-                    <p style="text-align: center;">
-                        <a href="{reset_url}" class="button">Reset Password</a>
-                    </p>
-                    <p>If the button doesn't work, you can copy and paste this link into your browser:</p>
-                    <p style="word-break: break-all; color: #ef4444;">{reset_url}</p>
-                    <p>This link will expire in 1 hour.</p>
-                </div>
-                <div class="footer">
-                    <p>&copy; 2024 Dental Care System. All rights reserved.</p>
-                </div>
-            </div>
-        </body>
-        </html>
-        """
-        
-        # Log the link for development
-        print(f"DEBUG: Password reset link for {email}: {reset_url}")
-        
-        return EmailService.send_email(email, subject, html_content)
-
-    @staticmethod
-    def send_admin_verification_request(
-        admin_email: str,
-        dentist_name: str,
-        dentist_email: str,
-        license_number: str,
-        verification_url: str
-    ) -> bool:
-        """Notify admin about new dentist registration requiring verification"""
-        
-        subject = f"Action Required: New Dentist Verification - {dentist_name}"
-        
-        html_content = f"""
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <style>
-                body {{ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #1e293b; }}
-                .container {{ max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px; }}
-                .header {{ background: #0f172a; color: white; padding: 25px; text-align: center; border-radius: 8px 8px 0 0; }}
-                .content {{ padding: 30px; background: #ffffff; }}
-                .info-box {{ background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 8px; margin: 20px 0; }}
-                .label {{ font-weight: bold; color: #64748b; font-size: 12px; text-transform: uppercase; }}
-                .value {{ font-size: 15px; color: #0f172a; margin-bottom: 10px; }}
-                .button {{ display: inline-block; padding: 12px 24px; background: #2563eb; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; margin-top: 10px; }}
-                .footer {{ text-align: center; margin-top: 25px; color: #94a3b8; font-size: 12px; }}
-            </style>
-        </head>
-        <body>
-            <div class="container">
-                <div class="header">
-                    <h2 style="margin:0;">Verification Required</h2>
-                </div>
-                <div class="content">
-                    <p>Hello Administrator,</p>
-                    <p>A new dentist has registered on the platform and requires credential verification before they can access clinical features.</p>
+                    <p style="text-align: left; font-size: 18px; color: #334155;">Hello <strong>{full_name}</strong>,</p>
+                    <p style="text-align: left;">Thank you for joining DentoAI. To complete your activation and secure your clinical dashboard, please enter the 6-digit verification code below:</p>
                     
-                    <div class="info-box">
-                        <div class="label">Dentist Name</div>
-                        <div class="value">{dentist_name}</div>
-                        
-                        <div class="label">Email Address</div>
-                        <div class="value">{dentist_email}</div>
-                        
-                        <div class="label">License Number</div>
-                        <div class="value">{license_number}</div>
+                    <div class="otp-box">{otp}</div>
+                    
+                    <p style="font-size: 15px; color: #475569;">This verification code will expire in <strong>10 minutes</strong>.</p>
+                    
+                    <div class="feature-text">
+                        <p>DentoAI ensures your secure medical history is accessible only by you and your verified clinical team.</p>
                     </div>
-                    
-                    <p style="text-align: center;">
-                        <a href="{verification_url}" class="button">Review Credentials</a>
-                    </p>
                 </div>
                 <div class="footer">
-                    <p>DentoAI Diagnostics - Administration System</p>
+                    <p>&copy; 2024 DentoAI Diagnostics. Secure Clinical Systems.</p>
                 </div>
             </div>
         </body>
         </html>
         """
         
+        print(f"DEBUG: Brevo OTP for {email}: {otp}")
+        return EmailService.send_email(email, subject, html_content)
+
+    @staticmethod
+    def send_password_reset_email(email: str, full_name: str, token: str, role: str) -> bool:
+        """Send password reset link via Brevo"""
+        from ..core.config import settings
+        base_url = settings.PATIENT_PORTAL_URL if role == "PATIENT" else settings.FRONTEND_URL
+        reset_url = f"{base_url.rstrip('/')}/reset-password?token={token}"
+        subject = "Security Alert: Password Reset Requested"
+        
+        html_content = f"""
+        <!DOCTYPE html>
+        <html><body>
+            <div style="font-family: sans-serif; padding: 40px; background: #fef2f2; border-radius: 12px; text-align: center;">
+                <h2 style="color:#ef4444;">Reset Your Password</h2>
+                <p>Hello {full_name}, we received a request to reset your DentoAI password.</p>
+                <a href="{reset_url}" style="display:inline-block; padding:16px 32px; background:#ef4444; color:white; text-decoration:none; border-radius:8px; font-weight:bold;">Reset Password</a>
+            </div>
+        </body></html>
+        """
+        return EmailService.send_email(email, subject, html_content)
+
+    @staticmethod
+    def send_admin_verification_request(admin_email: str, dentist_name: str, dentist_email: str, license_number: str, verification_url: str) -> bool:
+        subject = f"Audit Required: New Practitioner - {dentist_name}"
+        html_content = f"<h3>Practitioner Audit Required</h3><p>Name: {dentist_name}</p><p>License: {license_number}</p><a href='{verification_url}'>Review Practitioner</a>"
         return EmailService.send_email(admin_email, subject, html_content)

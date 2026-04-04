@@ -16,10 +16,10 @@ class Settings(BaseSettings):
     CONFIDENCE_THRESHOLD: float = 0.25
     IOU_THRESHOLD: float = 0.45
     
-    # Email Configuration (Resend API)
-    RESEND_API_KEY: str = ""
-    RESEND_FROM_EMAIL: str = "onboarding@resend.dev"  # Use resend.dev for testing
-    RESEND_FROM_NAME: str = "Dental Care System"
+    # Email Configuration (Brevo v3 SMTP API)
+    BREVO_API_KEY: str = ""
+    BREVO_SENDER_EMAIL: str = "noreply@dentoai.com"
+    BREVO_SENDER_NAME: str = "DentoAI Diagnostics"
     PORTAL_URL: str = "http://localhost"
     
     # Paths
@@ -57,7 +57,8 @@ class Settings(BaseSettings):
     
     class Config:
         env_file = ".env"
-        case_sensitive = True
+        case_sensitive = False # Case insensitive better for env vars
+        extra = "ignore"      # Ignore extra environment variables like the old RESEND_* keys
 
 settings = Settings()
 

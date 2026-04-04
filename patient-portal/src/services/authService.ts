@@ -28,17 +28,19 @@ export const authService = {
       role: 'PATIENT'
     };
 
-    console.group('Registration Payload Debug');
-    console.log('User Data:', payload);
     const serializedData = JSON.stringify(payload);
-    console.log('Serialized user_data:', serializedData);
-    console.groupEnd();
-
     const formData = new FormData();
     formData.append('user_data', serializedData);
 
-    // Let Axios automatically set the Content-Type and boundary
     await api.post('/auth/register', formData);
+  },
+
+  async verifyOtp(email: string, otp: string): Promise<void> {
+    await api.post('/auth/verify-otp', { email, otp });
+  },
+
+  async resendOtp(email: string): Promise<void> {
+    await api.post('/auth/resend-otp', { email });
   },
 
   async getCurrentUser(): Promise<User> {
