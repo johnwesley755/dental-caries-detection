@@ -11,6 +11,9 @@ from .image_service import ImageService
 from fastapi import UploadFile
 from ..models.user import UserRole
 from ..utils.notifications import notify_user, NotificationType
+import logging
+
+logger = logging.getLogger(__name__)
 
 class AuthService:
     @staticmethod
@@ -51,7 +54,8 @@ class AuthService:
                 full_name=db_user.full_name,
                 email=db_user.email
             )
-            patient = PatientService.create_patient(db, patient_data, user_id=db_user.id)
+            # For self-registration, creator_id is the user's own id
+            patient = PatientService.create_patient(db, patient_data, user_id=db_user.id, creator_id=db_user.id)
             
             # If there's an anonymous detection to link
             if user.detection_id:
@@ -126,14 +130,21 @@ class AuthService:
         db.commit()
         db.refresh(db_user)
 
-        # Send verification email for the user's primary email
-        verification_token = AuthService.create_access_token_for_user(db_user, expires_delta=timedelta(hours=24))
-        EmailService.send_verification_email(
-            email=db_user.email,
-            full_name=db_user.full_name,
-            token=verification_token,
-            role=db_user.role
-        )
+        # Post-commit tasks: Wrap in try-except to ensure registration success even if email/notification fails
+        try:
+            # Send verification email for the user's primary email
+            # Use user.email directly to avoid lazy loading issues after commit
+            verification_token = AuthService.create_access_token_for_user(db_user, expires_delta=timedelta(hours=24))
+            EmailService.send_verification_email(
+                email=db_user.email,
+                full_name=db_user.full_name,
+                token=verification_token,
+                role=db_user.role
+            )
+        except Exception as e:
+            # Log the error but don't fail the registration
+            logger.warning(f"Registration successful for {db_user.email} but failed to send verification email: {str(e)}")
+            print(f"⚠️ Warning: Registration successful for {db_user.email} but failed to send verification email: {str(e)}")
 
         return db_user
     

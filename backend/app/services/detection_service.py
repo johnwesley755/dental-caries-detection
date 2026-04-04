@@ -208,7 +208,5 @@ class DetectionService:
             changes={"patient_id": str(patient_id)}
         )
         db.add(history)
-        
-        db.commit()
-        db.refresh(detection)
+        db.flush()
         return detection

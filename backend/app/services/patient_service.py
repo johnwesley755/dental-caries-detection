@@ -28,8 +28,7 @@ class PatientService:
             user_id=user_id
         )
         db.add(db_patient)
-        db.commit()
-        db.refresh(db_patient)
+        db.flush()
         return db_patient
     
     @staticmethod

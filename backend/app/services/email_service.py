@@ -77,7 +77,10 @@ class EmailService:
         if ':' in base_url.split('//')[-1]:  # Check if port already exists
             base_url = '://'.join(base_url.split('://')[0:1]) + '://' + base_url.split('://')[1].split(':')[0]
         
-        if role.upper() == "PATIENT":
+        # Handle role enum safely
+        role_str = str(role.value) if hasattr(role, 'value') else str(role).upper()
+        
+        if role_str == "PATIENT":
             login_url = f"{base_url}:5174"  # Patient portal
             portal_name = "Patient Portal"
         else:
@@ -97,7 +100,7 @@ class EmailService:
                            color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }}
                 .content {{ background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }}
                 .credentials {{ background: white; padding: 20px; border-left: 4px solid #667eea; 
-                               margin: 20px 0; border-radius: 5px; }}
+                                margin: 20px 0; border-radius: 5px; }}
                 .button {{ display: inline-block; padding: 12px 30px; background: #667eea; 
                           color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }}
                 .footer {{ text-align: center; margin-top: 20px; color: #666; font-size: 12px; }}
@@ -119,7 +122,7 @@ class EmailService:
                     <div class="credentials">
                         <p><strong>Email:</strong> {email}</p>
                         <p><strong>Password:</strong> <code>{password}</code></p>
-                        <p><strong>Role:</strong> {role.title()}</p>
+                        <p><strong>Role:</strong> {role_str.title()}</p>
                     </div>
                     
                     <div class="warning">
@@ -157,18 +160,6 @@ class EmailService:
     ) -> bool:
         """
         Send detection report via email with PDF attachment using Resend API
-        
-        Args:
-            to_email: Recipient email address
-            patient_name: Patient's full name
-            detection_id: Detection ID
-            detection_date: Detection date string
-            summary_stats: Dictionary with teeth_detected, caries_found, etc.
-            pdf_bytes: PDF file as bytes
-            cc_email: Optional CC email address
-            
-        Returns:
-            True if email sent successfully, False otherwise
         """
         try:
             # Validate Resend API key
@@ -365,8 +356,11 @@ class EmailService:
         """Send email verification link to user"""
         from ..core.config import settings
         
+        # Handle role enum safely
+        role_str = str(role.value) if hasattr(role, 'value') else str(role).upper()
+        
         # Determine portal URL based on role
-        if role.upper() == "PATIENT":
+        if role_str == "PATIENT":
             base_url = settings.PATIENT_PORTAL_URL
         else:
             base_url = settings.FRONTEND_URL
@@ -425,8 +419,11 @@ class EmailService:
         """Send password reset link to user"""
         from ..core.config import settings
         
+        # Handle role enum safely
+        role_str = str(role.value) if hasattr(role, 'value') else str(role).upper()
+        
         # Determine portal URL based on role
-        if role.upper() == "PATIENT":
+        if role_str == "PATIENT":
             base_url = settings.PATIENT_PORTAL_URL
         else:
             base_url = settings.FRONTEND_URL

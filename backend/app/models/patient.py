@@ -24,7 +24,7 @@ class Patient(Base):
     address = Column(Text)
     medical_history = Column(JSONB)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)  # Link to user account for patient portal
-    created_by = Column(UUID(as_uuid=True), ForeignKey("users.id"))
+    created_by = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True) # Creator (dentist) ID
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     
