@@ -475,3 +475,65 @@ class EmailService:
         print(f"DEBUG: Password reset link for {email}: {reset_url}")
         
         return EmailService.send_email(email, subject, html_content)
+
+    @staticmethod
+    def send_admin_verification_request(
+        admin_email: str,
+        dentist_name: str,
+        dentist_email: str,
+        license_number: str,
+        verification_url: str
+    ) -> bool:
+        """Notify admin about new dentist registration requiring verification"""
+        
+        subject = f"Action Required: New Dentist Verification - {dentist_name}"
+        
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #1e293b; }}
+                .container {{ max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px; }}
+                .header {{ background: #0f172a; color: white; padding: 25px; text-align: center; border-radius: 8px 8px 0 0; }}
+                .content {{ padding: 30px; background: #ffffff; }}
+                .info-box {{ background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 8px; margin: 20px 0; }}
+                .label {{ font-weight: bold; color: #64748b; font-size: 12px; text-transform: uppercase; }}
+                .value {{ font-size: 15px; color: #0f172a; margin-bottom: 10px; }}
+                .button {{ display: inline-block; padding: 12px 24px; background: #2563eb; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; margin-top: 10px; }}
+                .footer {{ text-align: center; margin-top: 25px; color: #94a3b8; font-size: 12px; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h2 style="margin:0;">Verification Required</h2>
+                </div>
+                <div class="content">
+                    <p>Hello Administrator,</p>
+                    <p>A new dentist has registered on the platform and requires credential verification before they can access clinical features.</p>
+                    
+                    <div class="info-box">
+                        <div class="label">Dentist Name</div>
+                        <div class="value">{dentist_name}</div>
+                        
+                        <div class="label">Email Address</div>
+                        <div class="value">{dentist_email}</div>
+                        
+                        <div class="label">License Number</div>
+                        <div class="value">{license_number}</div>
+                    </div>
+                    
+                    <p style="text-align: center;">
+                        <a href="{verification_url}" class="button">Review Credentials</a>
+                    </p>
+                </div>
+                <div class="footer">
+                    <p>DentoAI Diagnostics - Administration System</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        return EmailService.send_email(admin_email, subject, html_content)

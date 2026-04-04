@@ -253,13 +253,83 @@ async def list_pending_dentists(
     current_user: User = Depends(require_admin)
 ):
     """List dentists awaiting verification - Admin only"""
-    pending_dentists = db.query(User).filter(
+    from ...models.dentist_profile import DentistProfile
+    
+    pending_dentists = db.query(User).join(DentistProfile, User.id == DentistProfile.user_id).filter(
         User.role == UserRole.DENTIST,
-        User.is_verified == False
+        DentistProfile.verification_status.in_(["PENDING", "RESUBMITTED"])
     ).all()
     
-    # Return with profile info
-    return pending_dentists
+    
+    # Return with profile info (explicit serialization to avoid 500)
+    serialized = []
+    for u in pending_dentists:
+        p = u.profile
+        serialized.append({
+            "id": str(u.id),
+            "email": u.email,
+            "full_name": u.full_name,
+            "role": u.role.value if hasattr(u.role, 'value') else str(u.role),
+            "is_active": u.is_active,
+            "is_verified": u.is_verified,
+            "created_at": u.created_at.isoformat() if u.created_at else None,
+            "profile": {
+                "license_number": p.license_number,
+                "specialization": p.specialization,
+                "clinic_name": p.clinic_name,
+                "clinic_address": p.clinic_address,
+                "verification_documents_url": p.verification_documents_url,
+                "verification_status": p.verification_status,
+                "phone_number": p.phone_number,
+                "years_of_experience": p.years_of_experience,
+                "profile_image_url": p.profile_image_url
+            } if p else None
+        })
+    
+    return serialized
+
+@router.get("/dentists-by-status/{status}")
+async def list_dentists_by_status(
+    status: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_admin)
+):
+    """List dentists by specific verification status - Admin only"""
+    from ...models.dentist_profile import DentistProfile
+    
+    dentists = db.query(User).join(DentistProfile, User.id == DentistProfile.user_id).filter(
+        User.role == UserRole.DENTIST,
+        DentistProfile.verification_status == status.upper()
+    ).all()
+    
+    
+    # Return with profile info (explicit serialization to avoid 500)
+    serialized = []
+    for u in dentists:
+        p = u.profile
+        serialized.append({
+            "id": str(u.id),
+            "email": u.email,
+            "full_name": u.full_name,
+            "role": u.role.value if hasattr(u.role, 'value') else str(u.role),
+            "is_active": u.is_active,
+            "is_verified": u.is_verified,
+            "created_at": u.created_at.isoformat() if u.created_at else None,
+            "profile": {
+                "license_number": p.license_number,
+                "specialization": p.specialization,
+                "clinic_name": p.clinic_name,
+                "clinic_address": p.clinic_address,
+                "verification_documents_url": p.verification_documents_url,
+                "verification_status": p.verification_status,
+                "phone_number": p.phone_number,
+                "years_of_experience": p.years_of_experience,
+                "profile_image_url": p.profile_image_url,
+                "rejection_reason": p.rejection_reason
+            } if p else None
+        })
+    
+    return serialized
 
 @router.post("/verify-dentist/{user_id}")
 async def verify_dentist(
@@ -267,7 +337,10 @@ async def verify_dentist(
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin)
 ):
-    """Verify or approve a dentist account - Admin only"""
+    """Approve a dentist account - Admin only"""
+    from ...models.dentist_profile import DentistProfile
+    from datetime import datetime
+    
     user = db.query(User).filter(User.id == user_id, User.role == UserRole.DENTIST).first()
     if not user:
         raise HTTPException(
@@ -275,7 +348,66 @@ async def verify_dentist(
             detail="Dentist not found"
         )
     
+    # Update user
     user.is_verified = True
+    
+    # Update profile
+    profile = db.query(DentistProfile).filter(DentistProfile.user_id == user.id).first()
+    if profile:
+        profile.verification_status = "APPROVED"
+        profile.verified_at = datetime.now()
+        profile.verified_by_id = current_user.id
+    
     db.commit()
     
+    # Send Approval Email (stub for now, should call EmailService)
+    # EmailService.send_approval_email(user.email, user.full_name)
+    
     return {"message": f"Dentist {user.full_name} verified successfully"}
+
+@router.post("/reject-dentist/{user_id}")
+async def reject_dentist(
+    user_id: str,
+    rejection_reason: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_admin)
+):
+    """Reject a dentist account - Admin only"""
+    from ...models.dentist_profile import DentistProfile
+    
+    user = db.query(User).filter(User.id == user_id, User.role == UserRole.DENTIST).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Dentist not found"
+        )
+    
+    # Update user (remains unverified)
+    user.is_verified = False
+    
+    # Update profile
+    profile = db.query(DentistProfile).filter(DentistProfile.user_id == user.id).first()
+    if not profile:
+         raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Dentist profile not found"
+        )
+         
+    profile.verification_status = "REJECTED"
+    profile.rejection_reason = rejection_reason
+    
+    db.commit()
+    
+    # Notify dentist (Bell)
+    from ...utils.notifications import notify_user, NotificationType
+    notify_user(
+        db=db,
+        user_id=str(user.id),
+        title="Verification Rejected",
+        message=f"Your credential verification was rejected. Reason: {rejection_reason}",
+        notification_type=NotificationType.SYSTEM
+    )
+    
+    # Notify dentist (Email stub)
+    
+    return {"message": f"Dentist {user.full_name} rejected"}

@@ -14,6 +14,7 @@ import {
   History,
 } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
+import { UserRole } from "../../types/auth.types";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -23,7 +24,7 @@ interface SidebarProps {
 export const SideNavBar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
 
   const navItems = [
     { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
@@ -124,31 +125,35 @@ export const SideNavBar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             </NavLink>
           ))}
 
-          <div className="pt-4 pb-4 px-4 text-sm font-black text-slate-400 opacity-60">
-            System Admin
-          </div>
-          {adminItems.map((item) => (
-            <NavLink
-              key={item.name}
-              to={item.path}
-              onClick={handleLinkClick}
-              className={({ isActive }) => `
-                    flex items-center gap-4 px-5 py-3.5 rounded-2xl transition-all duration-300 group
-                    ${
-                      isActive
-                        ? "bg-blue-900 text-white shadow-xl shadow-blue-900/20"
-                        : "text-slate-500 hover:bg-slate-50 hover:text-blue-900"
-                    }
-                `}
-            >
-              <item.icon
-                className={`w-5 h-5 transition-transform group-hover:scale-110 ${isActive(item.path) ? "text-white" : "text-slate-400 group-hover:text-blue-900"}`}
-              />
-              <span className="text-sm font-black leading-none">
-                {item.name}
-              </span>
-            </NavLink>
-          ))}
+          {user?.role === UserRole.ADMIN && (
+            <>
+              <div className="pt-4 pb-4 px-4 text-sm font-black text-slate-400 opacity-60">
+                System Admin
+              </div>
+              {adminItems.map((item) => (
+                <NavLink
+                  key={item.name}
+                  to={item.path}
+                  onClick={handleLinkClick}
+                  className={({ isActive }) => `
+                        flex items-center gap-4 px-5 py-3.5 rounded-2xl transition-all duration-300 group
+                        ${
+                          isActive
+                            ? "bg-blue-900 text-white shadow-xl shadow-blue-900/20"
+                            : "text-slate-500 hover:bg-slate-50 hover:text-blue-900"
+                        }
+                    `}
+                >
+                  <item.icon
+                    className={`w-5 h-5 transition-transform group-hover:scale-110 ${isActive(item.path) ? "text-white" : "text-slate-400 group-hover:text-blue-900"}`}
+                  />
+                  <span className="text-sm font-black leading-none">
+                    {item.name}
+                  </span>
+                </NavLink>
+              ))}
+            </>
+          )}
           <div className="px-6 mt-auto space-y-4">
             <button
               onClick={() => {
@@ -158,7 +163,7 @@ export const SideNavBar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
               className="w-full h-14 rounded-2xl bg-red-50 border-red-200 text-red-400 flex items-center justify-center gap-3 transition-all hover:bg-red-50 hover:text-red-500 group border border-transparent hover:border-red-100"
             >
               <LogOut className="w-5 h-5 transition-transform group-hover:-translate-x-1" />
-              <span className="text-sm font-black">Terminate Session</span>
+              <span className="text-sm font-black">Sign out</span>
             </button>
           </div>
         </nav>

@@ -23,6 +23,7 @@ import { UserManagement } from './pages/UserManagement';
 import { Messages } from './pages/Messages';
 import { Guidelines } from './pages/Guidelines';
 import VerificationDashboard from './pages/VerificationDashboard';
+import { PendingVerification } from './pages/PendingVerification';
 
 import MainLayout from './layouts/MainLayout';
 import './App.css';
@@ -62,6 +63,7 @@ function App() {
               <Route path="/messages" element={<Messages />} />
               <Route path="/guidelines" element={<Guidelines />} />
               <Route path="/verifications" element={<VerificationDashboard />} />
+              <Route path="/pending-verification" element={<PendingVerification />} />
             </Route>
 
             {/* Catch all */}

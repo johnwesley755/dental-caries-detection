@@ -5,7 +5,6 @@ import { UserRole } from '../../types/auth.types';
 import { validateEmail, validatePassword } from '../../utils/validation';
 import { motion } from 'framer-motion';
 import {
-  Loader2,
   ArrowRight,
   Lock,
   Mail,
@@ -18,7 +17,11 @@ import {
   Briefcase,
   FileText,
   Building,
-  MapPin
+  MapPin,
+  Phone,
+  History,
+  Upload,
+  CheckCircle2
 } from 'lucide-react';
 
 import { clsx, type ClassValue } from "clsx";
@@ -40,7 +43,12 @@ const Register: React.FC = () => {
     specialization: '',
     clinic_name: '',
     clinic_address: '',
+    phone_number: '',
+    years_of_experience: '',
   });
+  const [licenseFile, setLicenseFile] = useState<File | null>(null);
+  const [profileImage, setProfileImage] = useState<File | null>(null);
+  const [profilePreview, setProfilePreview] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -57,6 +65,26 @@ const Register: React.FC = () => {
       [e.target.name]: '',
       submit: ''
     });
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setLicenseFile(e.target.files[0]);
+    }
+  };
+
+  const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setProfileImage(file);
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfilePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const validateForm = (): boolean => {
@@ -79,8 +107,13 @@ const Register: React.FC = () => {
       newErrors.confirmPassword = 'Passwords do not match';
     }
 
-    if (formData.role === UserRole.DENTIST && !formData.license_number.trim()) {
-      newErrors.license_number = 'License number is required for verification';
+    if (formData.role === UserRole.DENTIST) {
+      if (!formData.license_number.trim()) {
+        newErrors.license_number = 'License number is required';
+      }
+      if (!licenseFile) {
+        newErrors.licenseFile = 'Upload license document for verification';
+      }
     }
 
     setErrors(newErrors);
@@ -103,12 +136,20 @@ const Register: React.FC = () => {
           specialization: formData.specialization,
           clinic_name: formData.clinic_name,
           clinic_address: formData.clinic_address,
+          phone_number: formData.phone_number,
+          years_of_experience: formData.years_of_experience,
+          verification_status: 'PENDING'
         } : undefined
-      });
+      }, licenseFile || undefined, profileImage || undefined);
       navigate('/dashboard');
-    } catch (err: any) {
+    } catch (err: unknown) {
+      let errorMessage = 'Registration failed. Please try again.';
+      if (err && typeof err === 'object' && 'response' in err) {
+        const response = (err as { response?: { data?: { detail?: string } } }).response;
+        errorMessage = response?.data?.detail || errorMessage;
+      }
       setErrors({
-        submit: err.response?.data?.detail || 'Registration failed. Please try again.',
+        submit: errorMessage,
       });
     }
   };
@@ -155,6 +196,42 @@ const Register: React.FC = () => {
                 <div className="p-4 text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl flex items-center gap-3">
                   <ShieldCheck className="h-5 w-5 shrink-0" />
                   <span>{errors.submit}</span>
+                </div>
+              )}
+
+              {/* Profile Image Section */}
+              {formData.role === UserRole.DENTIST && (
+                <div className="flex flex-col items-center justify-center space-y-3 mb-2">
+                  <div className="relative group">
+                    <div className={cn(
+                      "w-24 h-24 rounded-full border-2 border-dashed flex items-center justify-center overflow-hidden transition-all bg-slate-50/50 hover:bg-white",
+                      profilePreview ? "border-primary border-solid" : "border-slate-200 group-hover:border-primary/50"
+                    )}>
+                      {profilePreview ? (
+                        <img src={profilePreview} alt="Avatar Preview" className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="flex flex-col items-center text-slate-400 group-hover:text-primary transition-colors">
+                          <Upload className="h-6 w-6 mb-1" />
+                          <span className="text-[10px] font-black uppercase">Photo</span>
+                        </div>
+                      )}
+                      <input
+                        type="file"
+                        onChange={handleProfileImageChange}
+                        accept="image/*"
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                      />
+                    </div>
+                    {profilePreview && (
+                      <div className="absolute -bottom-1 -right-1 bg-emerald-500 text-white p-1 rounded-full shadow-lg border-2 border-white pointer-events-none">
+                        <CheckCircle2 className="h-4 w-4" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="text-center">
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Profile Identity</p>
+                    <p className="text-[9px] text-slate-300 mt-0.5">Professional Clinician Photo</p>
+                  </div>
                 </div>
               )}
 
@@ -206,16 +283,13 @@ const Register: React.FC = () => {
                     name="role"
                     value={formData.role}
                     onChange={handleChange}
-                    className="appearance-none flex h-14 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pl-12 pr-10 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                    className="appearance-none flex h-14 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pl-12 pr-10 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all pointer-events-none"
+                    disabled
                   >
                     <option value={UserRole.DENTIST}>Dentist</option>
-                    <option value={UserRole.ASSISTANT}>Assistant</option>
-                    <option value={UserRole.ADMIN}>Admin</option>
                   </select>
                   <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none">
-                    <svg className="h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                    </svg>
+                    <ShieldCheck className="h-4 w-4 text-emerald-500" />
                   </div>
                 </div>
               </div>
@@ -223,41 +297,118 @@ const Register: React.FC = () => {
               {/* Dentist fields */}
               {formData.role === UserRole.DENTIST && (
                 <div className="space-y-6 pt-4 border-t border-slate-100">
-                  <h3 className="text-sm font-bold text-slate-600">Professional Credentials</h3>
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-bold text-slate-600">Professional Credentials</h3>
+                    <span className="text-[10px] bg-amber-50 text-amber-600 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider border border-amber-100">Verification Required</span>
+                  </div>
+                  <p className="text-[11px] text-slate-400 -mt-5 italic">Your account will be reviewed by our administration team after registration.</p>
 
-                  <div className="space-y-2">
-                    <label className="text-sm font-bold text-slate-500 ml-1">License Number *</label>
-                    <div className="relative group">
-                      <FileText className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-primary transition-colors" />
-                      <input
-                        name="license_number"
-                        type="text"
-                        placeholder="LIC-123456"
-                        value={formData.license_number}
-                        onChange={handleChange}
-                        required
-                        className={cn(
-                          "flex h-14 w-full rounded-xl border bg-slate-50/50 px-4 py-3 pl-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all",
-                          errors.license_number ? "border-red-300" : "border-slate-200"
-                        )}
-                      />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
+                    <div className="space-y-2">
+                      <label className="text-sm font-bold text-slate-500 ml-1">License Number *</label>
+                      <div className="relative group">
+                        <FileText className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-primary transition-colors" />
+                        <input
+                          name="license_number"
+                          type="text"
+                          placeholder="LIC-123456"
+                          value={formData.license_number}
+                          onChange={handleChange}
+                          required
+                          className={cn(
+                            "flex h-14 w-full rounded-xl border bg-slate-50/50 px-4 py-3 pl-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all",
+                            errors.license_number ? "border-red-300" : "border-slate-200"
+                          )}
+                        />
+                      </div>
+                      {errors.license_number && <p className="text-xs text-red-600 font-medium ml-1">{errors.license_number}</p>}
                     </div>
-                    {errors.license_number && <p className="text-xs text-red-600 font-medium ml-1">{errors.license_number}</p>}
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-bold text-slate-500 ml-1">Specialization</label>
+                      <div className="relative group">
+                        <Stethoscope className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-primary transition-colors" />
+                        <input
+                          name="specialization"
+                          type="text"
+                          placeholder="e.g. Orthodontics"
+                          value={formData.specialization}
+                          onChange={handleChange}
+                          className="flex h-14 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pl-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                        />
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <label className="text-sm font-bold text-slate-500 ml-1">Specialization</label>
-                    <div className="relative group">
-                      <Stethoscope className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-primary transition-colors" />
-                      <input
-                        name="specialization"
-                        type="text"
-                        placeholder="e.g. Orthodontics"
-                        value={formData.specialization}
-                        onChange={handleChange}
-                        className="flex h-14 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pl-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                      />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-sm font-bold text-slate-500 ml-1">Years of Experience</label>
+                      <div className="relative group">
+                        <History className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-primary transition-colors" />
+                        <input
+                          name="years_of_experience"
+                          type="text"
+                          placeholder="e.g. 5+ years"
+                          value={formData.years_of_experience}
+                          onChange={handleChange}
+                          className="flex h-14 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pl-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                        />
+                      </div>
                     </div>
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-bold text-slate-500 ml-1">Phone Number</label>
+                      <div className="relative group">
+                        <Phone className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-primary transition-colors" />
+                        <input
+                          name="phone_number"
+                          type="tel"
+                          placeholder="+1 234 567 890"
+                          value={formData.phone_number}
+                          onChange={handleChange}
+                          className="flex h-14 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pl-12 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Document Upload */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-slate-500 ml-1">License Proof (PDF/Image) *</label>
+                    <div 
+                      className={cn(
+                        "relative border-2 border-dashed rounded-2xl flex flex-col items-center justify-center p-6 transition-all bg-slate-50/30",
+                        errors.licenseFile ? "border-red-300 bg-red-50/30" : "border-slate-200 hover:border-primary hover:bg-primary/5",
+                        licenseFile ? "border-emerald-200 bg-emerald-50/30" : ""
+                      )}
+                    >
+                      <input
+                        type="file"
+                        onChange={handleFileChange}
+                        accept="image/*,.pdf"
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                      />
+                      {licenseFile ? (
+                        <>
+                          <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center mb-3">
+                            <ShieldCheck className="h-6 w-6 text-emerald-600" />
+                          </div>
+                          <p className="text-xs font-bold text-emerald-700 truncate max-w-full px-4 text-center">
+                            {licenseFile.name}
+                          </p>
+                          <p className="text-[10px] text-emerald-500 mt-1">File selected - Click to change</p>
+                        </>
+                      ) : (
+                        <>
+                          <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center mb-3 group-hover:bg-primary/10 transition-colors">
+                            <Upload className="h-6 w-6 text-slate-400 group-hover:text-primary transition-colors" />
+                          </div>
+                          <p className="text-xs font-bold text-slate-600">Click or drag to upload</p>
+                          <p className="text-[10px] text-slate-400 mt-1">PDF, JPG or PNG (max 5MB)</p>
+                        </>
+                      )}
+                    </div>
+                    {errors.licenseFile && <p className="text-xs text-red-600 font-medium ml-1">{errors.licenseFile}</p>}
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

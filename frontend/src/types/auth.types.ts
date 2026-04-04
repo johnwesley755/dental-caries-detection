@@ -13,6 +13,12 @@ export interface DentistProfile {
   specialization?: string;
   clinic_name?: string;
   clinic_address?: string;
+  phone_number?: string;
+  years_of_experience?: string;
+  profile_image_url?: string;
+  verification_documents_url?: string;
+  verification_status: 'PENDING' | 'APPROVED' | 'REJECTED' | 'RESUBMITTED';
+  rejection_reason?: string;
 }
 
 export interface User {
@@ -59,7 +65,7 @@ export interface AuthContextType {
   user: User | null;
   token: string | null;
   login: (email: string, password: string) => Promise<void>;
-  register: (data: UserCreate) => Promise<void>;
+  register: (data: UserCreate, licenseFile?: File, profileImage?: File) => Promise<void>;
   logout: () => void;
   updateUser: (user: User) => void;
   isAuthenticated: boolean;

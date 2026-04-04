@@ -32,7 +32,21 @@ ALTER TABLE appointments
   ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP DEFAULT NOW();
 
 -- ============================================================
--- STEP 3: Verify the final schema
+-- STEP 3: Fix Dentist Verification (if missing)
+-- ============================================================
+-- migration for dentist verification lifecycle
+-- we only add the missing status and audit fields
+ALTER TABLE dentist_profiles
+  ADD COLUMN IF NOT EXISTS verification_status VARCHAR(20) DEFAULT 'PENDING',
+  ADD COLUMN IF NOT EXISTS rejection_reason     TEXT,
+  ADD COLUMN IF NOT EXISTS verified_at          TIMESTAMP,
+  ADD COLUMN IF NOT EXISTS verified_by_id       UUID REFERENCES users(id) ON DELETE SET NULL,
+  ADD COLUMN IF NOT EXISTS phone_number         VARCHAR(50),
+  ADD COLUMN IF NOT EXISTS years_of_experience  VARCHAR(20),
+  ADD COLUMN IF NOT EXISTS profile_image_url     TEXT;
+
+-- ============================================================
+-- STEP 4: Verify the final schema
 -- ============================================================
 -- Run this SELECT to confirm all columns exist:
 -- SELECT column_name, data_type FROM information_schema.columns

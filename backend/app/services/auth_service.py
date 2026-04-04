@@ -7,10 +7,19 @@ from datetime import timedelta
 from typing import Optional
 from ..core.config import settings
 from .email_service import EmailService
+from .image_service import ImageService
+from fastapi import UploadFile
+from ..models.user import UserRole
+from ..utils.notifications import notify_user, NotificationType
 
 class AuthService:
     @staticmethod
-    def create_user(db: Session, user: UserCreate) -> User:
+    async def create_user(
+        db: Session, 
+        user: UserCreate, 
+        license_file: Optional[UploadFile] = None,
+        profile_image: Optional[UploadFile] = None
+    ) -> User:
         """Create new user"""
         # Check if user exists
         existing_user = db.query(User).filter(User.email == user.email).first()
@@ -25,22 +34,15 @@ class AuthService:
             email=user.email,
             password_hash=get_password_hash(user.password),
             full_name=user.full_name,
-            role=user.role
+            role=user.role,
+            is_active=True,
+            is_verified=False if user.role == UserRole.DENTIST else True
         )
         db.add(db_user)
-        db.refresh(db_user)
-
-        # Send verification email
-        verification_token = self.create_access_token_for_user(db_user, expires_delta=timedelta(hours=24))
-        EmailService.send_verification_email(
-            email=db_user.email,
-            full_name=db_user.full_name,
-            token=verification_token,
-            role=db_user.role
-        )
+        db.flush() # Get ID
 
         # If user is a patient, create a patient record
-        if db_user.role == "PATIENT":
+        if db_user.role == UserRole.PATIENT:
             from .patient_service import PatientService
             from ..schemas.patient import PatientCreate
             from .detection_service import DetectionService
@@ -56,18 +58,82 @@ class AuthService:
                 DetectionService.link_detection_to_patient(db, user.detection_id, patient.id)
         
         # If user is a dentist, create a dentist profile
-        elif db_user.role == "DENTIST" and user.profile:
+        elif db_user.role == UserRole.DENTIST:
             from ..models.dentist_profile import DentistProfile
             
+            # Handle license file upload
+            document_url = None
+            if license_file:
+                image_service = ImageService()
+                upload_res = await image_service.save_upload_file(
+                    license_file, 
+                    folder="dentoai/verification",
+                    upload_to_cloudinary=True
+                )
+                document_url = upload_res.get("cloudinary_url") or upload_res.get("local_path")
+
+            # Handle profile image upload
+            profile_pic_url = None
+            if profile_image:
+                image_service = ImageService()
+                upload_res = await image_service.save_upload_file(
+                    profile_image,
+                    folder="dentoai/profiles",
+                    upload_to_cloudinary=True
+                )
+                profile_pic_url = upload_res.get("cloudinary_url") or upload_res.get("local_path")
+
+            profile_data = user.profile or {}
             db_profile = DentistProfile(
                 user_id=db_user.id,
-                license_number=user.profile.license_number,
-                specialization=user.profile.specialization,
-                clinic_name=user.profile.clinic_name,
-                clinic_address=user.profile.clinic_address
+                license_number=getattr(profile_data, 'license_number', 'PENDING'),
+                specialization=getattr(profile_data, 'specialization', None),
+                clinic_name=getattr(profile_data, 'clinic_name', None),
+                clinic_address=getattr(profile_data, 'clinic_address', None),
+                phone_number=getattr(profile_data, 'phone_number', None),
+                years_of_experience=getattr(profile_data, 'years_of_experience', None),
+                verification_documents_url=document_url,
+                profile_image_url=profile_pic_url,
+                verification_status="PENDING"
             )
             db.add(db_profile)
-            db.commit()
+            
+            # Notify Admins about new registration
+            admins = db.query(User).filter(User.role == UserRole.ADMIN).all()
+            verification_url = f"{settings.FRONTEND_URL}/admin/verification"
+            
+            for admin in admins:
+                # 1. Bell Notification
+                notify_user(
+                    db=db,
+                    user_id=str(admin.id),
+                    title="New Dentist Registration",
+                    message=f"{db_user.full_name} has registered and requires credential verification.",
+                    notification_type=NotificationType.SYSTEM,
+                    related_id=str(db_user.id),
+                    related_type="dentist_verification"
+                )
+                
+                # 2. Email Notification
+                EmailService.send_admin_verification_request(
+                    admin_email=admin.email,
+                    dentist_name=db_user.full_name,
+                    dentist_email=db_user.email,
+                    license_number=db_profile.license_number,
+                    verification_url=verification_url
+                )
+
+        db.commit()
+        db.refresh(db_user)
+
+        # Send verification email for the user's primary email
+        verification_token = AuthService.create_access_token_for_user(db_user, expires_delta=timedelta(hours=24))
+        EmailService.send_verification_email(
+            email=db_user.email,
+            full_name=db_user.full_name,
+            token=verification_token,
+            role=db_user.role
+        )
 
         return db_user
     

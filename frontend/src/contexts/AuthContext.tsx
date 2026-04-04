@@ -58,10 +58,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const register = async (data: UserCreate) => {
+  const register = async (data: UserCreate, licenseFile?: File, profileImage?: File) => {
     setIsLoading(true);
     try {
-      await authService.register(data);
+      await authService.register(data, licenseFile, profileImage);
       await login(data.email, data.password);
     } catch (error) {
       throw error;

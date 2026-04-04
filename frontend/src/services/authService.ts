@@ -3,8 +3,20 @@ import { api } from './api';
 import type { User, UserCreate, UserLogin, Token } from '../types/auth.types';
 
 export const authService = {
-  async register(data: UserCreate): Promise<User> {
-    const response = await api.post<User>('/auth/register', data);
+  async register(data: UserCreate, licenseFile?: File, profileImage?: File): Promise<User> {
+    const formData = new FormData();
+    formData.append('user_data', JSON.stringify(data));
+    if (licenseFile) {
+      formData.append('license_file', licenseFile);
+    }
+    if (profileImage) {
+      formData.append('profile_image', profileImage);
+    }
+    const response = await api.post<User>('/auth/register', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
     return response.data;
   },
 

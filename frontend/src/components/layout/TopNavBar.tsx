@@ -76,7 +76,7 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
              <img 
               alt="User" 
               className="w-full h-full object-cover" 
-              src={`https://ui-avatars.com/api/?name=${user?.full_name || 'User'}&background=003d9b&color=fff&bold=true`}
+              src={user?.profile?.profile_image_url || `https://ui-avatars.com/api/?name=${user?.full_name || 'User'}&background=003d9b&color=fff&bold=true`}
             />
           </div>
         </div>

@@ -1,18 +1,34 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, File, UploadFile, Form
 from fastapi.security import OAuth2PasswordRequestForm
+from typing import Optional
 from sqlalchemy.orm import Session
 from ...core.database import get_db
 from ...schemas.user import UserCreate, UserLogin, UserResponse, Token, ForgotPasswordRequest, ResetPasswordRequest
 from ...services.auth_service import AuthService
 from ...dependencies.auth import get_current_user
 from ...models.user import User
+import json
 
 router = APIRouter()
 
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
-async def register(user: UserCreate, db: Session = Depends(get_db)):
-    """Register new user"""
-    return AuthService.create_user(db, user)
+async def register(
+    user_data: str = Form(...),
+    license_file: Optional[UploadFile] = File(None),
+    profile_image: Optional[UploadFile] = File(None),
+    db: Session = Depends(get_db)
+):
+    """Register new user with optional document upload"""
+    try:
+        data = json.loads(user_data)
+        user_create = UserCreate(**data)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Invalid user data format: {str(e)}"
+        )
+        
+    return await AuthService.create_user(db, user_create, license_file, profile_image)
 
 @router.post("/login", response_model=Token)
 async def login(

@@ -8,6 +8,7 @@ class DentistProfileBase(BaseModel):
     specialization: Optional[str] = None
     clinic_name: Optional[str] = None
     clinic_address: Optional[str] = None
+    profile_image_url: Optional[str] = None
 
 class DentistProfileCreate(DentistProfileBase):
     pass
