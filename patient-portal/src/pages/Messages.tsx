@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { messagingService } from '../services/messagingService';
 import type { Conversation, Message } from '../services/messagingService';
-import { MessageCircle, Send, Paperclip, X, FileText, Image as ImageIcon, Download, Search, UserCircle, Check, CheckCheck, Activity } from 'lucide-react';
+import { MessageCircle, Send, Paperclip, X, FileText, Image as ImageIcon, Download, Search, UserCircle, Check, CheckCheck, Activity, ShieldCheck } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { useAuth } from '../contexts/AuthContext';
 import { patientService } from '../services/patientService';
@@ -285,7 +285,7 @@ export const Messages: React.FC = () => {
               <p className="text-sm text-slate-400 font-bold leading-relaxed mb-8 px-6">Your clinical message history with specialists will appear here.</p>
               <Button
                 onClick={() => handleStartNewChat()}
-                className="bg-primary hover:bg-blue-900 text-white px-8 h-12 rounded-2xl shadow-xl shadow-primary/20 font-black uppercase text-[10px] tracking-widest transition-all hover:scale-105"
+                className="bg-primary hover:bg-blue-900 text-white px-8 h-12 rounded-2xl shadow-xl shadow-primary/20 font-black text-[10px] transition-all hover:scale-105"
               >
                 Find Specialist
               </Button>
@@ -306,7 +306,7 @@ export const Messages: React.FC = () => {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between mb-1">
-                      <h3 className="font-black text-slate-900 truncate tracking-tight text-sm uppercase">{conv.other_user_name}</h3>
+                      <h3 className="font-black text-slate-900 truncate tracking-tight text-sm">{conv.other_user_name}</h3>
                       {conv.last_message_at && (
                         <span className="text-[10px] font-black text-slate-400 whitespace-nowrap ml-2 opacity-60">
                           {formatDate(conv.last_message_at)}
@@ -350,10 +350,10 @@ export const Messages: React.FC = () => {
                  <UserCircle className="h-6 w-6" />
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="font-black text-slate-900 truncate tracking-tight text-lg uppercase">{selectedConversation.other_user_name}</h3>
+                <h3 className="font-black text-slate-900 truncate tracking-tight text-lg">{selectedConversation.other_user_name}</h3>
                 <div className="flex items-center gap-2 mt-0.5">
                   <span className="w-2 h-2 bg-emerald-500 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
-                  <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest leading-none">Online & Verified</p>
+                  <p className="text-[10px] text-slate-400 font-black leading-none">Online & Verified</p>
                 </div>
               </div>
             </div>
@@ -370,7 +370,7 @@ export const Messages: React.FC = () => {
                   <React.Fragment key={message.id}>
                     {showDateHeader && (
                       <div className="flex justify-center my-10">
-                        <div className="bg-white px-5 py-2 rounded-2xl border border-slate-100 shadow-sm text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] leading-none">
+                        <div className="bg-white px-5 py-2 rounded-2xl border border-slate-100 shadow-sm text-[10px] font-black text-slate-400 leading-none">
                           {formatDate(message.created_at)}
                         </div>
                       </div>
@@ -392,13 +392,13 @@ export const Messages: React.FC = () => {
                                   <Activity className={`h-5 w-5 ${isOwn ? 'text-white' : 'text-emerald-500'}`} />
                                 </div>
                                 <div>
-                                  <p className={`text-[10px] font-black uppercase tracking-widest leading-none mb-1 ${isOwn ? 'text-white' : 'text-emerald-900'}`}>AI Analysis Linked</p>
+                                  <p className={`text-[10px] font-black leading-none mb-1 ${isOwn ? 'text-white' : 'text-emerald-900'}`}>AI Analysis Linked</p>
                                   <p className={`text-xs font-bold ${isOwn ? 'text-blue-100' : 'text-emerald-600'}`}>Clinical findings shared</p>
                                 </div>
                               </div>
                               <a 
                                  href={`/detection/${message.detection_id}`} 
-                                 className={`text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-xl transition-all ${isOwn ? 'bg-white text-primary hover:bg-blue-50 shadow-lg' : 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-xl'}`}
+                                 className={`text-[10px] font-black px-4 py-2 rounded-xl transition-all ${isOwn ? 'bg-white text-primary hover:bg-blue-50 shadow-lg' : 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-xl'}`}
                               >
                                 Open Scan
                               </a>
@@ -437,8 +437,8 @@ export const Messages: React.FC = () => {
                                     {getFileIcon(message.file_type)}
                                   </div>
                                   <div className="flex-1 min-w-0">
-                                    <p className="text-xs font-black truncate uppercase tracking-tight">{message.file_name}</p>
-                                    <p className="text-[10px] opacity-60 uppercase tracking-widest mt-1">Download Material</p>
+                                    <p className="text-xs font-black truncate tracking-tight">{message.file_name}</p>
+                                    <p className="text-[10px] opacity-60 mt-1">Download Material</p>
                                   </div>
                                   <Download className="h-4 w-4 opacity-40 group-hover/file:opacity-100 group-hover/file:translate-y-0.5 transition-all" />
                                 </a>
@@ -447,7 +447,7 @@ export const Messages: React.FC = () => {
                           )}
                         </div>
                         <div className="flex items-center gap-2 mt-2 px-1">
-                          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest transition-opacity">
+                          <span className="text-[10px] font-black text-slate-400 transition-opacity">
                             {formatTime(message.created_at)}
                           </span>
                           {isOwn && (
@@ -477,7 +477,7 @@ export const Messages: React.FC = () => {
                       <Activity className="h-5 w-5" />
                     </div>
                     <div>
-                      <p className="text-xs font-black text-emerald-950 uppercase tracking-tight leading-none mb-1">AI Scan Linked</p>
+                      <p className="text-xs font-black text-emerald-950 tracking-tight leading-none mb-1">AI Scan Linked</p>
                       <p className="text-[10px] text-emerald-600 font-bold">Analysis results will be attached to your next message.</p>
                     </div>
                   </div>
@@ -496,8 +496,8 @@ export const Messages: React.FC = () => {
                     {getFileIcon(selectedFile.type)}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-black text-primary truncate uppercase tracking-tight leading-none mb-1">{selectedFile.name}</p>
-                    <p className="text-[10px] text-blue-400 font-bold uppercase tracking-widest">Material Attachment Ready</p>
+                    <p className="text-xs font-black text-primary truncate tracking-tight leading-none mb-1">{selectedFile.name}</p>
+                    <p className="text-[10px] text-blue-400 font-bold">Material Attachment Ready</p>
                   </div>
                   <button
                     onClick={() => setSelectedFile(null)}
@@ -568,7 +568,7 @@ export const Messages: React.FC = () => {
                   )}
                 </Button>
               </div>
-              <p className="text-[10px] text-center text-slate-400 font-black uppercase tracking-widest mt-6 opacity-60">
+              <p className="text-[10px] text-center text-slate-400 font-black mt-6 opacity-60">
                 End-to-End Encrypted Health Messaging
               </p>
             </div>
@@ -579,13 +579,13 @@ export const Messages: React.FC = () => {
               <div className="w-24 h-24 bg-white rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-2xl shadow-blue-900/5 border border-slate-100 ring-1 ring-blue-50/50">
                 <MessageCircle className="h-12 w-12 text-primary/40 shrink-0" />
               </div>
-              <h3 className="text-3xl font-black text-slate-900 tracking-tight mb-4 uppercase">Dental Workspace</h3>
+              <h3 className="text-3xl font-black text-slate-900 tracking-tight mb-4">Dental Workspace</h3>
               <p className="text-slate-500 font-bold leading-relaxed mb-10 px-8">
                 Connect directly with our clinical board for AI scan reviews, consultations, and ongoing dental support.
               </p>
               <Button
                 onClick={() => handleStartNewChat()}
-                className="bg-primary hover:bg-blue-900 text-white px-10 h-14 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-2xl shadow-primary/20 transition-all hover:scale-105 active:scale-95"
+                className="bg-primary hover:bg-blue-900 text-white px-10 h-14 rounded-2xl font-black text-[10px] shadow-2xl shadow-primary/20 transition-all hover:scale-105 active:scale-95"
               >
                 Find Specialist
               </Button>
@@ -601,7 +601,7 @@ export const Messages: React.FC = () => {
             <div className="p-8 border-b border-slate-100 flex items-center justify-between bg-primary text-white">
               <div>
                 <h3 className="text-2xl font-black tracking-tight leading-none">Select Specialist</h3>
-                <p className="text-[10px] font-bold text-blue-100 uppercase tracking-widest mt-2">Verified Professional Board</p>
+                <p className="text-[10px] font-bold text-blue-100 mt-2">Verified Professional Board</p>
               </div>
               <button
                 onClick={() => setShowDentistSelector(false)}
@@ -617,7 +617,7 @@ export const Messages: React.FC = () => {
                     <div className="absolute inset-0 border-8 border-blue-50 rounded-full"></div>
                     <LoadingSpinner size="lg" />
                   </div>
-                  <p className="text-slate-400 font-black uppercase tracking-widest text-[10px] animate-pulse">Scanning clinical directory...</p>
+                  <p className="text-slate-400 font-black text-[10px] animate-pulse">Scanning clinical directory...</p>
                 </div>
               ) : dentists.length === 0 ? (
                 <div className="text-center py-16 px-10">
@@ -644,7 +644,7 @@ export const Messages: React.FC = () => {
                         <h4 className="font-black text-slate-900 tracking-tight text-lg leading-none">{dentist.full_name}</h4>
                         <div className="flex items-center gap-2 mt-2">
                            <ShieldCheck className="h-3 w-3 text-primary" />
-                           <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">Board Certified</p>
+                           <p className="text-[10px] text-slate-400 font-black">Board Certified</p>
                         </div>
                       </div>
                     </div>
@@ -666,7 +666,7 @@ export const Messages: React.FC = () => {
             <div className="p-8 border-b border-emerald-100 flex items-center justify-between bg-emerald-600 text-white">
               <div>
                 <h3 className="text-2xl font-black tracking-tight leading-none">Attach AI Scan</h3>
-                <p className="text-[10px] font-bold text-emerald-100 uppercase tracking-widest mt-2">Personal Diagnostic History</p>
+                <p className="text-[10px] font-bold text-emerald-100 mt-2">Personal Diagnostic History</p>
               </div>
               <button
                 onClick={() => setShowDetectionSelector(false)}
@@ -704,7 +704,7 @@ export const Messages: React.FC = () => {
                         <h4 className="font-black text-slate-900 tracking-tight text-lg leading-none">Scan #{det.detection_id.substring(0, 8)}</h4>
                         <div className="flex items-center gap-2 mt-2">
                            <Activity className="h-3 w-3 text-emerald-500" />
-                           <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">{new Date(det.detection_date).toLocaleDateString()}</p>
+                           <p className="text-[10px] text-slate-400 font-black">{new Date(det.detection_date).toLocaleDateString()}</p>
                         </div>
                       </div>
                     </div>

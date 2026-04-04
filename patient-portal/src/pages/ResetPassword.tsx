@@ -70,12 +70,12 @@ export const ResetPassword: React.FC = () => {
                         </div>
                     </div>
                     <div className="space-y-3">
-                      <h2 className="text-3xl font-black text-slate-900 uppercase tracking-tight leading-none">Reset Complete</h2>
+                      <h2 className="text-3xl font-black text-slate-900 tracking-tight leading-none">Reset Complete</h2>
                       <p className="text-slate-500 font-bold tracking-tight">Your clinical credentials have been updated successfully.</p>
                     </div>
                     <button
                         onClick={() => navigate('/login')}
-                        className="w-full h-14 rounded-2xl bg-primary text-white font-black uppercase text-[10px] tracking-widest flex items-center justify-center gap-3 shadow-2xl shadow-primary/30 hover:bg-blue-900 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                        className="w-full h-14 rounded-2xl bg-primary text-white font-black text-[10px] flex items-center justify-center gap-3 shadow-2xl shadow-primary/30 hover:bg-blue-900 transition-all hover:scale-[1.02] active:scale-[0.98]"
                     >
                         Return to Login
                         <ArrowRight className="h-4 w-4" />
@@ -97,7 +97,7 @@ export const ResetPassword: React.FC = () => {
             >
                 <div className="bg-white/90 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-blue-900/10 rounded-[2.5rem] p-10 lg:p-12 space-y-10">
                     <div className="text-center space-y-3">
-                        <h1 className="text-3xl font-black text-slate-900 uppercase tracking-tight leading-none">Security Update</h1>
+                        <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-none">Security Update</h1>
                         <p className="text-slate-500 font-bold tracking-tight">Set a secure new password for your account.</p>
                     </div>
 
@@ -110,7 +110,7 @@ export const ResetPassword: React.FC = () => {
                         )}
 
                         <div className="space-y-3">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">New Password</label>
+                            <label className="text-[10px] font-black text-slate-400 ml-1">New Password</label>
                             <div className="relative group">
                                 <div className="absolute left-5 top-5">
                                     <Lock className="h-5 w-5 text-slate-300 group-focus-within:text-primary transition-colors" />
@@ -135,7 +135,7 @@ export const ResetPassword: React.FC = () => {
                         </div>
 
                         <div className="space-y-3">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Confirm Identity</label>
+                            <label className="text-[10px] font-black text-slate-400 ml-1">Confirm Identity</label>
                             <div className="relative group">
                                 <div className="absolute left-5 top-5">
                                     <Lock className="h-5 w-5 text-slate-300 group-focus-within:text-primary transition-colors" />
@@ -154,14 +154,14 @@ export const ResetPassword: React.FC = () => {
                         <button
                             type="submit"
                             disabled={isLoading || !token}
-                            className="w-full h-15 rounded-2xl bg-primary text-white font-black uppercase text-[10px] tracking-widest flex items-center justify-center gap-3 shadow-2xl shadow-primary/30 hover:bg-blue-900 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
+                            className="w-full h-15 rounded-2xl bg-primary text-white font-black text-[10px] flex items-center justify-center gap-3 shadow-2xl shadow-primary/30 hover:bg-blue-900 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
                         >
                             {isLoading ? <LoadingSpinner size="sm" /> : <span>Activate Final Credentials</span>}
                         </button>
                     </form>
 
                     <div className="text-center pt-8 border-t border-slate-100">
-                        <Link to="/login" className="text-[10px] font-black text-slate-400 hover:text-primary transition-all uppercase tracking-widest">
+                        <Link to="/login" className="text-[10px] font-black text-slate-400 hover:text-primary transition-all">
                             Cancel Process
                         </Link>
                     </div>

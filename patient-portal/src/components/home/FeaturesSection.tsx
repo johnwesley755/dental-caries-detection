@@ -82,7 +82,7 @@ const FeatureCard = ({ feature }: { feature: typeof features[0] }) => {
             style={{ y, opacity }}
             className="flex-1 space-y-8 pt-20 lg:pt-0"
           >
-            <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full border text-sm font-bold uppercase tracking-widest ${feature.badge}`}>
+            <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full border text-sm font-bold ${feature.badge}`}>
               <feature.icon className="w-4 h-4" />
               {feature.tag}
             </div>
@@ -132,7 +132,7 @@ const FeatureCard = ({ feature }: { feature: typeof features[0] }) => {
                     <MousePointer2 className="w-5 h-5" />
                  </div>
                  <div>
-                    <p className="text-xs font-bold text-slate-400 uppercase">Interaction</p>
+                    <p className="text-xs font-bold text-slate-400">Interaction</p>
                     <p className="text-sm font-bold text-slate-900">Click to expand</p>
                  </div>
               </div>

@@ -75,13 +75,13 @@ export const HealthTracker: React.FC = () => {
                 <div className="h-10 w-10 rounded-xl bg-blue-50 flex items-center justify-center text-primary shadow-inner">
                    <Activity className="h-5 w-5" />
                 </div>
-                <h1 className="text-3xl font-black text-slate-900 tracking-tight uppercase leading-none">Health Analytics</h1>
+                <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-none">Health Analytics</h1>
              </div>
              <p className="text-slate-500 font-bold tracking-tight">Real-time longitudinal tracking of your oral wellness</p>
           </div>
           <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-slate-200 shadow-sm">
              <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-             <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Live Engine Active</span>
+             <span className="text-[10px] font-black text-slate-400">Live Engine Active</span>
           </div>
         </div>
 
@@ -95,9 +95,9 @@ export const HealthTracker: React.FC = () => {
             </div>
             <div className="relative z-10 space-y-6">
               <div className="flex items-center justify-between">
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Clinical Score</p>
+                <p className="text-[10px] font-black text-slate-400">Clinical Score</p>
                 {healthScore && (
-                  <div className={`flex items-center gap-2 px-3 py-1 rounded-xl border-2 text-[10px] font-black uppercase tracking-widest transition-all ${getTrendColor(healthScore.trend)}`}>
+                  <div className={`flex items-center gap-2 px-3 py-1 rounded-xl border-2 text-[10px] font-black transition-all ${getTrendColor(healthScore.trend)}`}>
                     {getTrendIcon(healthScore.trend)}
                     {healthScore.trend}
                   </div>
@@ -124,8 +124,8 @@ export const HealthTracker: React.FC = () => {
                         <ShieldCheck className="h-7 w-7 text-white" />
                      </div>
                      <div>
-                        <p className="text-[10px] font-black uppercase tracking-widest opacity-60 leading-none mb-1">Health Insight</p>
-                        <h3 className="text-2xl font-black tracking-tight uppercase">
+                        <p className="text-[10px] font-black opacity-60 leading-none mb-1">Health Insight</p>
+                        <h3 className="text-2xl font-black tracking-tight">
                           {healthScore?.score >= 80 ? 'Excellent' : 
                            healthScore?.score >= 60 ? 'Stabile' : 
                            healthScore?.score >= 40 ? 'Observation' : 'High Priority'}
@@ -151,7 +151,7 @@ export const HealthTracker: React.FC = () => {
            <div className="bg-white rounded-[2.5rem] shadow-xl shadow-blue-900/5 p-8 border border-white/50">
               <div className="mb-6 flex items-center justify-between">
                  <div>
-                    <h4 className="text-lg font-black text-slate-900 uppercase tracking-tight">Oral Health Trend</h4>
+                    <h4 className="text-lg font-black text-slate-900 tracking-tight">Oral Health Trend</h4>
                     <p className="text-xs text-slate-400 font-bold">12-month longitudinal audit</p>
                  </div>
                  <div className="h-8 w-8 rounded-lg bg-blue-50 flex items-center justify-center text-primary">
@@ -163,7 +163,7 @@ export const HealthTracker: React.FC = () => {
            <div className="bg-white rounded-[2.5rem] shadow-xl shadow-blue-900/5 p-8 border border-white/50">
               <div className="mb-6 flex items-center justify-between">
                  <div>
-                    <h4 className="text-lg font-black text-slate-900 uppercase tracking-tight">Diagnostic History</h4>
+                    <h4 className="text-lg font-black text-slate-900 tracking-tight">Diagnostic History</h4>
                     <p className="text-xs text-slate-400 font-bold">Total caries detected vs reviewed</p>
                  </div>
                  <div className="h-8 w-8 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-500">
@@ -184,7 +184,7 @@ export const HealthTracker: React.FC = () => {
               <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center border border-blue-100 shadow-inner">
                 <Heart className="h-8 w-8 text-primary" />
               </div>
-              <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight">Clinical Protocol</h3>
+              <h3 className="text-2xl font-black text-slate-900 tracking-tight">Clinical Protocol</h3>
               <p className="text-sm font-bold text-slate-400 leading-relaxed">
                 Personalized health guidelines generated by our Clinical AI based on your historical scan data and current trend profile.
               </p>

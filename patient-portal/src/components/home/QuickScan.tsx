@@ -54,9 +54,9 @@ export const QuickScan: React.FC = () => {
                     <div className="text-center mb-16 space-y-4">
                         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 border border-blue-100 mb-4 animate-in fade-in slide-in-from-bottom-2 duration-700">
                            <Sparkles className="h-4 w-4 text-primary" />
-                           <span className="text-[10px] font-black text-primary uppercase tracking-widest">Public Diagnostic Beta</span>
+                           <span className="text-[10px] font-black text-primary tracking-widest">Public Diagnostic Beta</span>
                         </div>
-                        <h2 className="text-4xl lg:text-5xl font-black text-slate-900 tracking-tight uppercase leading-none">Try Our AI Quick-Scan</h2>
+                        <h2 className="text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-none">Try Our AI Quick-Scan</h2>
                         <p className="text-lg text-slate-500 font-bold max-w-2xl mx-auto tracking-tight">
                             Execute an instant preliminary clinical analysis in seconds. Zero account registration required for your first audit.
                         </p>
@@ -74,8 +74,8 @@ export const QuickScan: React.FC = () => {
                                             <div className="h-20 w-20 rounded-[1.5rem] bg-white border border-blue-100 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all shadow-xl shadow-blue-900/5">
                                                 <Upload className="h-10 w-10 text-primary" />
                                             </div>
-                                            <span className="text-lg font-black text-slate-900 tracking-tight uppercase px-4 text-center">Upload Diagnostic Image</span>
-                                            <span className="text-xs text-slate-400 mt-2 text-center px-8 font-bold uppercase tracking-wider leading-relaxed">
+                                            <span className="text-lg font-black text-slate-900 tracking-tight px-4 text-center">Upload Diagnostic Image</span>
+                                            <span className="text-xs text-slate-400 mt-2 text-center px-8 font-bold leading-relaxed">
                                                 Clinical standard photography or radiographic imagery (JPG/PNG • max 10MB)
                                             </span>
                                             <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
@@ -97,7 +97,7 @@ export const QuickScan: React.FC = () => {
                                     <Button
                                         onClick={handleAnalyze}
                                         disabled={!file || isAnalyzing}
-                                        className="w-full h-16 text-lg font-black bg-primary hover:bg-blue-900 text-white rounded-2xl shadow-2xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98] uppercase tracking-widest text-[10px]"
+                                        className="w-full h-16 text-lg font-black bg-primary hover:bg-blue-900 text-white rounded-2xl shadow-2xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98] text-[10px]"
                                     >
                                         {isAnalyzing ? (
                                             <div className="flex items-center gap-3">
@@ -127,7 +127,7 @@ export const QuickScan: React.FC = () => {
                                                         <ShieldCheck className="h-6 w-6 text-primary" />
                                                     </div>
                                                     <div>
-                                                        <h4 className="font-black text-slate-900 uppercase tracking-tight text-lg">Encrypted Privacy</h4>
+                                                        <h4 className="font-black text-slate-900 tracking-tight text-lg">Encrypted Privacy</h4>
                                                         <p className="text-slate-500 font-bold text-sm leading-relaxed">Your clinical data is processed across secure channels and immediately expunged post-analysis unless authenticated.</p>
                                                     </div>
                                                 </div>
@@ -136,14 +136,14 @@ export const QuickScan: React.FC = () => {
                                                         <Sparkles className="h-6 w-6 text-emerald-500" />
                                                     </div>
                                                     <div>
-                                                        <h4 className="font-black text-slate-900 uppercase tracking-tight text-lg">92% Core Accuracy</h4>
+                                                        <h4 className="font-black text-slate-900 tracking-tight text-lg">92% Core Accuracy</h4>
                                                         <p className="text-slate-500 font-bold text-sm leading-relaxed">Model validated across 100k+ clinical dental datasets for maximum diagnostic precision.</p>
                                                     </div>
                                                 </div>
                                                 <div className="bg-amber-50 border border-amber-100 rounded-[1.5rem] p-6 shadow-sm ring-1 ring-amber-900/5">
                                                     <div className="flex gap-4">
                                                         <AlertCircle className="h-6 w-6 text-amber-500 shrink-0 mt-0.5" />
-                                                        <p className="text-[10px] text-amber-900 font-black uppercase tracking-tight leading-relaxed">
+                                                        <p className="text-[10px] text-amber-900 font-black tracking-tight leading-relaxed">
                                                             Medical Disclaimer: Public AI screening is for diagnostic information only. Always consult with board-certified clinical professionals for formal diagnosis.
                                                         </p>
                                                     </div>
@@ -158,17 +158,17 @@ export const QuickScan: React.FC = () => {
                                                 <div className="bg-emerald-50 border border-emerald-100 rounded-[2rem] p-10 text-center relative overflow-hidden group">
                                                     <div className="absolute inset-0 bg-white/20 pattern-grid-lg opacity-10" />
                                                     <CheckCircle2 className="h-20 w-20 text-emerald-500 mx-auto mb-6 group-hover:scale-110 transition-transform duration-500" />
-                                                    <h3 className="text-3xl font-black text-slate-900 uppercase tracking-tight leading-none mb-2">Audit Complete</h3>
-                                                    <p className="text-emerald-700 font-black uppercase tracking-widest text-[10px]">Clinical markers successfully identified</p>
+                                                    <h3 className="text-3xl font-black text-slate-900 tracking-tight leading-none mb-2">Audit Complete</h3>
+                                                    <p className="text-emerald-700 font-black text-[10px]">Clinical markers successfully identified</p>
                                                 </div>
 
                                                 <div className="grid grid-cols-2 gap-6">
                                                     <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-xl shadow-blue-900/5">
-                                                        <p className="text-slate-400 text-[10px] uppercase font-black tracking-[0.2em] mb-2 text-center">Teeth Detected</p>
+                                                        <p className="text-slate-400 text-[10px] font-black mb-2 text-center">Teeth Detected</p>
                                                         <p className="text-4xl font-black text-slate-900 text-center tracking-tighter">{result.total_teeth_detected}</p>
                                                     </div>
                                                     <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-xl shadow-blue-900/5">
-                                                        <p className="text-slate-400 text-[10px] uppercase font-black tracking-[0.2em] mb-2 text-center">AI Findings</p>
+                                                        <p className="text-slate-400 text-[10px] font-black mb-2 text-center">AI Findings</p>
                                                         <p className={`text-4xl font-black text-center tracking-tighter ${result.total_caries_detected > 0 ? 'text-primary' : 'text-emerald-500'}`}>
                                                             {result.total_caries_detected}
                                                         </p>
@@ -176,11 +176,11 @@ export const QuickScan: React.FC = () => {
                                                 </div>
 
                                                 <div className="space-y-4 pt-4">
-                                                    <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest text-center px-10 leading-relaxed">
+                                                    <p className="text-[10px] text-slate-400 font-black text-center px-10 leading-relaxed">
                                                         Authenticate your clinical profile to view detailed geometric markings and initiate professional verification.
                                                     </p>
                                                     <Link to="/register" state={{ detectionId: result.id }}>
-                                                        <Button className="w-full h-16 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-black uppercase text-[10px] tracking-[0.2em] group shadow-2xl shadow-emerald-900/20">
+                                                        <Button className="w-full h-16 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-[10px] group shadow-2xl shadow-emerald-900/20">
                                                             Secure Results & Contact Specialist
                                                             <ArrowRight className="h-4 w-4 ml-3 group-hover:translate-x-2 transition-transform" />
                                                         </Button>

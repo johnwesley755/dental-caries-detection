@@ -58,7 +58,7 @@ export const VerifyEmail: React.FC = () => {
                             </div>
                         </div>
                         <div className="space-y-3">
-                           <h1 className="text-3xl font-black text-slate-900 tracking-tight uppercase leading-none">Verifying</h1>
+                           <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-none">Verifying</h1>
                            <p className="text-slate-500 font-bold tracking-tight">Syncing with clinical servers...</p>
                         </div>
                     </div>
@@ -72,12 +72,12 @@ export const VerifyEmail: React.FC = () => {
                             </div>
                         </div>
                         <div className="space-y-3">
-                          <h1 className="text-3xl font-black text-slate-900 tracking-tight uppercase leading-none">Email Verified</h1>
+                          <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-none">Email Verified</h1>
                           <p className="text-slate-500 font-bold tracking-tight leading-relaxed">Your account is now fully activated. You can now access all clinical features.</p>
                         </div>
                         <button
                             onClick={() => navigate('/login')}
-                            className="w-full h-14 rounded-2xl bg-primary text-white font-black uppercase text-[10px] tracking-widest flex items-center justify-center gap-3 shadow-2xl shadow-primary/30 hover:bg-blue-900 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                            className="w-full h-14 rounded-2xl bg-primary text-white font-black text-[10px] flex items-center justify-center gap-3 shadow-2xl shadow-primary/30 hover:bg-blue-900 transition-all hover:scale-[1.02] active:scale-[0.98]"
                         >
                             Continue to Login
                             <ArrowRight className="h-4 w-4" />
@@ -93,7 +93,7 @@ export const VerifyEmail: React.FC = () => {
                             </div>
                         </div>
                         <div className="space-y-4">
-                          <h1 className="text-3xl font-black text-slate-900 tracking-tight uppercase leading-none">Access Denied</h1>
+                          <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-none">Access Denied</h1>
                           <div className="p-4 bg-red-50/50 border border-red-100/50 rounded-2xl flex items-start gap-3 text-left">
                               <ShieldCheck className="h-5 w-5 text-red-500 shrink-0 mt-0.5" />
                               <p className="text-xs font-bold text-red-700 leading-relaxed">{error}</p>
@@ -102,7 +102,7 @@ export const VerifyEmail: React.FC = () => {
                         </div>
                         <button
                             onClick={() => navigate('/login')}
-                            className="w-full h-14 rounded-2xl border-2 border-slate-100 text-slate-400 font-black uppercase text-[10px] tracking-widest hover:bg-slate-50 transition-all"
+                            className="w-full h-14 rounded-2xl border-2 border-slate-100 text-slate-400 font-black text-[10px] hover:bg-slate-50 transition-all"
                         >
                             Return to Login
                         </button>

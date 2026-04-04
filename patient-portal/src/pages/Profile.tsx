@@ -46,7 +46,7 @@ export const Profile: React.FC = () => {
           <Icon className="h-5 w-5" />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1.5">{label}</p>
+          <p className="text-[10px] font-black text-slate-400 leading-none mb-1.5">{label}</p>
           <p className="text-sm font-bold text-slate-900 truncate">{value}</p>
         </div>
       </div>
@@ -87,10 +87,10 @@ export const Profile: React.FC = () => {
                     </p>
                   </div>
                   <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3">
-                    <span className="inline-flex items-center px-4 py-1.5 rounded-2xl text-[10px] font-black uppercase tracking-widest bg-primary text-white shadow-lg shadow-primary/20">
+                    <span className="inline-flex items-center px-4 py-1.5 rounded-2xl text-[10px] font-black bg-primary text-white shadow-lg shadow-primary/20">
                       Patient
                     </span>
-                    <span className="inline-flex items-center px-4 py-1.5 rounded-2xl text-[10px] font-black uppercase tracking-widest bg-slate-100 text-slate-500 border border-slate-200/50">
+                    <span className="inline-flex items-center px-4 py-1.5 rounded-2xl text-[10px] font-black bg-slate-100 text-slate-500 border border-slate-200/50">
                       ID: {patient?.patient_id}
                     </span>
                   </div>
@@ -170,8 +170,8 @@ export const Profile: React.FC = () => {
 
                   <div className="pt-10 mt-10 border-t border-slate-100 space-y-6">
                     <div className="bg-slate-50 rounded-3xl p-8 text-center border border-slate-200/50 shadow-inner">
-                      <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-4">Account Status</p>
-                      <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-[1.25rem] bg-emerald-50 text-emerald-700 text-[10px] font-black uppercase tracking-widest border border-emerald-100 shadow-sm">
+                      <p className="text-[10px] text-slate-400 font-black mb-4">Account Status</p>
+                      <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-[1.25rem] bg-emerald-50 text-emerald-700 text-[10px] font-black border border-emerald-100 shadow-sm">
                         <span className="relative flex h-2 w-2">
                           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                           <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-600"></span>

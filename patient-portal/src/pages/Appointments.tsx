@@ -90,13 +90,13 @@ export const Appointments: React.FC = () => {
                 <div className="h-10 w-10 rounded-xl bg-blue-50 flex items-center justify-center text-primary shadow-inner">
                    <Calendar className="h-5 w-5" />
                 </div>
-                <h1 className="text-3xl font-black text-slate-900 tracking-tight uppercase leading-none">Appointment Center</h1>
+                <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-none">Appointment Center</h1>
              </div>
              <p className="text-slate-500 font-bold tracking-tight">Schedule and manage your personal clinical consultations</p>
           </div>
           <Button
             onClick={() => setShowForm(true)}
-            className="bg-primary hover:bg-blue-900 text-white px-8 h-12 rounded-2xl shadow-xl shadow-primary/20 font-black uppercase text-[10px] tracking-widest transition-all hover:scale-105"
+            className="bg-primary hover:bg-blue-900 text-white px-8 h-12 rounded-2xl shadow-xl shadow-primary/20 font-black text-[10px] transition-all hover:scale-105"
           >
             <Plus className="h-4 w-4 mr-2" strokeWidth={3} />
             Request Slot
@@ -113,7 +113,7 @@ export const Appointments: React.FC = () => {
             <button
               key={btn.value}
               onClick={() => setFilter(btn.value)}
-              className={`px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${filter === btn.value
+              className={`px-6 py-2.5 rounded-xl text-[10px] font-black transition-all ${filter === btn.value
                   ? 'bg-primary text-white shadow-lg shadow-primary/20'
                   : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50'
                 }`}
@@ -142,17 +142,17 @@ export const Appointments: React.FC = () => {
                         <span className="text-3xl font-black tracking-tighter leading-none mb-1">
                           {appointmentDate.getDate()}
                         </span>
-                        <span className="text-[10px] font-black uppercase tracking-widest opacity-60">
+                        <span className="text-[10px] font-black opacity-60">
                           {appointmentDate.toLocaleDateString('en-US', { month: 'short' })}
                         </span>
                       </div>
 
                       <div className="flex-1 space-y-4">
                         <div className="flex items-center gap-4 flex-wrap">
-                          <h3 className="text-xl font-black text-slate-900 tracking-tight uppercase">
+                          <h3 className="text-xl font-black text-slate-900 tracking-tight">
                             {appointment.appointment_type || 'General Consultation'}
                           </h3>
-                          <Badge variant="outline" className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-widest border-2 ${getStatusColor(appointment.status)}`}>
+                          <Badge variant="outline" className={`px-3 py-1 rounded-xl text-[10px] font-black border-2 ${getStatusColor(appointment.status)}`}>
                             {appointment.status.replace('_', ' ')}
                           </Badge>
                         </div>
@@ -166,18 +166,18 @@ export const Appointments: React.FC = () => {
                           </div>
                           <div className="flex items-center gap-2 text-slate-400">
                             <User className="h-4 w-4" />
-                            <span className="text-xs font-bold uppercase tracking-tight">{appointment.dentist_name}</span>
+                            <span className="text-xs font-bold tracking-tight">{appointment.dentist_name}</span>
                           </div>
                           <div className="flex items-center gap-2 text-slate-400">
                              <ShieldCheck className="h-4 w-4 text-emerald-500" />
-                             <span className="text-[10px] font-black uppercase tracking-widest">Verified Specialist</span>
+                             <span className="text-[10px] font-black">Verified Specialist</span>
                           </div>
                         </div>
 
                         {appointment.notes && (
                           <div className="flex items-start gap-2 bg-slate-50 p-3 rounded-xl border border-slate-100 max-w-2xl">
                             <Search className="h-3.5 w-3.5 text-primary mt-0.5 shrink-0" />
-                            <p className="text-[10px] font-bold text-slate-500 leading-relaxed uppercase tracking-tight">
+                            <p className="text-[10px] font-bold text-slate-500 leading-relaxed tracking-tight">
                               Context: {typeof appointment.notes === 'string' ? appointment.notes : JSON.stringify(appointment.notes)}
                             </p>
                           </div>
@@ -189,7 +189,7 @@ export const Appointments: React.FC = () => {
                     <div className="flex items-center gap-3">
                        <Button
                           variant="outline"
-                          className="px-6 h-12 rounded-[1.25rem] border-2 border-slate-100 hover:bg-slate-50 text-slate-400 font-black uppercase text-[10px] tracking-widest"
+                          className="px-6 h-12 rounded-[1.25rem] border-2 border-slate-100 hover:bg-slate-50 text-slate-400 font-black text-[10px]"
                           onClick={() => toast.info('Coming soon: Add to Calendar')}
                        >
                           Add to Calendar
@@ -198,7 +198,7 @@ export const Appointments: React.FC = () => {
                          <Button
                             variant="destructive"
                             onClick={() => handleCancel(appointment.id)}
-                            className="bg-red-50 hover:bg-red-500 text-red-500 hover:text-white border-2 border-red-100 hover:border-red-500 rounded-[1.25rem] h-12 px-8 font-black uppercase text-[10px] tracking-widest shadow-xl shadow-red-900/5 transition-all"
+                            className="bg-red-50 hover:bg-red-500 text-red-500 hover:text-white border-2 border-red-100 hover:border-red-500 rounded-[1.25rem] h-12 px-8 font-black text-[10px] shadow-xl shadow-red-900/5 transition-all"
                          >
                             Cancel Slot
                          </Button>
@@ -217,14 +217,14 @@ export const Appointments: React.FC = () => {
                 <Calendar className="h-10 w-10 text-primary opacity-30" />
               </div>
               <div className="space-y-2">
-                <h3 className="text-2xl font-black text-slate-900 tracking-tight uppercase">No Scheduled Events</h3>
+                <h3 className="text-2xl font-black text-slate-900 tracking-tight">No Scheduled Events</h3>
                 <p className="text-slate-400 font-bold max-w-sm mx-auto">
                   {filter ? `No records found for the "${filter}" filter status.` : "You don't have any upcoming diagnostic appointments."}
                 </p>
               </div>
               <Button
                 onClick={() => setShowForm(true)}
-                className="mt-4 bg-primary hover:bg-blue-900 text-white rounded-[1.25rem] px-8 h-12 font-black uppercase text-[10px] tracking-widest shadow-xl shadow-primary/20 transition-all hover:scale-105"
+                className="mt-4 bg-primary hover:bg-blue-900 text-white rounded-[1.25rem] px-8 h-12 font-black text-[10px] shadow-xl shadow-primary/20 transition-all hover:scale-105"
               >
                 Request Consultation
               </Button>
@@ -235,7 +235,7 @@ export const Appointments: React.FC = () => {
         {/* Info Alert */}
         <div className="bg-amber-50 border border-amber-100 rounded-2xl p-4 flex gap-4">
            <AlertCircle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
-           <p className="text-xs font-bold text-amber-700 leading-relaxed uppercase tracking-tight">
+           <p className="text-xs font-bold text-amber-700 leading-relaxed tracking-tight">
              Clinical Reminders: Please arrive 10 minutes prior to your scheduled slot for pre-diagnostic registration. Cancellation requires a minimum 24-hour notice to prioritize patient flow.
            </p>
         </div>

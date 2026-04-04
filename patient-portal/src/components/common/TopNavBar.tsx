@@ -29,14 +29,14 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({ title, onMenuClick }) => {
         )}
         
         {title ? (
-          <h1 className="text-xl lg:text-2xl font-black text-slate-900 tracking-tight uppercase leading-none truncate">
+          <h1 className="text-xl lg:text-2xl font-black text-slate-900 tracking-tight leading-none truncate">
             {title}
           </h1>
         ) : (
           <div className="relative w-full max-w-sm hidden lg:block group">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4 group-focus-within:text-primary transition-colors" />
             <input 
-              className="w-full pl-12 pr-6 py-3 bg-slate-50 border border-slate-100 rounded-2xl text-[10px] font-black uppercase tracking-widest focus:ring-4 focus:ring-primary/5 focus:border-primary/20 focus:bg-white transition-all placeholder:text-slate-300 outline-none" 
+              className="w-full pl-12 pr-6 py-3 bg-slate-50 border border-slate-100 rounded-2xl text-[10px] font-black focus:ring-4 focus:ring-primary/5 focus:border-primary/20 focus:bg-white transition-all placeholder:text-slate-300 outline-none" 
               placeholder="Search Records..." 
               type="text"
             />
@@ -67,10 +67,10 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({ title, onMenuClick }) => {
             onClick={() => navigate('/profile')}
         >
           <div className="text-right hidden lg:block pr-1">
-            <p className="text-[11px] font-black text-slate-900 uppercase tracking-tight leading-none mb-1">
+            <p className="text-[11px] font-black text-slate-900 tracking-tight leading-none mb-1">
               {user?.full_name?.split(' ')[0] || 'Patient'}
             </p>
-            <p className="text-[9px] text-primary font-black uppercase tracking-widest opacity-60">Verified Portal</p>
+            <p className="text-[9px] text-primary font-black opacity-60">Verified Portal</p>
           </div>
           
           <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-2xl bg-blue-50 flex items-center justify-center overflow-hidden border-2 border-white shadow-xl shadow-blue-900/5 group-hover:shadow-blue-900/10 transition-all ring-1 ring-slate-100 group-hover:ring-primary/20">

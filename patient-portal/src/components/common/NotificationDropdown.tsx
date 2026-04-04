@@ -108,7 +108,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification, onMar
                         <Check className="h-3.5 w-3.5" />
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent side="top" className="text-[10px] font-black uppercase tracking-widest px-3 py-1.5">Mark as read</TooltipContent>
+                    <TooltipContent side="top" className="text-[10px] font-black px-3 py-1.5">Mark as read</TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
               )}
@@ -124,7 +124,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification, onMar
                       <X className="h-3.5 w-3.5" />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent side="top" className="text-[10px] font-black uppercase tracking-widest px-3 py-1.5">Delete</TooltipContent>
+                  <TooltipContent side="top" className="text-[10px] font-black px-3 py-1.5">Delete</TooltipContent>
                 </Tooltip>
               </TooltipProvider>
             </div>
@@ -135,10 +135,10 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification, onMar
           </p>
 
           <div className="flex items-center justify-between mt-2">
-            <span className="text-[10px] text-slate-400 font-black uppercase tracking-widest opacity-60">
+            <span className="text-[10px] text-slate-400 font-black opacity-60">
               {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true })}
             </span>
-            <Badge variant="outline" className={`text-[10px] font-black uppercase tracking-[0.1em] px-2 py-0.5 rounded-lg border-none ${meta.badge}`}>
+            <Badge variant="outline" className={`text-[10px] font-black px-2 py-0.5 rounded-lg border-none ${meta.badge}`}>
               {notification.type}
             </Badge>
           </div>
@@ -219,7 +219,7 @@ export const NotificationDropdown: React.FC = () => {
       setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
       setUnreadCount(0);
       toast.success('All notifications marked as read', {
-        className: 'font-black uppercase text-[10px] tracking-widest'
+        className: 'font-black text-[10px]'
       });
     } catch {
       toast.error('Failed to mark all as read');
@@ -263,8 +263,8 @@ export const NotificationDropdown: React.FC = () => {
               <Bell className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <h3 className="text-sm font-black text-slate-900 uppercase tracking-tight leading-none">Notifications Center</h3>
-              <p className="text-[10px] text-slate-400 mt-1.5 font-bold uppercase tracking-widest">
+              <h3 className="text-sm font-black text-slate-900 tracking-tight leading-none">Notifications Center</h3>
+              <p className="text-[10px] text-slate-400 mt-1.5 font-bold">
                 {unreadCount > 0 ? `${unreadCount} unread events` : 'System optimized'}
               </p>
             </div>
@@ -275,7 +275,7 @@ export const NotificationDropdown: React.FC = () => {
               variant="ghost"
               size="sm"
               onClick={handleMarkAllAsRead}
-              className="h-8 px-3 text-[10px] font-black uppercase tracking-widest text-primary hover:bg-blue-50 hover:text-primary transition-all rounded-xl"
+              className="h-8 px-3 text-[10px] font-black text-primary hover:bg-blue-50 hover:text-primary transition-all rounded-xl"
             >
               <CheckCheck className="h-3.5 w-3.5 mr-2" />
               Clear all
@@ -293,8 +293,8 @@ export const NotificationDropdown: React.FC = () => {
                 <Inbox className="h-8 w-8 text-slate-200" />
               </div>
               <div className="space-y-1">
-                <p className="text-sm font-black text-slate-900 uppercase tracking-tight">Inbox Synchronized</p>
-                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Awaiting clinical diagnostic data</p>
+                <p className="text-sm font-black text-slate-900 tracking-tight">Inbox Synchronized</p>
+                <p className="text-[10px] text-slate-400 font-bold">Awaiting clinical diagnostic data</p>
               </div>
             </div>
           ) : (
@@ -314,13 +314,13 @@ export const NotificationDropdown: React.FC = () => {
         {/* ── Footer ── */}
         {notifications.length > 0 && (
           <div className="px-6 py-4 bg-white border-t border-slate-100 flex items-center justify-between">
-            <span className="text-[10px] text-slate-400 font-black uppercase tracking-widest">
+            <span className="text-[10px] text-slate-400 font-black">
               Audit level: {notifications.length} logged
             </span>
             <Button
               variant="ghost"
               size="sm"
-                className="h-8 px-4 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-900 hover:bg-slate-50 rounded-xl"
+                className="h-8 px-4 text-[10px] font-black text-slate-400 hover:text-slate-900 hover:bg-slate-50 rounded-xl"
               onClick={() => setOpen(false)}
             >
               Close

@@ -90,7 +90,7 @@ export const ForgotPassword: React.FC = () => {
                                 )}
 
                                 <div className="space-y-2">
-                                    <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">
+                                    <label className="text-xs font-bold text-slate-500 ml-1">
                                         Email Address
                                     </label>
                                     <div className="relative group">

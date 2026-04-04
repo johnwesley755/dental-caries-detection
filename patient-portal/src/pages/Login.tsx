@@ -4,7 +4,6 @@ import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { motion } from 'framer-motion';
 import {
-  Loader2,
   ArrowRight,
   Lock,
   Mail,
@@ -113,7 +112,7 @@ export const Login: React.FC = () => {
         >
           {/* DIFFERENTIATOR: Patient Access Badge */}
           <div className="flex justify-center mb-6">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-blue-950 text-xs font-semibold uppercase tracking-wider shadow-sm">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-blue-950 text-xs font-semibold shadow-sm">
               <UserCircle className="h-4 w-4" />
               Patient Access Portal
             </span>
@@ -145,7 +144,7 @@ export const Login: React.FC = () => {
 
               {/* Email Input */}
               <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">
+                <label className="text-xs font-bold text-slate-500 ml-1">
                   Email Address
                 </label>
                 <div className="relative group">
@@ -170,7 +169,7 @@ export const Login: React.FC = () => {
 
               {/* Password Input */}
               <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">
+                <label className="text-xs font-bold text-slate-500 ml-1">
                   Password
                 </label>
                 <div className="relative group">
@@ -270,7 +269,7 @@ export const Login: React.FC = () => {
           </div>
           <div className="flex flex-col">
             <span className="text-2xl font-bold tracking-tight text-white">DENTALAI<span className="text-blue-400">Diagnostics</span></span>
-            <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-blue-200/60">Patient Portal</span>
+            <span className="text-[10px] font-bold text-blue-200/60">Patient Portal</span>
           </div>
         </div>
 

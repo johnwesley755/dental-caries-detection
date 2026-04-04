@@ -113,7 +113,7 @@ export const Register: React.FC = () => {
                             )}
 
                             <div className="space-y-2">
-                                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Full Name</label>
+                                <label className="text-xs font-bold text-slate-500 ml-1">Full Name</label>
                                 <div className="relative group">
                                     <User className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-blue-900 transition-colors" />
                                     <input
@@ -128,7 +128,7 @@ export const Register: React.FC = () => {
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Email Address</label>
+                                <label className="text-xs font-bold text-slate-500 ml-1">Email Address</label>
                                 <div className="relative group">
                                     <Mail className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-blue-900 transition-colors" />
                                     <input
@@ -143,7 +143,7 @@ export const Register: React.FC = () => {
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Password</label>
+                                <label className="text-xs font-bold text-slate-500 ml-1">Password</label>
                                 <div className="relative group">
                                     <Lock className="absolute left-4 top-4 h-5 w-5 text-slate-400 group-focus-within:text-blue-900 transition-colors" />
                                     <input
@@ -202,7 +202,7 @@ export const Register: React.FC = () => {
                 </motion.div>
             </div>
 
-            <div className="hidden lg:flex relative h-full w-full flex-col p-16 text-white overflow-hidden bg-slate-900 uppercase">
+            <div className="hidden lg:flex relative h-full w-full flex-col p-16 text-white overflow-hidden bg-slate-900">
                 <img
                     src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?q=80&w=2070&auto=format&fit=crop"
                     alt="Modern Dentistry"

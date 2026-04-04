@@ -5,7 +5,6 @@ import { Button } from '../ui/button';
 import { useAuth } from '../../contexts/AuthContext';
 import { motion } from 'framer-motion';
 import { 
-  Sparkles, 
   ArrowRight, 
   Zap,
   ShieldCheck,
@@ -61,7 +60,7 @@ export const CTASection: React.FC = () => {
           >
             {/* Pill Badge */}
             <div className="flex justify-center">
-              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-900 text-sm font-bold uppercase tracking-widest shadow-sm">
+              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-900 text-sm font-bold shadow-sm">
                 <Zap className="w-4 h-4 fill-blue-900" />
                 Start your journey
               </span>

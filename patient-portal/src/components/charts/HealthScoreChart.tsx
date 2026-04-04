@@ -77,16 +77,16 @@ export const HealthScoreChart: React.FC = () => {
         <div>
           <div className="flex items-center gap-2 mb-1">
              <Activity className="h-4 w-4 text-primary" />
-             <h3 className="text-lg font-black text-slate-900 uppercase tracking-tight">Health Trajectory</h3>
+             <h3 className="text-lg font-black text-slate-900 tracking-tight">Health Trajectory</h3>
           </div>
-          <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">Clinical Wellness Longitudinal Audit</p>
+          <p className="text-xs text-slate-400 font-bold">Clinical Wellness Longitudinal Audit</p>
         </div>
         <div className="text-right flex flex-col items-end gap-1">
           <div className="flex items-baseline gap-1">
             <span className={`text-4xl font-black tracking-tighter ${getScoreColor()}`}>{currentScore}</span>
-            <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Index</span>
+            <span className="text-[10px] font-black text-slate-300">Index</span>
           </div>
-          <div className={`flex items-center gap-2 px-3 py-1 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all ${getTrendColor()}`}>
+          <div className={`flex items-center gap-2 px-3 py-1 rounded-xl border text-[10px] font-black transition-all ${getTrendColor()}`}>
             {getTrendIcon()}
             <span>{trend}</span>
           </div>
@@ -103,7 +103,7 @@ export const HealthScoreChart: React.FC = () => {
               stroke="#cbd5e1"
               axisLine={false}
               tickLine={false}
-              style={{ fontSize: '10px', fontWeight: '800', textTransform: 'uppercase' }}
+              style={{ fontSize: '10px', fontWeight: '800' }}
             />
             <YAxis 
               domain={[0, 100]} 
@@ -126,19 +126,16 @@ export const HealthScoreChart: React.FC = () => {
               itemStyle={{ 
                 fontSize: '10px', 
                 fontWeight: '900', 
-                textTransform: 'uppercase', 
-                letterSpacing: '0.1em',
                 color: '#1e3a8a'
               }}
               labelStyle={{
                 fontSize: '9px',
                 fontWeight: '700',
                 color: '#94a3b8',
-                marginBottom: '4px',
-                textTransform: 'uppercase'
+                marginBottom: '4px'
               }}
             />
-            <ReferenceLine y={70} stroke="#cbd5e1" strokeDasharray="3 3" label={{ value: 'OPTIMAL', fill: '#94a3b8', fontSize: 8, fontWeight: 900, position: 'right' }} />
+            <ReferenceLine y={70} stroke="#cbd5e1" strokeDasharray="3 3" label={{ value: 'Optimal', fill: '#94a3b8', fontSize: 8, fontWeight: 900, position: 'right' }} />
             <Line 
               type="monotone" 
               dataKey="score" 
@@ -156,7 +153,7 @@ export const HealthScoreChart: React.FC = () => {
       <div className="mt-8 p-5 bg-slate-50 rounded-2xl border border-slate-100 group-hover:bg-blue-50/50 group-hover:border-blue-100 transition-all duration-500">
         <div className="flex items-start gap-3">
           <Sparkles className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-          <p className="text-[10px] font-bold text-slate-500 leading-relaxed uppercase tracking-tight">
+          <p className="text-[10px] font-bold text-slate-500 leading-relaxed tracking-tight">
             <strong className="text-primary font-black">Clinical Protocol:</strong> Maintain a trajectory above index 70 for optimal diagnostic stability. Variations detected in the past 30 days are being analyzed by the AI engine.
           </p>
         </div>
@@ -165,7 +162,7 @@ export const HealthScoreChart: React.FC = () => {
       {data.length === 0 && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/60 backdrop-blur-[2px] z-20">
           <Activity className="h-12 w-12 text-slate-200 mb-4 animate-pulse" />
-          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Insufficient Clinical Data</p>
+          <p className="text-[10px] font-black text-slate-400">Insufficient Clinical Data</p>
         </div>
       )}
     </div>

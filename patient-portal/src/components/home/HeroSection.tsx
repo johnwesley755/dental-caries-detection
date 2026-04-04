@@ -196,7 +196,7 @@ export const HeroSection: React.FC = () => {
           >
             {/* Badge */}
             <motion.div variants={fadeInUp} className="flex justify-center">
-              <span className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-white/60 border border-blue-200 text-blue-950 text-sm font-bold uppercase tracking-widest backdrop-blur-md shadow-sm ring-1 ring-white/50">
+              <span className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-white/60 border border-blue-200 text-blue-950 text-sm font-bold backdrop-blur-md shadow-sm ring-1 ring-white/50">
                 <span className="relative flex h-2.5 w-2.5">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-900"></span>
@@ -280,7 +280,7 @@ export const HeroSection: React.FC = () => {
                     <Calendar className="h-7 w-7" />
                   </div>
                   <div>
-                    <p className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-0.5">Next Appointment</p>
+                    <p className="text-xs text-slate-500 font-bold mb-0.5">Next Appointment</p>
                     <p className="text-lg font-bold text-slate-900">Tomorrow, 10:00 AM</p>
                   </div>
                 </div>
@@ -297,7 +297,7 @@ export const HeroSection: React.FC = () => {
                     <Activity className="h-7 w-7" />
                   </div>
                   <div>
-                    <p className="text-xs text-slate-500 font-black uppercase tracking-tight mb-0.5">AI Analysis</p>
+                    <p className="text-xs text-slate-500 font-black mb-0.5">AI Analysis</p>
                     <p className="text-lg font-black text-emerald-700">Healthy • No Cavities</p>
                   </div>
                 </div>

@@ -23,10 +23,22 @@ export const authService = {
   },
 
   async register(userData: any): Promise<void> {
-    await api.post('/auth/register', {
+    const payload = {
       ...userData,
       role: 'PATIENT'
-    });
+    };
+
+    console.group('Registration Payload Debug');
+    console.log('User Data:', payload);
+    const serializedData = JSON.stringify(payload);
+    console.log('Serialized user_data:', serializedData);
+    console.groupEnd();
+
+    const formData = new FormData();
+    formData.append('user_data', serializedData);
+
+    // Let Axios automatically set the Content-Type and boundary
+    await api.post('/auth/register', formData);
   },
 
   async getCurrentUser(): Promise<User> {

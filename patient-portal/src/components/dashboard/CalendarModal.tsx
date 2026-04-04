@@ -102,8 +102,6 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose })
         padding: '4px 8px',
         fontSize: '11px',
         fontWeight: '800',
-        textTransform: 'uppercase',
-        letterSpacing: '0.05em',
         boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
       },
     };
@@ -115,11 +113,11 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose })
         <DialogContent className="max-w-6xl h-[90vh] p-0 overflow-hidden border-none shadow-2xl rounded-[2.5rem]">
           <DialogHeader className="px-10 py-8 border-b border-slate-100 flex flex-row items-center justify-between bg-white shrink-0">
             <div className="space-y-1">
-               <DialogTitle className="flex items-center gap-3 text-2xl font-black text-slate-900 uppercase tracking-tight">
+               <DialogTitle className="flex items-center gap-3 text-2xl font-black text-slate-900 tracking-tight">
                 <Calendar className="h-6 w-6 text-primary" />
                 Diagnostic Schedule
               </DialogTitle>
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-9">Clinical Appointment Longitudinal Audit</p>
+              <p className="text-[10px] font-black text-slate-400 ml-9">Clinical Appointment Longitudinal Audit</p>
             </div>
             <button 
               onClick={onClose}
@@ -160,7 +158,7 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose })
               ].map((item) => (
                 <div key={item.label} className="flex items-center gap-3">
                   <div className={`w-3 h-3 ${item.color} rounded-full shadow-lg shadow-black/5`}></div>
-                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{item.label}</span>
+                  <span className="text-[10px] font-black text-slate-400">{item.label}</span>
                 </div>
               ))}
             </div>

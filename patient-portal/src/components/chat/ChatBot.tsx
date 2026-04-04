@@ -105,7 +105,7 @@ export const ChatBot: React.FC<ChatBotProps> = ({ detectionId }) => {
                     </p>
                     {msg.detection_context && (
                       <div className="mt-4 pt-4 border-t border-slate-100">
-                        <p className="text-[10px] text-slate-400 font-black uppercase tracking-tight mb-2">
+                        <p className="text-[10px] text-slate-400 font-bold mb-2">
                           Scan Context:
                         </p>
                         <div className="flex flex-wrap gap-2 text-xs">

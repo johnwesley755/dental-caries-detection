@@ -43,14 +43,14 @@ export const DetectionHistoryChart: React.FC = () => {
                 <div>
                    <div className="flex items-center gap-2 mb-1">
                       <ShieldCheck className="h-4 w-4 text-emerald-500" />
-                      <h3 className="text-lg font-black text-slate-900 uppercase tracking-tight">Detection History</h3>
+                      <h3 className="text-lg font-black text-slate-900 tracking-tight">Detection History</h3>
                    </div>
-                   <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">Clinical Diagnostic Analytics</p>
+                   <p className="text-xs text-slate-400 font-bold">Clinical Diagnostic Analytics</p>
                 </div>
                 <div className="text-right">
                     <div className="flex items-baseline gap-1">
                         <span className="text-4xl font-black tracking-tighter text-emerald-500">{totalCaries}</span>
-                        <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Total Findings</span>
+                        <span className="text-[10px] font-black text-slate-300">Total Findings</span>
                     </div>
                 </div>
             </div>
@@ -65,7 +65,7 @@ export const DetectionHistoryChart: React.FC = () => {
                             stroke="#cbd5e1"
                             axisLine={false}
                             tickLine={false}
-                            style={{ fontSize: '10px', fontWeight: '800', textTransform: 'uppercase' }}
+                            style={{ fontSize: '10px', fontWeight: '800' }}
                         />
                         <YAxis 
                             stroke="#cbd5e1" 
@@ -87,16 +87,13 @@ export const DetectionHistoryChart: React.FC = () => {
                             itemStyle={{ 
                                 fontSize: '10px', 
                                 fontWeight: '900', 
-                                textTransform: 'uppercase', 
-                                letterSpacing: '0.1em',
                                 color: '#10b981'
                             }}
                             labelStyle={{
                                 fontSize: '9px',
                                 fontWeight: '700',
                                 color: '#94a3b8',
-                                marginBottom: '4px',
-                                textTransform: 'uppercase'
+                                marginBottom: '4px'
                             }}
                         />
                         <Bar 
@@ -114,14 +111,14 @@ export const DetectionHistoryChart: React.FC = () => {
                 <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100 group-hover:bg-emerald-50/50 group-hover:border-emerald-100 transition-all duration-500">
                     <div className="flex items-center gap-3 mb-1">
                         <TrendingUp className="h-4 w-4 text-emerald-500" />
-                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Aggregate Count</span>
+                        <span className="text-[10px] font-black text-slate-400">Aggregate Count</span>
                     </div>
                     <p className="text-xl font-black text-slate-900 tracking-tighter">{totalCaries}</p>
                 </div>
                 <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100 group-hover:bg-blue-50/50 group-hover:border-blue-100 transition-all duration-500">
                     <div className="flex items-center gap-3 mb-1">
                         <Activity className="h-4 w-4 text-primary" />
-                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Audit Depth</span>
+                        <span className="text-[10px] font-black text-slate-400">Audit Depth</span>
                     </div>
                     <p className="text-xl font-black text-slate-900 tracking-tighter">{data.length} Scans</p>
                 </div>
@@ -130,7 +127,7 @@ export const DetectionHistoryChart: React.FC = () => {
             {data.length === 0 && (
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/60 backdrop-blur-[2px] z-20">
                     <ShieldCheck className="h-12 w-12 text-slate-200 mb-4 animate-pulse" />
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Diagnostic Logs Empty</p>
+                    <p className="text-[10px] font-black text-slate-400">Diagnostic Logs Empty</p>
                 </div>
             )}
         </div>

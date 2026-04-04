@@ -115,12 +115,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
 
           <div className="px-6 mt-auto space-y-4">
              <div className="p-4 rounded-2xl bg-slate-100/50 border border-slate-200/30 flex items-center gap-4 transition-all mb-4">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-200 to-indigo-200 shrink-0 border-2 border-white shadow-sm flex items-center justify-center text-blue-700 font-black uppercase">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-200 to-indigo-200 shrink-0 border-2 border-white shadow-sm flex items-center justify-center text-blue-700 font-black">
                   {user?.full_name ? user.full_name.charAt(0) : "P"}
                 </div>
                 <div className="flex flex-col min-w-0">
                   <p className="text-sm font-black text-blue-900 truncate tracking-tight">{user?.full_name || "Patient"}</p>
-                  <p className="text-[10px] font-black text-primary uppercase tracking-tight">{user?.role || "PATIENT"}</p>
+                  <p className="text-[10px] font-black text-primary tracking-tight">{user?.role || "Patient"}</p>
                 </div>
              </div>
 

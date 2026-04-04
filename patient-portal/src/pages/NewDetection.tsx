@@ -84,7 +84,7 @@ export const NewDetection: React.FC = () => {
                                         </div>
 
                                         <div className="space-y-2">
-                                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Notes (Optional)</label>
+                                            <label className="text-[10px] font-black text-slate-400 ml-1">Notes (Optional)</label>
                                             <textarea
                                                 value={notes}
                                                 onChange={(e) => setNotes(e.target.value)}
@@ -103,7 +103,7 @@ export const NewDetection: React.FC = () => {
                                     {isAnalyzing ? (
                                         <>
                                             <LoadingSpinner size="sm" />
-                                            <span className="ml-2 uppercase tracking-widest text-xs">AI Analyzing...</span>
+                                            <span className="ml-2 text-xs">AI Analyzing...</span>
                                         </>
                                     ) : (
                                         <>
@@ -155,7 +155,7 @@ export const NewDetection: React.FC = () => {
                                 <div className="pt-4">
                                     <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 w-fit border border-slate-200/50">
                                         <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                                        <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none">AI Core Version 2.4.0</span>
+                                        <span className="text-[10px] font-black text-slate-500 leading-none">AI Core Version 2.4.0</span>
                                     </div>
                                 </div>
                             </div>
