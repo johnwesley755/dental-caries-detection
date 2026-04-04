@@ -22,6 +22,11 @@ class User(Base):
     role = Column(Enum(UserRole), default=UserRole.DENTIST, nullable=False)
     is_active = Column(Boolean, default=True, nullable=False)
     is_verified = Column(Boolean, default=False, nullable=False)
+    is_email_verified = Column(Boolean, default=False, nullable=False)
+    verification_otp = Column(String(6), nullable=True)
+    otp_expiry = Column(DateTime(timezone=True), nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     
     # Relationships
     chat_messages = relationship("ChatMessage", back_populates="user")
