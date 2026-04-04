@@ -11,7 +11,7 @@ import {
     AlertCircle,
     Mail
 } from 'lucide-react';
-import { toast } from 'react-hot-toast';
+import { toast } from 'sonner';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
 
 export const VerifyEmail: React.FC = () => {
