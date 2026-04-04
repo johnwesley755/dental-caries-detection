@@ -1,56 +1,188 @@
 // frontend/src/components/dashboard/NotificationDropdown.tsx
-import React, { useState, useEffect, useRef } from 'react';
-import { Bell, X, Check, CheckCheck } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Bell, X, Check, CheckCheck, BriefcaseMedical, CalendarDays, FileText, Settings, BellRing, Inbox } from 'lucide-react';
 import { notificationService, type Notification } from '../../services/notificationService';
 import { toast } from 'sonner';
 import { formatDistanceToNow } from 'date-fns';
-import { createPortal } from 'react-dom';
-import { LoadingSpinner } from '../../components/common/LoadingSpinner';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { ScrollArea } from '../ui/scroll-area';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
+import { Separator } from '../ui/separator';
+import { Skeleton } from '../ui/skeleton';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 
+// ─── Notification type meta ────────────────────────────────────────────────
+interface NotificationMeta {
+  icon: React.ReactNode;
+  dot: string;
+  badge: string;
+}
+
+const getNotificationMeta = (type: string): NotificationMeta => {
+  switch (type) {
+    case 'detection':
+      return {
+        icon: <BriefcaseMedical className="h-4 w-4 text-[#003d9b]" />,
+        dot: 'bg-[#003d9b]',
+        badge: 'bg-[#dae2ff] text-[#003d9b]',
+      };
+    case 'appointment':
+      return {
+        icon: <CalendarDays className="h-4 w-4 text-violet-600" />,
+        dot: 'bg-violet-500',
+        badge: 'bg-violet-50 text-violet-600',
+      };
+    case 'report':
+      return {
+        icon: <FileText className="h-4 w-4 text-emerald-600" />,
+        dot: 'bg-emerald-500',
+        badge: 'bg-emerald-50 text-emerald-700',
+      };
+    case 'system':
+      return {
+        icon: <Settings className="h-4 w-4 text-slate-500" />,
+        dot: 'bg-slate-400',
+        badge: 'bg-slate-100 text-slate-600',
+      };
+    case 'reminder':
+      return {
+        icon: <BellRing className="h-4 w-4 text-amber-600" />,
+        dot: 'bg-amber-400',
+        badge: 'bg-amber-50 text-amber-700',
+      };
+    default:
+      return {
+        icon: <Inbox className="h-4 w-4 text-slate-400" />,
+        dot: 'bg-slate-300',
+        badge: 'bg-slate-50 text-slate-500',
+      };
+  }
+};
+
+// ─── Single notification row ───────────────────────────────────────────────
+interface NotificationItemProps {
+  notification: Notification;
+  onMarkRead: (id: string) => void;
+  onDelete: (id: string) => void;
+}
+
+const NotificationItem: React.FC<NotificationItemProps> = ({ notification, onMarkRead, onDelete }) => {
+  const meta = getNotificationMeta(notification.type);
+
+  return (
+    <div
+      className={`group relative px-4 py-3.5 transition-colors hover:bg-slate-50 ${
+        !notification.is_read ? 'bg-[#eaedff]/40' : ''
+      }`}
+    >
+      {/* Unread left accent bar */}
+      {!notification.is_read && (
+        <div className="absolute left-0 top-3 bottom-3 w-[3px] rounded-r-full bg-[#003d9b]" />
+      )}
+
+      <div className="flex items-start gap-3">
+        {/* Icon chip */}
+        <div className={`mt-0.5 flex-shrink-0 w-8 h-8 rounded-xl flex items-center justify-center ${meta.badge}`}>
+          {meta.icon}
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-start justify-between gap-2">
+            <p className={`text-sm leading-snug ${notification.is_read ? 'font-medium text-slate-700' : 'font-semibold text-slate-900'}`}>
+              {notification.title}
+            </p>
+
+            {/* Actions — visible on hover */}
+            <div className="flex items-center gap-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+              {!notification.is_read && (
+                <TooltipProvider delayDuration={200}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6 text-slate-400 hover:text-[#003d9b] hover:bg-[#eaedff]"
+                        onClick={() => onMarkRead(notification.id)}
+                      >
+                        <Check className="h-3.5 w-3.5" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="top" className="text-xs">Mark as read</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
+              <TooltipProvider delayDuration={200}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-6 w-6 text-slate-400 hover:text-red-500 hover:bg-red-50"
+                      onClick={() => onDelete(notification.id)}
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="text-xs">Delete</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+          </div>
+
+          <p className="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">
+            {notification.message}
+          </p>
+
+          <div className="flex items-center justify-between mt-2">
+            <span className="text-[11px] text-slate-400 font-medium">
+              {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true })}
+            </span>
+            <span className={`text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full ${meta.badge}`}>
+              {notification.type}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ─── Skeleton loader ──────────────────────────────────────────────────────
+const NotificationSkeleton = () => (
+  <div className="px-4 py-3.5 space-y-2.5">
+    {[1, 2, 3].map((i) => (
+      <div key={i} className="flex items-start gap-3">
+        <Skeleton className="w-8 h-8 rounded-xl shrink-0" />
+        <div className="flex-1 space-y-1.5">
+          <Skeleton className="h-3.5 w-3/4 rounded" />
+          <Skeleton className="h-3 w-full rounded" />
+          <Skeleton className="h-3 w-1/2 rounded" />
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
+// ─── Main Dropdown ─────────────────────────────────────────────────────────
 export const NotificationDropdown: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(false);
-  const buttonRef = useRef<HTMLButtonElement>(null);
-  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
 
   useEffect(() => {
     loadNotifications();
     loadUnreadCount();
-    
-    // Poll for new notifications every 30 seconds
-    const interval = setInterval(() => {
-      loadUnreadCount();
-    }, 30000);
-
+    const interval = setInterval(loadUnreadCount, 30000);
     return () => clearInterval(interval);
   }, []);
 
+  // Reload notifications when opening
   useEffect(() => {
-    if (isOpen && buttonRef.current) {
-      const rect = buttonRef.current.getBoundingClientRect();
-      const dropdownWidth = 384; // w-96 = 24rem = 384px
-      
-      // Calculate left position, ensuring dropdown doesn't go off-screen
-      let leftPos = rect.right - dropdownWidth;
-      
-      // If dropdown would go off left edge, align with button's left edge instead
-      if (leftPos < 8) {
-        leftPos = rect.left;
-      }
-      
-      // If dropdown would go off right edge, align right edge with screen
-      if (leftPos + dropdownWidth > window.innerWidth - 8) {
-        leftPos = window.innerWidth - dropdownWidth - 8;
-      }
-      
-      setDropdownPosition({
-        top: rect.bottom + 8,
-        left: leftPos,
-      });
-    }
-  }, [isOpen]);
+    if (open) loadNotifications();
+  }, [open]);
 
   const loadNotifications = async () => {
     setLoading(true);
@@ -73,12 +205,10 @@ export const NotificationDropdown: React.FC = () => {
     }
   };
 
-  const handleMarkAsRead = async (notificationId: string) => {
+  const handleMarkAsRead = async (id: string) => {
     try {
-      await notificationService.markAsRead(notificationId);
-      setNotifications(prev =>
-        prev.map(n => n.id === notificationId ? { ...n, is_read: true } : n)
-      );
+      await notificationService.markAsRead(id);
+      setNotifications(prev => prev.map(n => n.id === id ? { ...n, is_read: true } : n));
       setUnreadCount(prev => Math.max(0, prev - 1));
     } catch {
       toast.error('Failed to mark as read');
@@ -96,150 +226,109 @@ export const NotificationDropdown: React.FC = () => {
     }
   };
 
-  const handleDelete = async (notificationId: string) => {
+  const handleDelete = async (id: string) => {
     try {
-      await notificationService.deleteNotification(notificationId);
-      setNotifications(prev => prev.filter(n => n.id !== notificationId));
-      toast.success('Notification deleted');
+      await notificationService.deleteNotification(id);
+      setNotifications(prev => prev.filter(n => n.id !== id));
+      if (notifications.find(n => n.id === id && !n.is_read)) {
+        setUnreadCount(prev => Math.max(0, prev - 1));
+      }
     } catch {
       toast.error('Failed to delete notification');
     }
   };
 
-  const getNotificationIcon = (type: string) => {
-    const icons = {
-      detection: '🔍',
-      appointment: '📅',
-      report: '📄',
-      system: '⚙️',
-      reminder: '🔔',
-    };
-    return icons[type as keyof typeof icons] || '📬';
-  };
-
   return (
-    <>
-      {/* Bell Icon Button */}
-      <button
-        ref={buttonRef}
-        onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 text-slate-400 hover:text-primary transition-colors hover:bg-slate-50 rounded-xl group"
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button className="relative p-2 text-slate-400 hover:text-[#003d9b] transition-colors hover:bg-[#eaedff] rounded-xl">
+          <Bell className="h-5 w-5" />
+          {unreadCount > 0 && (
+            <span className="absolute top-1.5 right-1.5 min-w-[18px] h-[18px] bg-[#003d9b] text-white text-[10px] font-black rounded-full flex items-center justify-center px-1 border-2 border-white shadow-sm">
+              {unreadCount > 9 ? '9+' : unreadCount}
+            </span>
+          )}
+        </button>
+      </PopoverTrigger>
+
+      <PopoverContent
+        align="end"
+        sideOffset={8}
+        className="w-[380px] p-0 rounded-2xl border border-slate-100 shadow-2xl shadow-slate-200/60 overflow-hidden"
       >
-        <Bell className="h-5 w-5" />
-        {unreadCount > 0 && (
-          <span className="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full border-2 border-white animate-pulse"></span>
-        )}
-      </button>
-
-      {/* Dropdown Portal */}
-      {isOpen && createPortal(
-        <>
-          {/* Backdrop */}
-          <div
-            className="fixed inset-0 z-[9998]"
-            onClick={() => setIsOpen(false)}
-          />
-
-          {/* Dropdown Content */}
-          <div 
-            className="fixed w-96 bg-white rounded-xl shadow-2xl border border-gray-200 z-[9999] max-h-[600px] overflow-hidden flex flex-col"
-            style={{ top: `${dropdownPosition.top}px`, left: `${dropdownPosition.left}px` }}
-          >
-            {/* Header */}
-            <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-gradient-to-r from-blue-50 to-indigo-50">
-                <div>
-                  <h3 className="text-lg font-bold text-gray-900">Notifications</h3>
-                  <p className="text-sm text-gray-500">{unreadCount} unread</p>
-                </div>
-                {unreadCount > 0 && (
-                  <button
-                    onClick={handleMarkAllAsRead}
-                    className="text-sm text-primary hover:text-blue-800 font-medium flex items-center gap-1"
-                  >
-                    <CheckCheck className="h-4 w-4" />
-                    Mark all read
-                  </button>
-                )}
-              </div>
-
-            {/* Notifications List */}
-            <div className="overflow-y-auto flex-1">
-              {loading ? (
-                <div className="p-8 text-center text-gray-500">
-                  <LoadingSpinner size="md" />
-                  <p className="mt-2">Loading...</p>
-                </div>
-              ) : notifications.length === 0 ? (
-                <div className="p-8 text-center text-gray-500">
-                  <Bell className="h-12 w-12 mx-auto mb-2 text-gray-300" />
-                  <p>No notifications yet</p>
-                </div>
-              ) : (
-                <div className="divide-y divide-gray-100">
-                  {notifications.map((notification) => (
-                    <div
-                      key={notification.id}
-                      className={`p-4 hover:bg-gray-50 transition-colors ${
-                        !notification.is_read ? 'bg-blue-50/50' : ''
-                      }`}
-                    >
-                      <div className="flex items-start gap-3">
-                        <div className="text-2xl">{getNotificationIcon(notification.type)}</div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-start justify-between gap-2">
-                            <h4 className="font-semibold text-gray-900 text-sm">
-                              {notification.title}
-                            </h4>
-                            <button
-                              onClick={() => handleDelete(notification.id)}
-                              className="text-gray-400 hover:text-red-500 transition-colors"
-                            >
-                              <X className="h-4 w-4" />
-                            </button>
-                          </div>
-                          <p className="text-sm text-gray-600 mt-1 line-clamp-2">
-                            {notification.message}
-                          </p>
-                          <div className="flex items-center justify-between mt-2">
-                            <span className="text-xs text-gray-400">
-                              {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true })}
-                            </span>
-                              {!notification.is_read && (
-                                <button
-                                  onClick={() => handleMarkAsRead(notification.id)}
-                                  className="text-xs text-primary hover:text-blue-800 font-medium flex items-center gap-1"
-                                >
-                                  <Check className="h-3 w-3" />
-                                  Mark read
-                                </button>
-                              )}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
+        {/* ── Header ── */}
+        <div className="flex items-center justify-between px-4 py-3.5 bg-white border-b border-slate-100">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 bg-[#dae2ff] rounded-xl flex items-center justify-center">
+              <Bell className="h-4 w-4 text-[#003d9b]" />
             </div>
-
-            {/* Footer */}
-            {notifications.length > 0 && (
-              <div className="p-3 border-t border-gray-200 bg-gray-50">
-                <button
-                  onClick={() => {
-                    setIsOpen(false);
-                    // Navigate to notifications page if you have one
-                  }}
-                  className="w-full text-center text-sm text-primary hover:text-blue-800 font-medium"
-                >
-                  View all notifications
-                </button>
-              </div>
-            )}
+            <div>
+              <h3 className="text-sm font-black text-slate-900 leading-none">Notifications</h3>
+              <p className="text-[11px] text-slate-400 mt-0.5">
+                {unreadCount > 0 ? `${unreadCount} unread` : 'All caught up'}
+              </p>
+            </div>
           </div>
-        </>,
-        document.body
-      )}
-    </>
+
+          {unreadCount > 0 && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleMarkAllAsRead}
+              className="h-7 px-2.5 text-xs font-semibold text-[#003d9b] hover:bg-[#eaedff] hover:text-[#003d9b] gap-1.5"
+            >
+              <CheckCheck className="h-3.5 w-3.5" />
+              Mark all read
+            </Button>
+          )}
+        </div>
+
+        {/* ── List ── */}
+        <ScrollArea className="max-h-[420px]">
+          {loading ? (
+            <NotificationSkeleton />
+          ) : notifications.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-14 px-6 text-center">
+              <div className="w-14 h-14 bg-slate-100 rounded-2xl flex items-center justify-center mb-3">
+                <Inbox className="h-7 w-7 text-slate-300" />
+              </div>
+              <p className="text-sm font-semibold text-slate-500">No notifications yet</p>
+              <p className="text-xs text-slate-400 mt-1">We'll notify you when something arrives</p>
+            </div>
+          ) : (
+            <div className="divide-y divide-slate-100">
+              {notifications.map((notification) => (
+                <NotificationItem
+                  key={notification.id}
+                  notification={notification}
+                  onMarkRead={handleMarkAsRead}
+                  onDelete={handleDelete}
+                />
+              ))}
+            </div>
+          )}
+        </ScrollArea>
+
+        {/* ── Footer ── */}
+        {notifications.length > 0 && (
+          <>
+            <Separator />
+            <div className="px-4 py-2.5 bg-slate-50/80 flex items-center justify-between">
+              <span className="text-xs text-slate-400 font-medium">
+                {notifications.length} notification{notifications.length !== 1 ? 's' : ''}
+              </span>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-7 px-2.5 text-xs font-semibold text-[#003d9b] hover:bg-[#eaedff]"
+                onClick={() => setOpen(false)}
+              >
+                Close
+              </Button>
+            </div>
+          </>
+        )}
+      </PopoverContent>
+    </Popover>
   );
 };
