@@ -18,7 +18,7 @@ from ...services.chat_service import ChatService
 
 router = APIRouter(prefix="/chat", tags=["chat"])
 
-@router.post("/", response_model=ChatMessageResponse, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=ChatMessageResponse, status_code=status.HTTP_201_CREATED)
 async def send_chat_message(
     message_data: ChatMessageCreate,
     db: Session = Depends(get_db),
