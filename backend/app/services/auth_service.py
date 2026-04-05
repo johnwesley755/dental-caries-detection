@@ -227,7 +227,7 @@ class AuthService:
 
     @staticmethod
     def authenticate_user(db: Session, email: str, password: str) -> User:
-        """Authenticate user"""
+        """Authenticate user and enforce email verification"""
         user = db.query(User).filter(User.email == email).first()
         if not user or not verify_password(password, user.password_hash):
             raise HTTPException(
@@ -235,6 +235,21 @@ class AuthService:
                 detail="Incorrect email or password",
                 headers={"WWW-Authenticate": "Bearer"},
             )
+        
+        # Enforce email verification (Mandatory for all users)
+        if not user.is_email_verified:
+            # Automatically trigger a fresh OTP on a failed login due to verification
+            try:
+                AuthService.resend_otp(db, email)
+                logger.info(f"Unverified login attempt for {email}. Fresh OTP triggered.")
+            except Exception as e:
+                logger.error(f"Failed to auto-resend OTP for {email}: {str(e)}")
+            
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Email not verified"
+            )
+            
         return user
     
     @staticmethod

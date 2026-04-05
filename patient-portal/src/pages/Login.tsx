@@ -49,6 +49,18 @@ export const Login: React.FC = () => {
       }
     } catch (err: any) {
       console.error('Login error:', err);
+      
+      // Handle "Email Not Verified" - 403 Forbidden
+      if (err.response?.status === 403 && err.response?.data?.detail === "Email not verified") {
+        navigate('/verify-email', { 
+            state: { 
+                email, 
+                message: "A fresh verification code has been sent to your email. Please verify to continue." 
+            } 
+        });
+        return;
+      }
+
       let errorMessage = 'Login failed. Please check your credentials.';
       if (err.response?.data?.detail) {
         const detail = err.response.data.detail;
