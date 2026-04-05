@@ -1,6 +1,7 @@
 // patient-portal/src/components/home/index.ts
-export { HeroSection } from './HeroSection';
-export { FeaturesSection } from './FeaturesSection';
-export { CTASection } from './CTASection';
-export { QuickScan } from './QuickScan';
-export { Footer } from '../common/Footer'
+export * from './HeroSection';
+export * from './PatientTrust';
+export * from './QuickScan';
+export * from './FeaturesSection';
+export * from './CTASection';
+export { Footer } from '../common/Footer';

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { motion } from 'framer-motion';
-import { Eye, EyeOff, Loader2, ArrowRight, Lock, Mail, Activity, Stethoscope, ShieldCheck } from 'lucide-react';
+import { Eye, EyeOff, ArrowRight, Lock, Mail, Activity, Stethoscope, ShieldCheck } from 'lucide-react';
 
 // --- Utility for merging classes ---
 import { clsx, type ClassValue } from "clsx";
@@ -28,8 +28,15 @@ const Login: React.FC = () => {
     try {
       await login(email, password);
       navigate('/dashboard');
-    } catch (err: any) {
-      setError(err.response?.data?.detail || 'Invalid credentials. Please try again.');
+    } catch (err: unknown) {
+      const error = err as { response?: { status: number; data?: { detail?: string } } };
+      const detail = error.response?.data?.detail;
+      
+      if (error.response?.status === 403 && detail === "Email not verified") {
+        navigate('/verify-email', { state: { email } });
+        return;
+      }
+      setError(detail || 'Invalid credentials. Please try again.');
     }
   };
 

@@ -171,33 +171,48 @@ export const HeroSection: React.FC = () => {
       {/* ==============================================
           HERO SECTION CONTENT
       =============================================== */}
-      {/* Significantly reduced padding to tighten layout */}
-      <div className="container relative z-10 mx-auto px-4 pt-32 pb-12 lg:pt-40 lg:pb-16 flex flex-col items-center">
+      <div className="container relative z-10 mx-auto px-4 pt-32 pb-12 lg:pt-48 lg:pb-24 flex flex-col items-center">
         
         {/* Text Content with Parallax */}
         <motion.div 
           style={{ y: yText }} 
           className="max-w-5xl w-full text-center relative"
         >
-          
-          {/* Floating 3D Elements */}
-          <motion.div variants={float} animate="animate" className="absolute -top-8 -left-4 lg:left-0 text-primary hidden lg:block">
-            <ShieldCheck className="h-20 w-20 drop-shadow-2xl fill-blue-50/50" />
+          {/* Floating UI Hints */}
+          <motion.div variants={float} animate="animate" className="absolute -top-12 -left-8 lg:-left-12 text-primary hidden lg:block opacity-60">
+            <div className="bg-white/80 backdrop-blur-xl p-4 rounded-3xl shadow-2xl border border-blue-50 flex items-center gap-4">
+               <div className="h-12 w-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
+                  <ShieldCheck className="h-6 w-6" />
+               </div>
+               <div className="text-left">
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Privacy</p>
+                  <p className="text-sm font-black text-slate-900">Secure Records</p>
+               </div>
+            </div>
           </motion.div>
-          <motion.div variants={floatReverse} animate="animate" className="absolute -top-4 -right-4 lg:right-0 text-emerald-600 hidden lg:block">
-            <Sparkles className="h-16 w-16 drop-shadow-2xl fill-emerald-50/50" />
+
+          <motion.div variants={floatReverse} animate="animate" className="absolute -top-8 -right-8 lg:-right-12 text-emerald-600 hidden lg:block opacity-60">
+             <div className="bg-white/80 backdrop-blur-xl p-4 rounded-3xl shadow-2xl border border-emerald-50 flex items-center gap-4">
+               <div className="h-12 w-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600">
+                  <Sparkles className="h-6 w-6" />
+               </div>
+               <div className="text-left">
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">AI Intelligence</p>
+                  <p className="text-sm font-black text-slate-900">Instant Checks</p>
+               </div>
+            </div>
           </motion.div>
 
           <motion.div
             initial="hidden"
             animate="visible"
             variants={{ visible: { transition: { staggerChildren: 0.15 } } }}
-            className="space-y-8" // Reduced spacing
+            className="space-y-10"
           >
             {/* Badge */}
             <motion.div variants={fadeInUp} className="flex justify-center">
-              <span className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-white/60 border border-blue-200 text-blue-950 text-sm font-bold backdrop-blur-md shadow-sm ring-1 ring-white/50">
-                <span className="relative flex h-2.5 w-2.5">
+              <span className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full bg-blue-50/80 border border-blue-100 text-blue-900 text-[10px] font-black uppercase tracking-[0.2em] backdrop-blur-md shadow-sm ring-4 ring-blue-50/50">
+                <span className="relative flex h-3 w-3">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-900"></span>
                 </span>

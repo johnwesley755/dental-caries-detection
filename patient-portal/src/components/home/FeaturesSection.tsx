@@ -1,172 +1,147 @@
 // patient-portal/src/components/home/FeaturesSection.tsx
-import React, { useRef } from 'react';
+import React from 'react';
 import { 
   Smartphone, 
-  Shield, 
-  TrendingUp, 
-  Check,
+  Sparkles, 
   ArrowRight,
-  MousePointer2
+  MessageSquare,
+  History,
+  Lock
 } from 'lucide-react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 
-// --- Feature Data ---
+// --- Feature Data (Patient Oriented) ---
 const features = [
   {
     id: 1,
-    tag: "Accessibility",
-    title: "Your dental health, anywhere.",
-    description: "Access your complete dental history, X-rays, and treatment plans from any device. No more phone calls to get your records.",
-    image: "https://images.unsplash.com/photo-1550831107-1553da8c8464?q=80&w=2540&auto=format&fit=crop",
-    icon: Smartphone,
-    bg: "bg-white",
-    text: "text-slate-900",
-    accent: "bg-blue-900",
-    badge: "bg-blue-50 text-blue-950 border-blue-100",
-    layout: "right"
+    title: "Instant AI Feedback",
+    description: "Get immediate insights into your dental health. Our AI highlights potential issues before they become painful or expensive.",
+    icon: Sparkles,
+    color: "blue"
   },
   {
     id: 2,
-    tag: "Bank-Grade Security",
-    title: "Fort Knox for your smile.",
-    description: "We utilize AES-256 encryption and strict HIPAA-compliant protocols. Your private health data remains strictly between you and your doctor.",
-    image: "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?q=80&w=2670&auto=format&fit=crop",
-    icon: Shield,
-    bg: "bg-slate-950",
-    text: "text-white",
-    accent: "bg-emerald-600",
-    badge: "bg-emerald-900/30 text-emerald-500 border-emerald-800",
-    layout: "left"
+    title: "Secure Messaging",
+    description: "Connect directly with your clinical team. Private, encrypted chat for all your questions and follow-up care.",
+    icon: MessageSquare,
+    color: "emerald"
   },
   {
     id: 3,
-    tag: "Smart Insights",
-    title: "See the future of your teeth.",
-    description: "Our AI analyzes your scans to predict potential issues before they happen. Track gum health and cavity risks on a visual timeline.",
-    image: "https://images.unsplash.com/photo-1551076805-e1869033e561?q=80&w=2532&auto=format&fit=crop",
-    icon: TrendingUp,
-    bg: "bg-gradient-to-br from-emerald-100 via-purple-100 to-pink-100",
-    text: "text-slate-900",
-    accent: "bg-purple-600",
-    badge: "bg-white/60 text-purple-700 border-purple-200 backdrop-blur",
-    layout: "right"
+    title: "Clean Dental History",
+    description: "Access your X-rays and treatment plans in plain English. No more confusing medical jargon—just clear health data.",
+    icon: History,
+    color: "indigo"
   }
 ];
 
-const FeatureCard = ({ feature }: { feature: typeof features[0] }) => {
-  const containerRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "start start"]
-  });
-
-  // Parallax effects for content
-  const y = useTransform(scrollYProgress, [0, 1], [100, 0]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [0, 1]);
-  const scale = useTransform(scrollYProgress, [0, 1], [0.85, 1]);
-
-  const isDark = feature.bg.includes('slate-950');
-  const isRight = feature.layout === 'right';
-
+const FeatureCard = ({ feature, index }: { feature: typeof features[0], index: number }) => {
+  const isEmerald = feature.color === 'emerald';
+  const isIndigo = feature.color === 'indigo';
+  
   return (
-    // STICKY CONTAINER: This is what creates the "stacking" effect
-    <div 
-      ref={containerRef} 
-      className={`sticky top-0 h-screen flex items-center justify-center overflow-hidden ${feature.bg}`}
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.1 }}
+      className="group relative p-10 rounded-[2.5rem] bg-white border border-slate-100 shadow-2xl shadow-slate-200/50 hover:shadow-primary/5 transition-all duration-500 hover:-translate-y-2"
     >
-      <div className="container mx-auto px-6 relative z-10 w-full">
-        <div className={`flex flex-col lg:flex-row items-center gap-12 lg:gap-24 h-full ${!isRight ? 'lg:flex-row-reverse' : ''}`}>
-          
-          {/* --- Text Content --- */}
-          <motion.div 
-            style={{ y, opacity }}
-            className="flex-1 space-y-8 pt-20 lg:pt-0"
-          >
-            <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full border text-sm font-bold ${feature.badge}`}>
-              <feature.icon className="w-4 h-4" />
-              {feature.tag}
-            </div>
-
-            <h2 className={`text-5xl lg:text-7xl font-extrabold tracking-tight leading-[1.1] ${feature.text}`}>
-              {feature.title}
-            </h2>
-
-            <p className={`text-xl lg:text-2xl leading-relaxed max-w-xl ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-              {feature.description}
-            </p>
-
-            <ul className="space-y-4">
-              {['Instant access', 'Secure encryption', '24/7 Availability'].map((item, i) => (
-                <li key={i} className={`flex items-center gap-3 text-lg font-medium ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-                  <div className={`flex items-center justify-center w-6 h-6 rounded-full ${isDark ? 'bg-emerald-600/20 text-emerald-500' : 'bg-blue-100 text-blue-900'}`}>
-                    <Check className="w-4 h-4" />
-                  </div>
-                  {item}
-                </li>
-              ))}
-            </ul>
-
-            <button className={`group mt-8 px-8 py-4 rounded-full text-lg font-bold text-white transition-all shadow-xl hover:shadow-2xl hover:-translate-y-1 flex items-center gap-2 ${feature.accent}`}>
-              Learn more
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </button>
-          </motion.div>
-
-          {/* --- Image/Visual Content --- */}
-          <motion.div 
-            style={{ scale }}
-            className="flex-1 w-full max-w-2xl"
-          >
-            <div className={`relative rounded-[2.5rem] overflow-hidden shadow-2xl border ${isDark ? 'border-slate-800' : 'border-white'} group`}>
-              
-              {/* Floating UI Elements (Visily Style) */}
-              <div className="absolute top-6 left-6 z-20 flex gap-2">
-                <div className="w-3 h-3 rounded-full bg-red-500/80" />
-                <div className="w-3 h-3 rounded-full bg-emerald-600/80" />
-                <div className="w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]" />
-              </div>
-
-              {/* Cursor Interaction Mockup */}
-              <div className="absolute bottom-10 right-10 z-20 bg-white/90 backdrop-blur p-4 rounded-2xl shadow-xl flex items-center gap-3 animate-bounce duration-[3000ms]">
-                 <div className={`p-2 rounded-lg ${isDark ? 'bg-emerald-100 text-emerald-600' : 'bg-blue-100 text-blue-900'}`}>
-                    <MousePointer2 className="w-5 h-5" />
-                 </div>
-                 <div>
-                    <p className="text-xs font-bold text-slate-400">Interaction</p>
-                    <p className="text-sm font-bold text-slate-900">Click to expand</p>
-                 </div>
-              </div>
-
-              {/* The Image */}
-              <img 
-                src={feature.image} 
-                alt={feature.title} 
-                className="w-full h-[50vh] object-cover object-top transform group-hover:scale-105 transition-transform duration-[1.5s]"
-              />
-              
-              {/* Gradient Overlay */}
-              <div className={`absolute inset-0 bg-gradient-to-t ${isDark ? 'from-slate-950/80' : 'from-white/20'} to-transparent opacity-60`} />
-            </div>
-          </motion.div>
-
-        </div>
+      <div className={`h-16 w-16 rounded-2xl flex items-center justify-center mb-8 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3 ${
+        isEmerald ? 'bg-emerald-50 text-emerald-600' : 
+        isIndigo ? 'bg-indigo-50 text-indigo-600' : 
+        'bg-blue-50 text-blue-600'
+      }`}>
+        <feature.icon className="w-8 h-8" />
       </div>
-    </div>
+
+      <h3 className="text-2xl font-black text-slate-900 mb-4 tracking-tight">
+        {feature.title}
+      </h3>
+
+      <p className="text-slate-500 font-bold leading-relaxed mb-8">
+        {feature.description}
+      </p>
+
+      <div className="flex items-center gap-2 text-sm font-black text-primary opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+        Discover more
+        <ArrowRight className="w-4 h-4 translate-x-0 group-hover:translate-x-1 transition-transform" />
+      </div>
+      
+      {/* Subtle Glow */}
+      <div className={`absolute -inset-px rounded-[2.5rem] opacity-0 group-hover:opacity-100 transition-opacity blur-xl -z-10 ${
+        isEmerald ? 'bg-emerald-400/10' : 
+        isIndigo ? 'bg-indigo-400/10' : 
+        'bg-blue-400/10'
+      }`} />
+    </motion.div>
   );
 };
 
 export const FeaturesSection: React.FC = () => {
   return (
-    <div className="relative w-full">
-      {/* This wrapper ensures the stacking context works. 
-        Each FeatureCard is h-screen and sticky.
-      */}
-      {features.map((feature) => (
-        <FeatureCard 
-          key={feature.id} 
-          feature={feature} 
-        />
-      ))}
-    </div>
+    <section className="py-32 bg-white relative overflow-hidden">
+      {/* Background Decorations */}
+      <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-blue-50/50 to-transparent pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-1/3 h-full bg-gradient-to-r from-emerald-50/30 to-transparent pointer-events-none" />
+
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="max-w-3xl mb-20">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-100 text-slate-500 text-[10px] font-black uppercase tracking-widest mb-6">
+                <Smartphone className="w-3.5 h-3.5" />
+                Patient Experience
+            </div>
+            <h2 className="text-5xl lg:text-7xl font-black text-slate-900 tracking-tight leading-[0.9] mb-8">
+                Designed for <br/>
+                <span className="text-primary">your peace of mind.</span>
+            </h2>
+            <p className="text-xl text-slate-500 font-bold leading-relaxed tracking-tight">
+                DentoAI isn't just about code—it's about making your next dental visit stress-free, informed, and private.
+            </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {features.map((feature, index) => (
+            <FeatureCard 
+              key={feature.id} 
+              feature={feature} 
+              index={index}
+            />
+          ))}
+        </div>
+
+        {/* Security Banner */}
+        <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-20 p-8 rounded-3xl bg-slate-900 text-white flex flex-col lg:flex-row items-center justify-between gap-8"
+        >
+            <div className="flex items-center gap-6">
+                <div className="h-14 w-14 rounded-2xl bg-white/10 flex items-center justify-center text-emerald-400">
+                    <Lock className="w-7 h-7" />
+                </div>
+                <div>
+                   <h4 className="text-xl font-black tracking-tight mb-1">Bank-Grade Security</h4>
+                   <p className="text-slate-400 font-bold text-sm">Your data is AES-256 encrypted and HIPAA compliant.</p>
+                </div>
+            </div>
+            <div className="flex -space-x-4">
+                {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="h-12 w-12 rounded-full border-4 border-slate-900 bg-slate-800 overflow-hidden">
+                        <img 
+                            src={`https://i.pravatar.cc/150?u=${i + 10}`} 
+                            alt="User" 
+                            className="w-full h-full object-cover opacity-80"
+                        />
+                    </div>
+                ))}
+                <div className="h-12 px-4 rounded-full border-4 border-slate-900 bg-emerald-600 flex items-center justify-center text-xs font-black">
+                    Join 2k+ Patients
+                </div>
+            </div>
+        </motion.div>
+      </div>
+    </section>
   );
 };

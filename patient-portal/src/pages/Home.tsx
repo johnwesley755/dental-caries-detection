@@ -1,11 +1,19 @@
 // patient-portal/src/pages/Home.tsx
 import React from 'react';
-import { HeroSection, FeaturesSection, QuickScan, CTASection, Footer } from '../components/home';
+import { 
+  HeroSection, 
+  PatientTrust,
+  QuickScan, 
+  FeaturesSection, 
+  CTASection, 
+  Footer 
+} from '../components/home';
 
 export const Home: React.FC = () => {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-white">
       <HeroSection />
+      <PatientTrust />
       <QuickScan />
       <FeaturesSection />
       <CTASection />

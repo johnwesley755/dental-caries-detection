@@ -192,6 +192,31 @@ class AuthService:
         return True
 
     @staticmethod
+    def verify_email(db: Session, token: str) -> bool:
+        """Verify user's email using a token/code (Legacy/URL support)"""
+        user = db.query(User).filter(User.verification_otp == token).first()
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid or expired verification token"
+            )
+
+        # Check expiry
+        now = datetime.now(timezone.utc)
+        if user.otp_expiry and user.otp_expiry.replace(tzinfo=timezone.utc) < now:
+             raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Verification token has expired"
+            )
+
+        # Successful verification
+        user.is_email_verified = True
+        user.verification_otp = None
+        user.otp_expiry = None
+        db.commit()
+        return True
+
+    @staticmethod
     def resend_otp(db: Session, email: str) -> bool:
         """Resend verification OTP to user"""
         user = db.query(User).filter(User.email == email).first()
