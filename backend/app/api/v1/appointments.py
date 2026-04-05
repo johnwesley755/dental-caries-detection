@@ -11,7 +11,10 @@ from ...models.patient import Patient
 from ...models.notification import Notification, NotificationType
 from pydantic import BaseModel
 from typing import Optional
+import logging
 from ...utils.notifications import notify_user
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(tags=["appointments"])
 
@@ -105,8 +108,10 @@ async def get_appointments(
     if current_user.role == UserRole.PATIENT:
         patient = db.query(Patient).filter(Patient.user_id == current_user.id).first()
         if patient:
-            query = query.filter(Appointment.patient_id == str(patient.id))
+            # Use native UUID type for the filter instead of string conversion
+            query = query.filter(Appointment.patient_id == patient.id)
         else:
+            logger.warning(f"No patient profile found for current user {current_user.id}")
             return []
     
     appointments = query.order_by(Appointment.appointment_date.desc()).all()
@@ -123,9 +128,9 @@ async def get_appointments(
             result.append({
                 "id": str(appt.id),
                 "patient_id": str(appt.patient_id),
-                "patient_name": patient.full_name if patient else "Unknown",
+                "patient_name": patient.full_name if patient else "Unknown Patient",
                 "dentist_id": str(appt.dentist_id),
-                "dentist_name": dentist.full_name if dentist else "Unknown",
+                "dentist_name": dentist.full_name if dentist else "Unknown Dentist",
                 "appointment_date": appt.appointment_date,
                 "duration_minutes": appt.duration_minutes,
                 "status": appt.status.value if hasattr(appt.status, 'value') else str(appt.status),
@@ -135,7 +140,7 @@ async def get_appointments(
                 "created_at": appt.created_at
             })
         except Exception as row_error:
-            print(f"Skipping appointment {appt.id} due to error: {row_error}")
+            logger.error(f"Critical error formatting appointment row {appt.id}: {str(row_error)}")
             continue
     
     return result
