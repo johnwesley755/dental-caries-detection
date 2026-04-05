@@ -7,18 +7,33 @@ from ..models.detection import Detection
 from ..models.chat import ChatMessage
 from ..models.user import User
 import logging
+import re
 
 logger = logging.getLogger(__name__)
 
 class ChatService:
     """Service for handling patient chatbot interactions via Groq (Primary)"""
     
-    # Medical safety keywords that should block the query
-    BLOCKED_KEYWORDS = [
+    # Tier 1: Medical safety (prevention of diagnosis/prescription)
+    MEDICAL_FORBIDDEN = [
         "medicine", "medication", "drug", "prescription", "prescribe",
         "dosage", "dose", "treatment", "cure", "heal", "therapy",
         "diagnose", "diagnosis", "confirm", "disease", "illness",
-        "antibiotic", "painkiller", "remedy", "surgery"
+        "antibiotic", "painkiller", "remedy", "surgery", "operation"
+    ]
+
+    # Tier 2: Profanity & Harmful Content (Baseline list)
+    PROFANITY_LIST = [
+        "fuck", "shit", "ass", "bitch", "bastard", "damn", "hell",
+        "kill", "death", "die", "murder", "suicide", "hate", "scam",
+        "fraud", "hack", "abuse"
+    ]
+
+    # Tier 3: Domain Verification Roots
+    DENTAL_ROOTS = [
+        "tooth", "teeth", "caries", "cavity", "decay", "gum", "dentist",
+        "scan", "result", "doctor", "mouth", "pain", "ache", "molar",
+        "incisor", "enamel", "pulp", "filling", "cleaning", "checkup"
     ]
     
     SAFE_REFUSAL = (
@@ -26,6 +41,18 @@ class ChatService:
         "For medical advice, treatment recommendations, or prescriptions, "
         "please consult your dentist directly. They are the best resource "
         "for your dental health needs."
+    )
+
+    DOMAIN_REFUSAL = (
+        "I am specialized only in dental health and scan diagnostics. "
+        "I cannot assist with general topics or unrelated queries. "
+        "Please ask me about your dental scan results or oral hygiene."
+    )
+
+    SAFETY_REFUSAL = (
+        "I am unable to process your request as it violates our safety and "
+        "professional conduct guidelines. Please keep the conversation professional "
+        "and focused on dental health."
     )
     
     DISCLAIMER = (
@@ -36,9 +63,31 @@ class ChatService:
     
     @staticmethod
     def is_safe_query(message: str) -> bool:
-        """Check if the query is safe (doesn't contain medical advice keywords)"""
+        """Check if the query is safe from harmful content and medical advice requests"""
         message_lower = message.lower()
-        return not any(keyword in message_lower for keyword in ChatService.BLOCKED_KEYWORDS)
+        
+        # Check for profanity first
+        if any(keyword in message_lower for keyword in ChatService.PROFANITY_LIST):
+            logger.warning(f"Profanity detected in user message: {message}")
+            return False
+            
+        # Check for medical diagnosis/prescription requests
+        if any(keyword in message_lower for keyword in ChatService.MEDICAL_FORBIDDEN):
+            logger.warning(f"Medical advice request detected: {message}")
+            return False
+            
+        return True
+
+    @staticmethod
+    def is_dental_domain(message: str) -> bool:
+        """Check if the query is relevant to dentistry/caries"""
+        message_lower = message.lower()
+        
+        # If it's a very short greeting/acknowledgment, allow it
+        if len(message_lower.split()) <= 2 and any(g in message_lower for g in ["hi", "hello", "thanks", "ok"]):
+            return True
+            
+        return any(root in message_lower for root in ChatService.DENTAL_ROOTS)
     
     @staticmethod
     def get_latest_detection(db: Session, user_id: str) -> Optional[Detection]:
@@ -52,12 +101,14 @@ class ChatService:
         """Prepare structured messages for the Chat Completion protocol"""
         
         system_instruction = (
-            "You are a helpful dental health assistant for patients. "
-            "Your role is to explain AI dental scan results in simple, easy-to-understand language. "
-            "You NEVER diagnose diseases, prescribe medications, or give medical advice. "
-            "You help patients understand what their scan results mean and what steps to take next. "
-            "Always be supportive and encouraging. "
-            "Keep responses concise (2-3 sentences maximum)."
+            "You are a highly specialized dental health assistant. "
+            "STRICT MANDATE: Only discuss dental caries (cavities), oral hygiene, and the provided scan results. "
+            "If the user asks about ANY unrelated topic (politics, weather, general science, etc.), "
+            "politely state that you are only capable of discussing dental health. "
+            "You NEVER prescribe medications, diagnose specific diseases beyond explaining the AI findings, "
+            "or recommend specific medical procedures. "
+            "Your tone must be clinical, supportive, and professional. "
+            "Keep responses extremely concise (Max 2-3 sentences)."
         )
         
         context = ""
@@ -78,7 +129,7 @@ class ChatService:
                             severity_counts[severity_level] += 1
             
             context = f"""
-Patient's Latest Dental Scan Results:
+Patient's Latest Dental Scan Results (STRICT CONTEXT):
 - Total caries detected: {detection.total_caries_detected}
 - Severity breakdown: {severity_counts['mild']} mild, {severity_counts['moderate']} moderate, {severity_counts['severe']} severe
 - Average AI confidence: {avg_confidence:.1f}%
@@ -114,8 +165,8 @@ Patient's Latest Dental Scan Results:
         payload = {
             "model": settings.GROQ_MODEL,
             "messages": messages,
-            "max_tokens": 300,
-            "temperature": 0.5,
+            "max_tokens": 250,
+            "temperature": 0.3, # Lowered for more deterministic/professional responses
             "stream": False
         }
         
@@ -130,17 +181,11 @@ Patient's Latest Dental Scan Results:
             )
             
             if response.status_code != 200:
-                # Specialized error for Groq account restrictions
-                if response.status_code == 403:
-                    logger.error(f"Groq API Access Forbidden: {response.text}")
-                    return "I'm currently unable to access the diagnostic service. Please notify the administrator."
-                
                 logger.error(f"Groq API error ({response.status_code}): {response.text}")
                 return "I'm currently unable to respond due to a service interruption. Please try again later."
             
             result = response.json()
             
-            # Navigate OpenAI-compatible response structure
             try:
                 choices = result.get("choices", [])
                 if choices:
@@ -150,15 +195,8 @@ Patient's Latest Dental Scan Results:
             except Exception as e:
                 logger.error(f"Failed to parse Groq response: {str(e)}")
             
-            logger.warning(f"Unexpected response format from Groq: {result}")
             return "I'm having trouble generating a response. Please try again."
             
-        except requests.exceptions.Timeout:
-            logger.error("Groq API timeout")
-            return "The response is taking longer than expected. Please try again."
-        except requests.exceptions.RequestException as e:
-            logger.error(f"Groq API request error: {str(e)}")
-            return "I'm currently unable to connect to the AI service. Please try again later."
         except Exception as e:
             logger.error(f"Unexpected error in Groq API call: {str(e)}")
             return "An unexpected error occurred. Please try again."
@@ -170,12 +208,22 @@ Patient's Latest Dental Scan Results:
         user_message: str,
         detection_id: Optional[str] = None
     ) -> Dict[str, Any]:
-        """Generate chatbot response with safety checks using Groq"""
+        """Generate chatbot response with multi-tier safety and domain checks"""
         
-        # Safety check
+        # 1. Profanity & Medical Advice safety check
         if not ChatService.is_safe_query(user_message):
+            message_lower = user_message.lower()
+            refusal = ChatService.SAFETY_REFUSAL if any(k in message_lower for k in ChatService.PROFANITY_LIST) else ChatService.SAFE_REFUSAL
             return {
-                "bot_response": ChatService.SAFE_REFUSAL,
+                "bot_response": refusal,
+                "is_safe": False,
+                "detection_context": None
+            }
+            
+        # 2. Domain Relevance Check
+        if not ChatService.is_dental_domain(user_message):
+            return {
+                "bot_response": ChatService.DOMAIN_REFUSAL,
                 "is_safe": False,
                 "detection_context": None
             }
