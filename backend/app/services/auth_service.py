@@ -250,6 +250,37 @@ class AuthService:
                 detail="Email not verified"
             )
             
+        # --- SELF-HEALING PROFILE RECOVERY ---
+        # Ensure every user has their required specialized profile
+        if user.role == UserRole.PATIENT:
+            from .patient_service import PatientService
+            from ..models.patient import Patient
+            from ..schemas.patient import PatientCreate
+            
+            patient_exists = db.query(Patient).filter(Patient.user_id == user.id).first()
+            if not patient_exists:
+                logger.warning(f"Auto-recovering missing Patient profile for user {user.email}")
+                patient_data = PatientCreate(
+                    full_name=user.full_name,
+                    email=user.email
+                )
+                PatientService.create_patient(db, patient_data, user_id=user.id, creator_id=user.id)
+                db.commit()
+
+        elif user.role == UserRole.DENTIST:
+            from ..models.dentist_profile import DentistProfile
+            
+            profile_exists = db.query(DentistProfile).filter(DentistProfile.user_id == user.id).first()
+            if not profile_exists:
+                logger.warning(f"Auto-recovering missing DentistProfile for user {user.email}")
+                db_profile = DentistProfile(
+                    user_id=user.id,
+                    license_number=f"PENDING-AUTH-RECOVERY-{user.id.hex[:8].upper()}",
+                    verification_status="PENDING"
+                )
+                db.add(db_profile)
+                db.commit()
+
         return user
     
     @staticmethod
