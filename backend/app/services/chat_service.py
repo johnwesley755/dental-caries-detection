@@ -124,7 +124,7 @@ class ChatService:
             if detection.caries_findings:
                 for finding in detection.caries_findings:
                     if finding.severity:
-                        severity_level = finding.severity.value.lower()
+                        severity_level = finding.severity.lower()
                         if severity_level in severity_counts:
                             severity_counts[severity_level] += 1
             
@@ -258,7 +258,7 @@ Patient's Latest Dental Scan Results (STRICT CONTEXT):
                 severity_counts = {}
                 for finding in detection.caries_findings:
                     if finding.severity:
-                        sev = finding.severity.value
+                        sev = finding.severity
                         severity_counts[sev] = severity_counts.get(sev, 0) + 1
                 if severity_counts:
                     severity = max(severity_counts, key=severity_counts.get)
