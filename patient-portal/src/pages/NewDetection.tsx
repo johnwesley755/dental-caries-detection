@@ -153,10 +153,10 @@ export const NewDetection: React.FC = () => {
                                 </div>
 
                                 <div className="pt-4">
-                                    <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 w-fit border border-slate-200/50">
+                                    {/* <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 w-fit border border-slate-200/50">
                                         <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
                                         <span className="text-[10px] font-black text-slate-500 leading-none">AI Core Version 2.4.0</span>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
 
