@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { authService } from '../services/authService';
+import { SessionExpiredModal } from '../components/auth/SessionExpiredModal';
 import type { User, UserCreate, AuthContextType } from '../types/auth.types';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -22,6 +23,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSessionExpired, setIsSessionExpired] = useState(false);
+
+  useEffect(() => {
+    // Listen for session expiration events from API service
+    const handleSessionExpired = () => {
+      setIsSessionExpired(true);
+      // We don't call logout here to let the modal stay visible
+      // but the storage is already cleared by the interceptor
+    };
+
+    window.addEventListener('dentoai-session-expired', handleSessionExpired);
+    return () => window.removeEventListener('dentoai-session-expired', handleSessionExpired);
+  }, []);
 
   useEffect(() => {
     const initAuth = async () => {
@@ -93,5 +107,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     isLoading,
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+      <SessionExpiredModal 
+        isOpen={isSessionExpired} 
+        onLogout={logout} 
+      />
+    </AuthContext.Provider>
+  );
 };

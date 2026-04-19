@@ -1,6 +1,7 @@
 // patient-portal/src/contexts/AuthContext.tsx
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { authService } from '../services/authService';
+import { SessionExpiredModal } from '../components/auth/SessionExpiredModal';
 import type { User, AuthContextType } from '../types/auth.types';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -9,6 +10,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSessionExpired, setIsSessionExpired] = useState(false);
+
+  useEffect(() => {
+    // Listen for session expiration events from API service
+    const handleSessionExpired = () => {
+      setIsSessionExpired(true);
+      // Storage is already cleared by the interceptor
+    };
+
+    window.addEventListener('dentoai-session-expired', handleSessionExpired);
+    return () => window.removeEventListener('dentoai-session-expired', handleSessionExpired);
+  }, []);
 
   useEffect(() => {
     const initAuth = async () => {
@@ -44,6 +57,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     authService.removeToken();
     setToken(null);
     setUser(null);
+    window.location.href = '/';
   };
 
   return (
@@ -58,6 +72,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }}
     >
       {children}
+      <SessionExpiredModal 
+        isOpen={isSessionExpired} 
+        onLogout={logout} 
+      />
     </AuthContext.Provider>
   );
 };

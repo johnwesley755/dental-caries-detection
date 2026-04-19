@@ -33,7 +33,8 @@ class ApiService {
         if (error.response?.status === 401) {
           localStorage.removeItem('token');
           localStorage.removeItem('user');
-          // Removed hard redirect to /login to allow public pages to handle auth state gracefully
+          // Dispatch global event to show session expired modal
+          window.dispatchEvent(new Event('dentoai-session-expired'));
         }
         return Promise.reject(error);
       }
