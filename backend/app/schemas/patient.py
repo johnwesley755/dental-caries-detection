@@ -22,7 +22,7 @@ class PatientResponse(PatientBase):
     id: UUID
     patient_id: str
     user_id: Optional[UUID] = None
-    created_by: UUID
+    created_by: Optional[UUID] = None
     created_by_name: Optional[str] = None
     created_at: datetime
     updated_at: Optional[datetime] = None

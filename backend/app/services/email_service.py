@@ -16,7 +16,13 @@ class EmailService:
         return password
     
     @staticmethod
-    def send_email(to_email: str, subject: str, html_content: str, attachments: Optional[List[dict]] = None) -> bool:
+    def send_email(
+        to_email: str, 
+        subject: str, 
+        html_content: str, 
+        attachments: Optional[List[dict]] = None,
+        sender_name: Optional[str] = None
+    ) -> bool:
         """Send an email via Brevo v3 Transactional API"""
         try:
             # Validate Brevo API key
@@ -29,7 +35,7 @@ class EmailService:
             # Prepare Brevo API payload
             payload = {
                 "sender": {
-                    "name": settings.BREVO_SENDER_NAME or settings.HOSPITAL_NAME,
+                    "name": sender_name or settings.BREVO_SENDER_NAME or settings.HOSPITAL_NAME,
                     "email": settings.BREVO_SENDER_EMAIL or settings.HOSPITAL_EMAIL
                 },
                 "to": [{"email": to_email}],
@@ -147,21 +153,29 @@ class EmailService:
         detection_date: str,
         summary_stats: dict,
         pdf_bytes: bytes,
-        cc_email: Optional[str] = None
+        cc_email: Optional[str] = None,
+        clinic_name: Optional[str] = None
     ) -> bool:
         """Send detection report via Brevo with PDF attachment"""
         try:
             import base64
-            html_body = EmailService._create_report_email_html(patient_name, detection_id, detection_date, summary_stats)
+            html_body = EmailService._create_report_email_html(patient_name, detection_id, detection_date, summary_stats, clinic_name)
             pdf_base64 = base64.b64encode(pdf_bytes).decode('utf-8')
             attachments = [{"content": pdf_base64, "name": f"Dental_Report_{detection_id}.pdf"}]
-            return EmailService.send_email(to_email, f"Diagnostic Report - {detection_id}", html_body, attachments)
+            return EmailService.send_email(
+                to_email, 
+                f"Diagnostic Report - {detection_id}", 
+                html_body, 
+                attachments,
+                sender_name=clinic_name
+            )
         except Exception as e:
             print(f"❌ Failed to prepare detection report: {str(e)}")
             return False
     
     @staticmethod
-    def _create_report_email_html(patient_name: str, detection_id: str, detection_date: str, summary_stats: dict) -> str:
+    def _create_report_email_html(patient_name: str, detection_id: str, detection_date: str, summary_stats: dict, clinic_name: Optional[str] = None) -> str:
+        clinic_display = clinic_name or settings.HOSPITAL_NAME
         html = f"""
         <!DOCTYPE html>
         <html>
@@ -172,12 +186,14 @@ class EmailService:
                 .header {{ background: #0f172a; color: white; padding: 30px; text-align: center; }}
                 .content {{ padding: 40px; }}
                 .summary {{ background: #f8fafc; border-left: 4px solid #3b82f6; padding: 20px; margin: 25px 0; border-radius: 4px; }}
+                .footer {{ background: #f1f5f9; padding: 20px; text-align: center; color: #64748b; font-size: 12px; }}
             </style>
         </head>
         <body>
             <div class="container">
                 <div class="header">
                     <h2 style="margin:0;">Diagnostic Report</h2>
+                    <p style="margin:5px 0 0 0; opacity:0.8;">{clinic_display}</p>
                 </div>
                 <div class="content">
                     <p>Dear {patient_name},</p>
@@ -187,6 +203,9 @@ class EmailService:
                         <p style="margin:5px 0;"><strong>Findings:</strong> <span style="color:#ef4444;">{summary_stats.get('caries_found', 'N/A')}</span></p>
                     </div>
                     <p>A detailed PDF containing the full findings and AI analysis is attached.</p>
+                </div>
+                <div class="footer">
+                    <p>Sent by {clinic_display}</p>
                 </div>
             </div>
         </body>

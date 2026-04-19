@@ -14,6 +14,7 @@ from matplotlib import pyplot as plt
 from typing import List, Optional
 from ..models.detection import Detection
 from ..models.patient import Patient
+from ..models.user import User
 from ..core.config import settings
 
 class ReportService:
@@ -47,6 +48,7 @@ class ReportService:
         self,
         detection: Detection,
         patient: Patient,
+        dentist: Optional[User] = None,
         include_images: bool = True
     ) -> bytes:
         """
@@ -74,7 +76,7 @@ class ReportService:
         story = []
         
         # Header
-        story.extend(self._build_header(detection, patient))
+        story.extend(self._build_header(detection, patient, dentist))
         story.append(Spacer(1, 0.3*inch))
         
         # Summary Section
@@ -114,7 +116,7 @@ class ReportService:
         
         # Footer
         print("Building footer...")
-        story.extend(self._build_footer())
+        story.extend(self._build_footer(dentist))
         
         # Build PDF
         print("Starting PDF build...")
@@ -136,7 +138,8 @@ class ReportService:
     def generate_dashboard_report(
         self,
         patients: List[Patient],
-        detections: List[Detection]
+        detections: List[Detection],
+        dentist: Optional[User] = None
     ) -> bytes:
         """
         Generate a summary PDF report for the entire clinic dashboard
@@ -155,7 +158,11 @@ class ReportService:
         
         # 1. Header
         story.append(Paragraph("CLINICAL INTELLIGENCE SUMMARY", self.styles['CustomTitle']))
-        story.append(Paragraph(f"Generated for: {saxutils.escape(settings.HOSPITAL_NAME)}", self.styles['Normal']))
+        
+        # Use dentist profile for clinic name if available
+        clinic_name = dentist.profile.clinic_name if dentist and dentist.profile and dentist.profile.clinic_name else settings.HOSPITAL_NAME
+        
+        story.append(Paragraph(f"Generated for: {saxutils.escape(clinic_name)}", self.styles['Normal']))
         story.append(Paragraph(f"Date: {datetime.now().strftime('%B %d, %Y')}", self.styles['Normal']))
         story.append(Spacer(1, 0.4*inch))
         
@@ -225,14 +232,14 @@ class ReportService:
         story.append(overview_table)
         
         # 4. Footer
-        story.extend(self._build_footer())
+        story.extend(self._build_footer(dentist))
         
         doc.build(story)
         pdf_bytes = buffer.getvalue()
         buffer.close()
         return pdf_bytes
     
-    def _build_header(self, detection: Detection, patient: Patient) -> list:
+    def _build_header(self, detection: Detection, patient: Patient, dentist: Optional[User] = None) -> list:
         """Build report header"""
         elements = []
         
@@ -550,19 +557,31 @@ class ReportService:
         
         return interpretation
     
-    def _build_footer(self) -> list:
+    def _build_footer(self, dentist: Optional[User] = None) -> list:
         """Build report footer with clinic information"""
         elements = []
         
         elements.append(Spacer(1, 0.5*inch))
         
+        # Use dentist profile info if available, otherwise fallback to settings
+        if dentist and dentist.profile:
+            clinic_name = dentist.profile.clinic_name or "Dental Professional"
+            clinic_address = dentist.profile.clinic_address or ""
+            clinic_phone = dentist.profile.phone_number or ""
+            clinic_email = dentist.email or ""
+        else:
+            clinic_name = settings.HOSPITAL_NAME
+            clinic_address = settings.HOSPITAL_ADDRESS
+            clinic_phone = settings.HOSPITAL_PHONE
+            clinic_email = settings.HOSPITAL_EMAIL
+
         # Hospital Information
         clinic_info = f"""
         <para alignment="center">
-        <b>{saxutils.escape(settings.HOSPITAL_NAME)}</b><br/>
-        {saxutils.escape(settings.HOSPITAL_ADDRESS) if settings.HOSPITAL_ADDRESS else ''}<br/>
-        {f'Phone: {saxutils.escape(settings.HOSPITAL_PHONE)}' if settings.HOSPITAL_PHONE else ''}<br/>
-        {f'Email: {saxutils.escape(settings.HOSPITAL_EMAIL)}' if settings.HOSPITAL_EMAIL else ''}
+        <b>{saxutils.escape(clinic_name)}</b><br/>
+        {saxutils.escape(clinic_address) if clinic_address else ''}<br/>
+        {f'Phone: {saxutils.escape(clinic_phone)}' if clinic_phone else ''}<br/>
+        {f'Email: {saxutils.escape(clinic_email)}' if clinic_email else ''}
         </para>
         """
         

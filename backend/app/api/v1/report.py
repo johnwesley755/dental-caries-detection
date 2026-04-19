@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import Response
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from uuid import UUID
 from pydantic import BaseModel, EmailStr
 from typing import Optional
@@ -59,17 +59,17 @@ async def download_detection_report(
     # Get patient
     patient = db.query(Patient).filter(Patient.id == detection.patient_id).first()
     
-    if not patient:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Patient not found"
-        )
+    # Get dentist profile info with eager loading
+    dentist = None
+    if detection.dentist_id:
+        dentist = db.query(User).options(joinedload(User.profile)).filter(User.id == detection.dentist_id).first()
     
     try:
         # Generate PDF
         pdf_bytes = report_service.generate_detection_report(
             detection=detection,
             patient=patient,
+            dentist=dentist,
             include_images=True
         )
         
@@ -115,17 +115,17 @@ async def email_detection_report(
     # Get patient
     patient = db.query(Patient).filter(Patient.id == detection.patient_id).first()
     
-    if not patient:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Patient not found"
-        )
-    
+    # Get dentist profile info with eager loading
+    dentist = None
+    if detection.dentist_id:
+        dentist = db.query(User).options(joinedload(User.profile)).filter(User.id == detection.dentist_id).first()
+        
     try:
         # Generate PDF
         pdf_bytes = report_service.generate_detection_report(
             detection=detection,
             patient=patient,
+            dentist=dentist,
             include_images=True
         )
         
@@ -140,6 +140,8 @@ async def email_detection_report(
         detection_date = datetime.fromisoformat(str(detection.detection_date)).strftime('%B %d, %Y')
         
         # Send email
+        clinic_name = dentist.profile.clinic_name if dentist and dentist.profile else None
+        
         success = email_service.send_detection_report(
             to_email=email_data.recipient_email,
             patient_name=patient.full_name,
@@ -147,7 +149,8 @@ async def email_detection_report(
             detection_date=detection_date,
             summary_stats=summary_stats,
             pdf_bytes=pdf_bytes,
-            cc_email=email_data.cc_email
+            cc_email=email_data.cc_email,
+            clinic_name=clinic_name
         )
         
         if not success:
@@ -189,7 +192,8 @@ async def download_dashboard_report(
         # Generate PDF
         pdf_bytes = report_service.generate_dashboard_report(
             patients=patients,
-            detections=detections
+            detections=detections,
+            dentist=current_user
         )
         
         # Return PDF as download
