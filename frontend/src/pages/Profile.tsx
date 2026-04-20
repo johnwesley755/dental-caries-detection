@@ -1,6 +1,7 @@
 // frontend/src/pages/Profile.tsx
 import React, { useState, useEffect } from 'react';
 import { toast } from 'sonner';
+import { resolveImageUrl } from '../utils/imageUrl';
 import {
     Shield, Edit2, Save,
     KeyRound, Mail, Camera, CheckCircle2, Fingerprint, AppWindow, Lock, X
@@ -15,6 +16,7 @@ import { Button } from '../components/ui/button';
 
 export const Profile: React.FC = () => {
     const { user, updateUser } = useAuth();
+    const profileImageUrl = resolveImageUrl(user?.profile?.profile_image_url);
     const [isEditing, setIsEditing] = useState(false);
     const [isChangingPassword, setIsChangingPassword] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -143,8 +145,12 @@ export const Profile: React.FC = () => {
 
                     <div className="relative flex flex-col md:flex-row items-center gap-8 lg:gap-10">
                         <div className="relative group">
-                            <div className="w-28 h-28 lg:w-32 lg:h-32 rounded-[2rem] bg-white flex items-center justify-center text-primary font-headline font-extrabold text-4xl lg:text-5xl shadow-2xl border-4 border-white/10 ring-8 ring-primary/5 group-hover:scale-105 transition-transform duration-500">
-                                {user?.full_name ? getInitials(user.full_name) : '??'}
+                            <div className="w-28 h-28 lg:w-32 lg:h-32 rounded-[2rem] bg-white flex items-center justify-center text-primary font-headline font-extrabold text-4xl lg:text-5xl shadow-2xl border-4 border-white/10 ring-8 ring-primary/5 group-hover:scale-105 transition-transform duration-500 overflow-hidden">
+                                {profileImageUrl ? (
+                                    <img src={profileImageUrl} alt="Profile" className="w-full h-full object-cover" />
+                                ) : (
+                                    user?.full_name ? getInitials(user.full_name) : '??'
+                                )}
                             </div>
                             <button className="absolute -bottom-2 -right-2 w-10 h-10 bg-primary-container text-white rounded-full flex items-center justify-center shadow-lg border-4 border-[#00194a] hover:scale-110 transition-transform active:scale-95 duration-200">
                                 <Camera className="h-4 w-4" />

@@ -32,7 +32,14 @@ class ImageService:
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(upload_file.file, buffer)
         
-        result = {"local_path": file_path}
+        # Calculate a relative local URL for fallback access
+        # settings.UPLOAD_DIR is mounted at /uploads/ in main.py
+        local_url = f"/uploads/{sub_dir}/{filename}"
+        
+        result = {
+            "local_path": file_path,
+            "local_url": local_url
+        }
         
         # Upload to Cloudinary if enabled
         if upload_to_cloudinary and settings.CLOUDINARY_CLOUD_NAME:
@@ -50,7 +57,7 @@ class ImageService:
                     result["local_path"] = None  # Indicate local file is gone
             except Exception as e:
                 print(f"Warning: Failed to upload to Cloudinary: {str(e)}")
-                # Continue with local path only
+                # Continue with local URL fallback in result
         
         return result
     

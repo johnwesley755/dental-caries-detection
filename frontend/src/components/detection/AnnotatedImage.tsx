@@ -4,6 +4,7 @@ import { Download, ZoomIn, ZoomOut, Eye, EyeOff } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import type { Detection } from '../../types/detection.types';
+import { resolveImageUrl } from '../../utils/imageUrl';
 
 interface AnnotatedImageProps {
   detection: Detection;
@@ -12,12 +13,9 @@ interface AnnotatedImageProps {
 export const AnnotatedImage: React.FC<AnnotatedImageProps> = ({ detection }) => {
   const [zoom, setZoom] = useState(1);
   const [showOriginal, setShowOriginal] = useState(false);
-  const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
-
-  const getImageUrl = (path: string) => `${API_BASE_URL}/${path.startsWith('/') ? path.slice(1) : path}`;
   const displayUrl = showOriginal 
-    ? (detection.original_image_url || getImageUrl(detection.original_image_path))
-    : (detection.annotated_image_url || (detection.annotated_image_path ? getImageUrl(detection.annotated_image_path) : null));
+    ? (resolveImageUrl(detection.original_image_url) || resolveImageUrl(detection.original_image_path))
+    : (resolveImageUrl(detection.annotated_image_url) || resolveImageUrl(detection.annotated_image_path));
 
   const handleDownload = () => {
     if (!displayUrl) return;

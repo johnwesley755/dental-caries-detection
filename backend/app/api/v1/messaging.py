@@ -331,10 +331,8 @@ async def upload_file(
         delete_local=True
     )
     
-    # Use Cloudinary URL if available, otherwise fallback to local path
-    file_url = upload_result.get("cloudinary_url")
-    if not file_url:
-        file_url = f"/{upload_result['local_path']}"
+    # Use Cloudinary URL if available, otherwise fallback to local URL
+    file_url = upload_result.get("cloudinary_url") or upload_result.get("local_url")
     
     return {
         "file_url": file_url,

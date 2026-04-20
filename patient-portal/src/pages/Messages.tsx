@@ -7,6 +7,7 @@ import { Button } from '../components/ui/button';
 import { useAuth } from '../contexts/AuthContext';
 import { patientService } from '../services/patientService';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
+import { resolveImageUrl } from '../utils/imageUrl';
 
 export const Messages: React.FC = () => {
   const { user } = useAuth();
@@ -235,17 +236,7 @@ export const Messages: React.FC = () => {
     return <FileText className="h-5 w-5" />;
   };
 
-  const getFileUrl = (url: string) => {
-    if (!url) return '';
-    let finalUrl = '';
-    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('//')) {
-      finalUrl = url.startsWith('//') ? `https:${url}` : url;
-    } else {
-      const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
-      finalUrl = `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
-    }
-    return finalUrl;
-  };
+  const getFileUrl = (url: string) => resolveImageUrl(url) || '';
 
   if (loading) {
     return (

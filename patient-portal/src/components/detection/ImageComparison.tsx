@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Maximize2, Minimize2, SlidersHorizontal, Columns2 } from 'lucide-react';
+import { resolveImageUrl } from '../../utils/imageUrl';
 
 interface ImageComparisonProps {
   originalImageUrl?: string;
@@ -13,6 +14,8 @@ export const ImageComparison: React.FC<ImageComparisonProps> = ({
   originalImageUrl,
   annotatedImageUrl,
 }) => {
+  const resolvedOriginal = resolveImageUrl(originalImageUrl);
+  const resolvedAnnotated = resolveImageUrl(annotatedImageUrl);
   const [viewMode, setViewMode] = useState<'split' | 'slider'>('split');
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [sliderPosition, setSliderPosition] = useState(50);
@@ -80,7 +83,7 @@ export const ImageComparison: React.FC<ImageComparisonProps> = ({
               <div className="relative bg-gray-100 rounded-lg overflow-hidden aspect-video">
                 {originalImageUrl ? (
                   <img
-                    src={originalImageUrl}
+                    src={resolvedOriginal}
                     alt="Original dental X-ray"
                     className="w-full h-full object-contain"
                   />
@@ -96,7 +99,7 @@ export const ImageComparison: React.FC<ImageComparisonProps> = ({
               <div className="relative bg-gray-100 rounded-lg overflow-hidden aspect-video">
                 {annotatedImageUrl ? (
                   <img
-                    src={annotatedImageUrl}
+                    src={resolvedAnnotated}
                     alt="AI-annotated dental X-ray"
                     className="w-full h-full object-contain"
                   />
@@ -122,7 +125,7 @@ export const ImageComparison: React.FC<ImageComparisonProps> = ({
               {/* Annotated Image (Background) */}
               {annotatedImageUrl && (
                 <img
-                  src={annotatedImageUrl}
+                  src={resolvedAnnotated}
                   alt="AI-annotated dental X-ray"
                   className="absolute inset-0 w-full h-full object-contain"
                 />
@@ -135,7 +138,7 @@ export const ImageComparison: React.FC<ImageComparisonProps> = ({
                   style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
                 >
                   <img
-                    src={originalImageUrl}
+                    src={resolvedOriginal}
                     alt="Original dental X-ray"
                     className="w-full h-full object-contain"
                   />

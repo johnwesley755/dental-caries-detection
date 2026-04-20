@@ -7,6 +7,7 @@ import type { Patient } from '../types/patient.types';
 import { FileText, Image as ImageIcon, Download, X } from 'lucide-react';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
 import { TopNavBar } from '../components/layout/TopNavBar';
+import { resolveImageUrl } from '../utils/imageUrl';
 
 export const Messages: React.FC = () => {
     const location = useLocation();
@@ -193,15 +194,7 @@ export const Messages: React.FC = () => {
     };
 
     const getFileUrl = (url: string) => {
-        if (!url) return '';
-        let finalUrl = '';
-        if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('//')) {
-            finalUrl = url.startsWith('//') ? `https:${url}` : url;
-        } else {
-            const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
-            finalUrl = `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
-        }
-        return finalUrl;
+        return resolveImageUrl(url) || '';
     };
 
     if (loading) {

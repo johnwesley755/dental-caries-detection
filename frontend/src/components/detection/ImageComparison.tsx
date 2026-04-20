@@ -9,7 +9,11 @@ interface ImageComparisonProps {
   annotatedImageUrl?: string;
 }
 
+import { resolveImageUrl } from '../../utils/imageUrl';
+
 export const ImageComparison: React.FC<ImageComparisonProps> = ({ originalImageUrl, annotatedImageUrl }) => {
+  const resolvedOriginal = resolveImageUrl(originalImageUrl);
+  const resolvedAnnotated = resolveImageUrl(annotatedImageUrl);
   const [viewMode, setViewMode] = useState<'split' | 'slider'>('slider');
   const [sliderPosition, setSliderPosition] = useState(50);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -61,13 +65,13 @@ export const ImageComparison: React.FC<ImageComparisonProps> = ({ originalImageU
             <div className="space-y-3">
                 <span className="text-xs font-black text-slate-400 ml-1">Native Radio</span>
                 <div className="rounded-3xl overflow-hidden shadow-lg border border-slate-200 bg-black aspect-video flex items-center justify-center">
-                   <img src={originalImageUrl} className="w-full h-full object-contain opacity-80" alt="Original" />
+                   <img src={resolvedOriginal} className="w-full h-full object-contain opacity-80" alt="Original" />
                 </div>
             </div>
             <div className="space-y-3">
                 <span className="text-xs font-black text-primary ml-1">Neural Overlay</span>
                 <div className="rounded-3xl overflow-hidden shadow-lg border border-slate-200 bg-black aspect-video flex items-center justify-center">
-                  <img src={annotatedImageUrl} className="w-full h-full object-contain" alt="Annotated" />
+                  <img src={resolvedAnnotated} className="w-full h-full object-contain" alt="Annotated" />
                 </div>
             </div>
           </div>
@@ -80,11 +84,11 @@ export const ImageComparison: React.FC<ImageComparisonProps> = ({ originalImageU
             onMouseDown={(e) => handleMove(e.clientX)}
           >
             {/* Background: Annotated */}
-            <img src={annotatedImageUrl} alt="Annotated" className="absolute inset-0 w-full h-full object-contain" />
+            <img src={resolvedAnnotated} alt="Annotated" className="absolute inset-0 w-full h-full object-contain" />
             
             {/* Foreground: Original (Clipped) */}
             <div className="absolute inset-0 overflow-hidden" style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}>
-                <img src={originalImageUrl} alt="Original" className="w-full h-full object-contain opacity-80 grayscale" />
+                <img src={resolvedOriginal} alt="Original" className="w-full h-full object-contain opacity-80 grayscale" />
             </div>
 
             {/* Slider Handle */}

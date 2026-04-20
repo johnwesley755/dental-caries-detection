@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { resolveImageUrl } from '../../utils/imageUrl';
 import { useAuth } from '../../contexts/AuthContext';
 import { UserRole } from '../../types/auth.types';
 import {
@@ -32,6 +33,7 @@ const Dots: React.FC<{ isExpanded: boolean, setIsExpanded: (v: boolean) => void 
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
   const { user, logout } = useAuth();
+  const profileImageUrl = resolveImageUrl(user?.profile?.profile_image_url);
   const location = useLocation();
   const navigate = useNavigate();
   const [showCalendar, setShowCalendar] = useState(false);
@@ -215,7 +217,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
             <div className={`flex items-center ${isExpanded ? 'justify-between' : 'justify-center'}`}>
               <div className="flex items-center gap-3 overflow-hidden">
                 <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-200 to-indigo-200 shrink-0 border border-white shadow-sm flex items-center justify-center overflow-hidden text-blue-700 font-bold">
-                  {user?.full_name ? user.full_name.charAt(0) : 'U'}
+                  {profileImageUrl ? (
+                    <img src={profileImageUrl} alt="Profile" className="w-full h-full object-cover" />
+                  ) : (
+                    user?.full_name ? user.full_name.charAt(0) : 'U'
+                  )}
                 </div>
                 {isExpanded && (
                   <div className="flex flex-col min-w-0">

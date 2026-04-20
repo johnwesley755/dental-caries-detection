@@ -100,13 +100,24 @@ class DetectionService:
         findings = results["findings"]
         teeth_count = results["teeth_count"]
         
+        # Annotated image URL fallback
+        annotated_image_url = None
+        if annotated_cloudinary:
+            annotated_image_url = annotated_cloudinary.get("url")
+        elif annotated_path:
+            # Fallback to local URL if Cloudinary failed but path exists
+            # settings.RESULTS_DIR is mounted at /results in main.py
+            relative_path = os.path.relpath(annotated_path, settings.RESULTS_DIR).replace('\\', '/')
+            annotated_image_url = f"/results/{relative_path}"
+            print(f"Fallback to local annotated URL: {annotated_image_url}")
+
         # Create detection record
         db_detection = Detection(
             detection_id=self.generate_detection_id(),
             patient_id=patient_id,
             dentist_id=dentist_id,
-            original_image_url=original_image_cloudinary.get("cloudinary_url") if original_image_cloudinary else None,
-            annotated_image_url=annotated_cloudinary.get("url") if annotated_cloudinary else None,
+            original_image_url=original_image_cloudinary.get("cloudinary_url") or original_image_cloudinary.get("local_url") if original_image_cloudinary else None,
+            annotated_image_url=annotated_image_url,
             original_image_public_id=original_image_cloudinary.get("public_id") if original_image_cloudinary else None,
             annotated_image_public_id=annotated_cloudinary.get("public_id") if annotated_cloudinary else None,
             image_type=detection_data.image_type.upper() if detection_data.image_type else "INTRAORAL",

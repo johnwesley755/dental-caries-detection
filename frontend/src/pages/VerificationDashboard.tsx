@@ -21,6 +21,7 @@ import { Badge } from '../components/ui/badge';
 import { motion, AnimatePresence } from 'framer-motion';
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { resolveImageUrl } from '../utils/imageUrl';
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -162,7 +163,7 @@ const VerificationDashboard: React.FC = () => {
                                 <div className="flex items-center gap-5 mb-8">
                                     <div className="h-16 w-16 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600 shadow-inner border border-blue-100 overflow-hidden shrink-0">
                                         {dentist.profile?.profile_image_url ? (
-                                          <img src={dentist.profile.profile_image_url} alt={dentist.full_name} className="w-full h-full object-cover" />
+                                          <img src={resolveImageUrl(dentist.profile.profile_image_url)} alt={dentist.full_name} className="w-full h-full object-cover" />
                                         ) : (
                                           <span className="text-2xl font-black">{dentist.full_name[0]}</span>
                                         )}
@@ -253,7 +254,7 @@ const VerificationDashboard: React.FC = () => {
                                   
                                   {dentist.profile?.verification_documents_url && (
                                     <a 
-                                      href={dentist.profile.verification_documents_url}
+                                      href={resolveImageUrl(dentist.profile.verification_documents_url)}
                                       target="_blank"
                                       rel="noopener noreferrer"
                                       className="h-12 w-12 bg-blue-50 text-blue-600 border border-blue-100 rounded-xl flex items-center justify-center hover:bg-blue-100 transition-colors shadow-sm"

@@ -9,8 +9,11 @@ import type { Detection } from '../types/detection.types';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
 import { TopNavBar } from '../components/layout/TopNavBar';
 import { format, subDays, isSameDay } from 'date-fns';
+import { resolveImageUrl } from '../utils/imageUrl';
+import { useAuth } from '../contexts/AuthContext';
 
 export const Dashboard: React.FC = () => {
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   const [patients, setPatients] = useState<Patient[]>([]);
@@ -248,7 +251,7 @@ export const Dashboard: React.FC = () => {
                         <img 
                             alt="Patient Avatar" 
                             className="w-8 h-8 lg:w-10 lg:h-10 rounded-full object-cover ring-2 ring-surface-container-high" 
-                            src={`https://ui-avatars.com/api/?name=${patient?.full_name || 'U'}&background=random&color=fff`} 
+                            src={resolveImageUrl(patient?.profile?.profile_image_url) || `https://ui-avatars.com/api/?name=${patient?.full_name || 'U'}&background=random&color=fff`} 
                         />
                     </div>
                     <div 
@@ -286,7 +289,7 @@ export const Dashboard: React.FC = () => {
                 <img 
                   alt="Dental X-ray analysis" 
                   className="w-full h-48 sm:h-64 lg:h-80 object-cover rounded-xl lg:rounded-2xl shadow-inner border border-slate-200" 
-                  src={latestDetection.annotated_image_url || latestDetection.original_image_url || "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=800&q=80"} 
+                  src={resolveImageUrl(latestDetection.annotated_image_url || latestDetection.original_image_url) || "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=800&q=80"} 
                 />
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <div className="w-16 h-16 lg:w-24 lg:h-24 border-2 border-secondary rounded-full animate-pulse border-dashed"></div>

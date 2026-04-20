@@ -88,7 +88,7 @@ class AuthService:
                     folder="dentoai/verification",
                     upload_to_cloudinary=True
                 )
-                document_url = upload_res.get("cloudinary_url") or upload_res.get("local_path")
+                document_url = upload_res.get("cloudinary_url") or upload_res.get("local_url")
 
             # Handle profile image upload
             profile_pic_url = None
@@ -99,7 +99,7 @@ class AuthService:
                     folder="dentoai/profiles",
                     upload_to_cloudinary=True
                 )
-                profile_pic_url = upload_res.get("cloudinary_url") or upload_res.get("local_path")
+                profile_pic_url = upload_res.get("cloudinary_url") or upload_res.get("local_url")
 
             profile_data = user.profile or {}
             db_profile = DentistProfile(

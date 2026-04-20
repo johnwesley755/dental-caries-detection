@@ -1,5 +1,5 @@
 
-    def _build_chart_section(self, detection: Detection) -> list:
+def _build_chart_section(self, detection: Detection) -> list:
         """Build severity distribution chart section"""
         elements = []
         
@@ -38,7 +38,7 @@
         
         return elements
     
-    def _create_severity_chart(self, severity_counts: dict) -> BytesIO:
+def _create_severity_chart(self, severity_counts: dict) -> BytesIO:
         """Create a severity distribution pie chart"""
         # Filter out zero counts
         labels = []
@@ -86,7 +86,7 @@
         
         return buffer
     
-    def _get_severity_interpretation(self, severity_counts: dict) -> str:
+def _get_severity_interpretation(self, severity_counts: dict) -> str:
         """Generate interpretation text based on severity distribution"""
         total = sum(severity_counts.values())
         
